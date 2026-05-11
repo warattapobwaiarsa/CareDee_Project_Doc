@@ -43,12 +43,24 @@
         }
         .admin-header {
             display: flex;
-            justify-content: flex-end;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 1rem;
             padding: 1rem;
             background: white;
             border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
+        .pagination {
+            margin-top: 1rem;
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            font-size: 0.9rem;
+            color: var(--secondary-color);
+        }
+        .pagination span { cursor: pointer; padding: 2px 8px; border-radius: 4px; border: 1px solid #eee; }
+        .pagination span:hover { background: #eee; }
 
         /* --- Admin Mobile Responsive --- */
         @media (max-width: 768px) {
@@ -74,9 +86,6 @@
             .main-content {
                 margin-left: 0;
                 padding: 10px;
-            }
-            .admin-header {
-                justify-content: center;
             }
             .grid {
                 grid-template-columns: 1fr !important;
@@ -107,23 +116,34 @@
 
     <main class="main-content container">
         <div class="admin-header">
-            <div class="notification-bell" onclick="toggleNotifications()">
-                🔔<span class="count">3</span>
-                <div id="notification-dropdown" class="notification-dropdown">
-                    <div class="notification-item"><span class="badge badge-danger">SOS</span> <b>คุณมานะ</b> แจ้งเหตุฉุกเฉิน!</div>
-                    <div class="notification-item">ผู้ดูแลใหม่ 5 ท่าน รอตรวจ KYC</div>
-                    <div class="notification-item">มีข้อร้องเรียนใหม่จาก คุณสมยศ</div>
+            <div class="search-bar" style="flex: 1; max-width: 400px;">
+                <input type="text" placeholder="ค้นหา Ticket, ชื่อผู้ดูแล..." style="width: 100%; padding: 0.5rem; border-radius: 5px; border: 1px solid #ccc;">
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 1.5rem;">
+                <div class="notification-bell" onclick="toggleNotifications()">
+                    🔔<span class="count">3</span>
+                    <div id="notification-dropdown" class="notification-dropdown">
+                        <div class="notification-item"><span class="badge badge-danger">SOS</span> <b>คุณมานะ</b> แจ้งเหตุฉุกเฉิน!</div>
+                        <div class="notification-item">ผู้ดูแลใหม่ 5 ท่าน รอตรวจ KYC</div>
+                        <div class="notification-item">มีข้อร้องเรียนใหม่จาก คุณสมยศ</div>
+                    </div>
+                </div>
+                <div class="admin-profile" style="display: flex; align-items: center; gap: 0.5rem;">
+                    <div style="width: 35px; height: 35px; background: var(--primary-color); color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: bold;">AD</div>
+                    <span style="font-weight: bold;">Admin_01</span>
+                    <span style="font-size: 0.8rem; color: var(--danger-color); cursor: pointer; margin-left: 5px;" onclick="showModal('คุณต้องการออกจากระบบใช่หรือไม่?')">Logout</span>
                 </div>
             </div>
         </div>
 
         <!-- Section: Operator Dashboard -->
         <section id="operator-dash-section">
-            <h1>Workforce Dashboard (Operator)</h1>
+            <h1>แดชบอร์ดกำลังพล</h1>
             <div class="grid">
                 <div class="card stat-card">
                     <div class="stat-value">42</div>
-                    <div>ผู้ดูแลที่กำลังทำงาน (Active)</div>
+                    <div>ผู้ดูแลที่กำลังทำงาน</div>
                 </div>
                 <div class="card stat-card">
                     <div class="stat-value">12</div>
@@ -161,14 +181,24 @@
                         </tr>
                     </tbody>
                 </table>
+                <div class="pagination">
+                    <span><< ก่อนหน้า</span><span>1</span><span>2</span><span>ถัดไป >></span>
+                </div>
             </div>
         </section>
 
-        <!-- Section: Dispute Management (New) -->
+        <!-- Section: Dispute Management -->
         <section id="disputes-section" style="display: none;">
-            <h1>Dispute & Ticket Management</h1>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <h1>จัดการข้อร้องเรียน</h1>
+                <select style="width: 200px;">
+                    <option>แสดงทั้งหมด</option>
+                    <option>รอดำเนินการ</option>
+                    <option>กำลังตรวจสอบ</option>
+                </select>
+            </div>
             <div class="card">
-                <h3>รายการข้อร้องเรียนที่รอดำเนินการ</h3>
+                <h3>รายการข้อร้องเรียน</h3>
                 <table style="width: 100%; border-collapse: collapse;">
                     <tr style="border-bottom: 1px solid #eee;">
                         <td style="padding: 1rem;">
@@ -177,120 +207,107 @@
                         </td>
                         <td>ปัญหา: บริการล่าช้ากว่ากำหนด 1 ชม.</td>
                         <td><span class="badge badge-warning">กำลังตรวจสอบ</span></td>
-                        <td><button class="btn-primary">จัดการ</button></td>
+                        <td><button class="btn-primary" onclick="showModal('แสดงรายละเอียด Ticket TKT-2026-045')">จัดการ</button></td>
                     </tr>
                 </table>
+                <div class="pagination">
+                    <span>1</span><span>2</span><span>3</span>
+                </div>
             </div>
         </section>
 
-        <!-- Section: KYC & Background Check (New) -->
+        <!-- Section: KYC & Background Check -->
         <section id="kyc-section" style="display: none;">
-            <h1>Caregiver KYC Verification</h1>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <h1>ตรวจสอบตัวตนผู้ดูแล (KYC)</h1>
+                <select style="width: 200px;">
+                    <option>ทั้งหมด</option>
+                    <option>รอตรวจสอบ</option>
+                </select>
+            </div>
             <div class="card">
                 <h3>ผู้สมัครใหม่รอการอนุมัติ</h3>
                 <div class="grid">
-                    <div class="card" style="border: 1px solid #eee;">
+                    <div class="card" style="border: 1px solid #eee; padding: 1rem;">
                         <h4>คุณใจดี มีสุข</h4>
                         <p>เอกสาร: บัตรประชาชน ✅</p>
                         <p>เอกสาร: ใบรับรองพยาบาล ⚠️ (รอตรวจ)</p>
                         <p>ประวัติอาชญากรรม: ✅ ไม่พบประวัติ</p>
                         <div style="display: flex; gap: 0.5rem;">
-                            <button class="btn-success">อนุมัติ</button>
-                            <button class="btn-danger">ปฏิเสธ</button>
+                            <button class="btn-success" onclick="showModal('อนุมัติโปรไฟล์คุณใจดีเรียบร้อย')">อนุมัติ</button>
+                            <button class="btn-danger" onclick="showModal('ปฏิเสธโปรไฟล์คุณใจดี? กรุณาระบุเหตุผล')">ปฏิเสธ</button>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Section: Financial Dashboard (New) -->
+        <!-- Section: Financial Dashboard -->
         <section id="finance-section" style="display: none;">
-            <h1>Financial Overview</h1>
+            <h1>ภาพรวมการเงิน</h1>
             <div class="grid">
                 <div class="card stat-card">
                     <div class="stat-value">฿ 1,250,000</div>
-                    <div>GMV (ยอดจองรวมเดือนนี้)</div>
+                    <div>ยอดขายรวม (GMV)</div>
                 </div>
                 <div class="card stat-card">
                     <div class="stat-value">฿ 187,500</div>
-                    <div>Platform Fee (GP 15%)</div>
-                </div>
-                <div class="card stat-card">
-                    <div class="stat-value">฿ 950,000</div>
-                    <div>ยอดรอจ่าย (Pending Payouts)</div>
+                    <div>ค่าธรรมเนียมแพลตฟอร์ม (15%)</div>
                 </div>
             </div>
             <div class="card">
-                <h3>รอบการจ่ายเงินถัดไป</h3>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h3>รอบการจ่ายเงินถัดไป</h3>
+                    <button class="btn-secondary" onclick="showModal('ส่งออกข้อมูลการเงินเป็น CSV สำเร็จ')">ส่งออกเป็น CSV</button>
+                </div>
                 <p>วันที่: 15 พ.ค. 2026 | จำนวนผู้ดูแล: 150 ท่าน | ยอดรวม: ฿ 450,000</p>
-                <button class="btn-primary">ดำเนินการเบิกจ่าย (Batch Payout)</button>
+                <button class="btn-primary" onclick="showModal('ยืนยันการทำเบิกจ่ายเป็นชุดสำหรับ 150 รายการ?')">ดำเนินการเบิกจ่าย</button>
             </div>
         </section>
 
         <!-- Section: RBAC Management -->
         <section id="rbac-section" style="display: none;">
-            <h1>Role-Based Access Control (Admin)</h1>
+            <h1>Role-Based Access Control</h1>
             <div class="card">
                 <h3>กำหนดสิทธิ์ตามบทบาท</h3>
                 <div class="form-group">
                     <label>เลือกบทบาท</label>
                     <select>
-                        <option>Operator (ผู้ให้บริการ)</option>
-                        <option>Admin (ผู้ดูแลระบบ)</option>
-                        <option>Finance (ฝ่ายการเงิน)</option>
+                        <option>Operator</option>
+                        <option>Admin</option>
+                        <option>Finance</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label>สิทธิ์การเข้าถึงโมดูล</label>
                     <div class="grid" style="grid-template-columns: 1fr 1fr;">
-                        <label><input type="checkbox" checked> Marketplace & Search</label>
-                        <label><input type="checkbox" checked> Booking & Scheduling</label>
-                        <label><input type="checkbox" checked> Payment & Revenue</label>
-                        <label><input type="checkbox"> System Audit Logs</label>
+                        <label><input type="checkbox" checked> Marketplace</label>
+                        <label><input type="checkbox" checked> Booking</label>
+                        <label><input type="checkbox" checked> Payment</label>
+                        <label><input type="checkbox"> Audit Logs</label>
                     </div>
                 </div>
-                <button class="btn-primary" onclick="alert('บันทึกสิทธิ์เรียบร้อย')">บันทึกการตั้งค่า</button>
+                <button class="btn-primary" onclick="showModal('บันทึกการตั้งค่าสิทธิ์เรียบร้อย')">บันทึกการตั้งค่า</button>
             </div>
         </section>
 
-        <!-- Section: System Health -->
+        <!-- Placeholder for other sections -->
         <section id="system-health-section" style="display: none;">
-            <h1>System Health & Monitoring</h1>
-            <div class="grid">
-                <div class="card">
-                    <h4>Server Status</h4>
-                    <p>API Server: <span class="badge badge-success">Online</span></p>
-                    <p>Database: <span class="badge badge-success">Healthy</span></p>
-                    <p>Notification Engine: <span class="badge badge-success">Idle</span></p>
-                </div>
-                <div class="card">
-                    <h4>Recent Audit Logs</h4>
-                    <ul style="font-size: 0.85rem;">
-                        <li>[10:00:22] ADM-01 logged in.</li>
-                        <li>[10:05:45] OP-02 updated schedule for CG-102.</li>
-                        <li>[10:10:01] System Backup completed successfully.</li>
-                    </ul>
-                </div>
-            </div>
+            <h1>System Health</h1><div class="card"><p>Server: Online | Database: Healthy</p></div>
         </section>
-
-        <!-- Section: Compliance (PDPA) -->
         <section id="compliance-section" style="display: none;">
-            <h1>Compliance & Data Protection</h1>
-            <div class="card">
-                <h3>PDPA Request Management</h3>
-                <p>จัดการคำขอใช้สิทธิ์ของเจ้าของข้อมูลส่วนบุคคล</p>
-                <div class="form-group">
-                    <label>ค้นหาบัญชีผู้ใช้ (Email/Phone)</label>
-                    <input type="text" placeholder="ระบุเพื่อตรวจสอบข้อมูลที่ถูกจัดเก็บ">
-                </div>
-                <div style="display: flex; gap: 1rem;">
-                    <button class="btn-secondary">ส่งออกข้อมูล (Data Portability)</button>
-                    <button class="btn-danger">ลบข้อมูลถาวร (Right to Erasure)</button>
-                </div>
-            </div>
+            <h1>PDPA Compliance</h1><div class="card"><p>รายงานการใช้สิทธิ์เจ้าของข้อมูล</p></div>
         </section>
     </main>
+
+    <!-- Custom Modal -->
+    <div id="custom-modal" class="modal">
+        <div class="modal-content" style="text-align: center;">
+            <h3 id="modal-title">แจ้งเตือนระบบ</h3>
+            <p id="modal-message"></p>
+            <button class="btn-primary" onclick="closeModal()">ตกลง</button>
+        </div>
+    </div>
 
     <script>
         function showSection(section) {
@@ -299,13 +316,7 @@
                 const el = document.getElementById(s + '-section');
                 if(el) el.style.display = 'none';
             });
-
             document.getElementById(section + '-section').style.display = 'block';
-            
-            // Update sidebar active state
-            const navItems = document.querySelectorAll('.sidebar-nav li');
-            navItems.forEach(item => item.classList.remove('active'));
-            // Find the clicked item is tricky here, so we just let it be for now or use a better selector
         }
 
         function toggleNotifications() {
@@ -313,13 +324,21 @@
             dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
         }
 
+        function showModal(msg) {
+            document.getElementById('modal-message').innerText = msg;
+            document.getElementById('custom-modal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('custom-modal').style.display = 'none';
+        }
+
         window.onclick = function(event) {
+            const dropdown = document.getElementById('notification-dropdown');
             if (!event.target.matches('.notification-bell') && !event.target.matches('.count')) {
-                const dropdown = document.getElementById('notification-dropdown');
-                if (dropdown && dropdown.style.display === 'block') {
-                    dropdown.style.display = 'none';
-                }
+                if (dropdown && dropdown.style.display === 'block') dropdown.style.display = 'none';
             }
+            if (event.target == document.getElementById('custom-modal')) closeModal();
         }
     </script>
 </body>
