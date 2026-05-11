@@ -227,7 +227,7 @@ sequenceDiagram
 
 ## 4. Operator View (มุมมองผู้ให้บริการ)
 
-มุ่งเน้นการบริหารจัดการทีมผู้ดูแล (Workforce Management) การควบคุมคุณภาพ และการวิเคราะห์รายได้ของหน่วยงาน
+มุ่งเน้นการเข้าถึงระบบเพื่อบริหารจัดการทีมผู้ดูแล (Workforce Management) การควบคุมคุณภาพ และการวิเคราะห์รายได้ของหน่วยงาน
 
 ```mermaid
 %%{init: { 'theme': 'base', 'themeVariables': { 'darkMode': false, 'background': '#ffffff', 'mainBkg': '#ffffff', 'primaryColor': '#ffffff', 'primaryTextColor': '#000000', 'primaryBorderColor': '#000000', 'lineColor': '#000000', 'secondaryColor': '#ffffff', 'tertiaryColor': '#ffffff', 'actorBkg': '#ffffff', 'actorTextColor': '#000000', 'actorLineColor': '#000000', 'participantBkg': '#ffffff', 'participantTextColor': '#000000', 'participantBorderColor': '#000000', 'signalColor': '#000000', 'signalTextColor': '#000000', 'labelTextColor': '#000000', 'loopTextColor': '#000000', 'noteBkgColor': '#ffffff', 'noteTextColor': '#000000', 'activationBkgColor': '#ffffff', 'activationBorderColor': '#000000', 'sequenceNumberColor': '#000000' }, 'themeCSS': 'svg { background-color: white !important; background: white !important; } rect, circle, path, line, polygon, .labelBox, .cluster rect, .actor, .participant, .note, .activation { fill: white !important; stroke: black !important; stroke-width: 2px !important; } text, tspan, .loopText, .messageText, .noteText, .sequenceNumber { fill: black !important; color: black !important; font-weight: bold !important; font-size: 14px !important; } .cluster rect { stroke-dasharray: 0 !important; }' } }%%
@@ -236,6 +236,7 @@ sequenceDiagram
 
     box white Operator Dashboard (แดชบอร์ดผู้ให้บริการ)
         actor OP as Operator
+        participant Auth as Auth System
         participant Portal as Operator Portal (9)
         participant BK as Booking (4)
         participant CR as Care Report (6)
@@ -243,10 +244,18 @@ sequenceDiagram
         participant PM as Payment (5)
     end
 
+    %% Access Control
+    OP->>Auth: Secure Login (Enterprise Credentials)
+    Auth-->>OP: Access Granted (Session Active)
+    OP->>Portal: Request Dashboard View
+
+    %% Data Feeding
     BK->>Portal: Update caregiver schedules
     CR->>Portal: Feed real-time activity logs
     RR->>Portal: Feed customer complaints/reviews
     PM->>Portal: Feed revenue data
+
+    %% Management Actions
     Portal-->>OP: Display Workforce Dashboard
     OP->>Portal: Manage schedules & resolve issues
     alt Dispute Resolved
@@ -257,12 +266,11 @@ sequenceDiagram
 ```
 
 **คำอธิบายทีละขั้นตอน (Step-by-step Explanation):**
-*   **Step 1:** ระบบ Booking (4) ส่งข้อมูลตารางงานและการเปลี่ยนแปลงตารางงานของผู้ดูแลเข้าสู่ Operator Portal (9)
-*   **Step 2:** ระบบ Care Report (6) ส่งบันทึกกิจกรรมแบบ Real-time ของผู้ดูแลทุกคนเข้าสู่ Portal (9)
-*   **Step 3:** ระบบ Rating & Review (7) ส่งข้อมูลการร้องเรียนและรีวิวจากลูกค้าเข้าสู่ Portal (9)
-*   **Step 4:** ระบบ Payment (5) ส่งข้อมูลรายได้และการเงินเข้าสู่ Portal (9)
-*   **Step 5:** Operator Portal (9) ประมวลผลและแสดงข้อมูลทั้งหมดในรูปแบบ Workforce Dashboard ให้ Operator (OP) เห็นภาพรวม
-*   **Step 6:** Operator (OP) ใช้ข้อมูลบน Portal (9) ในการจัดการตารางงานและแก้ไขปัญหาการปฏิบัติงานต่างๆ
+*   **Step 1-3 (Authentication):** Operator (OP) เข้าสู่ระบบด้วย Secure Login และเมื่อได้รับสิทธิ์เข้าใช้งาน ระบบจะดึงข้อมูล Dashboard จาก Operator Portal (9)
+*   **Step 4-7 (Data Feeding):** ระบบย่อยต่างๆ (Booking, Care Report, Rating, Payment) ส่งข้อมูลแบบ Real-time เข้ามาที่ Portal เพื่อให้ข้อมูลเป็นปัจจุบันที่สุด
+*   **Step 8:** Operator Portal (9) ประมวลผลและแสดงผล Workforce Dashboard ให้ Operator (OP) วิเคราะห์ประสิทธิภาพการทำงาน
+*   **Step 9:** Operator (OP) ใช้เครื่องมือบน Portal ในการปรับปรุงตารางงาน หรือเข้าแทรกแซงเพื่อแก้ไขปัญหาหน้างาน
+*   **Step 10-11 (Resolution):** เมื่อมีข้อพิพาท (Dispute) Operator สามารถเลือก "อนุมัติการจ่ายเงิน" ให้ผู้ดูแล หรือ "สั่งคืนเงิน" ให้ลูกค้าตามความเหมาะสม
 
 ---
 
