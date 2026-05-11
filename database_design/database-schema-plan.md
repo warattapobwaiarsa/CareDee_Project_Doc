@@ -188,15 +188,15 @@ model LocationHistory {
   id        String   @default(uuid())
   userId    String
   user      User     @relation(fields: [userId], references: [id])
-  latitude  Float
-  longitude Float
+  location  Unsupported("GEOGRAPHY(POINT, 4326)") // PostGIS Point for efficient spatial queries
   timestamp DateTime @default(now())
 
   @@id([id, timestamp])
 }
 // Note: LocationHistory is partitioned by RANGE (timestamp) in PostgreSQL. 
-// Prisma currently has limited declarative support for native partitioning;
-// implementation requires manual SQL for partition creation and retention policy.
+// Automated lifecycle management is implemented via a database-level Stored Procedure 
+// `create_next_month_location_history_partition()`. Prisma currently requires 
+// manual SQL management for these native partitions and spatial data types.
 
 model CaregiverAvailability {
   id                 String           @id @default(uuid())

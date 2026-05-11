@@ -105,7 +105,7 @@ Professional details for users with the CAREGIVER role.
 | `updatedAt` | TIMESTAMPTZ | NOT NULL | `NOW()` | Audit update time. |
 
 ### 6. LocationHistory (Partitioned)
-High-frequency GPS tracking data.
+High-frequency GPS tracking data. **Partitions are managed automatically via Stored Procedure.**
 
 | Column | Type | Constraints | Default | Description |
 | :--- | :--- | :--- | :--- | :--- |
@@ -113,6 +113,11 @@ High-frequency GPS tracking data.
 | `userId" | UUID | FK (User.id), NOT NULL | - | User being tracked. |
 | `location` | GEOGRAPHY | NOT NULL | - | PostGIS GPS Point (4326). |
 | `timestamp` | TIMESTAMPTZ | PK (Composite), NOT NULL | `NOW()` | Event time / Partition Key. |
+
+**Partitioning Notes:**
+- **Strategy:** Range Partitioning by `timestamp` (Monthly).
+- **Automation:** The `create_next_month_location_history_partition()` stored procedure handles the creation of future tables.
+- **Naming Convention:** `LocationHistory_YYYY_MM`.
 
 ### 7. CaregiverAvailability
 Recuring work shift definitions for caregivers.

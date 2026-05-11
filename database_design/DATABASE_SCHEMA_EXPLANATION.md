@@ -119,6 +119,11 @@ Time-series location data for tracking and auditing. This table uses **Declarati
 
 **Partitioning Strategy:**
 - **Type:** Range Partitioning (Monthly).
+- **Automated Lifecycle Management:** 
+  - To handle high-volume data without manual SQL maintenance, the system utilizes a Stored Procedure: `create_next_month_location_history_partition()`.
+  - **Logic:** This procedure calculates the date boundaries for the upcoming month and dynamically creates the required partition table (e.g., `LocationHistory_2026_06`) if it does not already exist.
+  - **Scheduling:** In production, this procedure should be scheduled via a job runner (e.g., `pg_cron`) to run on the 25th of every month.
+  - **Initialization:** A post-deployment script (`DO` block) ensures the current month's partition is created immediately upon schema deployment.
 - **Benefits:** 
   - Improves query performance on large datasets.
   - Simplifies data retention (dropping an entire month's partition is more efficient than `DELETE`).

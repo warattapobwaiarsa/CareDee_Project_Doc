@@ -94,12 +94,46 @@ CREATE TABLE "LocationHistory" (
     PRIMARY KEY ("id", "timestamp")
 ) PARTITION BY RANGE ("timestamp");
 
--- Example partitions (Declarative Partitioning - Monthly)
-CREATE TABLE "LocationHistory_2026_05" PARTITION OF "LocationHistory"
-    FOR VALUES FROM ('2026-05-01') TO ('2026-06-01');
+-- Stored Procedure to Auto-Create Next Month's Partition
+-- This procedure should be scheduled to run monthly (e.g., via pg_cron: '0 0 25 * *')
+CREATE OR REPLACE PROCEDURE create_next_month_location_history_partition()
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    next_month DATE;
+    next_month_plus_one DATE;
+    partition_name TEXT;
+    create_table_sql TEXT;
+BEGIN
+    -- Calculate the first day of the next month
+    next_month := DATE_TRUNC('month', CURRENT_DATE + INTERVAL '1 month');
+    next_month_plus_one := next_month + INTERVAL '1 month';
+    
+    -- Format partition name, e.g., "LocationHistory_2026_06"
+    partition_name := '"LocationHistory_' || TO_CHAR(next_month, 'YYYY_MM') || '"';
 
-CREATE TABLE "LocationHistory_2026_06" PARTITION OF "LocationHistory"
-    FOR VALUES FROM ('2026-06-01') TO ('2026-07-01');
+    -- Build the CREATE TABLE SQL dynamically
+    create_table_sql := 'CREATE TABLE IF NOT EXISTS ' || partition_name || 
+                        ' PARTITION OF "LocationHistory" ' ||
+                        ' FOR VALUES FROM (''' || next_month || ''') TO (''' || next_month_plus_one || ''');';
+                        
+    -- Execute the dynamic SQL
+    EXECUTE create_table_sql;
+END;
+$$;
+
+-- Create the current month partition explicitly to ensure it exists immediately upon schema initialization
+DO $$
+DECLARE
+    current_month DATE := DATE_TRUNC('month', CURRENT_DATE);
+    next_month DATE := current_month + INTERVAL '1 month';
+    partition_name TEXT := '"LocationHistory_' || TO_CHAR(current_month, 'YYYY_MM') || '"';
+BEGIN
+    EXECUTE 'CREATE TABLE IF NOT EXISTS ' || partition_name || 
+            ' PARTITION OF "LocationHistory" ' ||
+            ' FOR VALUES FROM (''' || current_month || ''') TO (''' || next_month || ''');';
+END;
+$$;
 
 CREATE TABLE "CaregiverAvailability" (
     "id" UUID PRIMARY KEY DEFAULT gen_random_uuid(),
