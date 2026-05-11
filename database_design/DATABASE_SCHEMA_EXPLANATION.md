@@ -345,4 +345,49 @@ Maps users to their mobile hardware for push notifications (FCM/APNs).
 6.  **Soft Deletes & Partial Indexes:** Critical tables use a `deletedAt` column for logical deletion. Partial unique indexes (e.g., on `User.email`) allow re-registration with the same identifier once an old account is soft-deleted.
 7.  **Automated Rating Triggers:** Caregiver `ratingAvg` is managed by database-level triggers that aggregate published reviews. To prevent race conditions during high-volume concurrent updates, explicit row-level locking (`FOR UPDATE`) is implemented on the `CaregiverProfile` row being recalculated.
 8.  **PDPA Versioning:** Consent is stored in a dedicated `UserConsentHistory` table with versioning and document hashes, ensuring high legal traceability and compliance with PDPA requirements.
-9.  **Scalability for High-Volume Data:** Tables like `LocationHistory` are expected to grow rapidly. The design explicitly recommends table partitioning by `timestamp` (e.g., monthly) to maintain query performance as the dataset reaches millions of rows.
+9. Scalability for High-Volume Data: Tables like `LocationHistory` are expected to grow rapidly. The design explicitly recommends table partitioning by `timestamp` (e.g., monthly) to maintain query performance as the dataset reaches millions of rows.
+
+---
+
+## 8. Module to Database Mapping (ความสัมพันธ์ระหว่าง Module และ Database)
+
+จากโครงสร้าง **10 Main Modules** ของระบบ CareDee ตารางต่างๆ ในฐานข้อมูลถูกออกแบบมาเพื่อรองรับการทำงานในแต่ละส่วน ดังนี้:
+
+### 1. User Management & Access Control
+*   **`"User"`**: ตารางหลักที่เก็บข้อมูลพื้นฐานของทุก Role (Customer, Caregiver, Operator, Admin, Training Institute) โดยใช้ `UUID` เพื่อความปลอดภัยและ `deletedAt` สำหรับ PDPA
+*   **`"UserCredential"`**: แยกข้อมูลการพิสูจน์ตัวตน (Password/Social Login) ออกจากข้อมูลส่วนบุคคล เพื่อความปลอดภัยและการจัดการหลาย Auth Provider
+*   **`"UserConsentHistory"`**: เก็บประวัติการยอมรับข้อตกลง (PDPA) พร้อม `version` และ `documentHash` เพื่อใช้เป็นหลักฐานทางกฎหมาย
+
+### 2. Marketplace & Search
+*   **`"CaregiverProfile"`**: เก็บข้อมูลวิชาชีพ ทักษะ (`skills` เป็น Array) และ `ratingAvg` เพื่อความรวดเร็วในการค้นหา
+*   **`"CaregiverAvailability"`**: จัดการตารางกะเวลาทำงาน เพื่อตรวจสอบความว่างและป้องกันการจองทับซ้อน
+
+### 3. Matching Engine
+*   **`"MatchRecommendationLog"`**: บันทึกประวัติการจับคู่และเหตุผล (`reasoning` เป็น JSONB) เพื่อใช้ในการปรับปรุง Algorithm ในอนาคต
+
+### 4. Booking & Scheduling
+*   **`"Booking"`**: ตารางธุรกรรมหลัก จัดการสถานะการจอง พิกัด Check-in/out และราคา
+*   **`"CareRecipient"`**: แยกข้อมูลผู้รับการดูแลออกมา เนื่องจากลูกค้า 1 รายอาจจองให้ผู้ป่วยหลายคน โดยเก็บประวัติสุขภาพเป็น `JSONB` เพื่อความยืดหยุ่น
+
+### 5. Payment & Revenue Management
+*   **`"Transaction"`**: บันทึกเส้นทางการเงิน แยกระหว่างยอดรวม ยอดสุทธิ และค่าคอมมิชชั่น เพื่อความโปร่งใสในการตรวจสอบ
+
+### 6. Care Report System
+*   **`"CareReport"`**: ให้ Caregiver บันทึกกิจกรรมประจำวัน (`activities` เป็น JSONB) พร้อมหลักฐานภาพถ่าย (`mediaUrls`)
+
+### 7. Rating & Review System
+*   **`"Review"`**: เก็บผลตอบรับจากลูกค้าเพื่อประเมิน Caregiver
+*   **`"ReviewAppeal"`**: ระบบอุทธรณ์สำหรับ Caregiver ในกรณีที่ได้รับรีวิวที่ไม่เป็นธรรม
+
+### 8. Notification System
+*   **`"Notification"`**: จัดเก็บประวัติการแจ้งเตือนส่วนบุคคล
+*   **`"UserDevice"`**: จัดเก็บ Device Token เพื่อส่ง Push Notification แยกตาม Platform (iOS/Android)
+
+### 9. Operator & Admin Portal
+*   **`"SystemConfiguration"`**: เก็บค่าปรับตั้งค่าระบบที่ Admin สามารถแก้ไขได้ผ่านหน้าเว็บ (`JSONB`)
+*   **`"AuditLog"`**: บันทึกทุกความเคลื่อนไหวในระบบ (Immutable) เพื่อความปลอดภัยและ Audit
+*   **`"LocationHistory"`**: เก็บเส้นทาง GPS แบบ Time-series (Partitioned Table) เพื่อตรวจสอบการทำงานและความปลอดภัย
+
+### 10. Training Institute Interface
+*   **`"Certification"`**: จัดเก็บและตรวจสอบใบประกาศนียบัตรวิชาชีพ เชื่อมโยงด้วย `nationalId`
+
