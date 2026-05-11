@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareDee - Training Provider</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="mobile-layout">
+    <div class="mobile-frame">
+        <header class="app-header">
+            <div class="logo"><strong>CareDee Provider</strong></div>
+            <div class="notification-bell" style="font-size: 1.25rem; cursor: pointer;">🔔</div>
+        </header>
+
+        <main class="app-content">
+            <!-- Market Demand Section -->
+            <section id="demand-section">
+                <div style="margin-bottom: 1.5rem;">
+                    <h2 style="font-size: 1.25rem; margin-bottom: 0.25rem;">Market Demand</h2>
+                    <p style="font-size: 0.85rem; color: var(--secondary-color);">Top required skills this month</p>
+                </div>
+
+                <div class="grid" style="margin-bottom: 2rem;">
+                    <div class="card" style="padding: 1rem; border-top: 3px solid var(--danger-color);">
+                        <div style="font-size: 0.75rem; color: var(--secondary-color);">Dementia Care</div>
+                        <div style="font-size: 1.25rem; font-weight: 700; margin-top: 0.25rem;">+15.2%</div>
+                        <small style="color: var(--danger-color);">High Priority</small>
+                    </div>
+                    <div class="card" style="padding: 1rem; border-top: 3px solid var(--success-color);">
+                        <div style="font-size: 0.75rem; color: var(--secondary-color);">Physiotherapy</div>
+                        <div style="font-size: 1.25rem; font-weight: 700; margin-top: 0.25rem;">+8.4%</div>
+                        <small style="color: var(--success-color);">Steady Growth</small>
+                    </div>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <h3 style="margin: 0; font-size: 1rem;">Upskill Marketplace</h3>
+                    <button class="btn-primary" style="font-size: 0.75rem; padding: 0.4rem 0.75rem;" onclick="alert('Create new course modal')">+ New</button>
+                </div>
+
+                <div class="card" style="padding: 1rem; margin-bottom: 1rem;">
+                    <h4 style="font-size: 0.9rem; margin-bottom: 0.5rem;">Advanced Geriatrics 2024</h4>
+                    <p style="font-size: 0.8rem; color: var(--secondary-color); margin-bottom: 1rem;">4 Modules • 45 mins total</p>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span class="badge badge-success">Live Session</span>
+                        <button class="btn-secondary" style="font-size: 0.75rem; padding: 0.4rem 0.75rem;">Edit Course</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Upload Section -->
+            <section id="upload-section" style="display: none;">
+                <h2 style="font-size: 1.25rem; margin-bottom: 1.5rem;">Certificate Upload</h2>
+                <div class="card" style="text-align: center; border-style: dashed; padding: 2rem;">
+                    <div style="font-size: 2.5rem; margin-bottom: 1rem;">📄</div>
+                    <p style="font-size: 0.9rem; color: var(--secondary-color); margin-bottom: 1.5rem;">Upload graduate CSV/Excel to sync badges.</p>
+                    <button class="btn-primary" style="width: 100%;">Choose File</button>
+                </div>
+                
+                <h3 style="font-size: 1rem; margin-top: 2rem; margin-bottom: 1rem;">Recent Uploads</h3>
+                <div class="card" style="padding: 1rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <strong style="font-size: 0.85rem;">Ref: AB12_Batch</strong>
+                            <div style="font-size: 0.75rem; color: var(--text-muted);">Oct 20, 2023 • 25 students</div>
+                        </div>
+                        <span class="badge badge-success">Synced</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <a href="#" id="nav-demand" class="active" onclick="showSection('demand')">📊<br>Demand</a>
+            <a href="#" id="nav-upload" onclick="showSection('upload')">📤<br>Upload</a>
+            <a href="#" onclick="alert('Institue Profile')">🏢<br>Profile</a>
+        </nav>
+    </div>
+
+    <script>
+        function showSection(section) {
+            const sections = ['demand', 'upload'];
+            sections.forEach(s => {
+                const el = document.getElementById(s + '-section');
+                if (el) el.style.display = 'none';
+                
+                const nav = document.getElementById('nav-' + s);
+                if (nav) nav.classList.remove('active');
+            });
+
+            document.getElementById(section + '-section').style.display = 'block';
+            document.getElementById('nav-' + section).classList.add('active');
+        }
+    </script>
+</body>
+</html>
