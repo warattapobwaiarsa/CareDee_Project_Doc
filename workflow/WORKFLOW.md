@@ -276,7 +276,7 @@ sequenceDiagram
 
 ## 5. Admin View (มุมมองผู้ดูแลระบบ)
 
-มุ่งเน้นการรักษาความมั่นคงปลอดภัยของข้อมูล (Security) การกำหนดสิทธิ์ (RBAC) และการปฏิบัติตามกฎหมาย PDPA
+มุ่งเน้นการเข้าถึงระบบเพื่อรักษาความมั่นคงปลอดภัยของข้อมูล (Security) การกำหนดสิทธิ์ (RBAC) และการปฏิบัติตามกฎหมาย PDPA
 
 ```mermaid
 %%{init: { 'theme': 'base', 'themeVariables': { 'darkMode': false, 'background': '#ffffff', 'mainBkg': '#ffffff', 'primaryColor': '#ffffff', 'primaryTextColor': '#000000', 'primaryBorderColor': '#000000', 'lineColor': '#000000', 'secondaryColor': '#ffffff', 'tertiaryColor': '#ffffff', 'actorBkg': '#ffffff', 'actorTextColor': '#000000', 'actorLineColor': '#000000', 'participantBkg': '#ffffff', 'participantTextColor': '#000000', 'participantBorderColor': '#000000', 'signalColor': '#000000', 'signalTextColor': '#000000', 'labelTextColor': '#000000', 'loopTextColor': '#000000', 'noteBkgColor': '#ffffff', 'noteTextColor': '#000000', 'activationBkgColor': '#ffffff', 'activationBorderColor': '#000000', 'sequenceNumberColor': '#000000' }, 'themeCSS': 'svg { background-color: white !important; background: white !important; } rect, circle, path, line, polygon, .labelBox, .cluster rect, .actor, .participant, .note, .activation { fill: white !important; stroke: black !important; stroke-width: 2px !important; } text, tspan, .loopText, .messageText, .noteText, .sequenceNumber { fill: black !important; color: black !important; font-weight: bold !important; font-size: 14px !important; } .cluster rect { stroke-dasharray: 0 !important; }' } }%%
@@ -285,20 +285,29 @@ sequenceDiagram
 
     box white System Administration (การบริหารจัดการระบบ)
         actor AD as Admin
+        participant Auth as Auth System (2FA)
         participant Portal as Admin Portal (9)
         participant UM as User Mgmt (1)
         participant All as All Other Modules
     end
 
+    %% High Security Access
+    AD->>Auth: Secure Login + Multi-Factor Auth
+    Auth-->>AD: Admin Access Granted
+    AD->>Portal: Access System Audit Dashboard
+
+    %% Configuration & Review
     AD->>UM: Configure Role-Based Access Control
     alt KYC Verification Flow
-        AD->>UM: Review Documents
+        AD->>UM: Review Caregiver Documents
         alt Documents Valid
             UM->>Portal: Update Caregiver to "Verified"
         else Documents Invalid
             UM->>Portal: Flag for follow-up/Reject
         end
     end
+
+    %% Auditing & Compliance
     UM->>Portal: Log access audits
     All->>Portal: Feed system performance metrics
     Portal-->>AD: Display System Health & Audit Dashboard
@@ -306,17 +315,17 @@ sequenceDiagram
 ```
 
 **คำอธิบายทีละขั้นตอน (Step-by-step Explanation):**
-*   **Step 1:** Admin (AD) กำหนดสิทธิ์การเข้าถึงข้อมูลรายโมดูลผ่านระบบ User Mgmt (1) (Role-Based Access Control)
-*   **Step 2:** ระบบ User Mgmt (1) ส่งประวัติการเข้าใช้งาน (Access Audits) เข้าสู่ Portal (9)
-*   **Step 3:** ทุกโมดูลในระบบ ส่งข้อมูลประสิทธิภาพและการทำงาน (System Performance Metrics) เข้าสู่ Portal (9)
-*   **Step 4:** Admin Portal (9) แสดงผล Dashboard สุขภาพของระบบ (System Health) และประวัติการตรวจสอบให้ Admin (AD) เห็น
-*   **Step 5:** Admin (AD) ใช้ Portal (9) ในการสร้างรายงานการปฏิบัติตามกฎหมาย (เช่น PDPA Compliance Reports)
+*   **Step 1-3 (Secure Access):** Admin (AD) เข้าสู่ระบบด้วยความปลอดภัยสูงสุดผ่าน Multi-Factor Authentication (2FA) เพื่อเข้าถึง Admin Portal (9)
+*   **Step 4 (RBAC):** Admin กำหนดสิทธิ์การเข้าถึงข้อมูล (Role-Based Access Control) ให้กับพนักงานกลุ่มต่างๆ ผ่านระบบ User Mgmt (1)
+*   **Step 5-8 (KYC Review):** Admin ตรวจสอบเอกสารของผู้ดูแล (KYC) และทำการอนุมัติ (Verified) หรือปฏิเสธ (Reject) ตามความถูกต้องของข้อมูล
+*   **Step 9-11 (Auditing):** ระบบ User Mgmt และทุกโมดูล ส่งบันทึกการใช้งาน (Audits) และข้อมูลประสิทธิภาพระบบ (Metrics) เข้าสู่ Dashboard
+*   **Step 12:** Admin ใช้ Portal ในการตรวจสอบสุขภาพของระบบและสร้างรายงานสรุปผลการปฏิบัติตามกฎหมาย (เช่น PDPA Compliance)
 
 ---
 
 ## 6. Training Institute View (มุมมองสถาบันฝึกอบรม)
 
-เน้นการยระดับมาตรฐานบุคลากรและการใช้ข้อมูลเพื่อพัฒนาหลักสูตรให้ตรงกับความต้องการของตลาด
+เน้นการเริ่มต้นเข้าใช้งานเพื่อยกระดับมาตรฐานบุคลากรและการใช้ข้อมูลเพื่อพัฒนาหลักสูตรให้ตรงกับความต้องการของตลาด
 
 ```mermaid
 %%{init: { 'theme': 'base', 'themeVariables': { 'darkMode': false, 'background': '#ffffff', 'mainBkg': '#ffffff', 'primaryColor': '#ffffff', 'primaryTextColor': '#000000', 'primaryBorderColor': '#000000', 'lineColor': '#000000', 'secondaryColor': '#ffffff', 'tertiaryColor': '#ffffff', 'actorBkg': '#ffffff', 'actorTextColor': '#000000', 'actorLineColor': '#000000', 'participantBkg': '#ffffff', 'participantTextColor': '#000000', 'participantBorderColor': '#000000', 'signalColor': '#000000', 'signalTextColor': '#000000', 'labelTextColor': '#000000', 'loopTextColor': '#000000', 'noteBkgColor': '#ffffff', 'noteTextColor': '#000000', 'activationBkgColor': '#ffffff', 'activationBorderColor': '#000000', 'sequenceNumberColor': '#000000' }, 'themeCSS': 'svg { background-color: white !important; background: white !important; } rect, circle, path, line, polygon, .labelBox, .cluster rect, .actor, .participant, .note, .activation { fill: white !important; stroke: black !important; stroke-width: 2px !important; } text, tspan, .loopText, .messageText, .noteText, .sequenceNumber { fill: black !important; color: black !important; font-weight: bold !important; font-size: 14px !important; } .cluster rect { stroke-dasharray: 0 !important; }' } }%%
@@ -325,11 +334,18 @@ sequenceDiagram
 
     box white Training & Certification (การฝึกอบรมและรับรอง)
         actor TI as Training Provider
+        participant Auth as Auth System
         participant TI_Int as TI Interface (10)
         participant UM as User Mgmt (1)
         participant MT as Matching (3)
     end
 
+    %% Authentication
+    TI->>Auth: Secure Login (Institute Credentials)
+    Auth-->>TI: Access Granted
+    TI->>TI_Int: Access Certification Portal
+
+    %% Certification Upload
     TI->>TI_Int: Upload graduate certifications
     alt Certification Verification
         TI_Int->>UM: Verify data integrity
@@ -339,17 +355,19 @@ sequenceDiagram
             UM-->>TI: Reject upload with errors
         end
     end
+
+    %% Market Intelligence
     MT->>TI_Int: Feed market demand statistics
     TI_Int-->>TI: Display required skills in market
     TI->>TI_Int: Adjust curriculum based on data
 ```
 
 **คำอธิบายทีละขั้นตอน (Step-by-step Explanation):**
-*   **Step 1:** สถาบันฝึกอบรม (TI) อัปโหลดข้อมูลการสำเร็จการศึกษาและใบเซอร์ผ่าน TI Interface (10)
-*   **Step 2:** TI Interface (10) ตรวจสอบและอัปเดตข้อมูลประวัติผู้ดูแลในระบบ User Mgmt (1) เพื่อยืนยันคุณภาพ
-*   **Step 3:** Matching Engine (3) ส่งข้อมูลสถิติความต้องการทักษะในตลาด (Market Demand) กลับไปยัง TI Interface (10)
-*   **Step 4:** TI Interface (10) แสดงผลข้อมูลทักษะที่เป็นที่ต้องการของตลาดให้สถาบันฝึกอบรม (TI) ทราบ
-*   **Step 5:** สถาบันฝึกอบรม (TI) นำข้อมูลที่ได้รับไปปรับปรุงหลักสูตรการสอน (Curriculum) ให้สอดคล้องกับความต้องการจริงของตลาดแรงงาน
+*   **Step 1-3 (Authentication):** ผู้ให้บริการฝึกอบรม (TI) เข้าสู่ระบบด้วยบัญชีองค์กร และเข้าใช้งาน TI Interface (10) เพื่อจัดการข้อมูล
+*   **Step 4 (Certification Upload):** สถาบันฝึกอบรม (TI) อัปโหลดข้อมูลการสำเร็จการศึกษาและใบเซอร์ผ่าน TI Interface (10)
+*   **Step 5-8 (Verification):** ระบบตรวจสอบความถูกต้องของข้อมูล (Data Integrity) หากถูกต้องจะทำการอัปเดต Badge หรือสถานะให้ผู้ดูแลในระบบ User Mgmt (1) ทันที
+*   **Step 9-10 (Market Intelligence):** Matching Engine (3) ส่งสถิติทักษะที่เป็นที่ต้องการของตลาดกลับมาที่ Portal เพื่อให้สถาบันวิเคราะห์
+*   **Step 11 (Adjustment):** สถาบันฝึกอบรม (TI) นำข้อมูลความต้องการจริงมาปรับปรุงหลักสูตร (Curriculum) ให้ทันสมัยและตรงจุด
 
 ---
 
