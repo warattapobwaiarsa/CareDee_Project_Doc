@@ -3,17 +3,19 @@
 
 -- Extensions
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";
+CREATE EXTENSION IF NOT EXISTS "postgis";
 
 -- Enums
 CREATE TYPE "Role" AS ENUM ('CUSTOMER', 'CAREGIVER', 'OPERATOR', 'ADMIN', 'TRAINING_INSTITUTE');
 CREATE TYPE "AuthProvider" AS ENUM ('LOCAL', 'GOOGLE', 'FACEBOOK', 'LINE', 'APPLE');
 CREATE TYPE "BookingStatus" AS ENUM ('PENDING', 'CONFIRMED', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED');
 CREATE TYPE "TransactionStatus" AS ENUM ('PENDING', 'SUCCESS', 'FAILED', 'REFUNDED');
-CREATE TYPE "CertificationStatus" AS ENUM ('PENDING', 'APPROVED', 'REJECTED', 'REVOKED');
+CREATE TYPE "CertificationStatus" AS ENUM ('PENDING', 'APPROVED', 'REJECTED', 'REVOKED', 'EXPIRED');
 CREATE TYPE "DayOfWeek" AS ENUM ('MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY');
 CREATE TYPE "ApprovalStatus" AS ENUM ('PENDING', 'APPROVED', 'REJECTED');
 CREATE TYPE "ReviewAppealStatus" AS ENUM ('PENDING', 'IN_REVIEW', 'RESOLVED', 'REJECTED');
 CREATE TYPE "TransactionType" AS ENUM ('DEPOSIT', 'FINAL_PAYMENT', 'REFUND', 'RETRY', 'ADJUSTMENT');
+CREATE TYPE "NotificationStatus" AS ENUM ('PENDING', 'SENT', 'FAILED');
 
 -- Tables
 
@@ -74,7 +76,7 @@ CREATE TABLE "CaregiverProfile" (
     "id" UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     "userId" UUID NOT NULL UNIQUE REFERENCES "User"("id") ON DELETE CASCADE,
     "operatorId" UUID REFERENCES "User"("id") ON DELETE SET NULL,
-    "nationalId" TEXT NOT NULL UNIQUE,
+    "nationalId" TEXT NOT NULL UNIQUE, -- Application-level encryption recommended (SA-003)
     "approvalStatus" "ApprovalStatus" NOT NULL DEFAULT 'PENDING',
     "skills" TEXT[],
     "serviceArea" TEXT NOT NULL,
@@ -87,8 +89,7 @@ CREATE TABLE "CaregiverProfile" (
 CREATE TABLE "LocationHistory" (
     "id" UUID DEFAULT gen_random_uuid(),
     "userId" UUID NOT NULL REFERENCES "User"("id") ON DELETE CASCADE,
-    "latitude" DOUBLE PRECISION NOT NULL,
-    "longitude" DOUBLE PRECISION NOT NULL,
+    "location" GEOGRAPHY(POINT, 4326) NOT NULL,
     "timestamp" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
     PRIMARY KEY ("id", "timestamp")
 ) PARTITION BY RANGE ("timestamp");
@@ -128,14 +129,13 @@ CREATE TABLE "Booking" (
     "caregiverId" UUID NOT NULL REFERENCES "CaregiverProfile"("id"),
     "serviceType" TEXT NOT NULL,
     "locationAddress" TEXT NOT NULL,
+    "locationGeog" GEOGRAPHY(POINT, 4326),
     "scheduledStart" TIMESTAMP WITH TIME ZONE NOT NULL,
     "scheduledEnd" TIMESTAMP WITH TIME ZONE NOT NULL,
     "checkInTime" TIMESTAMP WITH TIME ZONE,
-    "checkInLat" DOUBLE PRECISION,
-    "checkInLng" DOUBLE PRECISION,
+    "checkInLocation" GEOGRAPHY(POINT, 4326),
     "checkOutTime" TIMESTAMP WITH TIME ZONE,
-    "checkOutLat" DOUBLE PRECISION,
-    "checkOutLng" DOUBLE PRECISION,
+    "checkOutLocation" GEOGRAPHY(POINT, 4326),
     "status" "BookingStatus" NOT NULL DEFAULT 'PENDING',
     "cancellationReason" TEXT,
     "cancelledBy" UUID REFERENCES "User"("id"),
@@ -167,8 +167,7 @@ CREATE TABLE "CareReport" (
     "bookingId" UUID NOT NULL UNIQUE REFERENCES "Booking"("id"),
     "activities" JSONB NOT NULL,
     "mediaUrls" TEXT[],
-    "latitude" DOUBLE PRECISION,
-    "longitude" DOUBLE PRECISION,
+    "location" GEOGRAPHY(POINT, 4326),
     "submittedAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
     "deletedAt" TIMESTAMP WITH TIME ZONE
 );
@@ -188,6 +187,9 @@ CREATE TABLE "Notification" (
     "userId" UUID NOT NULL REFERENCES "User"("id") ON DELETE CASCADE,
     "type" TEXT NOT NULL,
     "message" TEXT NOT NULL,
+    "status" "NotificationStatus" NOT NULL DEFAULT 'PENDING',
+    "retryCount" INTEGER NOT NULL DEFAULT 0,
+    "lastRetryAt" TIMESTAMP WITH TIME ZONE,
     "isRead" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
 );
@@ -197,7 +199,7 @@ CREATE TABLE "AuditLog" (
     "userId" UUID NOT NULL REFERENCES "User"("id"),
     "action" TEXT NOT NULL,
     "entity" TEXT NOT NULL,
-    "details" JSONB NOT NULL,
+    "details" JSONB NOT NULL, -- Recommended to store {before: {...}, after: {...}}
     "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
 );
 
@@ -271,6 +273,21 @@ CREATE TRIGGER trg_update_caregiver_rating
 AFTER INSERT OR UPDATE OR DELETE ON "Review"
 FOR EACH ROW EXECUTE FUNCTION update_caregiver_rating();
 
+-- Trigger to handle certification expiry (Pseudo-logic, usually handled by a cron/worker but can be partially automated)
+CREATE OR REPLACE FUNCTION check_certification_status()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW."expiryDate" < NOW() THEN
+        NEW."status" := 'EXPIRED';
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_check_certification_expiry
+BEFORE INSERT OR UPDATE ON "Certification"
+FOR EACH ROW EXECUTE FUNCTION check_certification_status();
+
 -- Indexes for performance
 CREATE UNIQUE INDEX "idx_user_email_active" ON "User"("email") WHERE "deletedAt" IS NULL;
 CREATE UNIQUE INDEX "idx_user_phone_active" ON "User"("phone") WHERE "deletedAt" IS NULL;
@@ -283,12 +300,28 @@ CREATE INDEX "idx_credential_login" ON "UserCredential"("authProvider", "provide
 CREATE INDEX "idx_credential_user" ON "UserCredential"("userId");
 CREATE INDEX "idx_caregiver_operator" ON "CaregiverProfile"("operatorId");
 CREATE INDEX "idx_caregiver_service_area" ON "CaregiverProfile"("serviceArea");
-CREATE INDEX "idx_booking_customer" ON "Booking"("customerId");
-CREATE INDEX "idx_booking_caregiver" ON "Booking"("caregiverId");
-CREATE INDEX "idx_booking_scheduled_start" ON "Booking"("scheduledStart");
-CREATE INDEX "idx_booking_status" ON "Booking"("status");
-CREATE INDEX "idx_transaction_external_ref" ON "Transaction"("externalRefId");
-CREATE INDEX "idx_notification_user_unread" ON "Notification"("userId") WHERE "isRead" = false;
+
+-- Spatial Index for LocationHistory
+CREATE INDEX "idx_location_history_geom" ON "LocationHistory" USING GIST ("location");
+
+-- Booking Indexes
+CREATE INDEX "idx_booking_customer" ON "Booking"("customerId") WHERE "deletedAt" IS NULL;
+CREATE INDEX "idx_booking_caregiver" ON "Booking"("caregiverId") WHERE "deletedAt" IS NULL;
+CREATE INDEX "idx_booking_scheduled_start" ON "Booking"("scheduledStart") WHERE "deletedAt" IS NULL;
+CREATE INDEX "idx_booking_status" ON "Booking"("status") WHERE "deletedAt" IS NULL;
+CREATE INDEX "idx_booking_active" ON "Booking"("id") WHERE "deletedAt" IS NULL;
+CREATE INDEX "idx_booking_location" ON "Booking" USING GIST ("locationGeog");
+
+-- Transaction Indexes
+CREATE INDEX "idx_transaction_booking" ON "Transaction"("bookingId") WHERE "deletedAt" IS NULL;
+CREATE UNIQUE INDEX "idx_transaction_external_ref" ON "Transaction"("externalRefId") WHERE "deletedAt" IS NULL;
+
+-- CareReport Indexes
+CREATE INDEX "idx_care_report_booking" ON "CareReport"("bookingId") WHERE "deletedAt" IS NULL;
+CREATE INDEX "idx_care_report_location" ON "CareReport" USING GIST ("location");
+
+-- Other Indexes
+CREATE INDEX "idx_notification_user_unread" ON "Notification"("userId") WHERE "isRead" = false AND "status" != 'FAILED';
 CREATE INDEX "idx_audit_log_user" ON "AuditLog"("userId");
 CREATE INDEX "idx_audit_log_created_at" ON "AuditLog"("createdAt");
 CREATE INDEX "idx_system_config_key" ON "SystemConfiguration"("key");

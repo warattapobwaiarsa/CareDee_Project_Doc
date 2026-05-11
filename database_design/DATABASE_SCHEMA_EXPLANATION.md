@@ -8,9 +8,11 @@ This document provides a thorough explanation of the PostgreSQL schema for the C
 
 The CareDee database is designed to handle complex workflows across 10 main modules, prioritizing security (PDPA), financial traceability, and high-volume scalability.
 
+- **Extensions:** `pgcrypto` for UUIDs/hashing, `postgis` for high-performance spatial queries.
 - **Total Tables:** 18 Logical Tables (including 1 Partitioned Table)
 - **Total Columns:** 158 Columns
 - **Primary Key Strategy:** UUID (v4) for all entities.
+- **Spatial Data:** Uses `GEOGRAPHY(POINT, 4326)` for precise distance calculations and area filtering.
 - **Audit Strategy:** Soft deletes (`deletedAt`) and immutable Audit Logs.
 
 ### Entity Relationship Summary
@@ -96,7 +98,7 @@ Stores professional and geographical data for caregivers.
 | `id` | `UUID` | Primary Key | Unique profile identifier. |
 | `userId` | `UUID` | Link to User table | 1-to-1 relationship with the base User entity. |
 | `operatorId` | `UUID` | Managed by | Link to the Service Operator (User) overseeing this caregiver. |
-| `nationalId` | `TEXT` | Thai ID Number (Unique) | Encrypted at app-level; used for background checks. |
+| `nationalId` | `TEXT` | Thai ID Number (Unique) | **Encrypted at app-level (SA-003)**; used for background checks. |
 | `approvalStatus` | `ApprovalStatus` | Verification state | Enum: PENDING, APPROVED, REJECTED. |
 | `skills` | `TEXT[]` | List of expertise | Array type allows storing multiple skills efficiently. |
 | `serviceArea` | `TEXT` | Coverage area | Geographic scope of work (e.g., District name or Polygon JSON). |
@@ -112,8 +114,7 @@ Time-series location data for tracking and auditing. This table uses **Declarati
 | :--- | :--- | :--- | :--- |
 | `id` | `UUID` | ID Part | Component of the Composite Primary Key. |
 | `userId` | `UUID` | Link to User | Identifies which user was at the location. |
-| `latitude` | `DOUBLE PRECISION`| GPS Latitude | High-precision coordinate. |
-| `longitude` | `DOUBLE PRECISION`| GPS Longitude | High-precision coordinate. |
+| `location` | `GEOGRAPHY` | GPS Point | PostGIS GEOGRAPHY(POINT, 4326) for efficient spatial indexing and distance logic. |
 | `timestamp` | `TIMESTAMPTZ`| Event time (PK) | Partition key; used for range partitioning and retention policies. |
 
 **Partitioning Strategy:**
@@ -122,6 +123,7 @@ Time-series location data for tracking and auditing. This table uses **Declarati
   - Improves query performance on large datasets.
   - Simplifies data retention (dropping an entire month's partition is more efficient than `DELETE`).
   - Scales effectively to millions of records.
+  - **Spatial Indexing:** A GIST index is applied to the `location` column for rapid proximity lookups.
 
 ### Table: `"CareRecipient"`
 Stores details of the person receiving care.
@@ -160,9 +162,9 @@ Verified professional credentials.
 | `nationalId` | `TEXT` | Linking Identity | The primary key used to "claim" certificates during registration. |
 | `name` | `TEXT` | Certificate Name | Title of the professional qualification or course. |
 | `issuingInstituteId` | `UUID` | Verified by | Link to a User with the `TRAINING_INSTITUTE` role. |
-| `status` | `CertificationStatus`| Verification state | Tracks the lifecycle of a certificate. |
+| `status` | `CertificationStatus`| Verification state | Tracks the lifecycle of a certificate (e.g., PENDING, APPROVED, EXPIRED). |
 | `fileUrl` | `TEXT` | Certificate File | Link to the digital document in Cloud Storage. |
-| `expiryDate` | `TIMESTAMPTZ`| Validity limit | Standard compliance tracking for certificate renewal. |
+| `expiryDate` | `TIMESTAMPTZ`| Validity limit | Standard compliance tracking. **Status automatically updated to EXPIRED via trigger.** |
 | `createdAt` | `TIMESTAMPTZ`| Record creation time | Standard audit tracking. |
 | `updatedAt` | `TIMESTAMPTZ`| Last update time | Standard audit tracking. |
 
@@ -180,15 +182,13 @@ The central transactional table managing care sessions.
 | `careRecipientId` | `UUID` | Recipient Link | Foreign Key to the CareRecipient receiving the service. |
 | `caregiverId` | `UUID` | Caregiver Link | Foreign Key to the CaregiverProfile assigned to this session. |
 | `serviceType` | `TEXT` | Type of care | E.g., 'Daily Care', 'Specialist Care'. |
-| `locationAddress` | `TEXT` | Service Location | The physical address where care is provided. |
+| `locationGeog` | `GEOGRAPHY` | Service Point | PostGIS point for distance and area logic. |
 | `scheduledStart` | `TIMESTAMPTZ`| Planned Start | The agreed-upon date and time for the session to begin. |
 | `scheduledEnd` | `TIMESTAMPTZ`| Planned End | The agreed-upon date and time for the session to conclude. |
 | `checkInTime` | `TIMESTAMPTZ`| Actual Start | Verified time when the caregiver started the session. |
-| `checkInLat` | `DOUBLE PRECISION`| Check-in Latitude | GPS coordinate for physical presence verification at start. |
-| `checkInLng` | `DOUBLE PRECISION`| Check-in Longitude | GPS coordinate for physical presence verification at start. |
+| `checkInLocation` | `GEOGRAPHY` | Check-in Point | GPS coordinate for physical presence verification at start. |
 | `checkOutTime` | `TIMESTAMPTZ`| Actual End | Verified time when the caregiver ended the session. |
-| `checkOutLat` | `DOUBLE PRECISION`| Check-out Latitude | GPS coordinate for physical presence verification at end. |
-| `checkOutLng` | `DOUBLE PRECISION`| Check-out Longitude | GPS coordinate for physical presence verification at end. |
+| `checkOutLocation` | `GEOGRAPHY` | Check-out Point | GPS coordinate for physical presence verification at end. |
 | `status` | `BookingStatus` | Workflow state | Enum ensures only valid transitions (PENDING, CONFIRMED, etc.). |
 | `cancellationReason`| `TEXT` | Cancel Detail | Qualitative reason for cancelling the booking. |
 | `cancelledBy` | `UUID` | Cancelled By | Link to the User who performed the cancellation. |
@@ -234,8 +234,7 @@ Daily logs of caregiver activities during a booking.
 | `bookingId` | `UUID` | Link to Booking | 1-to-1 relationship linking the report to a specific session. |
 | `activities` | `JSONB` | Task checklist | Stores what was done (e.g., 'Bathed: Yes') in a flexible JSON format. |
 | `mediaUrls` | `TEXT[]` | Proof of care | Links to photos of food/environment for quality assurance and family visibility. |
-| `latitude` | `DOUBLE PRECISION`| Report Latitude | GPS coordinate at the time of report submission. |
-| `longitude` | `DOUBLE PRECISION`| Report Longitude | GPS coordinate at the time of report submission. |
+| `location` | `GEOGRAPHY` | Report Point | PostGIS GPS coordinate at the time of report submission. |
 | `submittedAt` | `TIMESTAMPTZ`| Submission Time | Exact timestamp when the caregiver finalized the report. |
 | `deletedAt` | `TIMESTAMPTZ`| Soft delete time | Support for logical deletion of care reports. |
 
@@ -318,6 +317,9 @@ User-facing alerts and messages delivered across multiple channels (Push, SMS, E
 | `userId` | `UUID` | Target Recipient | Foreign Key to the User receiving the alert. |
 | `type` | `TEXT` | Category | E.g., 'BOOKING_CONFIRMED', 'PAYMENT_FAILED' for filtering. |
 | `message` | `TEXT` | Alert Content | The actual text shown to the user. |
+| `status` | `NotificationStatus`| Queue State | Enum: PENDING, SENT, FAILED. |
+| `retryCount` | `INTEGER` | Retry Tracker | Number of failed attempts to deliver the alert. |
+| `lastRetryAt`| `TIMESTAMPTZ`| Last Attempt | Timestamp of the most recent delivery attempt. |
 | `isRead` | `BOOLEAN` | Read Status | Tracks if the user has interacted with or seen the alert. |
 | `createdAt` | `TIMESTAMPTZ`| Audit timestamp | Record creation time; used for chronological display. |
 
@@ -345,7 +347,10 @@ Maps users to their mobile hardware for push notifications (FCM/APNs).
 6.  **Soft Deletes & Partial Indexes:** Critical tables use a `deletedAt` column for logical deletion. Partial unique indexes (e.g., on `User.email`) allow re-registration with the same identifier once an old account is soft-deleted.
 7.  **Automated Rating Triggers:** Caregiver `ratingAvg` is managed by database-level triggers that aggregate published reviews. To prevent race conditions during high-volume concurrent updates, explicit row-level locking (`FOR UPDATE`) is implemented on the `CaregiverProfile` row being recalculated.
 8.  **PDPA Versioning:** Consent is stored in a dedicated `UserConsentHistory` table with versioning and document hashes, ensuring high legal traceability and compliance with PDPA requirements.
-9. Scalability for High-Volume Data: Tables like `LocationHistory` are expected to grow rapidly. The design explicitly recommends table partitioning by `timestamp` (e.g., monthly) to maintain query performance as the dataset reaches millions of rows.
+9. **Scalability for High-Volume Data:** Tables like `LocationHistory` are expected to grow rapidly. The design explicitly recommends table partitioning by `timestamp` (e.g., monthly) to maintain query performance as the dataset reaches millions of rows.
+10. **PostGIS & Spatial Intelligence:** All location-based data (history, bookings, reports) uses PostGIS `GEOGRAPHY` types instead of simple numeric coordinates. This allows the system to perform complex geographic queries (e.g., "Caregivers within 10km of customer") with high precision and speed.
+11. **Optimized Indexing for Soft Deletes:** Critical tables (`Booking`, `Transaction`, `CareReport`) utilize **Partial Indexes** that filter out soft-deleted records. This keeps indexes lean and significantly accelerates queries for active operational data.
+12. **Automated Lifecycle Management:** Triggers are used for high-integrity automation, such as the aggregation of caregiver ratings and the automatic expiration of certifications based on their validity dates.
 
 ---
 
