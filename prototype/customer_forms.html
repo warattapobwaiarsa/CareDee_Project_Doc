@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareDee - Customer Portal (Prototype)</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="logo"><strong>CareDee (แคร์ดี)</strong></div>
+        <div class="header-actions">
+            <nav>
+                <ul>
+                    <li><a href="#" class="active" onclick="showSection('search')">ค้นหาผู้ดูแล</a></li>
+                    <li><a href="#" onclick="showSection('profiles')">โปรไฟล์ผู้ป่วย</a></li>
+                    <li><a href="#" onclick="showSection('bookings')">การจองของฉัน</a></li>
+                    <li><a href="#" onclick="showSection('chat')">แชท</a></li>
+                </ul>
+            </nav>
+            <div class="notification-bell" onclick="toggleNotifications()">
+                🔔<span class="count">2</span>
+                <div id="notification-dropdown" class="notification-dropdown">
+                    <div class="notification-item"><b>คุณสมศรี</b> ยอมรับการจองของคุณแล้ว</div>
+                    <div class="notification-item">โปรดประเมินการบริการของคุณมานะ</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Section: Search & Marketplace -->
+        <section id="search-section">
+            <div class="card">
+                <h2>ค้นหาผู้ดูแลที่เหมาะกับคุณ</h2>
+                <div class="grid">
+                    <div class="form-group">
+                        <label>ประเภทการดูแล</label>
+                        <select>
+                            <option>ดูแลผู้สูงอายุ (Elderly Care)</option>
+                            <option>ดูแลผู้ป่วยพักฟื้น (Recovery Care)</option>
+                            <option>ดูแลเด็ก (Child Care)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>พื้นที่บริการ (จังหวัด/เขต)</label>
+                        <input type="text" placeholder="ระบุพื้นที่ เช่น กรุงเทพฯ, นนทบุรี">
+                    </div>
+                    <div class="form-group" style="display: flex; align-items: flex-end;">
+                        <button class="btn-primary" onclick="searchCaregivers()">ค้นหาเลย</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="search-results" style="display: none;">
+                <h3>ผลการค้นหาที่แนะนำ</h3>
+                <div class="grid">
+                    <div class="card">
+                        <h4>คุณสมศรี (พยาบาลวิชาชีพ)</h4>
+                        <p><span class="badge badge-success">ยืนยันตัวตนแล้ว</span></p>
+                        <p>ความเชี่ยวชาญ: ผู้สูงอายุที่มีภาวะสมองเสื่อม</p>
+                        <p>คะแนน: ⭐ 4.9 (120 รีวิว)</p>
+                        <p>ค่าบริการ: 1,500 บาท/วัน</p>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button class="btn-success" onclick="openBooking('คุณสมศรี')">จองตอนนี้</button>
+                            <button class="btn-secondary" onclick="showSection('chat')">คุยก่อนจอง</button>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h4>คุณมานะ (ผู้ช่วยพยาบาล)</h4>
+                        <p><span class="badge badge-success">ยืนยันตัวตนแล้ว</span></p>
+                        <p>ความเชี่ยวชาญ: กายภาพบำบัดเบื้องต้น</p>
+                        <p>คะแนน: ⭐ 4.7 (85 รีวิว)</p>
+                        <p>ค่าบริการ: 1,200 บาท/วัน</p>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button class="btn-success" onclick="openBooking('คุณมานะ')">จองตอนนี้</button>
+                            <button class="btn-secondary" onclick="showSection('chat')">คุยก่อนจอง</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section: Patient Profiles (New) -->
+        <section id="profiles-section" style="display: none;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <h2>โปรไฟล์ผู้ป่วย / ผู้รับบริการ</h2>
+                <button class="btn-primary" onclick="alert('แสดงฟอร์มเพิ่มโปรไฟล์ใหม่')">+ เพิ่มโปรไฟล์</button>
+            </div>
+            <div class="grid">
+                <div class="card profile-card active">
+                    <h4>คุณตาบุญมี (คุณพ่อ)</h4>
+                    <p>อายุ: 75 ปี | น้ำหนัก: 65 กก.</p>
+                    <p><b>โรคประจำตัว:</b> ความดันโลหิตสูง, เบาหวาน</p>
+                    <p><b>แพ้ยา:</b> ไม่มี</p>
+                    <p><b>ระดับการช่วยเหลือ:</b> กลุ่มติดบ้าน (เดินได้แต่ต้องมีคนช่วย)</p>
+                    <button class="btn-secondary">แก้ไข</button>
+                </div>
+            </div>
+
+            <h2 style="margin-top: 2rem;">สมุดที่อยู่ (Address Book)</h2>
+            <div class="grid">
+                <div class="card address-card active">
+                    <h4>บ้านพักอาศัย (หลัก)</h4>
+                    <p>123 ม.4 ซอยสุขุมวิท 101, แขวงบางจาก, เขตพระโขนง, กทม.</p>
+                    <p>โทร: 081-XXX-XXXX</p>
+                    <button class="btn-secondary">แก้ไข</button>
+                </div>
+                <div class="card address-card">
+                    <h4>โรงพยาบาลจุฬาลงกรณ์</h4>
+                    <p>อาคารภูมิสิริ ชั้น 12 ห้อง 1204</p>
+                    <button class="btn-secondary">แก้ไข</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section: Booking Form -->
+        <section id="booking-section" style="display: none;">
+            <div class="card">
+                <h2>รายละเอียดการจอง: <span id="caregiver-name-display"></span></h2>
+                
+                <div class="form-group">
+                    <label>เลือกผู้รับบริการ (จากโปรไฟล์)</label>
+                    <select>
+                        <option>คุณตาบุญมี (คุณพ่อ)</option>
+                        <option>เพิ่มโปรไฟล์ใหม่...</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>สถานที่รับบริการ</label>
+                    <select>
+                        <option>บ้านพักอาศัย (หลัก)</option>
+                        <option>โรงพยาบาลจุฬาลงกรณ์</option>
+                        <option>เพิ่มที่อยู่ใหม่...</option>
+                    </select>
+                </div>
+
+                <div class="grid">
+                    <div class="form-group">
+                        <label>วันที่เริ่มให้บริการ</label>
+                        <input type="date">
+                    </div>
+                    <div class="form-group">
+                        <label>จำนวนวัน</label>
+                        <input type="number" value="1" min="1">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>หมายเหตุเพิ่มเติม (ความต้องการพิเศษ)</label>
+                    <textarea rows="3" placeholder="เช่น ผู้ป่วยต้องทานยาตอนกี่โมง..."></textarea>
+                </div>
+                <div style="display: flex; gap: 1rem;">
+                    <button class="btn-primary" onclick="proceedToPayment()">ดำเนินการชำระเงิน</button>
+                    <button class="btn-secondary" onclick="showSection('search')">ยกเลิก</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section: Chat (New) -->
+        <section id="chat-section" style="display: none;">
+            <h2>ข้อความสื่อสาร</h2>
+            <div class="grid" style="grid-template-columns: 300px 1fr;">
+                <div class="card" style="padding: 1rem;">
+                    <div class="notification-item" style="background: #f0f7ff; border-radius: 4px;"><b>คุณสมศรี</b><br><small>พิมพ์ข้อความล่าสุด...</small></div>
+                    <div class="notification-item"><b>คุณมานะ</b><br><small>สวัสดีครับ ยินดีให้บริการครับ</small></div>
+                </div>
+                <div class="card" style="padding: 0;">
+                    <div class="chat-container">
+                        <div class="chat-messages">
+                            <div class="message message-received">สวัสดีค่ะ สนใจให้ดูแลคุณตาช่วงวันไหนคะ?</div>
+                            <div class="message message-sent">สวัสดีครับ อยากให้มาช่วงวันที่ 12-15 พ.ค. ครับ</div>
+                            <div class="message message-received">ช่วงนั้นว่างพอดีค่ะ คุณตามีภาวะช่วยเหลือตัวเองได้ระดับไหนคะ?</div>
+                        </div>
+                        <div class="chat-input">
+                            <input type="text" placeholder="พิมพ์ข้อความที่นี่...">
+                            <button class="btn-primary">ส่ง</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section: Payment Screen -->
+        <section id="payment-section" style="display: none;">
+            <div class="card" style="text-align: center;">
+                <h2>ชำระเงิน (Secure Payment)</h2>
+                <p>ยอดที่ต้องชำระ: <strong>1,500 บาท</strong></p>
+                <div style="margin: 2rem 0;">
+                    <button class="btn-primary" style="padding: 1rem 3rem;" onclick="confirmPayment()">
+                        ชำระด้วย QR Code / บัตรเครดิต
+                    </button>
+                </div>
+                <p style="font-size: 0.9rem; color: var(--secondary-color);">
+                    * ระบบจะเก็บเงินไว้จนกว่างานจะสำเร็จ (Escrow) ตามนโยบาย PDPA และความปลอดภัย
+                </p>
+            </div>
+        </section>
+
+        <!-- Section: My Bookings -->
+        <section id="bookings-section" style="display: none;">
+            <h2>รายการจองของฉัน</h2>
+            <div class="card">
+                <div style="display: flex; justify-content: space-between;">
+                    <div>
+                        <h4>คุณสมศรี</h4>
+                        <p>ผู้ป่วย: คุณตาบุญมี | วันที่: 12 พ.ค. 2026</p>
+                        <p>สถานะ: <span class="badge badge-warning">รอยืนยันจากผู้ดูแล</span></p>
+                    </div>
+                    <div>
+                        <button class="btn-secondary" onclick="showSection('chat')">แชท</button>
+                        <button class="btn-danger">ยกเลิกการจอง</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section: Rating & Review -->
+        <section id="rating-section" style="display: none;">
+            <div class="card">
+                <h2>ประเมินความพึงพอใจ</h2>
+                <p>งานสำเร็จแล้ว! โปรดให้คะแนนคุณสมศรี</p>
+                <div class="form-group">
+                    <label>คะแนน (Rating)</label>
+                    <div class="star-rating">
+                        <span class="star active">★</span>
+                        <span class="star active">★</span>
+                        <span class="star active">★</span>
+                        <span class="star active">★</span>
+                        <span class="star">★</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>ความคิดเห็น</label>
+                    <textarea rows="4" placeholder="แชร์ประสบการณ์ของคุณ..."></textarea>
+                </div>
+                <button class="btn-primary" onclick="submitRating()">ส่งประเมิน</button>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        function showSection(section) {
+            const sections = ['search', 'profiles', 'booking', 'chat', 'payment', 'bookings', 'rating'];
+            sections.forEach(s => {
+                const el = document.getElementById(s + '-section');
+                if(el) el.style.display = 'none';
+            });
+
+            const navLinks = document.querySelectorAll('nav a');
+            navLinks.forEach(link => link.classList.remove('active'));
+
+            if (section === 'search') {
+                document.getElementById('search-section').style.display = 'block';
+                navLinks[0].classList.add('active');
+            } else if (section === 'profiles') {
+                document.getElementById('profiles-section').style.display = 'block';
+                navLinks[1].classList.add('active');
+            } else if (section === 'bookings') {
+                document.getElementById('bookings-section').style.display = 'block';
+                navLinks[2].classList.add('active');
+            } else if (section === 'chat') {
+                document.getElementById('chat-section').style.display = 'block';
+                navLinks[3].classList.add('active');
+            } else if (section === 'rating') {
+                document.getElementById('rating-section').style.display = 'block';
+            } else if (section === 'booking') {
+                document.getElementById('booking-section').style.display = 'block';
+            } else if (section === 'payment') {
+                document.getElementById('payment-section').style.display = 'block';
+            }
+        }
+
+        function toggleNotifications() {
+            const dropdown = document.getElementById('notification-dropdown');
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function searchCaregivers() {
+            document.getElementById('search-results').style.display = 'block';
+        }
+
+        function openBooking(name) {
+            document.getElementById('caregiver-name-display').innerText = name;
+            showSection('booking');
+        }
+
+        function proceedToPayment() {
+            showSection('payment');
+        }
+
+        function confirmPayment() {
+            alert('ชำระเงินสำเร็จ! ระบบกำลังแจ้งเตือนผู้ดูแล');
+            showSection('bookings');
+        }
+
+        function submitRating() {
+            alert('ขอบคุณสำหรับคำแนะนำ! เราได้รับรีวิวของคุณแล้ว');
+            showSection('search');
+        }
+
+        // Close dropdown when clicking outside
+        window.onclick = function(event) {
+            if (!event.target.matches('.notification-bell') && !event.target.matches('.count')) {
+                const dropdown = document.getElementById('notification-dropdown');
+                if (dropdown && dropdown.style.display === 'block') {
+                    dropdown.style.display = 'none';
+                }
+            }
+        }
+    </script>
+</body>
+</html>

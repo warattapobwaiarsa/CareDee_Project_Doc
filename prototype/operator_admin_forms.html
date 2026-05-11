@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareDee - Operator & Admin Portal (Prototype)</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .sidebar {
+            width: 250px;
+            background: #2c3e50;
+            color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            padding: 1rem;
+            overflow-y: auto;
+        }
+        .main-content {
+            margin-left: 280px;
+        }
+        .sidebar-nav ul {
+            list-style: none;
+            padding: 0;
+        }
+        .sidebar-nav li {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #34495e;
+            cursor: pointer;
+        }
+        .sidebar-nav li:hover, .sidebar-nav li.active {
+            color: var(--primary-color);
+        }
+        .stat-card {
+            text-align: center;
+            padding: 1.5rem;
+        }
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        .admin-header {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>CareDee CMS</h2>
+        <div class="sidebar-nav">
+            <p><strong>Operator Portal</strong></p>
+            <ul>
+                <li onclick="showSection('operator-dash')">แดชบอร์ดกำลังพล</li>
+                <li onclick="showSection('disputes')">ข้อร้องเรียน (Disputes)</li>
+                <li onclick="showSection('schedules')">ตารางงาน</li>
+            </ul>
+            <p><strong>Admin Portal</strong></p>
+            <ul>
+                <li onclick="showSection('kyc')">ตรวจสอบตัวตน (KYC)</li>
+                <li onclick="showSection('finance')">สรุปการเงิน (Finance)</li>
+                <li onclick="showSection('rbac')">จัดการสิทธิ์ (RBAC)</li>
+                <li onclick="showSection('system-health')">สุขภาพระบบ</li>
+                <li onclick="showSection('compliance')">รายงาน PDPA</li>
+            </ul>
+        </div>
+    </div>
+
+    <main class="main-content container">
+        <div class="admin-header">
+            <div class="notification-bell" onclick="toggleNotifications()">
+                🔔<span class="count">3</span>
+                <div id="notification-dropdown" class="notification-dropdown">
+                    <div class="notification-item"><span class="badge badge-danger">SOS</span> <b>คุณมานะ</b> แจ้งเหตุฉุกเฉิน!</div>
+                    <div class="notification-item">ผู้ดูแลใหม่ 5 ท่าน รอตรวจ KYC</div>
+                    <div class="notification-item">มีข้อร้องเรียนใหม่จาก คุณสมยศ</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section: Operator Dashboard -->
+        <section id="operator-dash-section">
+            <h1>Workforce Dashboard (Operator)</h1>
+            <div class="grid">
+                <div class="card stat-card">
+                    <div class="stat-value">42</div>
+                    <div>ผู้ดูแลที่กำลังทำงาน (Active)</div>
+                </div>
+                <div class="card stat-card">
+                    <div class="stat-value">12</div>
+                    <div>การจองใหม่วันนี้</div>
+                </div>
+                <div class="card stat-card">
+                    <div class="stat-value">98%</div>
+                    <div>ความพึงพอใจลูกค้า</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>รายการกิจกรรม Real-time</h3>
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="text-align: left; border-bottom: 2px solid #eee;">
+                            <th>เวลา</th>
+                            <th>ผู้ดูแล</th>
+                            <th>กิจกรรม</th>
+                            <th>สถานะ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="border-bottom: 1px solid #eee;">
+                            <td>08:30</td>
+                            <td>คุณสมศรี</td>
+                            <td>Check-in ณ บ้านลูกค้า (เขตสาทร)</td>
+                            <td><span class="badge badge-success">ปกติ</span></td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #eee;">
+                            <td>09:15</td>
+                            <td>คุณมานะ</td>
+                            <td>บันทึกสัญญาณชีพ: ปกติ</td>
+                            <td><span class="badge badge-success">ปกติ</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Section: Dispute Management (New) -->
+        <section id="disputes-section" style="display: none;">
+            <h1>Dispute & Ticket Management</h1>
+            <div class="card">
+                <h3>รายการข้อร้องเรียนที่รอดำเนินการ</h3>
+                <table style="width: 100%; border-collapse: collapse;">
+                    <tr style="border-bottom: 1px solid #eee;">
+                        <td style="padding: 1rem;">
+                            <b>TKT-2026-045</b><br>
+                            โดย: คุณสมยศ | ผู้ดูแล: คุณมานะ
+                        </td>
+                        <td>ปัญหา: บริการล่าช้ากว่ากำหนด 1 ชม.</td>
+                        <td><span class="badge badge-warning">กำลังตรวจสอบ</span></td>
+                        <td><button class="btn-primary">จัดการ</button></td>
+                    </tr>
+                </table>
+            </div>
+        </section>
+
+        <!-- Section: KYC & Background Check (New) -->
+        <section id="kyc-section" style="display: none;">
+            <h1>Caregiver KYC Verification</h1>
+            <div class="card">
+                <h3>ผู้สมัครใหม่รอการอนุมัติ</h3>
+                <div class="grid">
+                    <div class="card" style="border: 1px solid #eee;">
+                        <h4>คุณใจดี มีสุข</h4>
+                        <p>เอกสาร: บัตรประชาชน ✅</p>
+                        <p>เอกสาร: ใบรับรองพยาบาล ⚠️ (รอตรวจ)</p>
+                        <p>ประวัติอาชญากรรม: ✅ ไม่พบประวัติ</p>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button class="btn-success">อนุมัติ</button>
+                            <button class="btn-danger">ปฏิเสธ</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section: Financial Dashboard (New) -->
+        <section id="finance-section" style="display: none;">
+            <h1>Financial Overview</h1>
+            <div class="grid">
+                <div class="card stat-card">
+                    <div class="stat-value">฿ 1,250,000</div>
+                    <div>GMV (ยอดจองรวมเดือนนี้)</div>
+                </div>
+                <div class="card stat-card">
+                    <div class="stat-value">฿ 187,500</div>
+                    <div>Platform Fee (GP 15%)</div>
+                </div>
+                <div class="card stat-card">
+                    <div class="stat-value">฿ 950,000</div>
+                    <div>ยอดรอจ่าย (Pending Payouts)</div>
+                </div>
+            </div>
+            <div class="card">
+                <h3>รอบการจ่ายเงินถัดไป</h3>
+                <p>วันที่: 15 พ.ค. 2026 | จำนวนผู้ดูแล: 150 ท่าน | ยอดรวม: ฿ 450,000</p>
+                <button class="btn-primary">ดำเนินการเบิกจ่าย (Batch Payout)</button>
+            </div>
+        </section>
+
+        <!-- Section: RBAC Management -->
+        <section id="rbac-section" style="display: none;">
+            <h1>Role-Based Access Control (Admin)</h1>
+            <div class="card">
+                <h3>กำหนดสิทธิ์ตามบทบาท</h3>
+                <div class="form-group">
+                    <label>เลือกบทบาท</label>
+                    <select>
+                        <option>Operator (ผู้ให้บริการ)</option>
+                        <option>Admin (ผู้ดูแลระบบ)</option>
+                        <option>Finance (ฝ่ายการเงิน)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>สิทธิ์การเข้าถึงโมดูล</label>
+                    <div class="grid" style="grid-template-columns: 1fr 1fr;">
+                        <label><input type="checkbox" checked> Marketplace & Search</label>
+                        <label><input type="checkbox" checked> Booking & Scheduling</label>
+                        <label><input type="checkbox" checked> Payment & Revenue</label>
+                        <label><input type="checkbox"> System Audit Logs</label>
+                    </div>
+                </div>
+                <button class="btn-primary" onclick="alert('บันทึกสิทธิ์เรียบร้อย')">บันทึกการตั้งค่า</button>
+            </div>
+        </section>
+
+        <!-- Section: System Health -->
+        <section id="system-health-section" style="display: none;">
+            <h1>System Health & Monitoring</h1>
+            <div class="grid">
+                <div class="card">
+                    <h4>Server Status</h4>
+                    <p>API Server: <span class="badge badge-success">Online</span></p>
+                    <p>Database: <span class="badge badge-success">Healthy</span></p>
+                    <p>Notification Engine: <span class="badge badge-success">Idle</span></p>
+                </div>
+                <div class="card">
+                    <h4>Recent Audit Logs</h4>
+                    <ul style="font-size: 0.85rem;">
+                        <li>[10:00:22] ADM-01 logged in.</li>
+                        <li>[10:05:45] OP-02 updated schedule for CG-102.</li>
+                        <li>[10:10:01] System Backup completed successfully.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section: Compliance (PDPA) -->
+        <section id="compliance-section" style="display: none;">
+            <h1>Compliance & Data Protection</h1>
+            <div class="card">
+                <h3>PDPA Request Management</h3>
+                <p>จัดการคำขอใช้สิทธิ์ของเจ้าของข้อมูลส่วนบุคคล</p>
+                <div class="form-group">
+                    <label>ค้นหาบัญชีผู้ใช้ (Email/Phone)</label>
+                    <input type="text" placeholder="ระบุเพื่อตรวจสอบข้อมูลที่ถูกจัดเก็บ">
+                </div>
+                <div style="display: flex; gap: 1rem;">
+                    <button class="btn-secondary">ส่งออกข้อมูล (Data Portability)</button>
+                    <button class="btn-danger">ลบข้อมูลถาวร (Right to Erasure)</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        function showSection(section) {
+            const sections = ['operator-dash', 'disputes', 'kyc', 'finance', 'rbac', 'system-health', 'compliance'];
+            sections.forEach(s => {
+                const el = document.getElementById(s + '-section');
+                if(el) el.style.display = 'none';
+            });
+
+            document.getElementById(section + '-section').style.display = 'block';
+            
+            // Update sidebar active state
+            const navItems = document.querySelectorAll('.sidebar-nav li');
+            navItems.forEach(item => item.classList.remove('active'));
+            // Find the clicked item is tricky here, so we just let it be for now or use a better selector
+        }
+
+        function toggleNotifications() {
+            const dropdown = document.getElementById('notification-dropdown');
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        }
+
+        window.onclick = function(event) {
+            if (!event.target.matches('.notification-bell') && !event.target.matches('.count')) {
+                const dropdown = document.getElementById('notification-dropdown');
+                if (dropdown && dropdown.style.display === 'block') {
+                    dropdown.style.display = 'none';
+                }
+            }
+        }
+    </script>
+</body>
+</html>

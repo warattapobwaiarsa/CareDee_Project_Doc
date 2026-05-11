@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareDee - Caregiver Portal (Prototype)</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="logo"><strong>CareDee (แคร์ดี) - ผู้ดูแล</strong></div>
+        <div class="header-actions">
+            <nav>
+                <ul>
+                    <li><a href="#" class="active" onclick="showSection('jobs')">งานใหม่</a></li>
+                    <li><a href="#" onclick="showSection('schedule')">ตารางเวลา</a></li>
+                    <li><a href="#" onclick="showSection('active-care')">งานปัจจุบัน</a></li>
+                    <li><a href="#" onclick="showSection('wallet')">รายได้</a></li>
+                </ul>
+            </nav>
+            <div class="notification-bell" onclick="toggleNotifications()">
+                🔔<span class="count">1</span>
+                <div id="notification-dropdown" class="notification-dropdown">
+                    <div class="notification-item">มีคำขอรับบริการใหม่จาก <b>คุณสมยศ</b></div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Section: New Job Requests -->
+        <section id="jobs-section">
+            <h2>คำขอรับบริการใหม่</h2>
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: start;">
+                    <div>
+                        <h4>ลูกค้า: คุณสมยศ (เขตพญาไท)</h4>
+                        <p>ผู้รับบริการ: คุณแม่มาลี (อายุ 80 ปี)</p>
+                        <p>บริการ: ดูแลผู้สูงอายุ (Day Care)</p>
+                        <p>วันที่: 12 พ.ค. 2026 (08:00 - 17:00)</p>
+                        <p>ค่าตอบแทน: 1,200 บาท</p>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                        <button class="btn-success" onclick="acceptJob()">ยอมรับงาน</button>
+                        <button class="btn-danger">ปฏิเสธ</button>
+                        <button class="btn-secondary" onclick="alert('เปิดแชทคุยกับลูกค้า')">แชทสอบถาม</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section: Availability Calendar (New) -->
+        <section id="schedule-section" style="display: none;">
+            <h2>จัดการตารางเวลาความว่าง</h2>
+            <div class="card">
+                <div class="grid" style="grid-template-columns: 1fr 1fr;">
+                    <div>
+                        <h4>ตั้งค่าวันว่าง</h4>
+                        <div class="form-group">
+                            <label>เลือกวันที่</label>
+                            <input type="date">
+                        </div>
+                        <div class="form-group">
+                            <label>สถานะ</label>
+                            <select>
+                                <option>ว่าง (Available)</option>
+                                <option>ไม่ว่าง (Busy)</option>
+                            </select>
+                        </div>
+                        <button class="btn-primary" onclick="alert('บันทึกสถานะเรียบร้อย')">บันทึก</button>
+                    </div>
+                    <div style="background: #eee; padding: 1rem; border-radius: 8px; text-align: center;">
+                        <p>[Mockup: ปฏิทินแสดงผลจุดสีเขียว/แดง]</p>
+                        <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px;">
+                            <div style="background: white; padding: 5px;">1</div>
+                            <div style="background: white; padding: 5px;">2</div>
+                            <div style="background: var(--success-color); color: white; padding: 5px;">3</div>
+                            <div style="background: var(--success-color); color: white; padding: 5px;">4</div>
+                            <div style="background: var(--danger-color); color: white; padding: 5px;">5</div>
+                            <!-- ... rest of calendar ... -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section: Active Care -->
+        <section id="active-care-section" style="display: none;">
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h2>งานปัจจุบัน: คุณแม่มาลี</h2>
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <button class="btn-danger" style="padding: 1rem;" onclick="triggerSOS()">🆘 SOS ฉุกเฉิน</button>
+                        <div id="timer" style="font-weight: bold; color: var(--danger-color); font-size: 1.2rem;">00:00:00</div>
+                    </div>
+                </div>
+                
+                <div id="check-in-view">
+                    <p>กรุณากด Check-in เมื่อถึงสถานที่ให้บริการ (พิกัด GPS จะถูกบันทึก)</p>
+                    <button class="btn-primary" onclick="checkIn()">Check-in (เริ่มงาน)</button>
+                </div>
+
+                <div id="report-view" style="display: none; margin-top: 2rem;">
+                    <h3>บันทึกรายงานการดูแล (Care Report)</h3>
+                    
+                    <div class="form-group">
+                        <label>สัญญาณชีพ (Vitals)</label>
+                        <div class="grid" style="grid-template-columns: 1fr 1fr;">
+                            <input type="text" placeholder="ความดัน (BP เช่น 120/80)">
+                            <input type="text" placeholder="อุณหภูมิ (°C)">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>กิจกรรมประจำวัน</label>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+                            <label style="font-weight: normal;"><input type="checkbox"> อาบน้ำ/เช็ดตัว</label>
+                            <label style="font-weight: normal;"><input type="checkbox"> รับประทานอาหารเช้า</label>
+                            <label style="font-weight: normal;"><input type="checkbox"> ทานยาตามแพทย์สั่ง</label>
+                            <label style="font-weight: normal;"><input type="checkbox"> กายภาพบำบัดเบื้องต้น</label>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 1rem; border-top: 1px solid #eee; padding-top: 1rem;">
+                        <button class="btn-success" onclick="saveReport()">บันทึกรายงาน</button>
+                        <button class="btn-danger" onclick="checkOut()">Check-out (จบงาน)</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section: Wallet & Earnings (New) -->
+        <section id="wallet-section" style="display: none;">
+            <h2>กระเป๋าเงินและรายได้</h2>
+            <div class="grid">
+                <div class="card" style="text-align: center;">
+                    <h4>ยอดเงินที่ถอนได้</h4>
+                    <h2 style="font-size: 2.5rem;">฿ 4,500.00</h2>
+                    <button class="btn-primary">ถอนเงินเข้าบัญชี</button>
+                </div>
+                <div class="card">
+                    <h4>ยอดรอโอน (Pending)</h4>
+                    <h2 style="color: var(--secondary-color);">฿ 1,200.00</h2>
+                    <p><small>* จะเข้ากระเป๋าหลังจบงานและลูกค้าอนุมัติ</small></p>
+                </div>
+            </div>
+            <div class="card">
+                <h3>ประวัติรายได้ล่าสุด</h3>
+                <table style="width: 100%; border-collapse: collapse;">
+                    <tr style="border-bottom: 1px solid #eee;">
+                        <td style="padding: 1rem;">10 พ.ค. 2026</td>
+                        <td>งานดูแลคุณตาบุญมี</td>
+                        <td style="text-align: right; color: var(--success-color);">+ 1,500.00</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #eee;">
+                        <td style="padding: 1rem;">08 พ.ค. 2026</td>
+                        <td>งานดูแลผู้ป่วยพักฟื้น</td>
+                        <td style="text-align: right; color: var(--success-color);">+ 3,000.00</td>
+                    </tr>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        function showSection(section) {
+            const sections = ['jobs', 'schedule', 'active-care', 'wallet'];
+            sections.forEach(s => {
+                const el = document.getElementById(s + '-section');
+                if(el) el.style.display = 'none';
+            });
+
+            const navLinks = document.querySelectorAll('nav a');
+            navLinks.forEach(link => link.classList.remove('active'));
+
+            if (section === 'jobs') {
+                document.getElementById('jobs-section').style.display = 'block';
+                navLinks[0].classList.add('active');
+            } else if (section === 'schedule') {
+                document.getElementById('schedule-section').style.display = 'block';
+                navLinks[1].classList.add('active');
+            } else if (section === 'active-care') {
+                document.getElementById('active-care-section').style.display = 'block';
+                navLinks[2].classList.add('active');
+            } else if (section === 'wallet') {
+                document.getElementById('wallet-section').style.display = 'block';
+                navLinks[3].classList.add('active');
+            }
+        }
+
+        function toggleNotifications() {
+            const dropdown = document.getElementById('notification-dropdown');
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function acceptJob() {
+            alert('คุณยอมรับงานแล้ว! กรุณาเตรียมตัวและเดินทางไปยังสถานที่ลูกค้า');
+            showSection('active-care');
+        }
+
+        function checkIn() {
+            if(confirm('ยืนยันการ Check-in? ระบบจะบันทึกเวลาและตำแหน่งของคุณ')) {
+                document.getElementById('check-in-view').style.display = 'none';
+                document.getElementById('report-view').style.display = 'block';
+                startTimer();
+            }
+        }
+
+        function triggerSOS() {
+            if(confirm('🚨 ยืนยันการแจ้งเหตุฉุกเฉิน? ระบบจะติดต่อ 1669 และแจ้งเตือนญาติ/Operator ทันที')) {
+                alert('ส่งสัญญาณฉุกเฉินแล้ว เจ้าหน้าที่กำลังดำเนินการประสานงาน');
+            }
+        }
+
+        function saveReport() {
+            alert('บันทึกรายงานสำเร็จ! ข้อมูลถูกส่งให้ลูกค้าแบบ Real-time');
+        }
+
+        function checkOut() {
+            if(confirm('ยืนยันการจบงาน?')) {
+                alert('จบงานสำเร็จ! รายได้ 1,200 บาท ถูกบันทึกในสถานะรอโอน');
+                showSection('wallet');
+            }
+        }
+
+        let seconds = 0;
+        function startTimer() {
+            setInterval(() => {
+                seconds++;
+                let hrs = Math.floor(seconds / 3600);
+                let mins = Math.floor((seconds % 3600) / 60);
+                let secs = seconds % 60;
+                document.getElementById('timer').innerText = 
+                    `${hrs.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            }, 1000);
+        }
+
+        window.onclick = function(event) {
+            if (!event.target.matches('.notification-bell') && !event.target.matches('.count')) {
+                const dropdown = document.getElementById('notification-dropdown');
+                if (dropdown && dropdown.style.display === 'block') {
+                    dropdown.style.display = 'none';
+                }
+            }
+        }
+    </script>
+</body>
+</html>
