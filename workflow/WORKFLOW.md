@@ -94,7 +94,7 @@ sequenceDiagram
 
 ## 2. Customer View (มุมมองผู้รับบริการ)
 
-มุ่งเน้นการเดินทางของผู้รับบริการ (User Journey) ตั้งแต่การค้นหาจนถึงการประเมินผล เพื่อความสะดวก รวดเร็ว และความสบายใจของครอบครัว
+มุ่งเน้นการเดินทางของผู้รับบริการ (User Journey) ตั้งแต่การเริ่มต้นเข้าใช้งาน การค้นหาจนถึงการประเมินผล เพื่อความสะดวก รวดเร็ว และความสบายใจของครอบครัว
 
 ```mermaid
 %%{init: { 'theme': 'base', 'themeVariables': { 'darkMode': false, 'background': '#ffffff', 'mainBkg': '#ffffff', 'primaryColor': '#ffffff', 'primaryTextColor': '#000000', 'primaryBorderColor': '#000000', 'lineColor': '#000000', 'secondaryColor': '#ffffff', 'tertiaryColor': '#ffffff', 'actorBkg': '#ffffff', 'actorTextColor': '#000000', 'actorLineColor': '#000000', 'participantBkg': '#ffffff', 'participantTextColor': '#000000', 'participantBorderColor': '#000000', 'signalColor': '#000000', 'signalTextColor': '#000000', 'labelTextColor': '#000000', 'loopTextColor': '#000000', 'noteBkgColor': '#ffffff', 'noteTextColor': '#000000', 'activationBkgColor': '#ffffff', 'activationBorderColor': '#000000', 'sequenceNumberColor': '#000000' }, 'themeCSS': 'svg { background-color: white !important; background: white !important; } rect, circle, path, line, polygon, .labelBox, .cluster rect, .actor, .participant, .note, .activation { fill: white !important; stroke: black !important; stroke-width: 2px !important; } text, tspan, .loopText, .messageText, .noteText, .sequenceNumber { fill: black !important; color: black !important; font-weight: bold !important; font-size: 14px !important; } .cluster rect { stroke-dasharray: 0 !important; }' } }%%
@@ -103,6 +103,8 @@ sequenceDiagram
 
     box white Customer Journey (เส้นทางผู้รับบริการ)
         actor C as Customer
+        participant Auth as Auth System
+        participant UM as User Mgmt (1)
         participant MK as Marketplace (2)
         participant MT as Matching (3)
         participant BK as Booking (4)
@@ -112,9 +114,18 @@ sequenceDiagram
         participant NT as Notification (8)
     end
 
+    %% Authentication & Onboarding
+    C->>Auth: Sign Up / Login (OTP/Social)
+    Auth-->>C: Access Token Issued
+    C->>UM: Setup Patient Profile & Address
+    UM-->>C: Profile Saved Successfully
+
+    %% Service Search
     C->>MK: Search for caregiver (filters)
     MK->>MT: Find best match
     MT-->>C: Display ranked profiles
+    
+    %% Booking & Payment
     C->>BK: Request booking
     BK->>PM: Prompt for payment
     C->>PM: Process digital payment
@@ -125,25 +136,31 @@ sequenceDiagram
         PM-->>C: Payment Failed Alert
         C->>PM: Retry Payment / Cancel
     end
+
+    %% Service Execution
     loop During Service
         CR->>NT: Trigger update
         NT-->>C: Receive real-time Care Report
     end
+    
+    %% Post-Service
     C->>RR: Submit rating and review
 ```
 
 **คำอธิบายทีละขั้นตอน (Step-by-step Explanation):**
-*   **Step 1-3:** ลูกค้า (C) ค้นหาผู้ดูแลผ่าน Marketplace (2) โดย Matching (3) จะประมวลผลและแสดงโปรไฟล์ที่เรียงลำดับตามความเหมาะสม (Ranked Profiles)
-*   **Step 4-5:** ลูกค้า (C) กดจอง (4) และระบบจะส่งไปยัง Payment (5) เพื่อให้ลูกค้าชำระเงิน
-*   **Step 6-7:** ลูกค้า (C) ดำเนินการชำระเงิน (5) และได้รับใบเสร็จรับเงิน (Receipt) เมื่อสำเร็จ
-*   **Step 8-9 (Loop):** ระหว่างการให้บริการ ระบบ Care Report (6) จะส่งสัญญาณผ่าน Notification (8) ให้ลูกค้า (C) ได้รับรายงานสุขภาพและกิจกรรมแบบ Real-time
-*   **Step 10:** เมื่อจบงาน ลูกค้า (C) ส่งคะแนนและรีวิวผ่านระบบ Rating & Review (7) เพื่อให้คะแนนผู้ดูแลในระบบต่อไป
+*   **Step 1-2 (Authentication):** ลูกค้า (C) ลงทะเบียนหรือเข้าสู่ระบบผ่าน Auth System (เช่น OTP หรือ Social Login) และได้รับ Token เพื่อเข้าใช้งาน
+*   **Step 3-4 (Onboarding):** ลูกค้าตั้งค่าข้อมูลผู้ป่วย (Patient Profile) เช่น อาการ โรคประจำตัว และระบุที่อยู่สำหรับการรับบริการในระบบ User Mgmt (1)
+*   **Step 5-7 (Search):** ลูกค้า (C) ค้นหาผู้ดูแลผ่าน Marketplace (2) โดยระบุเงื่อนไขที่ต้องการ ซึ่งระบบ Matching (3) จะแสดงโปรไฟล์ผู้ดูแลที่เหมาะสมที่สุด
+*   **Step 8-9 (Booking):** ลูกค้า (C) เลือกผู้ดูแลและกดจอง (4) ระบบจะส่งไปยัง Payment (5) เพื่อให้ลูกค้าชำระเงิน
+*   **Step 10-11 (Payment):** ลูกค้า (C) ดำเนินการชำระเงิน และระบบจะออกใบเสร็จ (Receipt) เมื่อสำเร็จ
+*   **Step 12-13 (Loop):** ระหว่างการให้บริการ ระบบ Care Report (6) จะส่งรายงานสุขภาพและกิจกรรมให้ลูกค้า (C) ติดตามแบบ Real-time ผ่าน Notification (8)
+*   **Step 14:** เมื่อจบงาน ลูกค้า (C) ส่งคะแนนและรีวิวผ่านระบบ Rating & Review (7) เพื่อให้คะแนนผู้ดูแลในระบบต่อไป
 
 ---
 
 ## 3. Caregiver View (มุมมองผู้ดูแล)
 
-เน้นการจัดการตารางงาน การลงบันทึกการปฏิบัติงานที่ง่าย และความโปร่งใสของรายได้
+เน้นการเริ่มต้นเป็นผู้ดูแลในระบบ การจัดการตารางงาน การลงบันทึกการปฏิบัติงานที่ง่าย และความโปร่งใสของรายได้
 
 ```mermaid
 %%{init: { 'theme': 'base', 'themeVariables': { 'darkMode': false, 'background': '#ffffff', 'mainBkg': '#ffffff', 'primaryColor': '#ffffff', 'primaryTextColor': '#000000', 'primaryBorderColor': '#000000', 'lineColor': '#000000', 'secondaryColor': '#ffffff', 'tertiaryColor': '#ffffff', 'actorBkg': '#ffffff', 'actorTextColor': '#000000', 'actorLineColor': '#000000', 'participantBkg': '#ffffff', 'participantTextColor': '#000000', 'participantBorderColor': '#000000', 'signalColor': '#000000', 'signalTextColor': '#000000', 'labelTextColor': '#000000', 'loopTextColor': '#000000', 'noteBkgColor': '#ffffff', 'noteTextColor': '#000000', 'activationBkgColor': '#ffffff', 'activationBorderColor': '#000000', 'sequenceNumberColor': '#000000' }, 'themeCSS': 'svg { background-color: white !important; background: white !important; } rect, circle, path, line, polygon, .labelBox, .cluster rect, .actor, .participant, .note, .activation { fill: white !important; stroke: black !important; stroke-width: 2px !important; } text, tspan, .loopText, .messageText, .noteText, .sequenceNumber { fill: black !important; color: black !important; font-weight: bold !important; font-size: 14px !important; } .cluster rect { stroke-dasharray: 0 !important; }' } }%%
@@ -153,6 +170,7 @@ sequenceDiagram
     box white Caregiver Workflow (ขั้นตอนงานของผู้ดูแล)
         actor CG as Caregiver
         actor C as Customer
+        participant Auth as Auth System
         participant UM as User Mgmt (1)
         participant BK as Booking (4)
         participant CR as Care Report (6)
@@ -160,14 +178,24 @@ sequenceDiagram
         participant PM as Payment (5)
     end
 
-    UM-->>CG: Profile status updated
+    %% Authentication & KYC Onboarding
+    CG->>Auth: Sign Up / Login
+    Auth-->>CG: Access Granted
+    CG->>UM: Submit KYC (ID, Certs, Background Check)
+    UM->>UM: Admin Review Process
+    UM-->>CG: Profile status updated (Verified/Rejected)
+
     alt Profile Verified
-        CG->>BK: Active & Ready for jobs
+        CG->>BK: Set Availability & Ready for jobs
     else Profile Rejected
-        CG->>UM: Submit missing documents
+        CG->>UM: Update / Submit missing documents
     end
+
+    %% Job Acceptance
     NT-->>CG: Receive new job request
     CG->>BK: Confirm availability & accept job
+    
+    %% Service Delivery
     alt On-time Check-in
         CG->>CR: Check-in (Start Service via GPS)
     else Late / No-show
@@ -178,19 +206,22 @@ sequenceDiagram
         CG->>CR: Log vitals, activities, attach media
     end
     CG->>CR: Check-out (End Service)
+    
+    %% Payment & Payout
     C->>CR: Review & Approve Final Report
     CR->>PM: Trigger Payout
     PM-->>CG: Receive automated payout
 ```
 
 **คำอธิบายทีละขั้นตอน (Step-by-step Explanation):**
-*   **Step 1:** ระบบ User Mgmt (1) ยืนยันว่าโปรไฟล์ของผู้ดูแล (CG) พร้อมใช้งาน (Active)
-*   **Step 2-3:** ผู้ดูแล (CG) ได้รับแจ้งเตือนงานใหม่ (8) และกดตอบรับการจองผ่านระบบ Booking (4)
-*   **Step 4:** เมื่อถึงหน้างาน ผู้ดูแล (CG) กด Check-in ผ่านระบบ Care Report (6) (บันทึกเวลาและ GPS)
-*   **Step 5 (Loop):** ระหว่างงาน ผู้ดูแล (CG) บันทึกข้อมูลสุขภาพ กิจกรรม และแนบสื่อต่างๆ ผ่าน Care Report (6)
-*   **Step 6:** เมื่อเสร็จงาน ผู้ดูแล (CG) กด Check-out (End Service) ผ่าน Care Report (6)
-*   **Step 7:** ลูกค้า (C) ตรวจสอบและกดยอมรับรายงานฉบับสุดท้าย (Final Report) ผ่าน Care Report (6)
-*   **Step 8-9:** ระบบ Care Report (6) ส่งสัญญาณให้ Payment (5) ดำเนินการโอนเงิน (Payout) ให้ผู้ดูแล (CG) โดยอัตโนมัติ
+*   **Step 1-2 (Authentication):** ผู้ดูแล (CG) ลงทะเบียนและเข้าสู่ระบบ
+*   **Step 3-5 (Onboarding & KYC):** ผู้ดูแลส่งเอกสารยืนยันตัวตน (KYC) เช่น บัตรประชาชน, ใบรับรองการฝึกอบรม และประวัติอาชญากรรม เพื่อให้ Admin ตรวจสอบ เมื่อผ่านการอนุมัติ สถานะจะเปลี่ยนเป็น "Verified"
+*   **Step 6-7 (Availability):** ผู้ดูแลที่ผ่านการตรวจสอบแล้ว (Verified) สามารถตั้งค่าเวลาว่าง (Availability) เพื่อเริ่มรับงานผ่านระบบ Booking (4)
+*   **Step 8-9 (Job Acceptance):** เมื่อมีงานที่ตรงสเปก ระบบจะส่ง Notification (8) แจ้งเตือน และผู้ดูแลกดตอบรับงาน
+*   **Step 10 (Check-in):** เมื่อถึงหน้างาน ผู้ดูแลกด Check-in ผ่าน Care Report (6) เพื่อบันทึกเวลาและพิกัด GPS
+*   **Step 11 (Loop):** ระหว่างงาน ผู้ดูแลบันทึกข้อมูลสุขภาพ กิจกรรม และแนบสื่อต่างๆ ผ่าน Care Report (6)
+*   **Step 12 (Check-out):** เมื่อเสร็จงาน กด Check-out (End Service) เพื่อส่งรายงานฉบับสุดท้าย
+*   **Step 13-15 (Payout):** เมื่อลูกค้า (C) อนุมัติรายงาน ระบบจะส่งคำสั่งไปยัง Payment (5) เพื่อโอนเงินให้ผู้ดูแลโดยอัตโนมัติ
 
 ---
 

@@ -1,18 +1,18 @@
 :root {
-    /* Refined Medical Palette (Inferred from Figma) */
-    --primary-color: #2563eb;    /* Modern Trust Blue */
+    /* Refined Medical Palette based on Reference Design */
+    --primary-color: #0d6efd;    /* Vibrant Trust Blue */
     --primary-light: #eff6ff;
-    --secondary-color: #64748b;  /* Slate Gray */
+    --secondary-color: #64748b;  /* Slate Gray for text */
     --success-color: #10b981;    /* Emerald */
     --danger-color: #ef4444;     /* Red */
     --warning-color: #f59e0b;    /* Amber */
     --info-color: #0ea5e9;       /* Sky */
-    --bg-color: #f8fafc;         /* Slate 50 */
+    --bg-color: #f8fafc;         /* App Background (Slate 50) */
     --card-bg: #ffffff;
-    --text-color: #1e293b;       /* Slate 900 */
+    --text-color: #0f172a;       /* Darker Slate for headings */
     --text-muted: #94a3b8;       /* Slate 400 */
-    --border-color: #e2e8f0;     /* Slate 200 */
-    --border-radius: 12px;       /* Modern rounded corners */
+    --border-color: #e2e8f0;     /* Light borders */
+    --border-radius: 12px;       /* Modern rounded corners for cards */
     --base-font-size: 16px;
 }
 
@@ -21,7 +21,7 @@ body {
     font-size: var(--base-font-size);
     line-height: 1.5;
     color: var(--text-color);
-    background-color: #e2e8f0; /* PC Background */
+    background-color: #cbd5e1; /* PC Background (outside mobile frame) */
     margin: 0;
 }
 
@@ -41,23 +41,21 @@ h1, h2, h3, h4 {
     background: var(--card-bg);
     padding: 1.5rem;
     border-radius: var(--border-radius);
-    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03); /* Softer, wider shadow */
     margin-bottom: 1.5rem;
-    border: 1px solid var(--border-color);
+    border: 1px solid #f1f5f9; /* Very subtle border */
 }
 
 .form-group {
-    margin-bottom: 1.25rem;
+    margin-bottom: 1.5rem;
 }
 
 label {
     display: block;
     margin-bottom: 0.5rem;
     font-weight: 600;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     color: var(--secondary-color);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
 }
 
 input[type="text"],
@@ -69,19 +67,23 @@ select,
 textarea {
     width: 100%;
     padding: 0.875rem 1rem;
-    border: 1px solid var(--border-color);
+    border: 1px solid #cbd5e1; /* Clearer border */
     border-radius: 8px;
     font-size: 1rem;
     box-sizing: border-box;
-    background-color: #f1f5f9;
-    transition: all 0.2s;
+    background-color: #ffffff; /* White background for crispness */
+    color: var(--text-color);
+    transition: all 0.2s ease-in-out;
+}
+
+input::placeholder {
+    color: var(--text-muted);
 }
 
 input:focus, select:focus, textarea:focus {
     border-color: var(--primary-color);
-    background-color: #fff;
     outline: none;
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.15); /* Stronger focus ring */
 }
 
 button {
@@ -103,10 +105,10 @@ button:active {
 }
 
 .btn-primary { background-color: var(--primary-color); color: white; }
-.btn-primary:hover { background-color: #1d4ed8; }
+.btn-primary:hover { background-color: #0b5ed7; box-shadow: 0 4px 12px rgba(13, 110, 253, 0.2); }
 
-.btn-secondary { background-color: var(--primary-light); color: var(--primary-color); }
-.btn-secondary:hover { background-color: #dbeafe; }
+.btn-secondary { background-color: white; color: var(--primary-color); border: 1px solid var(--primary-color); }
+.btn-secondary:hover { background-color: var(--primary-light); }
 
 .btn-success { background-color: var(--success-color); color: white; }
 .btn-danger { background-color: var(--danger-color); color: white; }
@@ -118,9 +120,9 @@ button:active {
     font-weight: 600;
 }
 
-.badge-success { background-color: #dcfce7; color: #166534; }
-.badge-warning { background-color: #fef3c7; color: #92400e; }
-.badge-danger { background-color: #fee2e2; color: #991b1b; }
+.badge-success { background-color: #d1fae5; color: #047857; }
+.badge-warning { background-color: #fef3c7; color: #b45309; }
+.badge-danger { background-color: #fee2e2; color: #b91c1c; }
 
 /* --- Mobile Frame Simulation --- */
 body.mobile-layout {
@@ -128,15 +130,14 @@ body.mobile-layout {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background-color: #cbd5e1;
 }
 
 .mobile-frame {
     width: 390px;
     height: 844px;
     background-color: var(--bg-color);
-    border: 12px solid #0f172a;
-    border-radius: 48px;
+    border: 14px solid #0f172a;
+    border-radius: 50px;
     box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
     position: relative;
     display: flex;
@@ -146,19 +147,21 @@ body.mobile-layout {
 
 .app-header {
     background-color: var(--card-bg);
-    padding: 1.5rem 1.25rem 1rem;
+    padding: 1.5rem 1.5rem 1rem;
     border-bottom: 1px solid var(--border-color);
     z-index: 10;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: sticky;
+    top: 0;
 }
 
 .app-content {
     flex: 1;
     overflow-y: auto;
-    padding: 1.25rem;
-    padding-bottom: 90px;
+    padding: 1.5rem;
+    padding-bottom: 90px; /* Space for bottom nav */
 }
 
 .bottom-nav {
@@ -176,19 +179,20 @@ body.mobile-layout {
 
 .bottom-nav a {
     text-decoration: none;
-    color: var(--secondary-color);
+    color: var(--text-muted);
     font-size: 0.75rem;
+    font-weight: 600;
     text-align: center;
     flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 4px;
+    transition: color 0.2s;
 }
 
 .bottom-nav a.active {
     color: var(--primary-color);
-    font-weight: 700;
 }
 
 /* Custom UI for Grid (Used in Search/Stats) */
