@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareDee - Portal Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            100: '#E0F2F4',
+                            600: '#007A8C',
+                            700: '#006675', // Pressed state from foundation
+                        },
+                        secondary: {
+                            100: '#FFF3E6',
+                            500: '#FF9F43',
+                        },
+                        semantic: {
+                            success: '#28C76F',
+                            warning: '#FF9F43',
+                            error: '#EA5455',
+                            info: '#00CFE8',
+                        },
+                        neutral: {
+                            100: '#F8F8F8',
+                            300: '#B9B9C3',
+                            600: '#6E6B7B',
+                            900: '#1E1E1E',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['IBM Plex Sans Thai', 'Inter', 'sans-serif'],
+                        display: ['IBM Plex Sans Thai', 'Inter', 'sans-serif'],
+                    },
+                    spacing: {
+                        '1': '4px',
+                        '2': '8px',
+                        '3': '12px',
+                        '4': '16px',
+                        '5': '20px',
+                        '6': '24px',
+                        '8': '32px',
+                        '10': '40px',
+                        '12': '48px',
+                        '16': '64px',
+                        '20': '80px',
+                        '24': '96px',
+                        '32': '128px',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { 
+            font-family: 'IBM Plex Sans Thai', 'Inter', sans-serif;
+            background-color: #F8F8F8; /* Neutral 100 Surface */
+        }
+        .display-xs { font-size: 24px; line-height: 32px; font-weight: 700; }
+        .text-sm { font-size: 14px; line-height: 20px; }
+        .text-md { font-size: 16px; line-height: 24px; }
+    </style>
+</head>
+<body class="text-neutral-900 min-h-screen flex items-center justify-center p-4">
+
+    <!-- Floating Accessibility Controls (NF-USE-005) -->
+    <div class="fixed top-4 right-4 flex gap-2 z-50">
+        <button onclick="adjustFontSize(1)" class="w-10 h-10 bg-white border border-neutral-300 rounded-full shadow-md flex items-center justify-center hover:bg-neutral-100" title="เพิ่มขนาดตัวอักษร">
+            <span class="font-bold text-lg">A+</span>
+        </button>
+        <button onclick="adjustFontSize(-1)" class="w-10 h-10 bg-white border border-neutral-300 rounded-full shadow-md flex items-center justify-center hover:bg-neutral-100" title="ลดขนาดตัวอักษร">
+            <span class="font-bold text-sm">A-</span>
+        </button>
+        <button onclick="toggleContrast()" class="w-10 h-10 bg-neutral-900 text-white rounded-full shadow-md flex items-center justify-center hover:bg-black" title="เปลี่ยน Contrast">
+            <i data-lucide="contrast" class="w-5 h-5"></i>
+        </button>
+    </div>
+
+    <div class="bg-white w-full max-w-md rounded-2xl shadow-xl overflow-hidden border border-neutral-300 transition-all duration-300" id="login-card">
+        <div class="p-8">
+            <div class="flex flex-col items-center mb-8">
+                <div id="role-icon" class="w-16 h-16 bg-primary-600 rounded-2xl flex items-center justify-center text-white mb-4 shadow-lg transition-all duration-300">
+                    <i data-lucide="shield-check" class="w-10 h-10"></i>
+                </div>
+                <h1 class="display-xs text-primary-600">CareDee Portal</h1>
+                <p id="role-subtitle" class="text-sm text-neutral-600 mt-1">เข้าสู่ระบบเพื่อจัดการความปลอดภัย</p>
+            </div>
+
+            <!-- Role Selector Tabs (NF-USE-002 Thai Consistency) -->
+            <div class="flex p-1 bg-neutral-100 rounded-xl mb-6 border border-neutral-300">
+                <button onclick="setRole('operator')" id="btn-operator" class="flex-1 py-2 text-[10px] font-bold rounded-lg transition-all bg-white text-primary-600 shadow-sm border border-neutral-300">
+                    ผู้ให้บริการ
+                </button>
+                <button onclick="setRole('training')" id="btn-training" class="flex-1 py-2 text-[10px] font-bold rounded-lg transition-all text-neutral-600 hover:bg-white/50">
+                    สถาบันอบรม
+                </button>
+                <button onclick="setRole('admin')" id="btn-admin" class="flex-1 py-2 text-[10px] font-bold rounded-lg transition-all text-neutral-600 hover:bg-white/50">
+                    ผู้ดูแลระบบ
+                </button>
+            </div>
+
+            <div id="login-fields" class="space-y-4">
+                <div>
+                    <label id="label-email" class="block text-sm font-semibold text-neutral-600 mb-1">อีเมล หรือ เบอร์โทรศัพท์</label>
+                    <input type="text" id="email" value="operator@caredee.com" class="w-full px-4 py-3 bg-neutral-100 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-primary-600 focus:outline-none transition-all" placeholder="อีเมล หรือ เบอร์โทรศัพท์">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-neutral-600 mb-1">รหัสผ่าน</label>
+                    <input type="password" id="password" value="password123" class="w-full px-4 py-3 bg-neutral-100 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-primary-600 focus:outline-none transition-all" placeholder="••••••••">
+                </div>
+                
+                <!-- PDPA Consent (SC-001) -->
+                <div class="p-3 bg-neutral-50 rounded-lg border border-neutral-200">
+                    <label class="flex items-start gap-3 cursor-pointer">
+                        <input type="checkbox" checked class="mt-1 rounded border-neutral-300 text-primary-600 focus:ring-primary-600">
+                        <span class="text-[11px] text-neutral-600 leading-tight">ฉันยอมรับ <a href="#" class="text-primary-600 underline">เงื่อนไขการใช้งาน</a> และ <a href="#" class="text-primary-600 underline">นโยบายความเป็นส่วนตัว (PDPA)</a> ของแพลตฟอร์ม CareDee</span>
+                    </label>
+                </div>
+
+                <div class="flex items-center justify-between text-xs text-neutral-600">
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" checked class="rounded border-neutral-300 text-primary-600 focus:ring-primary-600">
+                        จดจำการใช้งาน
+                    </label>
+                    <button onclick="showForgetPassword()" class="text-primary-600 hover:underline">ลืมรหัสผ่าน?</button>
+                </div>
+                <button onclick="show2FA()" class="w-full py-4 bg-primary-600 text-white rounded-xl font-bold hover:bg-primary-700 transition-colors shadow-md">
+                    ถัดไป
+                </button>
+
+                <!-- Social Login Divider (FR-UM-001) -->
+                <div class="relative py-4">
+                    <div class="absolute inset-0 flex items-center">
+                        <div class="w-full border-t border-neutral-200"></div>
+                    </div>
+                    <div class="relative flex justify-center text-[10px] uppercase font-bold">
+                        <span class="bg-white px-2 text-neutral-400">หรือเข้าสู่ระบบด้วย</span>
+                    </div>
+                </div>
+
+                <!-- Social Login Buttons -->
+                <div class="grid grid-cols-2 gap-3">
+                    <button onclick="showToast('เข้าสู่ระบบด้วย Google (Mockup)')" class="flex items-center justify-center gap-2 py-3 border border-neutral-300 rounded-xl hover:bg-neutral-50 transition-all">
+                        <img src="https://www.google.com/favicon.ico" class="w-4 h-4" alt="Google">
+                        <span class="text-xs font-bold text-neutral-600">Google</span>
+                    </button>
+                    <button onclick="showToast('เข้าสู่ระบบด้วย LINE (Mockup)')" class="flex items-center justify-center gap-2 py-3 border border-[#06C755] bg-[#06C755]/5 rounded-xl hover:bg-[#06C755]/10 transition-all">
+                        <svg class="w-4 h-4 fill-[#06C755]" viewBox="0 0 24 24"><path d="M24 10.304c0-4.58-4.558-8.304-10.158-8.304-5.6 0-10.158 3.724-10.158 8.304 0 4.108 3.612 7.551 8.497 8.196.33.071.779.217.892.498.102.256.067.656.033.914-.15.845-.55 3.387-.625 3.766-.086.435.158.188 1.02-.45 1.045-.774 4.887-3.666 6.671-6.279 1.229-1.792 1.83-3.142 1.83-4.645zm-15.86 3.123c-.328 0-.594-.266-.594-.594v-3.774l-1.637 1.638c-.232.231-.607.231-.839 0-.232-.232-.232-.607 0-.839l2.651-2.65c.111-.112.261-.174.419-.174.159 0 .309.063.42.175l2.651 2.65c.232.232.232.607 0 .839-.232.231-.607.231-.839 0l-1.637-1.638v3.774c0 .328-.266.594-.595.594zm8.681-.594c0 .328-.266.594-.594.594h-4.321c-.328 0-.594-.266-.594-.594v-5.207c0-.328.266-.594.594-.594h4.321c.328 0 .594.266.594.594 0 .328-.266.594-.594.594h-3.727v1.415h3.111c.328 0 .594.266.594.594 0 .328-.266.594-.594.594h-3.111v1.415h3.727c.328 0 .594.266.594.594z"/></svg>
+                        <span class="text-xs font-bold text-[#06C755]">LINE</span>
+                    </button>
+                </div>
+
+                <div class="text-center pt-2">
+                    <p class="text-[11px] text-neutral-600">ยังไม่มีบัญชี? <a href="#" class="text-primary-600 font-bold hover:underline">สมัครเป็นพาร์ทเนอร์</a></p>
+                </div>
+            </div>
+
+            <!-- Forget Password Step (FR-UM-004) -->
+            <div id="forget-fields" class="hidden space-y-6">
+                <div class="text-center">
+                    <h3 class="font-bold text-neutral-900">กู้คืนรหัสผ่าน</h3>
+                    <p class="text-neutral-600 text-xs mt-2">ระบุอีเมลเพื่อรับรหัส OTP ในการตั้งรหัสผ่านใหม่</p>
+                </div>
+                <input type="email" class="w-full px-4 py-3 bg-neutral-100 border border-neutral-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-600" placeholder="ระบุอีเมลของคุณ">
+                <div class="space-y-3">
+                    <button onclick="showToast('ส่งรหัส OTP เรียบร้อยแล้ว (Mockup)')" class="w-full py-4 bg-primary-600 text-white rounded-xl font-bold hover:bg-primary-700 transition-colors shadow-md">
+                        รับรหัส OTP
+                    </button>
+                    <button onclick="backToLoginFromForget()" class="w-full py-4 bg-white text-neutral-600 border border-neutral-300 rounded-xl font-bold hover:bg-neutral-100 transition-colors">
+                        ยกเลิก
+                    </button>
+                </div>
+            </div>
+
+            <div id="twofa-fields" class="hidden space-y-6">
+                <div class="text-center">
+                    <p class="text-neutral-600 text-sm mb-4 font-bold">ยืนยันตัวตน 2 ชั้น (Security Required)</p>
+                    <p class="text-neutral-600 text-xs mb-4">กรอกรหัส 2FA จาก Google Authenticator</p>
+                    <div class="flex justify-between gap-2 max-w-[280px] mx-auto">
+                        <input type="text" maxlength="1" class="otp-input w-12 h-14 text-center text-2xl font-bold bg-neutral-100 border-2 border-neutral-300 rounded-xl focus:border-primary-600 focus:outline-none transition-all">
+                        <input type="text" maxlength="1" class="otp-input w-12 h-14 text-center text-2xl font-bold bg-neutral-100 border-2 border-neutral-300 rounded-xl focus:border-primary-600 focus:outline-none transition-all">
+                        <input type="text" maxlength="1" class="otp-input w-12 h-14 text-center text-2xl font-bold bg-neutral-100 border-2 border-neutral-300 rounded-xl focus:border-primary-600 focus:outline-none transition-all">
+                        <input type="text" maxlength="1" class="otp-input w-12 h-14 text-center text-2xl font-bold bg-neutral-100 border-2 border-neutral-300 rounded-xl focus:border-primary-600 focus:outline-none transition-all">
+                    </div>
+                </div>
+                <div class="space-y-3">
+                    <button onclick="login()" class="w-full py-4 bg-primary-600 text-white rounded-xl font-bold hover:bg-primary-700 transition-colors shadow-md">
+                        ยืนยันตัวตน
+                    </button>
+                    <button onclick="backToLogin()" class="w-full py-4 bg-white text-neutral-600 border border-neutral-300 rounded-xl font-bold hover:bg-neutral-100 transition-colors">
+                        ยกเลิก
+                    </button>
+                    <div class="text-center">
+                        <button onclick="showToast('กำลังนำคุณไปยังหน้าติดต่อผู้ดูแลระบบ...')" class="text-xs text-primary-600 hover:underline">พบปัญหาในการยืนยันตัวตน? ติดต่อผู้ดูแลระบบ</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="lockout-notice" class="hidden mt-6 p-4 bg-semantic-error/10 border border-semantic-error rounded-xl flex items-start gap-3">
+                <i data-lucide="alert-triangle" class="w-5 h-5 text-semantic-error shrink-0 mt-0.5"></i>
+                <div>
+                    <p class="text-semantic-error font-bold text-sm">Account Lockout</p>
+                    <p class="text-neutral-600 text-xs mt-1">กรอกผิดเกิน 5 ครั้ง ระบบระงับการเข้าใช้งาน 15 นาที</p>
+                    <button onclick="showToast('กำลังนำคุณไปยังหน้าแจ้งเรื่องปลดล็อก...')" class="text-[10px] text-semantic-error underline mt-2 block font-bold">แจ้งปลดล็อก หรือ ติดต่อเจ้าหน้าที่</button>
+                </div>
+            </div>
+        </div>
+        <div class="bg-neutral-100 p-4 text-center border-t border-neutral-300">
+            <p id="footer-compliance" class="text-[10px] text-neutral-600 uppercase tracking-widest font-bold">Secured by PDPA Compliance</p>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast" class="hidden fixed bottom-8 px-6 py-4 bg-neutral-900 text-white rounded-2xl shadow-2xl z-50 animate-bounce">
+        <p class="text-sm font-bold" id="toast-msg"></p>
+    </div>
+
+    <script>
+        lucide.createIcons();
+        let currentRole = 'operator';
+        let currentFontSize = 16;
+
+        function adjustFontSize(delta) {
+            currentFontSize += delta * 2;
+            document.documentElement.style.fontSize = currentFontSize + 'px';
+            showToast('ปรับขนาดตัวอักษรเป็น: ' + currentFontSize + 'px');
+        }
+
+        function toggleContrast() {
+            document.body.classList.toggle('bg-neutral-900');
+            document.getElementById('login-card').classList.toggle('border-yellow-400');
+            showToast('สลับ Contrast โหมด');
+        }
+
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            document.getElementById('toast-msg').innerText = msg;
+            t.classList.remove('hidden');
+            setTimeout(() => t.classList.add('hidden'), 3000);
+        }
+
+        function setRole(role) {
+            currentRole = role;
+            const btnOp = document.getElementById('btn-operator');
+            const btnTr = document.getElementById('btn-training');
+            const btnAd = document.getElementById('btn-admin');
+            const iconDiv = document.getElementById('role-icon');
+            const subtitle = document.getElementById('role-subtitle');
+            const labelEmail = document.getElementById('label-email');
+            const footer = document.getElementById('footer-compliance');
+            const emailInput = document.getElementById('email');
+
+            // Reset all
+            [btnOp, btnTr, btnAd].forEach(b => {
+                b.className = 'flex-1 py-2 text-[10px] font-bold rounded-lg transition-all text-neutral-600 hover:bg-white/50';
+            });
+
+            if (role === 'operator') {
+                btnOp.className = 'flex-1 py-2 text-[10px] font-bold rounded-lg transition-all bg-white text-primary-600 shadow-sm border border-neutral-300';
+                iconDiv.innerHTML = '<i data-lucide="shield-check" class="w-10 h-10"></i>';
+                iconDiv.className = 'w-16 h-16 bg-primary-600 rounded-2xl flex items-center justify-center text-white mb-4 shadow-lg transition-all duration-300';
+                subtitle.innerText = 'เข้าสู่ระบบเพื่อจัดการความปลอดภัย';
+                labelEmail.innerText = 'อีเมล หรือ เบอร์โทรศัพท์';
+                footer.innerText = 'Secured by PDPA Compliance';
+                emailInput.value = 'operator@caredee.com';
+            } else if (role === 'training') {
+                btnTr.className = 'flex-1 py-2 text-[10px] font-bold rounded-lg transition-all bg-white text-secondary-500 shadow-sm border border-neutral-300';
+                iconDiv.innerHTML = '<i data-lucide="graduation-cap" class="w-10 h-10"></i>';
+                iconDiv.className = 'w-16 h-16 bg-secondary-100 rounded-2xl flex items-center justify-center text-secondary-500 mb-4 shadow-sm border border-secondary-500 transition-all duration-300';
+                subtitle.innerText = 'เข้าสู่ระบบสถาบันฝึกอบรม';
+                labelEmail.innerText = 'อีเมลสถาบัน';
+                footer.innerText = 'Authorized Training Provider';
+                emailInput.value = 'admin@training.edu';
+            } else if (role === 'admin') {
+                btnAd.className = 'flex-1 py-2 text-[10px] font-bold rounded-lg transition-all bg-white text-neutral-900 shadow-sm border border-neutral-300';
+                iconDiv.innerHTML = '<i data-lucide="lock" class="w-10 h-10"></i>';
+                iconDiv.className = 'w-16 h-16 bg-neutral-900 rounded-2xl flex items-center justify-center text-white mb-4 shadow-lg transition-all duration-300';
+                subtitle.innerText = 'System Root Administration';
+                labelEmail.innerText = 'อีเมลผู้ดูแลระบบ';
+                footer.innerText = 'Global Infrastructure Monitoring';
+                emailInput.value = 'root@caredee.system';
+            }
+            lucide.createIcons();
+        }
+
+        function show2FA() {
+            document.getElementById('login-fields').classList.add('hidden');
+            document.getElementById('twofa-fields').classList.remove('hidden');
+        }
+
+        function backToLogin() {
+            document.getElementById('twofa-fields').classList.add('hidden');
+            document.getElementById('login-fields').classList.remove('hidden');
+        }
+
+        function showForgetPassword() {
+            document.getElementById('login-fields').classList.add('hidden');
+            document.getElementById('forget-fields').classList.remove('hidden');
+        }
+
+        function backToLoginFromForget() {
+            document.getElementById('forget-fields').classList.add('hidden');
+            document.getElementById('login-fields').classList.remove('hidden');
+        }
+
+        function login() {
+            if (currentRole === 'operator') {
+                window.location.href = 'operator/operator_mockup.html?login=success';
+            } else if (currentRole === 'training') {
+                window.location.href = 'training/TrainingInstitute.html?login=success';
+            } else {
+                window.location.href = 'admin/admin_mockup.html?login=success';
+            }
+        }
+
+        // OTP Auto-focus
+        const inputs = document.querySelectorAll('.otp-input');
+        inputs.forEach((input, index) => {
+            input.addEventListener('input', (e) => {
+                if (e.target.value.length === 1 && index < inputs.length - 1) {
+                    inputs[index + 1].focus();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

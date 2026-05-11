@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareDee - Operator Management Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            100: '#E0F2F4',
+                            600: '#007A8C',
+                            700: '#006675', // Pressed
+                        },
+                        secondary: {
+                            100: '#FFF3E6',
+                            500: '#FF9F43',
+                        },
+                        semantic: {
+                            success: '#28C76F',
+                            warning: '#FF9F43',
+                            error: '#EA5455',
+                            info: '#00CFE8',
+                        },
+                        neutral: {
+                            100: '#F8F8F8',
+                            300: '#B9B9C3',
+                            600: '#6E6B7B',
+                            900: '#1E1E1E',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['IBM Plex Sans Thai', 'Inter', 'sans-serif'],
+                        display: ['IBM Plex Sans Thai', 'Inter', 'sans-serif'],
+                    },
+                    spacing: {
+                        '1': '4px',
+                        '2': '8px',
+                        '3': '12px',
+                        '4': '16px',
+                        '5': '20px',
+                        '6': '24px',
+                        '8': '32px',
+                        '10': '40px',
+                        '12': '48px',
+                        '16': '64px',
+                        '20': '80px',
+                        '24': '96px',
+                        '32': '128px',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'IBM Plex Sans Thai', 'Inter', sans-serif; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #F8F8F8; }
+        ::-webkit-scrollbar-thumb { background: #B9B9C3; border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-neutral-100 text-neutral-900">
+
+    <!-- Floating Accessibility Controls (NF-USE-005) -->
+    <div class="fixed top-4 right-4 flex gap-2 z-50">
+        <button onclick="adjustFontSize(1)" class="w-10 h-10 bg-white border border-neutral-300 rounded-full shadow-md flex items-center justify-center hover:bg-neutral-100" title="เพิ่มขนาดตัวอักษร">
+            <span class="font-bold text-lg text-neutral-900">A+</span>
+        </button>
+        <button onclick="adjustFontSize(-1)" class="w-10 h-10 bg-white border border-neutral-300 rounded-full shadow-md flex items-center justify-center hover:bg-neutral-100" title="ลดขนาดตัวอักษร">
+            <span class="font-bold text-sm text-neutral-900">A-</span>
+        </button>
+        <button onclick="toggleContrast()" class="w-10 h-10 bg-neutral-900 text-white rounded-full shadow-md flex items-center justify-center hover:bg-black" title="เปลี่ยน Contrast">
+            <i data-lucide="contrast" class="w-5 h-5"></i>
+        </button>
+    </div>
+
+    <!-- Main Application Shell -->
+    <div id="app-shell" class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <aside class="w-72 bg-white border-r border-neutral-300 flex flex-col shrink-0">
+            <div class="p-6 border-b border-neutral-300 flex items-center gap-3">
+                <div class="w-10 h-10 bg-primary-600 rounded-xl flex items-center justify-center text-white shadow-md">
+                    <i data-lucide="activity" class="w-6 h-6"></i>
+                </div>
+                <div>
+                    <h2 class="text-xl font-bold text-primary-600 leading-tight">CareDee</h2>
+                    <p class="text-[10px] font-bold text-neutral-600 uppercase tracking-wider">Operator Portal</p>
+                </div>
+            </div>
+
+            <nav class="flex-1 p-4 space-y-1 overflow-y-auto">
+                <p class="px-3 text-[10px] font-bold text-neutral-300 uppercase tracking-widest mb-4">Operations</p>
+                
+                <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all bg-primary-600 text-white shadow-lg shadow-primary-600/20">
+                    <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+                    แผงควบคุมหลัก
+                </button>
+
+                <button onclick="switchTab('caregivers')" id="nav-caregivers" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all text-neutral-600 hover:bg-primary-100 hover:text-primary-600 group">
+                    <i data-lucide="users" class="w-5 h-5 text-neutral-300 group-hover:text-primary-600"></i>
+                    จัดการผู้ดูแล (KYC)
+                </button>
+
+                <button onclick="switchTab('scheduling')" id="nav-scheduling" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all text-neutral-600 hover:bg-primary-100 hover:text-primary-600 group">
+                    <i data-lucide="calendar" class="w-5 h-5 text-neutral-300 group-hover:text-primary-600"></i>
+                    ตารางงาน & ปัญหา
+                </button>
+
+                <button onclick="switchTab('disputes')" id="nav-disputes" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all text-neutral-600 hover:bg-primary-100 hover:text-primary-600 group">
+                    <i data-lucide="message-square" class="w-5 h-5 text-neutral-300 group-hover:text-primary-600"></i>
+                    การอุทธรณ์ & QA
+                </button>
+
+                <button onclick="switchTab('settlement')" id="nav-settlement" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all text-neutral-600 hover:bg-primary-100 hover:text-primary-600 group">
+                    <i data-lucide="wallet" class="w-5 h-5 text-neutral-300 group-hover:text-primary-600"></i>
+                    ยอดเงิน & รายงาน
+                </button>
+
+                <p class="px-3 text-[10px] font-bold text-neutral-300 uppercase tracking-widest mt-8 mb-4">Configuration (Advanced)</p>
+
+                <button onclick="switchTab('matching')" id="nav-matching" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all text-neutral-600 hover:bg-primary-100 hover:text-primary-600 group">
+                    <i data-lucide="sliders" class="w-5 h-5 text-neutral-300 group-hover:text-primary-600"></i>
+                    ปรับแต่ง Matching
+                </button>
+
+                <button onclick="switchTab('incidents')" id="nav-incidents" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all text-neutral-600 hover:bg-primary-100 hover:text-primary-600 group">
+                    <i data-lucide="file-warning" class="w-5 h-5 text-neutral-300 group-hover:text-primary-600"></i>
+                    บันทึกเหตุการณ์
+                </button>
+
+                <p class="px-3 text-[10px] font-bold text-neutral-300 uppercase tracking-widest mt-8 mb-4">System</p>
+                
+                <div class="px-4 py-3 flex items-center gap-3">
+                    <div class="w-2 h-2 rounded-full bg-semantic-success shadow-[0_0_8px_rgba(40,199,111,0.8)]"></div>
+                    <span class="text-[10px] font-bold text-neutral-600 uppercase tracking-widest">System Online</span>
+                </div>
+
+            </nav>
+
+            <div class="p-4 border-t border-neutral-300">
+                <div class="bg-neutral-100 p-4 rounded-2xl flex items-center gap-3 border border-neutral-300">
+                    <div class="w-10 h-10 rounded-full bg-primary-100 border-2 border-primary-600 overflow-hidden flex items-center justify-center text-primary-600 font-bold">OP</div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-xs font-bold text-neutral-900 truncate">สมศักดิ์ บริหาร</p>
+                        <p class="text-[10px] text-neutral-600 font-medium">Service Operator</p>
+                    </div>
+                    <button onclick="logout()" class="text-neutral-300 hover:text-semantic-error transition-colors">
+                        <i data-lucide="log-out" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Content Area -->
+        <main class="flex-1 flex flex-col min-w-0 bg-neutral-100 overflow-hidden">
+            <!-- Header -->
+            <header class="h-20 bg-white border-b border-neutral-300 px-8 flex items-center justify-between sticky top-0 z-10">
+                <div>
+                    <h1 id="page-title" class="text-xl font-bold text-neutral-900">แผงควบคุมหลัก</h1>
+                    <p class="text-xs text-neutral-600 font-medium">อัปเดตข้อมูลทุก 60 วินาที</p>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="relative hidden md:block">
+                        <i data-lucide="search" class="w-4 h-4 text-neutral-300 absolute left-4 top-1/2 -translate-y-1/2"></i>
+                        <input type="text" placeholder="ค้นหาข้อมูล..." class="pl-10 pr-4 py-2 bg-neutral-100 border border-neutral-300 rounded-full text-xs focus:ring-2 focus:ring-primary-600 focus:outline-none w-64 transition-all">
+                    </div>
+                    <button class="relative p-2 text-neutral-600 hover:bg-neutral-100 rounded-xl transition-all border border-neutral-300">
+                        <i data-lucide="bell" class="w-5 h-5"></i>
+                        <span class="absolute top-2 right-2 w-2 h-2 bg-semantic-error rounded-full border border-white"></span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Scrollable Page Content -->
+            <div class="flex-1 overflow-y-auto p-8">
+                <div class="max-w-6xl mx-auto space-y-8">
+                    
+                    <!-- Tab: Dashboard -->
+                    <div id="content-dashboard" class="tab-content active space-y-8">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                            <div class="bg-white p-6 rounded-2xl shadow-sm border border-neutral-300">
+                                <div class="flex justify-between items-start mb-4">
+                                    <div class="p-2 rounded-xl bg-primary-100 text-primary-600">
+                                        <i data-lucide="users" class="w-6 h-6"></i>
+                                    </div>
+                                    <span class="text-[10px] font-bold bg-semantic-success/10 text-semantic-success px-2 py-1 rounded-full">+5.2%</span>
+                                </div>
+                                <p class="text-neutral-600 text-xs font-bold uppercase tracking-wider">ผู้ดูแลที่ Active</p>
+                                <p class="text-3xl font-bold text-neutral-900 mt-1">1,248</p>
+                            </div>
+                            <div class="bg-white p-6 rounded-2xl shadow-sm border border-neutral-300">
+                                <div class="flex justify-between items-start mb-4">
+                                    <div class="p-2 rounded-xl bg-secondary-100 text-secondary-500">
+                                        <i data-lucide="clock" class="w-6 h-6"></i>
+                                    </div>
+                                    <span class="text-[10px] font-bold bg-semantic-warning/10 text-semantic-warning px-2 py-1 rounded-full">Pending</span>
+                                </div>
+                                <p class="text-neutral-600 text-xs font-bold uppercase tracking-wider">รอตรวจสอบใบเซอร์</p>
+                                <p class="text-3xl font-bold text-neutral-900 mt-1">42</p>
+                            </div>
+                            <div class="bg-white p-6 rounded-2xl shadow-sm border border-neutral-300">
+                                <div class="flex justify-between items-start mb-4">
+                                    <div class="p-2 rounded-xl bg-semantic-info/10 text-semantic-info">
+                                        <i data-lucide="clipboard-check" class="w-6 h-6"></i>
+                                    </div>
+                                    <span class="text-[10px] font-bold bg-semantic-info/10 text-semantic-info px-2 py-1 rounded-full">SLA 98%</span>
+                                </div>
+                                <p class="text-neutral-600 text-xs font-bold uppercase tracking-wider">การจองวันนี้</p>
+                                <p class="text-3xl font-bold text-neutral-900 mt-1">156</p>
+                            </div>
+                            <div class="bg-white p-6 rounded-2xl shadow-sm border border-neutral-300">
+                                <div class="flex justify-between items-start mb-4">
+                                    <div class="p-2 rounded-xl bg-semantic-error/10 text-semantic-error">
+                                        <i data-lucide="alert-circle" class="w-6 h-6"></i>
+                                    </div>
+                                    <span class="text-[10px] font-bold bg-semantic-error/10 text-semantic-error px-2 py-1 rounded-full">High</span>
+                                </div>
+                                <p class="text-neutral-600 text-xs font-bold uppercase tracking-wider">เคสฉุกเฉิน / ปัญหา</p>
+                                <p class="text-3xl font-bold text-semantic-error mt-1">3</p>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                            <div class="bg-white rounded-2xl shadow-sm border border-neutral-300 overflow-hidden">
+                                <div class="p-6 border-b border-neutral-300 flex justify-between items-center">
+                                    <h3 class="font-bold text-neutral-900">กิจกรรมล่าสุด (Audit Trail)</h3>
+                                    <button class="text-xs text-primary-600 font-bold hover:underline">ดูทั้งหมด</button>
+                                </div>
+                                <div class="divide-y divide-neutral-100">
+                                    <div class="p-4 flex gap-4 hover:bg-neutral-100 transition-colors">
+                                        <div class="w-1 bg-semantic-success rounded-full"></div>
+                                        <div>
+                                            <p class="text-sm font-bold text-neutral-900">อนุมัติผู้ดูแลใหม่: วนิดา รักษ์ดี</p>
+                                            <p class="text-xs text-neutral-600 mt-1">โดย Operator: สมศักดิ์ • 10 นาทีที่แล้ว</p>
+                                        </div>
+                                    </div>
+                                    <div class="p-4 flex gap-4 hover:bg-neutral-100 transition-colors">
+                                        <div class="w-1 bg-semantic-warning rounded-full"></div>
+                                        <div>
+                                            <p class="text-sm font-bold text-neutral-900">จัดสรรงานแทน: จองรหัส #BK-8842</p>
+                                            <p class="text-xs text-neutral-600 mt-1">เหตุผล: ผู้ดูแลประสบอุบัติเหตุ • 45 นาทีที่แล้ว</p>
+                                        </div>
+                                    </div>
+                                    <div class="p-4 flex gap-4 hover:bg-neutral-100 transition-colors">
+                                        <div class="w-1 bg-primary-600 rounded-full"></div>
+                                        <div>
+                                            <p class="text-sm font-bold text-neutral-900">ส่งออกรายงานรายได้ประจำเดือน</p>
+                                            <p class="text-xs text-neutral-600 mt-1">ประเภทไฟล์: XLSX • 2 ชม. ที่แล้ว</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-white rounded-2xl shadow-sm border border-neutral-300 p-6 flex flex-col justify-center items-center text-center">
+                                <div class="w-20 h-20 bg-neutral-100 rounded-3xl flex items-center justify-center text-neutral-300 mb-4">
+                                    <i data-lucide="pie-chart" class="w-10 h-10"></i>
+                                </div>
+                                <h3 class="font-bold text-neutral-900">สรุปสัดส่วนทักษะ</h3>
+                                <p class="text-sm text-neutral-600 mt-2 max-w-xs">ข้อมูลกำลังถูกประมวลผลสำหรับ Marketplace Skill Statistics</p>
+                                <div class="mt-6 flex gap-2">
+                                    <div class="w-3 h-3 rounded-full bg-primary-600"></div>
+                                    <div class="w-3 h-3 rounded-full bg-secondary-500"></div>
+                                    <div class="w-3 h-3 rounded-full bg-semantic-info"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Caregiver Management (KYC) -->
+                    <div id="content-caregivers" class="tab-content space-y-8">
+                        <div class="bg-white rounded-2xl shadow-sm border border-neutral-300 overflow-hidden">
+                            <div class="p-6 border-b border-neutral-300 flex justify-between items-center bg-neutral-100/50">
+                                <div>
+                                    <h3 class="font-bold text-neutral-900 text-lg">รายการรออนุมัติ (The Gatekeeper)</h3>
+                                    <p class="text-xs text-neutral-600 mt-1">พิจารณาใบรับรองและทักษะเฉพาะทาง</p>
+                                </div>
+                                <div class="flex gap-2">
+                                    <button class="px-4 py-2 bg-white border border-neutral-300 rounded-xl text-xs font-bold hover:bg-neutral-100 transition-all">กรองตามทักษะ</button>
+                                </div>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left">
+                                    <thead>
+                                        <tr class="text-[10px] uppercase font-bold text-neutral-600 border-b border-neutral-300">
+                                            <th class="px-6 py-4">ผู้สมัคร</th>
+                                            <th class="px-6 py-4">สถานะใบเซอร์ฯ</th>
+                                            <th class="px-6 py-4">ทักษะสำคัญ</th>
+                                            <th class="px-6 py-4">วันที่ส่ง</th>
+                                            <th class="px-6 py-4 text-right">การจัดการ</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-neutral-100">
+                                        <tr class="hover:bg-primary-100/20 transition-colors group">
+                                            <td class="px-6 py-4">
+                                                <div class="flex items-center gap-3">
+                                                    <div class="w-10 h-10 rounded-xl bg-primary-100 flex items-center justify-center font-bold text-primary-600">ว</div>
+                                                    <div>
+                                                        <p class="text-sm font-bold text-neutral-900">วิไลลักษณ์ ใจดี</p>
+                                                        <p class="text-xs text-neutral-600">วิชาชีพพยาบาล (RN)</p>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                <span class="px-3 py-1 bg-semantic-success/10 text-semantic-success text-[10px] font-bold rounded-full border border-semantic-success/20">CERTIFIED</span>
+                                            </td>
+                                            <td class="px-6 py-4 text-xs font-medium text-neutral-600">กายภาพ, ดูแลแผลกดทับ</td>
+                                            <td class="px-6 py-4 text-xs text-neutral-600">10 พ.ค. 2026</td>
+                                            <td class="px-6 py-4 text-right space-x-2">
+                                                <button onclick="openVerifyModal('วิไลลักษณ์ ใจดี')" class="px-3 py-1.5 bg-primary-600 text-white text-[10px] font-bold rounded-lg hover:bg-primary-700 transition-all shadow-md">ตรวจสอบเอกสาร</button>
+                                                <button class="p-1.5 text-neutral-300 hover:text-semantic-error transition-colors"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                                            </td>
+                                        </tr>
+                                        <tr class="hover:bg-primary-100/20 transition-colors group">
+                                            <td class="px-6 py-4">
+                                                <div class="flex items-center gap-3">
+                                                    <div class="w-10 h-10 rounded-xl bg-neutral-200 flex items-center justify-center font-bold text-neutral-600">ม</div>
+                                                    <div>
+                                                        <p class="text-sm font-bold text-neutral-900">มานะ ขยันงาน</p>
+                                                        <p class="text-xs text-neutral-600">ผู้ช่วยพยาบาล (NA)</p>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                <span class="px-3 py-1 bg-semantic-warning/10 text-semantic-warning text-[10px] font-bold rounded-full border border-semantic-warning/20">PENDING VERIFY</span>
+                                            </td>
+                                            <td class="px-6 py-4 text-xs font-medium text-neutral-600">ช่วยเหลือพื้นฐาน, กิจวัตรประจำวัน</td>
+                                            <td class="px-6 py-4 text-xs text-neutral-600">09 พ.ค. 2026</td>
+                                            <td class="px-6 py-4 text-right space-x-2">
+                                                <button onclick="openVerifyModal('มานะ ขยันงาน')" class="px-3 py-1.5 bg-primary-600 text-white text-[10px] font-bold rounded-lg hover:bg-primary-700 transition-all shadow-md">ตรวจสอบเอกสาร</button>
+                                                <button class="p-1.5 text-neutral-300 hover:text-semantic-error transition-colors"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Operational Control & Scheduling -->
+                    <div id="content-scheduling" class="tab-content space-y-8">
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                            <div class="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-neutral-300 p-6">
+                                <div class="flex justify-between items-center mb-6">
+                                    <h3 class="font-bold text-neutral-900">ตารางเวรกะวันนี้</h3>
+                                    <div class="flex gap-2">
+                                        <div class="flex items-center gap-2 px-3 py-1.5 bg-semantic-success/10 rounded-lg">
+                                            <div class="w-2 h-2 rounded-full bg-semantic-success animate-pulse"></div>
+                                            <span class="text-[10px] font-bold text-semantic-success uppercase">Live Tracking</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="space-y-4">
+                                    <div class="p-4 bg-neutral-100 rounded-2xl border border-neutral-300 flex items-center gap-4 relative overflow-hidden">
+                                        <div class="absolute left-0 top-0 bottom-0 w-1 bg-semantic-success"></div>
+                                        <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-primary-600 shadow-sm border border-neutral-300">
+                                            <i data-lucide="user" class="w-6 h-6"></i>
+                                        </div>
+                                        <div class="flex-1">
+                                            <div class="flex justify-between items-start">
+                                                <h4 class="text-sm font-bold text-neutral-900">คุณสายใจ บุญมาก (เคสประจำ)</h4>
+                                                <span class="text-[10px] font-bold text-semantic-success">เช็กอินแล้ว 08:00 น.</span>
+                                            </div>
+                                            <p class="text-xs text-neutral-600 mt-1 flex items-center gap-1">
+                                                <i data-lucide="map-pin" class="w-3 h-3"></i> เขตบางนา • ผู้ดูแล: วนิดา รักษ์ดี
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div class="p-4 bg-white rounded-2xl border-2 border-semantic-error/50 flex items-center gap-4 relative overflow-hidden animate-pulse">
+                                        <div class="absolute left-0 top-0 bottom-0 w-1 bg-semantic-error"></div>
+                                        <div class="w-12 h-12 bg-semantic-error/10 rounded-xl flex items-center justify-center text-semantic-error shadow-sm border border-semantic-error/20">
+                                            <i data-lucide="alert-triangle" class="w-6 h-6"></i>
+                                        </div>
+                                        <div class="flex-1">
+                                            <div class="flex justify-between items-start">
+                                                <h4 class="text-sm font-bold text-neutral-900">เคสจองใหม่ #BK-9021</h4>
+                                                <span class="text-[10px] font-bold text-semantic-error">CONFLIT DETECTED</span>
+                                            </div>
+                                            <p class="text-xs text-neutral-600 mt-1 flex items-center gap-1">
+                                                <i data-lucide="info" class="w-3 h-3"></i> ผู้ดูแล "สมคิด" ลาป่วยกระทันหัน
+                                            </p>
+                                            <button onclick="reassignCase('#BK-9021')" class="mt-3 text-[10px] px-3 py-1.5 bg-semantic-error text-white font-bold rounded-lg hover:bg-red-600 transition-all">จัดสรรงานแทนด่วน</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-primary-600 rounded-2xl p-6 text-white shadow-xl shadow-primary-600/30">
+                                <h3 class="font-bold text-lg mb-4">Operational Status</h3>
+                                <div class="space-y-6">
+                                    <div>
+                                        <div class="flex justify-between text-xs font-bold mb-2">
+                                            <span>Active Monitoring</span>
+                                            <span>100%</span>
+                                        </div>
+                                        <div class="h-1.5 bg-white/20 rounded-full overflow-hidden">
+                                            <div class="h-full bg-white w-full"></div>
+                                        </div>
+                                    </div>
+                                    <div class="p-4 bg-white/10 rounded-xl border border-white/20">
+                                        <p class="text-xs font-bold uppercase tracking-widest opacity-60">Incident Rate</p>
+                                        <p class="text-2xl font-bold mt-1">0.5% <span class="text-xs font-normal opacity-80">(Normal)</span></p>
+                                    </div>
+                                    <p class="text-[10px] opacity-70 leading-relaxed italic">"ทุกการเปลี่ยนตารางงานโดย Operator ต้องระบุเหตุผลเพื่อ Audit Trail ตามมาตรฐานสากล"</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 4: Quality Assurance & Dispute Resolution -->
+                    <div id="content-disputes" class="tab-content space-y-8">
+                        <div class="bg-white rounded-2xl shadow-sm border border-neutral-300 overflow-hidden">
+                            <div class="p-6 border-b border-neutral-300 flex justify-between items-center">
+                                <h3 class="font-bold text-neutral-900">Review Appeals (คำอุทธรณ์คะแนนรีวิว)</h3>
+                                <div class="flex items-center gap-2">
+                                    <span class="text-xs font-bold text-semantic-error">SLA: ภายใน 3 วันทำการ</span>
+                                </div>
+                            </div>
+                            <div class="p-6">
+                                <div class="space-y-6">
+                                    <div class="p-6 bg-neutral-100 rounded-2xl border border-neutral-300">
+                                        <div class="flex justify-between mb-4">
+                                            <div class="flex items-center gap-3">
+                                                <div class="w-12 h-12 rounded-full bg-secondary-100 flex items-center justify-center text-secondary-500 font-bold border-2 border-white shadow-sm">ส</div>
+                                                <div>
+                                                    <p class="text-sm font-bold text-neutral-900">สมคิด ยิ้มสู้</p>
+                                                    <div class="flex gap-1 mt-0.5">
+                                                        <i data-lucide="star" class="w-3 h-3 fill-secondary-500 text-secondary-500"></i>
+                                                        <i data-lucide="star" class="w-3 h-3 text-neutral-300"></i>
+                                                        <i data-lucide="star" class="w-3 h-3 text-neutral-300"></i>
+                                                        <i data-lucide="star" class="w-3 h-3 text-neutral-300"></i>
+                                                        <i data-lucide="star" class="w-3 h-3 text-neutral-300"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="text-right">
+                                                <p class="text-[10px] font-bold text-neutral-600">ยื่นเมื่อ 11 พ.ค. 2026</p>
+                                                <p class="text-[10px] font-bold text-semantic-warning mt-1">เหลือเวลา: 2 วัน 14 ชม.</p>
+                                            </div>
+                                        </div>
+                                        <div class="p-4 bg-white rounded-xl border border-neutral-300 mb-4">
+                                            <p class="text-xs text-neutral-600 leading-relaxed font-medium italic">"ลูกค้าแจ้งว่าผมไปสาย 1 ชม. แต่จริงๆ ผมไปถึงก่อนเวลาและมี Care Report ยืนยันในระบบครับ รบกวนตรวจสอบเพื่อความเป็นธรรมด้วยครับ"</p>
+                                        </div>
+                                        <div class="flex gap-3">
+                                            <button class="flex-1 py-2 bg-semantic-success text-white text-xs font-bold rounded-lg hover:bg-green-600 shadow-md">Approve Appeal (ปรับคะแนน)</button>
+                                            <button class="flex-1 py-2 bg-white text-semantic-error border border-semantic-error text-xs font-bold rounded-lg hover:bg-semantic-error/10">Reject (คงคะแนนเดิม)</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 5: Settlement & Audit Trail -->
+                    <div id="content-settlement" class="tab-content space-y-8">
+                        <!-- ... unchanged settlement content ... -->
+                    </div>
+
+                    <!-- Step 6: Matching Adjustment (PF-MT-002) -->
+                    <div id="content-matching" class="tab-content space-y-8">
+                        <div class="bg-white rounded-2xl shadow-sm border border-neutral-300 p-8">
+                            <h3 class="font-bold text-xl text-neutral-900 mb-2">Matching Engine Configuration</h3>
+                            <p class="text-sm text-neutral-600 mb-8">ปรับแต่งค่าน้ำหนัก (Weights) สำหรับอัลกอริทึมการแนะนำผู้ดูแล</p>
+                            
+                            <div class="space-y-8 max-w-2xl">
+                                <div class="space-y-4">
+                                    <div class="flex justify-between items-center">
+                                        <label class="text-sm font-bold text-neutral-900">ค่าน้ำหนักทักษะ (Skill Relevance)</label>
+                                        <span class="text-primary-600 font-bold">40%</span>
+                                    </div>
+                                    <input type="range" class="w-full h-2 bg-neutral-200 rounded-lg appearance-none cursor-pointer accent-primary-600">
+                                </div>
+                                <div class="space-y-4">
+                                    <div class="flex justify-between items-center">
+                                        <label class="text-sm font-bold text-neutral-900">ระยะทาง (Proximity)</label>
+                                        <span class="text-primary-600 font-bold">30%</span>
+                                    </div>
+                                    <input type="range" class="w-full h-2 bg-neutral-200 rounded-lg appearance-none cursor-pointer accent-primary-600">
+                                </div>
+                                <div class="space-y-4">
+                                    <div class="flex justify-between items-center">
+                                        <label class="text-sm font-bold text-neutral-900">คะแนนรีวิว (Rating History)</label>
+                                        <span class="text-primary-600 font-bold">30%</span>
+                                    </div>
+                                    <input type="range" class="w-full h-2 bg-neutral-200 rounded-lg appearance-none cursor-pointer accent-primary-600">
+                                </div>
+                                
+                                <div class="p-4 bg-primary-100/50 border border-primary-600 rounded-xl">
+                                    <p class="text-xs text-primary-700 leading-relaxed italic">"การปรับพารามิเตอร์จะมีผลต่อการแนะนำผู้ดูแลใน Marketplace ทันที ทุกการแก้ไขจะถูกบันทึกใน Version Control"</p>
+                                </div>
+
+                                <button onclick="showToast('บันทึกพารามิเตอร์ใหม่ (v2.1) สำเร็จ')" class="px-8 py-4 bg-primary-600 text-white font-bold rounded-xl shadow-lg hover:bg-primary-700 transition-all">บันทึกการตั้งค่า</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 7: Incident Reports (PF-OP-003) -->
+                    <div id="content-incidents" class="tab-content space-y-8">
+                        <div class="bg-white rounded-2xl shadow-sm border border-neutral-300 overflow-hidden">
+                            <div class="p-6 border-b border-neutral-300 bg-neutral-50 flex justify-between items-center">
+                                <h3 class="font-bold text-neutral-900">Incident Logging & Resolutions</h3>
+                                <button onclick="showToast('เริ่มบันทึกเคสใหม่')" class="px-4 py-2 bg-semantic-error text-white text-xs font-bold rounded-xl shadow-md flex items-center gap-2">
+                                    <i data-lucide="plus" class="w-4 h-4"></i> บันทึกเหตุการณ์ใหม่
+                                </button>
+                            </div>
+                            <div class="p-6">
+                                <div class="space-y-4">
+                                    <div class="p-4 bg-white border border-neutral-300 rounded-2xl flex justify-between items-center hover:shadow-md transition-all">
+                                        <div class="flex items-center gap-4">
+                                            <div class="w-10 h-10 rounded-full bg-semantic-error/10 text-semantic-error flex items-center justify-center">
+                                                <i data-lucide="alert-octagon" class="w-5 h-5"></i>
+                                            </div>
+                                            <div>
+                                                <p class="text-sm font-bold text-neutral-900">อุบัติเหตุระหว่างเดินทาง (#INC-102)</p>
+                                                <p class="text-xs text-neutral-600 mt-0.5">ผู้ดูแล: สมคิด ยิ้มสู้ | วันที่: 12 พ.ค. 2026</p>
+                                            </div>
+                                        </div>
+                                        <span class="px-3 py-1 bg-semantic-success/10 text-semantic-success text-[10px] font-bold rounded-full">RESOLVED</span>
+                                    </div>
+                                    <div class="p-4 bg-white border border-neutral-300 rounded-2xl flex justify-between items-center hover:shadow-md transition-all">
+                                        <div class="flex items-center gap-4">
+                                            <div class="w-10 h-10 rounded-full bg-semantic-warning/10 text-semantic-warning flex items-center justify-center">
+                                                <i data-lucide="clock" class="w-5 h-5"></i>
+                                            </div>
+                                            <div>
+                                                <p class="text-sm font-bold text-neutral-900">การเช็กอินผิดพลาด (#INC-105)</p>
+                                                <p class="text-xs text-neutral-600 mt-0.5">ผู้ดูแล: วนิดา รักษ์ดี | วันที่: 12 พ.ค. 2026</p>
+                                            </div>
+                                        </div>
+                                        <span class="px-3 py-1 bg-semantic-warning/10 text-semantic-warning text-[10px] font-bold rounded-full">INVESTIGATING</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal: Verification -->
+    <div id="verify-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-neutral-900/60 backdrop-blur-sm">
+        <div class="bg-white w-full max-w-2xl rounded-2xl shadow-2xl border border-neutral-300 flex flex-col max-h-[90vh]">
+            <div class="p-6 border-b border-neutral-300 flex justify-between items-center">
+                <h3 class="text-xl font-bold text-neutral-900">ตรวจสอบคุณสมบัติ: <span id="modal-user-name"></span></h3>
+                <button onclick="closeModal('verify-modal')" class="p-2 hover:bg-neutral-100 rounded-xl"><i data-lucide="x" class="w-6 h-6"></i></button>
+            </div>
+            <div class="p-8 overflow-y-auto space-y-6">
+                <div class="grid grid-cols-2 gap-6">
+                    <div class="p-4 bg-neutral-100 rounded-2xl border border-neutral-300">
+                        <p class="text-[10px] font-bold text-neutral-600 uppercase tracking-widest mb-2">ID Verification (KYC)</p>
+                        <div class="aspect-[4/3] bg-neutral-300 rounded-xl flex items-center justify-center text-neutral-600 font-bold">
+                            Mock: ID Card Image
+                        </div>
+                    </div>
+                    <div class="p-4 bg-neutral-100 rounded-2xl border border-neutral-300">
+                        <p class="text-[10px] font-bold text-neutral-600 uppercase tracking-widest mb-2">Certification</p>
+                        <div class="aspect-[4/3] bg-primary-100 border-2 border-primary-600 border-dashed rounded-xl flex flex-col items-center justify-center text-primary-600 p-4 text-center">
+                            <i data-lucide="file-text" class="w-8 h-8 mb-2"></i>
+                            <p class="text-[10px] font-bold">CERTIFIED BY TRAINING PROVIDER</p>
+                            <p class="text-[8px] mt-1 opacity-70">Hash: 0x82...f42</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-bold text-neutral-900 mb-2">ระบุเหตุผล (กรณี Reject/Suspend)</label>
+                    <textarea class="w-full p-4 bg-neutral-100 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-primary-600 focus:outline-none h-24 text-sm" placeholder="เช่น เอกสารไม่ชัดเจน, ขาดใบรับรองทักษะเฉพาะทาง..."></textarea>
+                </div>
+            </div>
+            <div class="p-6 border-t border-neutral-300 flex gap-4 bg-neutral-100/50">
+                <button onclick="actionSuccess('อนุมัติ')" class="flex-1 py-4 bg-primary-600 text-white rounded-xl font-bold hover:bg-primary-700 shadow-md transition-all">Approve & Active</button>
+                <button onclick="actionWarning('ปฏิเสธ')" class="flex-1 py-4 bg-white text-semantic-error border border-semantic-error rounded-xl font-bold hover:bg-semantic-error/5 transition-all">Reject / Feedback</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="hidden fixed bottom-8 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 px-6 py-4 bg-neutral-900 text-white rounded-2xl shadow-2xl animate-bounce">
+        <i data-lucide="check-circle" class="w-5 h-5 text-semantic-success"></i>
+        <p class="text-sm font-bold tracking-tight" id="toast-message">ดำเนินการสำเร็จ</p>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        function logout() {
+            if(confirm('คุณต้องการออกจากระบบใช่หรือไม่? ทุกกิจกรรมจะถูกบันทึกใน Audit Trail')) {
+                window.location.href = '../login.html';
+            }
+        }
+
+        function switchTab(tabId) {
+            // Update Nav
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('bg-primary-600', 'text-white', 'shadow-lg', 'shadow-primary-600/20');
+                item.classList.add('text-neutral-600', 'hover:bg-primary-100', 'hover:text-primary-600');
+                const icon = item.querySelector('i');
+                if(icon) icon.classList.replace('text-white', 'text-neutral-300');
+            });
+
+            const activeNav = document.getElementById('nav-' + tabId);
+            activeNav.classList.add('bg-primary-600', 'text-white', 'shadow-lg', 'shadow-primary-600/20');
+            activeNav.classList.remove('text-neutral-600', 'hover:bg-primary-100', 'hover:text-primary-600');
+            const activeIcon = activeNav.querySelector('i');
+            if(activeIcon) activeIcon.classList.replace('text-neutral-300', 'text-white');
+
+            // Update Content
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.getElementById('content-' + tabId).classList.add('active');
+
+            // Update Title
+            const titles = {
+                'dashboard': 'แผงควบคุมหลัก',
+                'caregivers': 'จัดการผู้ดูแล (KYC)',
+                'scheduling': 'ตารางงาน & ปัญหา',
+                'disputes': 'การอุทธรณ์ & QA',
+                'settlement': 'ยอดเงิน & รายงาน'
+            };
+            document.getElementById('page-title').innerText = titles[tabId];
+        }
+
+        // Modal Logic
+        function openVerifyModal(name) {
+            document.getElementById('modal-user-name').innerText = name;
+            document.getElementById('verify-modal').classList.remove('hidden');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.add('hidden');
+        }
+
+        // Action Simulation
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-message').innerText = msg;
+            toast.classList.remove('hidden');
+            setTimeout(() => toast.classList.add('hidden'), 3000);
+        }
+
+        function actionSuccess(action) {
+            showToast(`${action}สำเร็จ สถานะเปลี่ยนเป็น Active`);
+            closeModal('verify-modal');
+        }
+
+        function actionWarning(action) {
+            showToast(`${action}เสร็จสิ้น ระบบส่ง Feedback ให้ผู้ใช้แล้ว`);
+            closeModal('verify-modal');
+        }
+
+        function reassignCase(id) {
+            const reason = prompt(`ระบุเหตุผลในการจัดสรรงานแทน สำหรับเคส ${id}:`);
+            if(reason) {
+                showToast(`จัดสรรงานแทนสำเร็จ (${reason})`);
+            }
+        }
+
+        function mockExport(type) {
+            const progress = document.getElementById('export-progress');
+            progress.classList.remove('hidden');
+            setTimeout(() => {
+                progress.classList.add('hidden');
+                showToast(`ส่งออกไฟล์ ${type} สำเร็จ (Audit Log Created)`);
+            }, 2000);
+        }
+
+        // OTP Auto-focus
+        const inputs = document.querySelectorAll('.otp-input');
+        inputs.forEach((input, index) => {
+            input.addEventListener('input', (e) => {
+                if (e.target.value.length === 1 && index < inputs.length - 1) {
+                    inputs[index + 1].focus();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
