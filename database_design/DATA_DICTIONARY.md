@@ -12,11 +12,12 @@ This document serves as the technical reference for the CareDee PostgreSQL datab
 | **AuthProvider** | LOCAL, GOOGLE, FACEBOOK, LINE, APPLE |
 | **BookingStatus** | PENDING, CONFIRMED, IN_PROGRESS, COMPLETED, CANCELLED |
 | **TransactionStatus** | PENDING, SUCCESS, FAILED, REFUNDED |
-| **CertificationStatus** | PENDING, APPROVED, REJECTED, REVOKED |
+| **CertificationStatus** | PENDING, APPROVED, REJECTED, REVOKED, EXPIRED |
 | **DayOfWeek** | MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY |
 | **ApprovalStatus** | PENDING, APPROVED, REJECTED |
 | **ReviewAppealStatus** | PENDING, IN_REVIEW, RESOLVED, REJECTED |
 | **TransactionType** | DEPOSIT, FINAL_PAYMENT, REFUND, RETRY, ADJUSTMENT |
+| **NotificationStatus** | PENDING, SENT, FAILED |
 
 ---
 
@@ -94,9 +95,9 @@ Professional details for users with the CAREGIVER role.
 | `id` | UUID | PK | `gen_random_uuid()` | Unique identifier. |
 | `userId` | UUID | FK (User.id), UNIQUE, NOT NULL | - | Base user reference. |
 | `operatorId` | UUID | FK (User.id) | - | Managing Service Operator. |
-| `nationalId` | TEXT | UNIQUE, NOT NULL | - | Thai ID card number (Encrypted). |
+| `nationalId` | TEXT | UNIQUE, NOT NULL | - | Thai ID card number (**Encrypted at app-level SA-003**). |
 | `approvalStatus` | ApprovalStatus | NOT NULL | 'PENDING' | Workflow verification state. |
-| `skills` | TEXT[] | - | - | Array of professional skills. |
+| `skills" | TEXT[] | - | - | Array of professional skills. |
 | `serviceArea` | TEXT | NOT NULL | - | Coverage zone metadata. |
 | `hourlyRate` | FLOAT8 | NOT NULL | - | Price per hour in THB. |
 | `ratingAvg` | FLOAT8 | NOT NULL | 0.0 | Cached score from reviews. |
@@ -109,9 +110,8 @@ High-frequency GPS tracking data.
 | Column | Type | Constraints | Default | Description |
 | :--- | :--- | :--- | :--- | :--- |
 | `id` | UUID | PK (Composite) | `gen_random_uuid()` | Unique identifier. |
-| `userId` | UUID | FK (User.id), NOT NULL | - | User being tracked. |
-| `latitude` | FLOAT8 | NOT NULL | - | GPS latitude. |
-| `longitude` | FLOAT8 | NOT NULL | - | GPS longitude. |
+| `userId" | UUID | FK (User.id), NOT NULL | - | User being tracked. |
+| `location` | GEOGRAPHY | NOT NULL | - | PostGIS GPS Point (4326). |
 | `timestamp` | TIMESTAMPTZ | PK (Composite), NOT NULL | `NOW()` | Event time / Partition Key. |
 
 ### 7. CaregiverAvailability
@@ -135,9 +135,9 @@ Verified credentials for caregivers.
 | `nationalId` | TEXT | NOT NULL | - | Used for certificate claiming. |
 | `name` | TEXT | NOT NULL | - | Certificate/Course name. |
 | `issuingInstituteId`| UUID | FK (User.id), NOT NULL | - | The Training Institute. |
-| `status` | CertificationStatus | NOT NULL | 'PENDING' | Verification workflow. |
+| `status` | CertificationStatus | NOT NULL | 'PENDING' | Verification workflow (e.g. APPROVED, EXPIRED). |
 | `fileUrl` | TEXT | NOT NULL | - | Link to S3/Storage file. |
-| `expiryDate` | TIMESTAMPTZ | NOT NULL | - | Validity limit. |
+| `expiryDate` | TIMESTAMPTZ | NOT NULL | - | Validity limit. **Status auto-updated via trigger.** |
 | `createdAt` | TIMESTAMPTZ | NOT NULL | `NOW()` | Audit creation time. |
 | `updatedAt` | TIMESTAMPTZ | NOT NULL | `NOW()` | Audit update time. |
 
@@ -152,12 +152,13 @@ Central transaction table for care sessions.
 | `caregiverId` | UUID | FK (CaregiverProfile.id), NOT NULL | - | The assigned caregiver. |
 | `serviceType` | TEXT | NOT NULL | - | Category of service. |
 | `locationAddress` | TEXT | NOT NULL | - | Physical service location. |
+| `locationGeog` | GEOGRAPHY | - | - | PostGIS point for distance logic. |
 | `scheduledStart` | TIMESTAMPTZ | NOT NULL | - | Planned start. |
 | `scheduledEnd` | TIMESTAMPTZ | NOT NULL | - | Planned end. |
 | `checkInTime` | TIMESTAMPTZ | - | - | Actual start. |
-| `checkInLat`/`Lng` | FLOAT8 | - | - | GPS verification at start. |
+| `checkInLocation` | GEOGRAPHY | - | - | GPS verification at start. |
 | `checkOutTime` | TIMESTAMPTZ | - | - | Actual end. |
-| `checkOutLat`/`Lng` | FLOAT8 | - | - | GPS verification at end. |
+| `checkOutLocation` | GEOGRAPHY | - | - | GPS verification at end. |
 | `status` | BookingStatus | NOT NULL | 'PENDING' | Workflow state. |
 | `cancellationReason` | TEXT | - | - | Provided by user/operator. |
 | `cancelledBy` | UUID | FK (User.id) | - | User who triggered cancel. |
@@ -193,7 +194,7 @@ Daily clinical/activity logs submitted by caregivers.
 | `bookingId` | UUID | FK (Booking.id), UNIQUE, NOT NULL | - | Reference to session. |
 | `activities` | JSONB | NOT NULL | - | Structured checklist of tasks. |
 | `mediaUrls` | TEXT[] | - | - | List of evidence image URLs. |
-| `latitude`/`longitude` | FLOAT8 | - | - | Submission GPS location. |
+| `location` | GEOGRAPHY | - | - | Submission PostGIS GPS location. |
 | `submittedAt` | TIMESTAMPTZ | NOT NULL | `NOW()` | Record time. |
 | `deletedAt` | TIMESTAMPTZ | - | - | Soft delete timestamp. |
 
@@ -233,7 +234,7 @@ Immutable log of system-wide actions.
 | `userId` | UUID | FK (User.id), NOT NULL | - | Performer of the action. |
 | `action` | TEXT | NOT NULL | - | E.g., 'LOGIN', 'UPDATE_RATE'. |
 | `entity` | TEXT | NOT NULL | - | Affected table name. |
-| `details` | JSONB | NOT NULL | - | Before/After state change. |
+| `details` | JSONB | NOT NULL | - | State change (**{before: {...}, after: {...}}**). |
 | `createdAt` | TIMESTAMPTZ | NOT NULL | `NOW()` | Event timestamp. |
 
 ### 15. SystemConfiguration
@@ -268,6 +269,9 @@ Multi-channel alerts for users.
 | `userId` | UUID | FK (User.id), NOT NULL | - | Target recipient. |
 | `type` | TEXT | NOT NULL | - | Category (e.g., 'PAYMENT'). |
 | `message` | TEXT | NOT NULL | - | Alert content. |
+| `status` | NotificationStatus | NOT NULL | 'PENDING' | Queue state. |
+| `retryCount` | INTEGER | NOT NULL | 0 | Number of failed attempts. |
+| `lastRetryAt` | TIMESTAMPTZ | - | - | Last delivery attempt time. |
 | `isRead` | BOOLEAN | NOT NULL | false | Read/Unread status. |
 | `createdAt` | TIMESTAMPTZ | NOT NULL | `NOW()` | Audit creation time. |
 
