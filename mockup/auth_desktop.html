@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareDee - ลงชื่อเข้าใช้ระบบบริหารจัดการ</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8fafc;
+            height: 100vh;
+            margin: 0;
+            display: flex;
+        }
+
+        .login-split {
+            display: flex;
+            width: 100%;
+        }
+
+        .login-branding {
+            flex: 1.2;
+            background: #0f172a;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 4rem;
+            text-align: center;
+        }
+
+        .login-form-container {
+            flex: 1;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 4rem;
+            box-shadow: -10px 0 30px rgba(0,0,0,0.05);
+        }
+
+        .login-card {
+            max-width: 450px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .branding-logo {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .branding-tagline {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            max-width: 400px;
+        }
+
+        @media (max-width: 1024px) {
+            .login-branding { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-split">
+        <!-- Branding Side -->
+        <div class="login-branding">
+            <div>
+                <div class="branding-logo">CareDee</div>
+                <h2 style="color: white; font-size: 2rem; margin-bottom: 1.5rem;">Management System</h2>
+                <p class="branding-tagline">ระบบบริหารจัดการสำหรับแอดมิน เจ้าหน้าที่ และสถาบันฝึกอบรม เพื่อการยกระดับคุณภาพการดูแลผู้สูงอายุอย่างครบวงจร</p>
+            </div>
+            <div style="margin-top: 4rem; text-align: left; background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
+                <p style="font-size: 0.9rem; margin: 0; color: var(--success-color);">🟢 ระบบทำงานปกติ (Infrastructure Online)</p>
+                <p style="font-size: 0.8rem; margin: 0.5rem 0 0; color: var(--text-muted);">เวอร์ชัน: 1.2.0 (Stable Release)</p>
+            </div>
+        </div>
+
+        <!-- Form Side -->
+        <div class="login-form-container">
+            <div class="login-card">
+                <div style="margin-bottom: 2.5rem;">
+                    <h1 style="font-size: 2rem; margin-bottom: 0.5rem;">เข้าสู่ระบบ</h1>
+                    <p style="color: var(--secondary-color);">กรุณาระบุรายละเอียดเพื่อเข้าใช้งานแผงควบคุม</p>
+                </div>
+
+                <div class="form-group">
+                    <label>ระดับสิทธิ์การใช้งาน (Role)</label>
+                    <select id="user-role" style="background: white; border: 2px solid var(--border-color);">
+                        <option value="admin">ผู้ดูแลระบบ (Admin)</option>
+                        <option value="operator">เจ้าหน้าที่ปฏิบัติการ (Operator)</option>
+                        <option value="institute">สถาบันฝึกอบรม (Training Institute)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>ชื่อผู้ใช้งาน หรือ อีเมล</label>
+                    <input type="text" placeholder="username@caredee.com" style="background: white;">
+                </div>
+
+                <div class="form-group">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                        <label style="margin: 0;">รหัสผ่าน</label>
+                        <a href="#" style="font-size: 0.85rem; color: var(--primary-color); text-decoration: none;">ลืมรหัสผ่าน?</a>
+                    </div>
+                    <input type="password" placeholder="••••••••" style="background: white;">
+                </div>
+
+                <div style="margin: 1.5rem 0 2rem;">
+                    <label style="display: flex; align-items: center; gap: 0.75rem; font-weight: normal; text-transform: none; font-size: 0.9rem;">
+                        <input type="checkbox" style="width: 18px; height: 18px;"> จดจำการเข้าใช้งานบนอุปกรณ์นี้
+                    </label>
+                </div>
+
+                <button class="btn-primary" style="width: 100%; padding: 1.125rem; font-size: 1.1rem; border-radius: 10px;" onclick="handleLogin()">เข้าสู่ระบบ</button>
+
+                <div style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border-color); text-align: center;">
+                    <p style="font-size: 0.85rem; color: var(--secondary-color);">สำหรับลูกค้าและผู้ดูแล <br> <a href="auth_forms.html" style="color: var(--primary-color); font-weight: 600; text-decoration: none;">เข้าใช้งานเวอร์ชันมือถือที่นี่</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function handleLogin() {
+            const role = document.getElementById('user-role').value;
+            
+            if (role === 'admin' || role === 'operator') {
+                alert('กำลังเข้าสู่ระบบ Admin/Operator Dashboard...');
+                window.location.href = 'operator_admin_forms.html';
+            } else if (role === 'institute') {
+                alert('กำลังเข้าสู่ระบบ Training Institute Dashboard...');
+                window.location.href = 'training_institute_forms.html';
+            }
+        }
+    </script>
+</body>
+</html>

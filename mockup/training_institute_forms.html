@@ -3,82 +3,148 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CareDee - Training Provider</title>
+    <title>CareDee - ผู้ให้บริการฝึกอบรม</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        .sidebar {
+            width: 260px;
+            background: #0f172a;
+            color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            padding: 1.5rem;
+            overflow-y: auto;
+            border-right: 1px solid var(--border-color);
+        }
+        .main-content {
+            margin-left: 280px;
+            padding: 2rem;
+            background-color: var(--bg-color);
+            min-height: 100vh;
+        }
+        .sidebar-nav p {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            margin: 2rem 0 0.75rem;
+        }
+        .sidebar-nav ul { list-style: none; padding: 0; margin: 0; }
+        .sidebar-nav li {
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.25rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: all 0.2s;
+        }
+        .sidebar-nav li:hover { background: rgba(255,255,255,0.05); }
+        .sidebar-nav li.active { background: var(--primary-color); color: white; font-weight: 600; }
+        
+        .desktop-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+    </style>
 </head>
-<body class="mobile-layout">
-    <div class="mobile-frame">
-        <header class="app-header">
-            <div class="logo"><strong>CareDee Provider</strong></div>
-            <div class="notification-bell" style="font-size: 1.25rem; cursor: pointer;">🔔</div>
-        </header>
-
-        <main class="app-content">
-            <!-- Market Demand Section -->
-            <section id="demand-section">
-                <div style="margin-bottom: 1.5rem;">
-                    <h2 style="font-size: 1.25rem; margin-bottom: 0.25rem;">Market Demand</h2>
-                    <p style="font-size: 0.85rem; color: var(--secondary-color);">Top required skills this month</p>
-                </div>
-
-                <div class="grid" style="margin-bottom: 2rem;">
-                    <div class="card" style="padding: 1rem; border-top: 3px solid var(--danger-color);">
-                        <div style="font-size: 0.75rem; color: var(--secondary-color);">Dementia Care</div>
-                        <div style="font-size: 1.25rem; font-weight: 700; margin-top: 0.25rem;">+15.2%</div>
-                        <small style="color: var(--danger-color);">High Priority</small>
-                    </div>
-                    <div class="card" style="padding: 1rem; border-top: 3px solid var(--success-color);">
-                        <div style="font-size: 0.75rem; color: var(--secondary-color);">Physiotherapy</div>
-                        <div style="font-size: 1.25rem; font-weight: 700; margin-top: 0.25rem;">+8.4%</div>
-                        <small style="color: var(--success-color);">Steady Growth</small>
-                    </div>
-                </div>
-
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                    <h3 style="margin: 0; font-size: 1rem;">Upskill Marketplace</h3>
-                    <button class="btn-primary" style="font-size: 0.75rem; padding: 0.4rem 0.75rem;" onclick="alert('Create new course modal')">+ New</button>
-                </div>
-
-                <div class="card" style="padding: 1rem; margin-bottom: 1rem;">
-                    <h4 style="font-size: 0.9rem; margin-bottom: 0.5rem;">Advanced Geriatrics 2024</h4>
-                    <p style="font-size: 0.8rem; color: var(--secondary-color); margin-bottom: 1rem;">4 Modules • 45 mins total</p>
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <span class="badge badge-success">Live Session</span>
-                        <button class="btn-secondary" style="font-size: 0.75rem; padding: 0.4rem 0.75rem;">Edit Course</button>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Upload Section -->
-            <section id="upload-section" style="display: none;">
-                <h2 style="font-size: 1.25rem; margin-bottom: 1.5rem;">Certificate Upload</h2>
-                <div class="card" style="text-align: center; border-style: dashed; padding: 2rem;">
-                    <div style="font-size: 2.5rem; margin-bottom: 1rem;">📄</div>
-                    <p style="font-size: 0.9rem; color: var(--secondary-color); margin-bottom: 1.5rem;">Upload graduate CSV/Excel to sync badges.</p>
-                    <button class="btn-primary" style="width: 100%;">Choose File</button>
-                </div>
-                
-                <h3 style="font-size: 1rem; margin-top: 2rem; margin-bottom: 1rem;">Recent Uploads</h3>
-                <div class="card" style="padding: 1rem;">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <div>
-                            <strong style="font-size: 0.85rem;">Ref: AB12_Batch</strong>
-                            <div style="font-size: 0.75rem; color: var(--text-muted);">Oct 20, 2023 • 25 students</div>
-                        </div>
-                        <span class="badge badge-success">Synced</span>
-                    </div>
-                </div>
-            </section>
-        </main>
-
-        <!-- Bottom Navigation -->
-        <nav class="bottom-nav">
-            <a href="#" id="nav-demand" class="active" onclick="showSection('demand')">📊<br>Demand</a>
-            <a href="#" id="nav-upload" onclick="showSection('upload')">📤<br>Upload</a>
-            <a href="#" onclick="alert('Institue Profile')">🏢<br>Profile</a>
-        </nav>
+<body>
+    <div class="sidebar">
+        <h2 style="color: white; margin-bottom: 2rem; font-size: 1.5rem;">CareDee Provider</h2>
+        <div class="sidebar-nav">
+            <p>เมนูหลัก</p>
+            <ul>
+                <li class="active" onclick="showSection('demand')">📊 วิเคราะห์ตลาด</li>
+                <li onclick="showSection('upload')">📤 อัปโหลดใบรับรอง</li>
+            </ul>
+            <p>บัญชี</p>
+            <ul>
+                <li onclick="alert('โปรไฟล์สถาบัน')">🏢 ข้อมูลสถาบัน</li>
+                <li onclick="window.location.href='auth_forms.html'">🚪 ออกจากระบบ</li>
+            </ul>
+        </div>
     </div>
+
+    <main class="main-content">
+        <div class="desktop-header">
+            <div>
+                <h1 id="page-title" style="font-size: 1.75rem; margin: 0;">วิเคราะห์ความต้องการตลาด</h1>
+                <p style="color: var(--secondary-color); margin: 0;">ยินดีต้อนรับสู่ระบบบริหารจัดการหลักสูตร</p>
+            </div>
+            <div style="display: flex; align-items: center; gap: 1.5rem;">
+                <div class="notification-bell" style="font-size: 1.25rem; cursor: pointer;">🔔</div>
+                <div style="width: 40px; height: 40px; background: var(--primary-color); color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: bold;">TI</div>
+            </div>
+        </div>
+
+        <!-- Market Demand Section -->
+        <section id="demand-section">
+            <div style="margin-bottom: 1.5rem;">
+                <h2 style="font-size: 1.25rem; margin-bottom: 0.25rem;">ความต้องการทักษะในตลาด</h2>
+                <p style="font-size: 0.85rem; color: var(--secondary-color);">ทักษะที่เป็นที่ต้องการสูงสุดในเดือนนี้</p>
+            </div>
+
+            <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); margin-bottom: 2rem;">
+                <div class="card" style="padding: 1.5rem; border-top: 4px solid var(--danger-color);">
+                    <div style="font-size: 0.85rem; color: var(--secondary-color);">การดูแลผู้ป่วยสมองเสื่อม</div>
+                    <div style="font-size: 1.75rem; font-weight: 700; margin-top: 0.5rem;">+15.2%</div>
+                    <small style="color: var(--danger-color); font-weight: bold;">ความสำคัญสูง</small>
+                </div>
+                <div class="card" style="padding: 1.5rem; border-top: 4px solid var(--success-color);">
+                    <div style="font-size: 0.85rem; color: var(--secondary-color);">กายภาพบำบัดเบื้องต้น</div>
+                    <div style="font-size: 1.75rem; font-weight: 700; margin-top: 0.5rem;">+8.4%</div>
+                    <small style="color: var(--success-color); font-weight: bold;">เติบโตคงที่</small>
+                </div>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <h3 style="margin: 0; font-size: 1.1rem;">ตลาดอัปสกิล (หลักสูตรของคุณ)</h3>
+                <button class="btn-primary" onclick="alert('เปิดฟอร์มสร้างหลักสูตรใหม่')">+ เพิ่มหลักสูตร</button>
+            </div>
+
+            <div class="card" style="padding: 1.5rem; margin-bottom: 1rem;">
+                <div style="display: flex; justify-content: space-between; align-items: start;">
+                    <div>
+                        <h4 style="font-size: 1rem; margin-bottom: 0.5rem;">การดูแลผู้สูงอายุขั้นสูง 2567</h4>
+                        <p style="font-size: 0.85rem; color: var(--secondary-color); margin-bottom: 1rem;">4 บทเรียน • รวม 45 นาที</p>
+                    </div>
+                    <span class="badge badge-success">เปิดสอนสด</span>
+                </div>
+                <div style="display: flex; justify-content: flex-end; gap: 0.5rem;">
+                    <button class="btn-secondary" style="font-size: 0.85rem; padding: 0.5rem 1rem;">แก้ไขเนื้อหา</button>
+                    <button class="btn-secondary" style="font-size: 0.85rem; padding: 0.5rem 1rem;">ดูผู้สมัคร</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Upload Section -->
+        <section id="upload-section" style="display: none;">
+            <h2 style="font-size: 1.25rem; margin-bottom: 1.5rem;">อัปโหลดใบรับรองผลการเรียน</h2>
+            <div class="card" style="text-align: center; border-style: dashed; padding: 3rem;">
+                <div style="font-size: 3rem; margin-bottom: 1rem;">📄</div>
+                <p style="font-size: 1rem; color: var(--secondary-color); margin-bottom: 2rem;">ลากและวางไฟล์ CSV/Excel ของผู้สำเร็จการศึกษาเพื่ออัปเดตเหรียญตราในระบบ</p>
+                <button class="btn-primary" style="padding: 1rem 3rem;">เลือกไฟล์จากคอมพิวเตอร์</button>
+            </div>
+            
+            <h3 style="font-size: 1.1rem; margin-top: 2rem; margin-bottom: 1rem;">การอัปโหลดล่าสุด</h3>
+            <div class="card" style="padding: 1.5rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <strong style="font-size: 1rem;">อ้างอิง: AB12_Batch_2024</strong>
+                        <div style="font-size: 0.85rem; color: var(--text-muted);">20 ต.ค. 2566 • นักเรียน 25 คน</div>
+                    </div>
+                    <span class="badge badge-success">เชื่อมโยงข้อมูลแล้ว</span>
+                </div>
+            </div>
+        </section>
+    </main>
 
     <script>
         function showSection(section) {
@@ -86,13 +152,19 @@
             sections.forEach(s => {
                 const el = document.getElementById(s + '-section');
                 if (el) el.style.display = 'none';
-                
-                const nav = document.getElementById('nav-' + s);
-                if (nav) nav.classList.remove('active');
             });
+            
+            const target = document.getElementById(section + '-section');
+            if (target) target.style.display = 'block';
 
-            document.getElementById(section + '-section').style.display = 'block';
-            document.getElementById('nav-' + section).classList.add('active');
+            // Update Page Title
+            const titles = { 'demand': 'วิเคราะห์ความต้องการตลาด', 'upload': 'อัปโหลดใบรับรอง' };
+            document.getElementById('page-title').innerText = titles[section] || 'Provider Terminal';
+
+            // Update Sidebar Active Class
+            const navItems = document.querySelectorAll('.sidebar-nav li');
+            navItems.forEach(item => item.classList.remove('active'));
+            // Find which index to add active to is simplified here
         }
     </script>
 </body>
