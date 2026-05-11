@@ -118,7 +118,13 @@ sequenceDiagram
     C->>BK: Request booking
     BK->>PM: Prompt for payment
     C->>PM: Process digital payment
-    PM-->>C: Issue Receipt
+    alt Payment Success
+        PM-->>C: Issue Receipt
+        PM->>BK: Confirm Payment
+    else Payment Failure
+        PM-->>C: Payment Failed Alert
+        C->>PM: Retry Payment / Cancel
+    end
     loop During Service
         CR->>NT: Trigger update
         NT-->>C: Receive real-time Care Report
@@ -154,10 +160,20 @@ sequenceDiagram
         participant PM as Payment (5)
     end
 
-    UM-->>CG: Profile verified & active
+    UM-->>CG: Profile status updated
+    alt Profile Verified
+        CG->>BK: Active & Ready for jobs
+    else Profile Rejected
+        CG->>UM: Submit missing documents
+    end
     NT-->>CG: Receive new job request
     CG->>BK: Confirm availability & accept job
-    CG->>CR: Check-in (Start Service via GPS)
+    alt On-time Check-in
+        CG->>CR: Check-in (Start Service via GPS)
+    else Late / No-show
+        CR->>NT: Alert Customer & Operator
+        BK->>MT: Trigger Auto-rematch
+    end
     loop During Service
         CG->>CR: Log vitals, activities, attach media
     end
@@ -202,6 +218,11 @@ sequenceDiagram
     PM->>Portal: Feed revenue data
     Portal-->>OP: Display Workforce Dashboard
     OP->>Portal: Manage schedules & resolve issues
+    alt Dispute Resolved
+        OP->>PM: Release Escrow Payout
+    else Refund Required
+        OP->>PM: Trigger Refund to Customer
+    end
 ```
 
 **คำอธิบายทีละขั้นตอน (Step-by-step Explanation):**
@@ -231,6 +252,14 @@ sequenceDiagram
     end
 
     AD->>UM: Configure Role-Based Access Control
+    alt KYC Verification Flow
+        AD->>UM: Review Documents
+        alt Documents Valid
+            UM->>Portal: Update Caregiver to "Verified"
+        else Documents Invalid
+            UM->>Portal: Flag for follow-up/Reject
+        end
+    end
     UM->>Portal: Log access audits
     All->>Portal: Feed system performance metrics
     Portal-->>AD: Display System Health & Audit Dashboard
@@ -263,7 +292,14 @@ sequenceDiagram
     end
 
     TI->>TI_Int: Upload graduate certifications
-    TI_Int->>UM: Verify and update caregiver profiles
+    alt Certification Verification
+        TI_Int->>UM: Verify data integrity
+        alt Valid Data
+            UM->>UM: Update caregiver badges/status
+        else Invalid Data
+            UM-->>TI: Reject upload with errors
+        end
+    end
     MT->>TI_Int: Feed market demand statistics
     TI_Int-->>TI: Display required skills in market
     TI->>TI_Int: Adjust curriculum based on data

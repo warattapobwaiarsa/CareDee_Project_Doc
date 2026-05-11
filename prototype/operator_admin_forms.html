@@ -49,6 +49,39 @@
             background: white;
             border-radius: 8px;
         }
+
+        /* --- Admin Mobile Responsive --- */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                padding: 1rem;
+            }
+            .sidebar-nav ul {
+                display: flex;
+                overflow-x: auto;
+                gap: 1rem;
+                padding-bottom: 0.5rem;
+            }
+            .sidebar-nav li {
+                white-space: nowrap;
+                border-bottom: none;
+                padding: 0.5rem 1rem;
+                background: #34495e;
+                border-radius: 4px;
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 10px;
+            }
+            .admin-header {
+                justify-content: center;
+            }
+            .grid {
+                grid-template-columns: 1fr !important;
+            }
+        }
     </style>
 </head>
 <body>

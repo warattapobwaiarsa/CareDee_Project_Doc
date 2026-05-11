@@ -6,10 +6,6 @@
     <title>CareDee - Authentication (Prototype)</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        .auth-container {
-            max-width: 450px;
-            margin: 50px auto;
-        }
         .tab-group {
             display: flex;
             margin-bottom: 2rem;
@@ -29,80 +25,85 @@
         }
     </style>
 </head>
-<body style="background-color: #f0f2f5;">
-    <div class="auth-container">
-        <div style="text-align: center; margin-bottom: 2rem;">
-            <h1 style="margin: 0;">CareDee (แคร์ดี)</h1>
-            <p>แพลตฟอร์มจับคู่ผู้ดูแลและผู้สูงอายุ</p>
-        </div>
+<body class="mobile-layout">
+    <div class="mobile-frame">
+        <header class="app-header">
+            <div class="logo"><strong>CareDee (แคร์ดี)</strong></div>
+        </header>
 
-        <div class="card">
-            <div class="tab-group">
-                <div id="login-tab" class="tab active" onclick="showAuth('login')">เข้าสู่ระบบ</div>
-                <div id="register-tab" class="tab" onclick="showAuth('register')">ลงทะเบียนใหม่</div>
+        <main class="app-content">
+            <div style="text-align: center; margin-bottom: 2rem; margin-top: 1rem;">
+                <h1 style="margin: 0; font-size: 1.8rem;">ยินดีต้อนรับ</h1>
+                <p>แพลตฟอร์มสำหรับผู้ดูแลและผู้สูงอายุ</p>
             </div>
 
-            <!-- Login Form -->
-            <div id="login-form">
-                <div class="form-group">
-                    <label>เบอร์โทรศัพท์ / อีเมล</label>
-                    <input type="text" placeholder="081-XXX-XXXX หรือ email@example.com">
-                </div>
-                <div class="form-group">
-                    <label>รหัสผ่าน</label>
-                    <input type="password" placeholder="••••••••">
-                </div>
-                <div style="text-align: right; margin-bottom: 1.5rem;">
-                    <a href="#" style="font-size: 0.9rem; color: var(--primary-color);">ลืมรหัสผ่าน?</a>
-                </div>
-                <button class="btn-primary" style="width: 100%; padding: 1rem;" onclick="login()">เข้าสู่ระบบ</button>
-            </div>
-
-            <!-- Register Form -->
-            <div id="register-form" style="display: none;">
-                <div class="form-group">
-                    <label>ประเภทผู้ใช้งาน</label>
-                    <select id="user-role" onchange="updateRegisterFields()">
-                        <option value="customer">ลูกค้า (ผู้มองหาผู้ดูแล)</option>
-                        <option value="caregiver">ผู้ดูแล (Caregiver)</option>
-                        <option value="training">สถาบันฝึกอบรม</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>ชื่อ-นามสกุล</label>
-                    <input type="text" placeholder="ระบุชื่อจริง">
-                </div>
-                <div class="form-group">
-                    <label>เบอร์โทรศัพท์</label>
-                    <input type="text" placeholder="08X-XXX-XXXX">
-                </div>
-                <div class="form-group">
-                    <label>รหัสผ่าน</label>
-                    <input type="password" placeholder="อย่างน้อย 8 ตัวอักษร">
+            <div class="card">
+                <div class="tab-group">
+                    <div id="login-tab" class="tab active" onclick="showAuth('login')">เข้าสู่ระบบ</div>
+                    <div id="register-tab" class="tab" onclick="showAuth('register')">ลงทะเบียน</div>
                 </div>
 
-                <!-- Caregiver Specific Fields -->
-                <div id="caregiver-fields" style="display: none; background: #f9f9f9; padding: 1rem; border-radius: 4px; margin-bottom: 1.5rem;">
-                    <p><b>ข้อมูลเพิ่มเติมสำหรับผู้ดูแล</b></p>
+                <!-- Login Form -->
+                <div id="login-form">
                     <div class="form-group">
-                        <label>เลขใบประกอบวิชาชีพ (ถ้ามี)</label>
-                        <input type="text">
+                        <label>เบอร์โทรศัพท์ / อีเมล</label>
+                        <input type="text" placeholder="ระบุเบอร์หรืออีเมล">
                     </div>
-                    <label><input type="checkbox"> ยินยอมให้ตรวจสอบประวัติอาชญากรรม</label>
+                    <div class="form-group">
+                        <label>รหัสผ่าน</label>
+                        <input type="password" placeholder="••••••••">
+                    </div>
+                    <div style="text-align: right; margin-bottom: 1.5rem;">
+                        <a href="#" style="font-size: 0.9rem; color: var(--primary-color);">ลืมรหัสผ่าน?</a>
+                    </div>
+                    <button class="btn-primary" style="width: 100%;" onclick="login()">เข้าสู่ระบบ</button>
                 </div>
 
-                <div class="form-group" style="font-size: 0.85rem; color: var(--secondary-color);">
-                    <label style="font-weight: normal;">
-                        <input type="checkbox"> ฉันยอมรับ <a href="#">ข้อตกลงการใช้งาน</a> และ <a href="#">นโยบายความเป็นส่วนตัว (PDPA)</a>
-                    </label>
+                <!-- Register Form -->
+                <div id="register-form" style="display: none;">
+                    <div class="form-group">
+                        <label>ประเภทผู้ใช้งาน</label>
+                        <select id="user-role" onchange="updateRegisterFields()">
+                            <option value="customer">ลูกค้า (Family)</option>
+                            <option value="caregiver">ผู้ดูแล (Caregiver)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>ชื่อ-นามสกุล</label>
+                        <input type="text" placeholder="ชื่อจริง">
+                    </div>
+                    <div class="form-group">
+                        <label>เบอร์โทรศัพท์</label>
+                        <input type="text" placeholder="08X-XXX-XXXX">
+                    </div>
+                    <div class="form-group">
+                        <label>รหัสผ่าน</label>
+                        <input type="password" placeholder="อย่างน้อย 8 ตัวอักษร">
+                    </div>
+
+                    <!-- Caregiver Specific Fields -->
+                    <div id="caregiver-fields" style="display: none; background: #f9f9f9; padding: 1rem; border-radius: 4px; margin-bottom: 1.5rem;">
+                        <p><b>ข้อมูลเพิ่มเติม</b></p>
+                        <div class="form-group">
+                            <label>เลขใบประกอบวิชาชีพ</label>
+                            <input type="text">
+                        </div>
+                        <label style="font-weight: normal;"><input type="checkbox"> ยินยอมตรวจสอบประวัติอาชญากรรม</label>
+                    </div>
+
+                    <div class="form-group" style="font-size: 0.8rem; color: var(--secondary-color);">
+                        <label style="font-weight: normal;">
+                            <input type="checkbox"> ฉันยอมรับนโยบาย PDPA
+                        </label>
+                    </div>
+                    <button class="btn-success" style="width: 100%;" onclick="register()">สมัครสมาชิก</button>
                 </div>
-                <button class="btn-success" style="width: 100%; padding: 1rem;" onclick="register()">สมัครสมาชิก</button>
             </div>
-        </div>
 
-        <div style="text-align: center; margin-top: 2rem;">
-            <a href="customer_forms.html" style="color: var(--secondary-color); font-size: 0.9rem;">กลับหน้าหลัก</a>
-        </div>
+            <div style="text-align: center; margin-top: 1rem; margin-bottom: 2rem;">
+                <a href="customer_forms.html" style="color: var(--secondary-color); font-size: 0.9rem;">ข้ามไปหน้าสำรวจ (Guest)</a>
+            </div>
+        </main>
     </div>
 
     <script>
@@ -126,12 +127,12 @@
         }
 
         function login() {
-            alert('เข้าสู่ระบบสำเร็จ! ระบบจะนำคุณไปยัง Dashboard ตามบทบาทของคุณ');
+            alert('เข้าสู่ระบบสำเร็จ!');
             window.location.href = 'customer_forms.html';
         }
 
         function register() {
-            alert('ลงทะเบียนสำเร็จ! โปรดตรวจสอบ SMS/Email เพื่อยืนยันตัวตน (OTP)');
+            alert('ลงทะเบียนสำเร็จ! กรุณายืนยันตัวตนด้วย OTP');
             showAuth('login');
         }
     </script>
