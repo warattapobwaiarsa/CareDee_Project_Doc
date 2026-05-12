@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เข้าสู่ระบบ | CareDee</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Brand Colors */
+            --primary-600: #007A8C;
+            --primary-100: #E0F2F4;
+            --secondary-500: #FF9F43;
+            --secondary-100: #FFF3E6;
+            
+            /* Semantic Colors */
+            --success: #28C76F;
+            --warning: #FF9F43;
+            --error: #EA5455;
+            --info: #00CFE8;
+            
+            /* Neutral Colors */
+            --white: #FFFFFF;
+            --neutral-100: #F8F8F8;
+            --neutral-300: #B9B9C3;
+            --neutral-600: #6E6B7B;
+            --neutral-900: #1E1E1E;
+            
+            /* Interactive */
+            --pressed: #006675;
+            
+            /* Typography */
+            --font-main: 'IBM Plex Sans Thai', 'Inter', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-main);
+        }
+
+        body {
+            background-color: var(--neutral-100);
+            color: var(--neutral-900);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-wrapper {
+            display: flex;
+            width: 100%;
+            max-width: 1000px;
+            height: 600px;
+            background: var(--white);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            margin: 20px;
+        }
+
+        /* Branding Side */
+        .branding-side {
+            flex: 1;
+            background: linear-gradient(135deg, var(--primary-600) 0%, #005A68 100%);
+            color: white;
+            padding: 48px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .branding-side::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            right: -100px;
+            width: 300px;
+            height: 300px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+        }
+
+        .logo-placeholder {
+            width: 64px;
+            height: 64px;
+            background: white;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-600);
+            font-weight: 700;
+            font-size: 24px;
+            margin-bottom: 32px;
+        }
+
+        .branding-side h2 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            line-height: 1.3;
+        }
+
+        .branding-side p {
+            font-size: 18px;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        /* Form Side */
+        .form-side {
+            width: 450px;
+            padding: 48px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: var(--white);
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--neutral-900);
+        }
+
+        p.subtitle {
+            font-size: 14px;
+            color: var(--neutral-600);
+            margin-bottom: 32px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: var(--neutral-900);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            font-size: 16px;
+            border: 1px solid var(--neutral-300);
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            outline: none;
+            color: var(--neutral-900);
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-600);
+            box-shadow: 0 0 0 3px var(--primary-100);
+        }
+
+        .form-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            font-size: 14px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            color: var(--neutral-600);
+        }
+
+        .forgot-password {
+            color: var(--primary-600);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .forgot-password:hover {
+            text-decoration: underline;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 14px;
+            background-color: var(--primary-600);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .btn-login:hover {
+            background-color: var(--pressed);
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 24px;
+            font-size: 14px;
+            color: var(--neutral-600);
+        }
+
+        .register-link a {
+            color: var(--secondary-500);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 900px) {
+            .branding-side {
+                display: none;
+            }
+            .login-wrapper {
+                max-width: 450px;
+                height: auto;
+            }
+            .form-side {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .form-side {
+                padding: 32px 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-wrapper">
+        <div class="branding-side">
+            <div class="logo-placeholder">CD</div>
+            <h2>ดูแลคนที่คุณรัก <br>ด้วยมืออาชีพจาก CareDee</h2>
+            <p>แพลตฟอร์มที่รวมผู้ดูแลคุณภาพและสถาบันฝึกอบรมชั้นนำ เพื่อความอุ่นใจของทุกคนในครอบครัว</p>
+        </div>
+
+        <div class="form-side">
+            <div class="form-header">
+                <h1>เข้าสู่ระบบ</h1>
+                <p class="subtitle">กรุณากรอกข้อมูลเพื่อเข้าใช้งานระบบ</p>
+            </div>
+
+            <form>
+                <div class="form-group">
+                    <label for="email">อีเมล / ชื่อผู้ใช้งาน</label>
+                    <input type="text" id="email" class="form-control" placeholder="example@email.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">รหัสผ่าน</label>
+                    <input type="password" id="password" class="form-control" placeholder="••••••••" required>
+                </div>
+
+                <div class="form-footer">
+                    <label class="checkbox-group">
+                        <input type="checkbox"> จดจำฉัน
+                    </label>
+                    <a href="#" class="forgot-password">ลืมรหัสผ่าน?</a>
+                </div>
+
+                <button type="submit" class="btn-login">เข้าสู่ระบบ</button>
+            </form>
+
+            <div class="register-link">
+                ยังไม่มีบัญชี? <a href="#">ลงทะเบียนใหม่</a>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

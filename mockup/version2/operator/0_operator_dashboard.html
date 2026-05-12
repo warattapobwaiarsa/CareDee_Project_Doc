@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareDee Operator Portal - Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Brand Colors */
+            --primary-600: #007A8C;
+            --primary-100: #E0F2F4;
+            --secondary-500: #FF9F43;
+            --secondary-100: #FFF3E6;
+            
+            /* Semantic Colors */
+            --success: #28C76F;
+            --warning: #FF9F43;
+            --error: #EA5455;
+            --info: #00CFE8;
+            
+            /* Neutral Colors */
+            --white: #FFFFFF;
+            --neutral-100: #F8F8F8;
+            --neutral-300: #B9B9C3;
+            --neutral-600: #6E6B7B;
+            --neutral-900: #1E1E1E;
+            
+            /* Interactive */
+            --pressed: #006675;
+            
+            /* Sidebar Specific */
+            --sidebar-bg: #004D58; 
+            --sidebar-width: 280px;
+
+            /* Typography */
+            --font-main: 'IBM Plex Sans Thai', 'Inter', sans-serif;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--font-main); }
+        body { background: var(--neutral-100); color: var(--neutral-900); display: flex; min-height: 100vh; }
+
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--sidebar-bg);
+            color: var(--white);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            z-index: 1000;
+        }
+        .sidebar-header { padding: 32px 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .logo-box { width: 44px; height: 44px; background: var(--white); color: var(--primary-600); border-radius: 10px; margin: 0 auto 12px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 20px; }
+        .sidebar-menu { flex: 1; padding: 20px 0; }
+        .menu-item { 
+            padding: 15px 25px; 
+            display: flex; 
+            align-items: center; 
+            text-decoration: none; 
+            color: rgba(255,255,255,0.7);
+            transition: 0.3s;
+            font-size: 15px;
+        }
+        .menu-item:hover, .menu-item.active { background: rgba(255,255,255,0.1); color: var(--white); border-left: 4px solid var(--secondary-500); }
+        .menu-item i { margin-right: 15px; width: 24px; text-align: center; font-style: normal; }
+
+        /* Main Content */
+        .main { margin-left: var(--sidebar-width); flex: 1; padding: 32px; }
+        header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 32px; 
+            background: var(--white);
+            padding: 16px 28px;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        }
+        .user-profile { display: flex; align-items: center; gap: 16px; }
+        .badge-mfa { font-size: 10px; background: var(--success); color: white; padding: 2px 8px; border-radius: 10px; font-weight: 600; }
+
+        /* Metrics */
+        .metrics-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 32px; }
+        .metric-card { 
+            background: var(--white); 
+            padding: 24px; 
+            border-radius: 16px; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            border-left: 4px solid var(--primary-600);
+        }
+        .metric-label { font-size: 14px; color: var(--neutral-600); margin-bottom: 8px; font-weight: 500; }
+        .metric-value { font-size: 26px; font-weight: 700; color: var(--neutral-900); }
+        .metric-refresh { font-size: 11px; color: var(--neutral-300); margin-top: 8px; }
+
+        /* Layout Sections */
+        .layout-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 32px; }
+        .card { 
+            background: var(--white); 
+            border-radius: 16px; 
+            padding: 28px; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03); 
+            margin-bottom: 32px; 
+        }
+        .card-title { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; border-bottom: 1px solid var(--neutral-100); padding-bottom: 12px; }
+        .card-title h3 { font-size: 18px; color: var(--neutral-900); font-weight: 600; }
+        
+        /* Table */
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; padding: 14px; font-size: 13px; color: var(--neutral-600); background: var(--neutral-100); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+        td { padding: 16px 14px; font-size: 14px; border-bottom: 1px solid var(--neutral-100); }
+        
+        .status-badge { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+        .bg-pending { background: var(--secondary-100); color: var(--secondary-500); }
+        .bg-active { background: rgba(40, 199, 111, 0.12); color: var(--success); }
+        .bg-urgent { background: rgba(234, 84, 85, 0.12); color: var(--error); }
+
+        /* Actions */
+        .btn { 
+            padding: 10px 18px; 
+            border-radius: 8px; 
+            border: none; 
+            cursor: pointer; 
+            font-size: 13px; 
+            font-weight: 600; 
+            transition: 0.2s;
+        }
+        .btn-primary { background: var(--primary-600); color: white; }
+        .btn-primary:hover { background: var(--pressed); }
+        .btn-secondary { background: var(--secondary-500); color: white; }
+        .btn-outline { background: var(--primary-100); color: var(--primary-600); }
+        .btn-outline:hover { background: var(--primary-600); color: white; }
+
+        /* Care Report Tracking */
+        .care-report-item { 
+            display: flex; 
+            gap: 16px; 
+            padding: 16px; 
+            background: var(--neutral-100);
+            border-radius: 12px; 
+            margin-bottom: 12px;
+        }
+        .report-meta { font-size: 12px; color: var(--neutral-600); margin-top: 6px; }
+
+        /* Alert Display */
+        .alert-lock { 
+            background: var(--error); 
+            color: white; 
+            padding: 12px 24px; 
+            border-radius: 12px; 
+            margin-bottom: 24px;
+            display: none; 
+            font-size: 14px;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo-box">CD</div>
+            <h2 style="font-weight: 700; font-size: 22px;">CareDee</h2>
+            <span style="font-size: 11px; color: rgba(255,255,255,0.5); text-transform: uppercase;">Service Operator Portal</span>
+        </div>
+        <div class="sidebar-menu">
+            <a href="#" class="menu-item active"><i>🏠</i> หน้าหลัก Dashboard</a>
+            <a href="#" class="menu-item"><i>👥</i> จัดการทีมผู้ดูแล (Team)</a>
+            <a href="#" class="menu-item"><i>📅</i> ตารางงาน & การจอง</a>
+            <a href="#" class="menu-item"><i>📋</i> ติดตามรายงานหน้างาน</a>
+            <a href="#" class="menu-item"><i>⚠️</i> ข้อร้องเรียน & อุทธรณ์</a>
+            <a href="#" class="menu-item"><i>📊</i> รายงาน & รายได้</a>
+        </div>
+        <div style="padding: 24px; border-top: 1px solid rgba(255,255,255,0.1);">
+            <a href="#" class="menu-item" style="padding: 0;"><i>🚪</i> ออกจากระบบ</a>
+        </div>
+    </nav>
+
+    <main class="main">
+        <div class="alert-lock" id="lockoutMsg">
+            <strong>⚠️ บัญชีถูกระงับชั่วคราว:</strong> ล็อกอินผิดพลาดเกิน 5 ครั้ง กรุณารอ 15 นาที
+        </div>
+
+        <header>
+            <div>
+                <h1 style="font-size: 20px; font-weight: 700;">ยินดีต้อนรับ, EN Enterprise Operator</h1>
+                <p style="font-size: 13px; color: var(--neutral-600);">รหัสพนักงาน: OP-44021</p>
+            </div>
+            <div class="user-profile">
+                <div style="text-align: right;">
+                    <p style="font-weight: 600; font-size: 14px;">Michael jackson <span class="badge-mfa">2FA VERIFIED</span></p>
+                    <p style="font-size: 12px; color: var(--neutral-600);">หัวหน้าฝ่ายปฏิบัติการ</p>
+                </div>
+                <div style="width: 48px; height: 48px; border-radius: 12px; background: var(--primary-100); display: flex; align-items: center; justify-content: center; color: var(--primary-600); font-weight: 700;">KW</div>
+            </div>
+        </header>
+
+        <!-- Real-time Metrics -->
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-label">งานที่กำลังดำเนินการ</div>
+                <div class="metric-value">12 งาน</div>
+                <div class="metric-refresh">🔄 45s</div>
+            </div>
+            <div class="metric-card" style="border-left-color: var(--secondary-500);">
+                <div class="metric-label">รออนุมัติผู้ดูแลใหม่</div>
+                <div class="metric-value">3 รายการ</div>
+            </div>
+            <div class="metric-card" style="border-left-color: var(--info);">
+                <div class="metric-label">รายได้สุทธิ (เดือนนี้)</div>
+                <div class="metric-value">฿ 82,450</div>
+            </div>
+            <div class="metric-card" style="border-left-color: var(--success);">
+                <div class="metric-label">คะแนนเฉลี่ยทีม</div>
+                <div class="metric-value">4.92 / 5.0</div>
+            </div>
+        </div>
+
+        <div class="layout-grid">
+            <!-- Left Side: Operations -->
+            <div>
+                <!-- Caregiver Management -->
+                <div class="card">
+                    <div class="card-title">
+                        <h3>การจัดการผู้ดูแล (Verify New Requests)</h3>
+                        <a href="#" style="font-size: 13px; color: var(--primary-600); text-decoration: none; font-weight: 600;">ดูทั้งหมด</a>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ชื่อผู้ดูแล</th>
+                                <th>ใบรับรอง (TI Status)</th>
+                                <th>ทักษะหลัก</th>
+                                <th>การจัดการ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="font-weight: 500;">น.ส. วิภาวี รักเรียน</td>
+                                <td><span class="status-badge bg-active">✓ Certified</span></td>
+                                <td>ดูแลผู้ป่วยติดเตียง</td>
+                                <td>
+                                    <button class="btn btn-primary">อนุมัติรับงาน</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 500;">นาย มานะ สุขสบาย</td>
+                                <td><span class="status-badge bg-pending">รออัปเดต (TI)</span></td>
+                                <td>ดูแลผู้สูงอายุทั่วไป</td>
+                                <td>
+                                    <button class="btn btn-outline" disabled>ตรวจสอบเอกสาร</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Scheduling & Conflicts -->
+                <div class="card">
+                    <div class="card-title">
+                        <h3>ตารางงาน & การจอง (Scheduling Control)</h3>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Booking ID</th>
+                                <th>ลูกค้า</th>
+                                <th>ผู้ดูแล</th>
+                                <th>สถานะ</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="font-weight: 600; color: var(--primary-600);">#BK-7721</td>
+                                <td>คุณสมหญิง (B2C)</td>
+                                <td>รวีวรรณ</td>
+                                <td><span class="status-badge bg-active">กำลังทำงาน</span></td>
+                                <td><button class="btn btn-outline">Geotag View</button></td>
+                            </tr>
+                            <tr style="background: var(--secondary-100);">
+                                <td style="font-weight: 600; color: var(--primary-600);">#BK-7725</td>
+                                <td>คุณวิชัย (B2C)</td>
+                                <td>- </td>
+                                <td><span class="status-badge bg-urgent">⚠️ ตารางซ้อน</span></td>
+                                <td><button class="btn btn-secondary">จัดสรรงานแทน</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Right Side: Reports & Dispute -->
+            <div>
+                <!-- Care Report Tracking -->
+                <div class="card">
+                    <div class="card-title">
+                        <h3>Care Report ล่าสุด</h3>
+                    </div>
+                    <div class="care-report-item">
+                        <div style="flex: 1;">
+                            <p style="font-weight: 600; font-size: 14px;">รวีวรรณ - #BK-7721</p>
+                            <p style="font-size: 12px; color: var(--primary-600); margin-top: 2px;">เช็กอิน: 08:00น. (ตรงพิกัด)</p>
+                            <div class="report-meta">บันทึก: ให้ยาเช้าและทำกายภาพเบื้องต้นแล้ว</div>
+                        </div>
+                        <div style="font-size: 20px;">📸</div>
+                    </div>
+                    <div class="care-report-item">
+                        <div style="flex: 1;">
+                            <p style="font-weight: 600; font-size: 14px;">สมคิด - #BK-7718</p>
+                            <p style="font-size: 12px; color: var(--success); margin-top: 2px;">ปิดงาน: 12:00น.</p>
+                            <div class="report-meta">บันทึก: สภาพร่างกายปกติ ทานอาหารได้ครบ</div>
+                        </div>
+                        <div style="font-size: 20px;">✅</div>
+                    </div>
+                </div>
+
+                <!-- Dispute SLA -->
+                <div class="card">
+                    <div class="card-title">
+                        <h3>อุทธรณ์รีวิว (SLA 3 วัน)</h3>
+                    </div>
+                    <div style="padding: 16px; background: var(--neutral-100); border-radius: 12px;">
+                        <p style="font-size: 14px; font-weight: 600;">Case: #AP-990</p>
+                        <p style="font-size: 12px; margin: 4px 0; color: var(--neutral-600);">ผู้ดูแล: รวีวรรณ (ขออุทธรณ์ 1 ดาว)</p>
+                        <p style="font-size: 12px; color: var(--error); font-weight: 600;">เหลือเวลา: 1 วัน 4 ชม.</p>
+                        <button class="btn btn-primary" style="width: 100%; margin-top: 12px;">ตรวจสอบ & ตัดสิน</button>
+                    </div>
+                </div>
+
+                <!-- Export Reports -->
+                <div class="card">
+                    <div class="card-title">
+                        <h3>รายงานสรุปผล</h3>
+                    </div>
+                    <p style="font-size: 12px; color: var(--neutral-600); margin-bottom: 20px;">ข้อมูล Audit Log เก็บรักษา 3 ปี (ตามนโยบาย PDPA)</p>
+                    <button class="btn btn-outline" style="width: 100%; margin-bottom: 12px; text-align: left; padding: 12px 16px;">📊 สรุปงานรายวัน (CSV)</button>
+                    <button class="btn btn-outline" style="width: 100%; text-align: left; padding: 12px 16px;">📈 รายงานผลรายเดือน (XLSX)</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Simulate real-time logic
+        let timeLeft = 45;
+        setInterval(() => {
+            timeLeft--;
+            if(timeLeft < 0) timeLeft = 60;
+            const refreshEl = document.querySelector('.metric-refresh');
+            if(refreshEl) refreshEl.innerHTML = `🔄 ${timeLeft}s`;
+        }, 1000);
+    </script>
+</body>
+</html>

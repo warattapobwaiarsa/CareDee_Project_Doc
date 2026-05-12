@@ -1,0 +1,189 @@
+<svg width="1440" height="1150" viewBox="0 0 1440 1150" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="1440" height="1150" fill="#F8F8F8"/>
+
+  <!-- Sidebar -->
+  <rect width="280" height="1150" fill="white" stroke="#B9B9C3" stroke-width="1"/>
+  
+  <!-- Sidebar Brand -->
+  <rect x="118" y="32" width="44" height="44" rx="10" fill="#007A8C"/>
+  <text x="140" y="61" fill="white" font-family="Inter, sans-serif" font-size="20" font-weight="700" text-anchor="middle">CD</text>
+  <text x="140" y="100" fill="#007A8C" font-family="IBM Plex Sans Thai, sans-serif" font-size="20" font-weight="700" text-anchor="middle">CareDee Academy</text>
+  <text x="140" y="120" fill="#6E6B7B" font-family="Inter, sans-serif" font-size="11" font-weight="400" text-anchor="middle" style="text-transform: uppercase;">Training Institute Interface</text>
+  <line x1="0" y1="140" x2="280" y2="140" stroke="#F8F8F8"/>
+
+  <!-- Sidebar Menu -->
+  <text x="24" y="190" fill="#6E6B7B" font-family="IBM Plex Sans Thai, sans-serif" font-size="15" font-weight="500">🏠 ภาพรวมสถาบัน</text>
+  <text x="24" y="238" fill="#6E6B7B" font-family="IBM Plex Sans Thai, sans-serif" font-size="15" font-weight="500">📥 นำเข้าข้อมูลการอบรม</text>
+  <text x="24" y="286" fill="#6E6B7B" font-family="IBM Plex Sans Thai, sans-serif" font-size="15" font-weight="500">🏅 จัดการใบรับรอง</text>
+  <text x="24" y="334" fill="#6E6B7B" font-family="IBM Plex Sans Thai, sans-serif" font-size="15" font-weight="500">📈 สถิติตลาดแรงงาน</text>
+
+  <!-- Active Item: งานตรวจสอบ -->
+  <rect x="0" y="360" width="280" height="48" fill="#E0F2F4"/>
+  <rect x="276" y="360" width="4" height="48" fill="#007A8C"/>
+  <text x="24" y="390" fill="#007A8C" font-family="IBM Plex Sans Thai, sans-serif" font-size="15" font-weight="500">🛡️ งานตรวจสอบ</text>
+
+  <!-- Logout -->
+  <line x1="0" y1="1050" x2="280" y2="1050" stroke="#F8F8F8"/>
+  <text x="24" y="1090" fill="#EA5455" font-family="IBM Plex Sans Thai, sans-serif" font-size="15" font-weight="500">🚪 ออกจากระบบ</text>
+
+  <!-- Main Content Area -->
+  <g transform="translate(312, 32)">
+    <!-- Header -->
+    <rect width="1096" height="88" rx="16" fill="white" shadow="0 4px 12px rgba(0,0,0,0.03)"/>
+    <text x="28" y="40" fill="#1E1E1E" font-family="IBM Plex Sans Thai, sans-serif" font-size="20" font-weight="700">4. งานตรวจสอบ (Verification Tasks)</text>
+    <text x="28" y="62" fill="#6E6B7B" font-family="IBM Plex Sans Thai, sans-serif" font-size="13">ยืนยันความถูกต้องของวุฒิการศึกษาและจัดการเอกสารสถาบัน</text>
+    
+    <!-- Institute Status -->
+    <text x="1010" y="44" fill="#1E1E1E" font-family="IBM Plex Sans Thai, sans-serif" font-size="14" font-weight="700" text-anchor="end">สถาบันการพยาบาลไทย</text>
+    <text x="1010" y="62" fill="#28C76F" font-family="IBM Plex Sans Thai, sans-serif" font-size="11" text-anchor="end">Institute Verified: ✓ Yes</text>
+    <rect x="1024" y="22" width="44" height="44" rx="12" fill="#E0F2F4"/>
+    <text x="1046" y="49" fill="#007A8C" font-family="Inter, sans-serif" font-size="16" font-weight="700" text-anchor="middle">SM</text>
+
+    <!-- Stats Grid -->
+    <g transform="translate(0, 120)">
+      <!-- Card 1 -->
+      <rect width="259" height="110" rx="16" fill="white"/>
+      <rect y="106" width="259" height="4" rx="2" fill="#FF9F43"/>
+      <text x="24" y="30" fill="#6E6B7B" font-family="IBM Plex Sans Thai, sans-serif" font-size="12" font-weight="600">คำร้องค้างตรวจสอบ</text>
+      <text x="24" y="76" fill="#1E1E1E" font-family="IBM Plex Sans Thai, sans-serif" font-size="24" font-weight="700">12 รายการ</text>
+
+      <!-- Card 2 -->
+      <g transform="translate(279, 0)">
+        <rect width="259" height="110" rx="16" fill="white"/>
+        <rect y="106" width="259" height="4" rx="2" fill="#28C76F"/>
+        <text x="24" y="30" fill="#6E6B7B" font-family="IBM Plex Sans Thai, sans-serif" font-size="12" font-weight="600">ยืนยันแล้ววันนี้</text>
+        <text x="24" y="76" fill="#1E1E1E" font-family="IBM Plex Sans Thai, sans-serif" font-size="24" font-weight="700">45 รายการ</text>
+      </g>
+
+      <!-- Card 3 -->
+      <g transform="translate(558, 0)">
+        <rect width="259" height="110" rx="16" fill="white"/>
+        <rect y="106" width="259" height="4" rx="2" fill="#007A8C"/>
+        <text x="24" y="30" fill="#6E6B7B" font-family="IBM Plex Sans Thai, sans-serif" font-size="12" font-weight="600">ใบอนุญาตสถาบัน</text>
+        <text x="24" y="76" fill="#28C76F" font-family="IBM Plex Sans Thai, sans-serif" font-size="16" font-weight="700">Active (อีก 245 วัน)</text>
+      </g>
+
+      <!-- Card 4 -->
+      <g transform="translate(837, 0)">
+        <rect width="259" height="110" rx="16" fill="white"/>
+        <rect y="106" width="259" height="4" rx="2" fill="#B9B9C3"/>
+        <text x="24" y="30" fill="#6E6B7B" font-family="IBM Plex Sans Thai, sans-serif" font-size="12" font-weight="600">ความเร็วการตอบสนอง</text>
+        <text x="24" y="76" fill="#1E1E1E" font-family="IBM Plex Sans Thai, sans-serif" font-size="24" font-weight="700">1.5 ชม.</text>
+      </g>
+    </g>
+
+    <!-- Pending Verification Requests Card -->
+    <g transform="translate(0, 262)">
+      <rect width="1096" height="380" rx="16" fill="white" shadow="0 4px 12px rgba(0,0,0,0.03)"/>
+      <text x="28" y="44" fill="#1E1E1E" font-family="IBM Plex Sans Thai, sans-serif" font-size="18" font-weight="700">คำร้องขอตรวจสอบใบรับรอง (Pending Verification)</text>
+      <rect x="420" y="28" width="130" height="24" rx="12" fill="#FFF3E6"/>
+      <text x="485" y="44" fill="#FF9F43" font-family="IBM Plex Sans Thai, sans-serif" font-size="11" font-weight="700" text-anchor="middle">ต้องการการยืนยันด่วน</text>
+      <line x1="28" y1="64" x2="1068" y2="64" stroke="#F8F8F8"/>
+      
+      <text x="28" y="90" fill="#6E6B7B" font-family="IBM Plex Sans Thai, sans-serif" font-size="13">รายการที่ Caregiver อัปโหลดไฟล์รูปภาพใบรับรองเข้ามาเอง ระบบต้องการให้สถาบันกดยืนยันว่าเอกสารเป็นของจริงตามฐานข้อมูลของคุณ</text>
+
+      <!-- Table -->
+      <g transform="translate(28, 120)">
+        <rect width="1040" height="40" fill="#F8F8F8"/>
+        <text x="14" y="26" fill="#6E6B7B" font-family="IBM Plex Sans Thai, sans-serif" font-size="13" font-weight="600">ผู้ขอตรวจสอบ</text>
+        <text x="220" y="26" fill="#6E6B7B" font-family="IBM Plex Sans Thai, sans-serif" font-size="13" font-weight="600">รหัสใบรับรอง</text>
+        <text x="400" y="26" fill="#6E6B7B" font-family="IBM Plex Sans Thai, sans-serif" font-size="13" font-weight="600">หลักสูตรที่ระบุ</text>
+        <text x="650" y="26" fill="#6E6B7B" font-family="IBM Plex Sans Thai, sans-serif" font-size="13" font-weight="600">ไฟล์แนบ</text>
+        <text x="900" y="26" fill="#6E6B7B" font-family="IBM Plex Sans Thai, sans-serif" font-size="13" font-weight="600" text-anchor="middle">การดำเนินการ</text>
+
+        <!-- Row 1 -->
+        <g transform="translate(0, 40)">
+          <text x="14" y="30" fill="#1E1E1E" font-family="IBM Plex Sans Thai, sans-serif" font-size="14" font-weight="600">น.ส. สมใจ ใฝ่เรียน</text>
+          <text x="14" y="48" fill="#6E6B7B" font-family="IBM Plex Sans Thai, sans-serif" font-size="11">ID: 1-2204-XXXXX-XX-X</text>
+          
+          <text x="220" y="40" fill="#1E1E1E" font-family="monospace" font-size="14" font-weight="700">CERT-2025-998</text>
+          
+          <text x="400" y="40" fill="#1E1E1E" font-family="IBM Plex Sans Thai, sans-serif" font-size="14">การดูแลผู้สูงอายุ (420 ชม.)</text>
+          
+          <rect x="650" y="20" width="100" height="28" rx="8" fill="white" stroke="#B9B9C3"/>
+          <text x="700" y="39" fill="#6E6B7B" font-family="IBM Plex Sans Thai, sans-serif" font-size="12" text-anchor="middle">🖼️ ดูรูปใบเซอร์</text>
+          
+          <g transform="translate(800, 20)">
+            <rect width="90" height="28" rx="8" fill="#007A8C"/>
+            <text x="45" y="39" fill="white" font-family="IBM Plex Sans Thai, sans-serif" font-size="12" text-anchor="middle">ยืนยัน</text>
+            <rect x="100" y="0" width="90" height="28" rx="8" fill="white" stroke="#EA5455"/>
+            <text x="145" y="39" fill="#EA5455" font-family="IBM Plex Sans Thai, sans-serif" font-size="12" text-anchor="middle">ปฏิเสธ</text>
+          </g>
+          <line x1="0" y1="70" x2="1040" y2="70" stroke="#F8F8F8"/>
+        </g>
+
+        <!-- Row 2 -->
+        <g transform="translate(0, 110)">
+          <text x="14" y="30" fill="#1E1E1E" font-family="IBM Plex Sans Thai, sans-serif" font-size="14" font-weight="600">นาย มั่นคง มั่งคั่ง</text>
+          <text x="14" y="48" fill="#6E6B7B" font-family="IBM Plex Sans Thai, sans-serif" font-size="11">ID: 3-5501-XXXXX-XX-X</text>
+          
+          <text x="220" y="40" fill="#1E1E1E" font-family="monospace" font-size="14" font-weight="700">CERT-2026-112</text>
+          
+          <text x="400" y="40" fill="#1E1E1E" font-family="IBM Plex Sans Thai, sans-serif" font-size="14">การปฐมพยาบาลเบื้องต้น</text>
+          
+          <rect x="650" y="20" width="100" height="28" rx="8" fill="white" stroke="#B9B9C3"/>
+          <text x="700" y="39" fill="#6E6B7B" font-family="IBM Plex Sans Thai, sans-serif" font-size="12" text-anchor="middle">🖼️ ดูรูปใบเซอร์</text>
+          
+          <g transform="translate(800, 20)">
+            <rect width="90" height="28" rx="8" fill="#007A8C"/>
+            <text x="45" y="39" fill="white" font-family="IBM Plex Sans Thai, sans-serif" font-size="12" text-anchor="middle">ยืนยัน</text>
+            <rect x="100" y="0" width="90" height="28" rx="8" fill="white" stroke="#EA5455"/>
+            <text x="145" y="39" fill="#EA5455" font-family="IBM Plex Sans Thai, sans-serif" font-size="12" text-anchor="middle">ปฏิเสธ</text>
+          </g>
+        </g>
+      </g>
+    </g>
+
+    <!-- Institute KYC Documents Card -->
+    <g transform="translate(0, 674)">
+      <rect width="1096" height="400" rx="16" fill="white" shadow="0 4px 12px rgba(0,0,0,0.03)"/>
+      <text x="28" y="44" fill="#1E1E1E" font-family="IBM Plex Sans Thai, sans-serif" font-size="18" font-weight="700">เอกสารรับรองสถาบัน (KYC &amp; Compliance)</text>
+      <rect x="940" y="28" width="128" height="24" rx="12" fill="#E6F9F0"/>
+      <text x="1004" y="44" fill="#28C76F" font-family="IBM Plex Sans Thai, sans-serif" font-size="11" font-weight="700" text-anchor="middle">Verified Institute</text>
+      <line x1="28" y1="64" x2="1068" y2="64" stroke="#F8F8F8"/>
+
+      <text x="28" y="90" fill="#6E6B7B" font-family="IBM Plex Sans Thai, sans-serif" font-size="13">จัดการเอกสารทางกฎหมายของสถาบัน เพื่อรักษาความน่าเชื่อถือและสถานะ "สถาบันที่ผ่านการรับรอง" ใน CareDee Platform</text>
+
+      <g transform="translate(28, 110)">
+        <!-- Doc 1 -->
+        <rect width="504" height="120" rx="12" stroke="#F8F8F8"/>
+        <text x="16" y="30" fill="#1E1E1E" font-family="IBM Plex Sans Thai, sans-serif" font-size="14" font-weight="700">ใบอนุญาตจัดตั้งโรงเรียน/สถาบัน</text>
+        <text x="16" y="50" fill="#6E6B7B" font-family="IBM Plex Sans Thai, sans-serif" font-size="12">อัปโหลดเมื่อ: 12 ม.ค. 2569 | หมดอายุ: 12 ม.ค. 2570</text>
+        <rect x="16" y="66" width="160" height="24" rx="12" fill="#E0F2F4"/>
+        <text x="96" y="82" fill="#007A8C" font-family="IBM Plex Sans Thai, sans-serif" font-size="11" font-weight="700" text-anchor="middle">สถานะ: ผ่านการตรวจสอบแล้ว</text>
+        
+        <rect x="380" y="20" width="108" height="28" rx="8" fill="white" stroke="#B9B9C3"/>
+        <text x="434" y="39" fill="#6E6B7B" font-family="IBM Plex Sans Thai, sans-serif" font-size="12" text-anchor="middle">ดูเอกสาร</text>
+        <rect x="380" y="60" width="108" height="40" rx="8" fill="#F8F8F8" stroke="#B9B9C3" stroke-dasharray="4 2"/>
+        <text x="434" y="85" fill="#007A8C" font-family="IBM Plex Sans Thai, sans-serif" font-size="12" text-anchor="middle">อัปเดตไฟล์ใหม่</text>
+
+        <!-- Doc 2 -->
+        <g transform="translate(536, 0)">
+          <rect width="504" height="120" rx="12" stroke="#F8F8F8"/>
+          <text x="16" y="30" fill="#1E1E1E" font-family="IBM Plex Sans Thai, sans-serif" font-size="14" font-weight="700">หนังสือรับรองมาตรฐานหลักสูตร (สบส./ศธ.)</text>
+          <text x="16" y="50" fill="#6E6B7B" font-family="IBM Plex Sans Thai, sans-serif" font-size="12">สถานะ: กำลังจะหมดอายุใน 30 วัน</text>
+          <rect x="16" y="66" width="140" height="24" rx="12" fill="#FFF3E6"/>
+          <text x="86" y="82" fill="#FF9F43" font-family="IBM Plex Sans Thai, sans-serif" font-size="11" font-weight="700" text-anchor="middle">ต้องการการอัปเดต</text>
+          
+          <rect x="380" y="20" width="108" height="28" rx="8" fill="white" stroke="#B9B9C3"/>
+          <text x="434" y="39" fill="#6E6B7B" font-family="IBM Plex Sans Thai, sans-serif" font-size="12" text-anchor="middle">ดูเอกสาร</text>
+          <rect x="380" y="60" width="108" height="40" rx="8" fill="#F8F8F8" stroke="#FF9F43" stroke-dasharray="4 2"/>
+          <text x="434" y="85" fill="#FF9F43" font-family="IBM Plex Sans Thai, sans-serif" font-size="12" text-anchor="middle">อัปเดตไฟล์ใหม่</text>
+        </g>
+      </g>
+
+      <!-- Info Box -->
+      <g transform="translate(28, 260)">
+        <rect width="1040" height="100" rx="12" fill="#E0F2F4"/>
+        <text x="60" y="36" fill="#007A8C" font-family="IBM Plex Sans Thai, sans-serif" font-size="14" font-weight="700">คำชี้แจงมาตรฐานการตรวจสอบ</text>
+        <text x="16" y="38" font-size="24">ℹ️</text>
+        <text x="60" y="60" fill="#1E1E1E" font-family="IBM Plex Sans Thai, sans-serif" font-size="12" width="960">การที่สถาบันกดยืนยัน (Confirm) ใบรับรองให้ Caregiver หมายถึงสถาบันยอมรับผิดชอบในความถูกต้องของข้อมูลนั้นตามมาตรฐาน Audit Log ของระบบ</text>
+        <text x="60" y="80" fill="#1E1E1E" font-family="IBM Plex Sans Thai, sans-serif" font-size="12" width="960">หากพบการยืนยันเท็จ สถาบันอาจถูกระงับสถานะ Verified Institute โดย Admin</text>
+      </g>
+    </g>
+
+    <!-- Footer -->
+    <text x="548" y="1120" fill="#6E6B7B" font-family="IBM Plex Sans Thai, sans-serif" font-size="11" text-anchor="middle">ระบบทำงานภายใต้กรอบการตรวจสอบความปลอดภัยข้อมูลสากล ข้อมูลการยืนยันจะถูกจัดเก็บเป็นหลักฐานพยานในระบบ Cloud</text>
+  </g>
+</svg>

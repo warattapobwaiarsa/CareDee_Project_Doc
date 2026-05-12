@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareDee Operator Portal - Dispute & Resolution</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Brand Colors */
+            --primary-600: #007A8C;
+            --primary-100: #E0F2F4;
+            --secondary-500: #FF9F43;
+            --secondary-100: #FFF3E6;
+            
+            /* Semantic Colors */
+            --success: #28C76F;
+            --warning: #FF9F43;
+            --error: #EA5455;
+            --info: #00CFE8;
+            
+            /* Neutral Colors */
+            --white: #FFFFFF;
+            --neutral-100: #F8F8F8;
+            --neutral-300: #B9B9C3;
+            --neutral-600: #6E6B7B;
+            --neutral-900: #1E1E1E;
+            
+            /* Interactive */
+            --pressed: #006675;
+            
+            /* Sidebar Specific */
+            --sidebar-bg: #004D58; 
+            --sidebar-width: 280px;
+
+            /* Typography */
+            --font-main: 'IBM Plex Sans Thai', 'Inter', sans-serif;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--font-main); }
+        body { background: var(--neutral-100); color: var(--neutral-900); display: flex; min-height: 100vh; }
+
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--sidebar-bg);
+            color: var(--white);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            z-index: 1000;
+        }
+        .sidebar-header { padding: 32px 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .logo-box { width: 44px; height: 44px; background: var(--white); color: var(--primary-600); border-radius: 10px; margin: 0 auto 12px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 20px; }
+        .sidebar-menu { flex: 1; padding: 20px 0; }
+        .menu-item { 
+            padding: 15px 25px; 
+            display: flex; 
+            align-items: center; 
+            text-decoration: none; 
+            color: rgba(255,255,255,0.7);
+            transition: 0.3s;
+            font-size: 15px;
+        }
+        .menu-item:hover, .menu-item.active { background: rgba(255,255,255,0.1); color: var(--white); border-left: 4px solid var(--secondary-500); }
+        .menu-item i { margin-right: 15px; width: 24px; text-align: center; font-style: normal; }
+
+        /* Main Content */
+        .main { margin-left: var(--sidebar-width); flex: 1; padding: 32px; }
+        header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 32px; 
+            background: var(--white);
+            padding: 16px 28px;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        }
+
+        /* Metrics */
+        .metrics-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 32px; }
+        .metric-card { background: white; padding: 20px; border-radius: 16px; border-left: 4px solid var(--primary-600); box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
+        .metric-label { font-size: 13px; color: var(--neutral-600); margin-bottom: 4px; }
+        .metric-value { font-size: 24px; font-weight: 700; color: var(--neutral-900); }
+
+        /* Tabs */
+        .tabs { display: flex; gap: 8px; margin-bottom: 24px; }
+        .tab-btn { padding: 10px 24px; border-radius: 10px; border: none; background: white; color: var(--neutral-600); font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .tab-btn.active { background: var(--primary-600); color: white; }
+
+        /* Layout Grid */
+        .layout-grid { display: grid; grid-template-columns: 1fr 380px; gap: 32px; }
+
+        /* Cards */
+        .card { background: white; border-radius: 16px; padding: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); margin-bottom: 32px; }
+        .card-title { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .card-title h3 { font-size: 18px; font-weight: 600; }
+
+        /* Dispute List */
+        .dispute-item {
+            border: 1px solid var(--neutral-100);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .dispute-item:hover { border-color: var(--primary-600); background: var(--neutral-100); }
+        .dispute-item.selected { border-left: 4px solid var(--primary-600); background: var(--primary-100); }
+
+        .dispute-header { display: flex; justify-content: space-between; margin-bottom: 8px; }
+        .case-id { font-weight: 700; color: var(--primary-600); font-size: 14px; }
+        .sla-tag { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 4px; }
+        .sla-urgent { background: var(--error); color: white; }
+        .sla-normal { background: var(--neutral-300); color: white; }
+
+        .dispute-meta { font-size: 12px; color: var(--neutral-600); margin-bottom: 12px; }
+        .dispute-summary { font-size: 13px; line-height: 1.5; color: var(--neutral-900); }
+
+        /* Detail Section */
+        .detail-view { position: sticky; top: 32px; }
+        .evidence-box { background: var(--neutral-100); border-radius: 12px; padding: 16px; margin-bottom: 20px; }
+        .evidence-title { font-size: 13px; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+        
+        .chat-snippet { font-size: 12px; border-left: 2px solid var(--neutral-300); padding-left: 12px; margin-bottom: 12px; color: var(--neutral-600); }
+        
+        .action-area { border-top: 1px solid var(--neutral-100); padding-top: 20px; }
+        .btn { width: 100%; padding: 12px; border-radius: 10px; border: none; font-weight: 600; font-size: 14px; cursor: pointer; margin-bottom: 8px; transition: 0.2s; }
+        .btn-primary { background: var(--primary-600); color: white; }
+        .btn-outline { background: white; color: var(--primary-600); border: 1px solid var(--primary-600); }
+        .btn-danger { background: var(--error); color: white; }
+
+        .status-badge { font-size: 11px; padding: 4px 10px; border-radius: 20px; font-weight: 700; }
+        .bg-pending { background: rgba(255, 159, 67, 0.12); color: var(--warning); }
+        .bg-review { background: rgba(0, 207, 232, 0.12); color: var(--info); }
+
+        /* Review Star */
+        .stars { color: #FF9F43; font-size: 14px; }
+
+    </style>
+</head>
+<body>
+
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo-box">CD</div>
+            <h2 style="font-weight: 700; font-size: 22px;">CareDee</h2>
+            <span style="font-size: 11px; color: rgba(255,255,255,0.5); text-transform: uppercase;">Service Operator Portal</span>
+        </div>
+        <div class="sidebar-menu">
+            <a href="operator_mockup2.html" class="menu-item"><i>🏠</i> หน้าหลัก Dashboard</a>
+            <a href="1_operator_caregiver_management.html" class="menu-item"><i>👥</i> จัดการทีมผู้ดูแล (Team)</a>
+            <a href="2_operator_schedule_booking.html" class="menu-item"><i>📅</i> ตารางงาน & การจอง</a>
+            <a href="3_operator_care_report.html" class="menu-item"><i>📋</i> ติดตามรายงานหน้างาน</a>
+            <a href="#" class="menu-item active"><i>⚠️</i> ข้อร้องเรียน & อุทธรณ์</a>
+            <a href="#" class="menu-item"><i>📊</i> รายงาน & รายได้</a>
+        </div>
+        <div style="padding: 24px; border-top: 1px solid rgba(255,255,255,0.1);">
+            <a href="#" class="menu-item" style="padding: 0;"><i>🚪</i> ออกจากระบบ</a>
+        </div>
+    </nav>
+
+    <main class="main">
+        <header>
+            <div>
+                <h1 style="font-size: 20px; font-weight: 700;">ข้อร้องเรียน & อุทธรณ์รีวิว (Complaints & Disputes)</h1>
+                <p style="font-size: 13px; color: var(--neutral-600);">จัดการความขัดแย้งและตัดสินคำอุทธรณ์ตาม SLA ภายใน 3 วันทำการ</p>
+            </div>
+            <div class="user-profile">
+                <div style="text-align: right; margin-right: 16px;">
+                    <p style="font-weight: 600; font-size: 14px;">Michael Jackson</p>
+                    <p style="font-size: 12px; color: var(--neutral-600);">Operator Manager</p>
+                </div>
+                <div style="width: 48px; height: 48px; border-radius: 12px; background: var(--primary-100); display: flex; align-items: center; justify-content: center; color: var(--primary-600); font-weight: 700;">MJ</div>
+            </div>
+        </header>
+
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-label">รอดำเนินการทั้งหมด</div>
+                <div class="metric-value">12 เคส</div>
+            </div>
+            <div class="metric-card" style="border-left-color: var(--error);">
+                <div class="metric-label">ใกล้ครบกำหนด SLA (< 24 ชม.)</div>
+                <div class="metric-value">3 เคส</div>
+            </div>
+            <div class="metric-card" style="border-left-color: var(--success);">
+                <div class="metric-label">แก้ไขสำเร็จเดือนนี้</div>
+                <div class="metric-value">45 เคส</div>
+            </div>
+            <div class="metric-card" style="border-left-color: var(--info);">
+                <div class="metric-label">ระยะเวลาเฉลี่ย (ชม.)</div>
+                <div class="metric-value">18.5</div>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active">อุทธรณ์รีวิว (Appeals) <span class="status-badge bg-pending" style="margin-left: 8px;">8</span></button>
+            <button class="tab-btn">ข้อร้องเรียนลูกค้า (Complaints) <span class="status-badge bg-review" style="margin-left: 8px;">4</span></button>
+            <button class="tab-btn">ประวัติที่จบแล้ว (History)</button>
+        </div>
+
+        <div class="layout-grid">
+            <!-- Left Side: List -->
+            <div>
+                <div class="card">
+                    <div class="card-title">
+                        <h3>รายการรอการพิจารณา</h3>
+                    </div>
+
+                    <!-- Dispute Item 1 (Review Appeal) -->
+                    <div class="dispute-item selected">
+                        <div class="dispute-header">
+                            <span class="case-id">#AP-990</span>
+                            <span class="sla-tag sla-urgent">เหลือเวลา 1 วัน 4 ชม.</span>
+                        </div>
+                        <div class="dispute-meta">
+                            <strong>ผู้ดูแล:</strong> น.ส. รวีวรรณ ผ่องใส | <strong>จอง:</strong> #BK-7721 | <strong>ระดับ:</strong> <span class="stars">★☆☆☆☆ (1 ดาว)</span>
+                        </div>
+                        <div class="dispute-summary">
+                            "ลูกค้าให้ 1 ดาวเนื่องจากแจ้งว่าเข้างานสาย แต่ผู้ดูแลขออุทธรณ์เนื่องจากมีปัญหาระบบ GPS ของแอพและได้แจ้งลูกค้าทางแชทไว้ก่อนแล้ว"
+                        </div>
+                        <div style="margin-top: 12px; display: flex; gap: 8px;">
+                            <span class="status-badge bg-pending">รอพิจารณา</span>
+                            <span class="status-badge" style="background: #eee;">Review Appeal</span>
+                        </div>
+                    </div>
+
+                    <!-- Dispute Item 2 (Review Appeal) -->
+                    <div class="dispute-item">
+                        <div class="dispute-header">
+                            <span class="case-id">#AP-995</span>
+                            <span class="sla-tag sla-normal">เหลือเวลา 2 วัน 18 ชม.</span>
+                        </div>
+                        <div class="dispute-meta">
+                            <strong>ผู้ดูแล:</strong> น.ส. วิภาวี รักเรียน | <strong>จอง:</strong> #BK-7788 | <strong>ระดับ:</strong> <span class="stars">★★☆☆☆ (2 ดาว)</span>
+                        </div>
+                        <div class="dispute-summary">
+                            "อุทธรณ์รีวิว: ลูกค้าติเรื่องการสื่อสาร แต่ผู้ดูแลยืนยันว่าทำตามคำแนะนำพยาบาลจาก TI ทุกขั้นตอน"
+                        </div>
+                    </div>
+
+                    <!-- Dispute Item 3 (Complaint) -->
+                    <div class="dispute-item">
+                        <div class="dispute-header">
+                            <span class="case-id">#CP-102</span>
+                            <span class="sla-tag sla-normal">เหลือเวลา 2 วัน 22 ชม.</span>
+                        </div>
+                        <div class="dispute-meta">
+                            <strong>ลูกค้า:</strong> คุณมานพ | <strong>ผู้ดูแล:</strong> น.ส. วิภาวี | <strong>จอง:</strong> #BK-7755
+                        </div>
+                        <div class="dispute-summary">
+                            "ข้อร้องเรียน: ลูกค้าแจ้งว่าผู้ดูแลไม่บันทึก Care Report ตามเวลาที่กำหนด (ดีเลย์ 2 ชม.)"
+                        </div>
+                        <div style="margin-top: 12px; display: flex; gap: 8px;">
+                            <span class="status-badge bg-review">กำลังตรวจสอบ</span>
+                            <span class="status-badge" style="background: #eee;">Customer Complaint</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Right Side: Details & Actions -->
+            <div class="detail-view">
+                <div class="card">
+                    <div class="card-title">
+                        <h3>รายละเอียดเคส #AP-990</h3>
+                    </div>
+
+                    <div class="evidence-box">
+                        <div class="evidence-title">💬 แชทหลักฐาน (Chat Snippet)</div>
+                        <div class="chat-snippet">
+                            <strong>07:55 - รวีวรรณ:</strong> "สวัสดีค่ะคุณสมหญิง ตอนนี้ถึงหน้าหมู่บ้านแล้วนะคะ แต่ในแอพขึ้นว่าอยู่นอกพื้นที่ กำลังแจ้งแอดมินนะคะ"
+                        </div>
+                        <div class="chat-snippet">
+                            <strong>07:58 - คุณสมหญิง:</strong> "โอเคค่ะ เข้ามาได้เลยจ้า เดี๋ยวเปิดประตูรอ"
+                        </div>
+                        <div class="evidence-title">📍 พิกัดเช็กอิน (Check-in Log)</div>
+                        <div style="font-size: 12px; color: var(--neutral-900);">
+                            เวลา: 08:00:05 (ตรงเวลา)<br>
+                            สถานะ: นอกรัศมี 800 เมตร (False Positive Flag)
+                        </div>
+                    </div>
+
+                    <div class="action-area">
+                        <p style="font-size: 13px; font-weight: 600; margin-bottom: 12px;">ตัดสินผลการพิจารณา:</p>
+                        
+                        <button class="btn btn-primary">✅ ยอมรับคำอุทธรณ์ (ลบรีวิวนี้)</button>
+                        <p style="font-size: 11px; color: var(--neutral-600); margin-bottom: 12px; text-align: center;">คะแนนเฉลี่ยของผู้ดูแลจะถูกคำนวณใหม่โดยไม่รวมรีวิวนี้</p>
+                        
+                        <button class="btn btn-outline">⚖️ ยอมรับบางส่วน (แก้ไขข้อความ)</button>
+                        <button class="btn btn-danger">❌ ปฏิเสธคำอุทธรณ์ (คงรีวิวไว้)</button>
+                        
+                        <div style="margin-top: 16px;">
+                            <label style="font-size: 12px; color: var(--neutral-600);">บันทึกเหตุผลการตัดสิน (Internal Only):</label>
+                            <textarea placeholder="ระบุเหตุผลเพื่อใช้เป็น Audit Trail..." style="width: 100%; height: 80px; border: 1px solid var(--neutral-300); border-radius: 8px; padding: 10px; font-size: 12px; margin-top: 8px;"></textarea>
+                        </div>
+                        
+                        <button class="btn btn-outline" style="margin-top: 12px; border-color: var(--neutral-300); color: var(--neutral-600);">📩 ส่งข้อความแจ้งผล (ทั้ง 2 ฝ่าย)</button>
+                    </div>
+                </div>
+
+                <!-- Policy Tip -->
+                <div class="card" style="background: var(--secondary-100); border: none;">
+                    <h4 style="font-size: 14px; margin-bottom: 8px; color: var(--secondary-500);">💡 นโยบายการตัดสิน</h4>
+                    <p style="font-size: 12px; color: var(--neutral-600); line-height: 1.5;">
+                        ตามมาตรฐาน CareDee หากมีหลักฐานแชทชัดเจนว่าลูกค้าทราบปัญหาเทคนิคและการให้บริการยังคงเป็นปกติ ให้พิจารณาลบรีวิวเพื่อรักษาความเป็นธรรมแก่ผู้ดูแล
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>

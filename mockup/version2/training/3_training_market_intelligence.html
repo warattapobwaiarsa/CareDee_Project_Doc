@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>สถิติตลาดแรงงาน - CareDee Academy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Brand Colors */
+            --primary-600: #007A8C;
+            --primary-100: #E0F2F4;
+            --secondary-500: #FF9F43;
+            --secondary-100: #FFF3E6;
+            
+            /* Semantic Colors */
+            --success: #28C76F;
+            --warning: #FF9F43;
+            --error: #EA5455;
+            --info: #00CFE8;
+            
+            /* Neutral Colors */
+            --white: #FFFFFF;
+            --neutral-100: #F8F8F8;
+            --neutral-300: #B9B9C3;
+            --neutral-600: #6E6B7B;
+            --neutral-900: #1E1E1E;
+            
+            /* Sidebar */
+            --sidebar-width: 280px;
+
+            /* Typography */
+            --font-main: 'IBM Plex Sans Thai', 'Inter', sans-serif;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--font-main); }
+        body { background: var(--neutral-100); color: var(--neutral-900); display: flex; min-height: 100vh; }
+
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--white);
+            height: 100vh;
+            position: fixed;
+            border-right: 1px solid var(--neutral-300);
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+        }
+        .sidebar-brand { padding: 32px 24px; text-align: center; border-bottom: 1px solid var(--neutral-100); }
+        .logo-box { width: 44px; height: 44px; background: var(--primary-600); color: var(--white); border-radius: 10px; margin: 0 auto 12px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 20px; }
+        .sidebar-brand h2 { color: var(--primary-600); font-size: 20px; font-weight: 700; }
+        .sidebar-menu { flex: 1; padding: 20px 0; }
+        .menu-link {
+            padding: 14px 24px;
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: var(--neutral-600);
+            font-weight: 500;
+            transition: 0.2s;
+            font-size: 15px;
+        }
+        .menu-link:hover, .menu-link.active { background: var(--primary-100); color: var(--primary-600); border-right: 4px solid var(--primary-600); }
+        .menu-link i { margin-right: 12px; width: 24px; text-align: center; font-style: normal; }
+
+        /* Main */
+        .main { margin-left: var(--sidebar-width); flex: 1; padding: 32px; }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            background: var(--white);
+            padding: 16px 28px;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        }
+
+        /* Stats Grid */
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 32px; }
+        .stat-card { 
+            background: var(--white); 
+            padding: 24px; 
+            border-radius: 16px; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03); 
+            border-left: 4px solid var(--primary-600);
+        }
+        .stat-label { font-size: 12px; color: var(--neutral-600); margin-bottom: 8px; font-weight: 600; text-transform: uppercase; }
+        .stat-value { font-size: 24px; font-weight: 700; color: var(--neutral-900); }
+        .stat-trend { font-size: 12px; margin-top: 4px; font-weight: 600; }
+        .trend-up { color: var(--success); }
+
+        /* Grid Layout */
+        .grid-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+        .card { background: var(--white); border-radius: 16px; padding: 28px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); margin-bottom: 32px; }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; border-bottom: 1px solid var(--neutral-100); padding-bottom: 12px; }
+        .card-title { font-size: 18px; font-weight: 700; color: var(--neutral-900); }
+
+        /* Demand Bar */
+        .demand-item { margin-bottom: 20px; }
+        .demand-info { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; }
+        .demand-bar-bg { height: 12px; background: var(--neutral-100); border-radius: 6px; overflow: hidden; }
+        .demand-bar-fill { height: 100%; background: var(--primary-600); border-radius: 6px; position: relative; }
+        .demand-growth { font-size: 11px; font-weight: 700; color: var(--success); margin-left: 8px; }
+
+        /* Heatmap Mock */
+        .heatmap-container {
+            height: 350px;
+            background: #EAF2F8;
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .map-marker {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: rgba(234, 84, 85, 0.6);
+            border-radius: 50%;
+            border: 2px solid var(--error);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.5); opacity: 0.4; }
+            100% { transform: scale(1); opacity: 0.8; }
+        }
+
+        /* Circular Chart */
+        .employment-chart {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: conic-gradient(var(--primary-600) 0% 82%, var(--neutral-100) 82% 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            position: relative;
+        }
+        .employment-chart::after {
+            content: "82%";
+            width: 120px;
+            height: 120px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--primary-600);
+        }
+
+        /* Legend */
+        .legend { display: flex; gap: 16px; font-size: 12px; margin-top: 16px; justify-content: center; }
+        .legend-item { display: flex; align-items: center; gap: 6px; }
+        .dot { width: 10px; height: 10px; border-radius: 50%; }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <div class="logo-box">CD</div>
+            <h2>CareDee Academy</h2>
+            <p style="font-size: 11px; color: var(--neutral-600); margin-top: 4px; text-transform: uppercase;">Training Institute Interface</p>
+        </div>
+        <nav class="sidebar-menu">
+            <a href="training_mockup2.html" class="menu-link"><i>🏠</i> ภาพรวมสถาบัน</a>
+            <a href="1_training_import.html" class="menu-link"><i>📥</i> นำเข้าข้อมูลการอบรม</a>
+            <a href="2_training_cert_manage.html" class="menu-link"><i>🏅</i> จัดการใบรับรอง</a>
+            <a href="3_training_market_intelligence.html" class="menu-link active"><i>📈</i> สถิติตลาดแรงงาน</a>
+            <a href="#" class="menu-link"><i>🛡️</i> นโยบายการตรวจสอบ</a>
+        </nav>
+        <div style="padding: 24px; border-top: 1px solid var(--neutral-100);">
+            <a href="#" class="menu-link" style="color: var(--error); padding: 0;"><i>🚪</i> ออกจากระบบ</a>
+        </div>
+    </aside>
+
+    <main class="main">
+        <header>
+            <div class="page-title">
+                <h1 style="font-size: 20px; font-weight: 700;">3. สถิติตลาดแรงงาน (Market Intelligence)</h1>
+                <p style="font-size: 13px; color: var(--neutral-600);">ข้อมูลเชิงลึกเพื่อการพัฒนาหลักสูตรและการขยายตลาด</p>
+            </div>
+            <button class="btn" style="background: var(--primary-100); color: var(--primary-600); padding: 10px 16px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer;">
+                <i>📅</i> ช่วงเวลา: 6 เดือนล่าสุด
+            </button>
+        </header>
+
+        <!-- Top Insights -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">ความต้องการแรงงานเฉลี่ย</div>
+                <div class="stat-value">4,500 งาน/เดือน</div>
+                <div class="stat-trend trend-up">↑ 12% จากไตรมาสก่อน</div>
+            </div>
+            <div class="stat-card" style="border-left-color: var(--secondary-500);">
+                <div class="stat-label">ทักษะขาดแคลนอันดับ 1</div>
+                <div class="stat-value">ดูแลผู้ป่วยติดเตียง</div>
+                <div class="stat-trend" style="color: var(--error);">Gap: -250 คน</div>
+            </div>
+            <div class="stat-card" style="border-left-color: var(--success);">
+                <div class="stat-label">อัตราการได้งาน (Graduates)</div>
+                <div class="stat-value">82.5%</div>
+                <div class="stat-trend trend-up">↑ สูงกว่าค่าเฉลี่ยตลาด 5%</div>
+            </div>
+            <div class="stat-card" style="border-left-color: var(--info);">
+                <div class="stat-label">พื้นที่แนะนำ (Shortage)</div>
+                <div class="stat-value">นนทบุรี / บางนา</div>
+                <div class="stat-trend">Demand Density: สูงมาก</div>
+            </div>
+        </div>
+
+        <div class="grid-layout">
+            <!-- Skill Demand Trend -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">ความต้องการทักษะ (Skill Demand Trend)</h2>
+                    <p style="font-size: 12px; color: var(--neutral-600);">วัดจากปริมาณการจองจริง</p>
+                </div>
+                
+                <div class="demand-item">
+                    <div class="demand-info">
+                        <span style="font-weight: 600;">ดูแลผู้ป่วยติดเตียง (Bedbound Care)</span>
+                        <span>850 เคส/สัปดาห์ <span class="demand-growth">↑ 20%</span></span>
+                    </div>
+                    <div class="demand-bar-bg"><div class="demand-bar-fill" style="width: 85%;"></div></div>
+                </div>
+
+                <div class="demand-item">
+                    <div class="demand-info">
+                        <span style="font-weight: 600;">ดูแลผู้สูงอายุสมองเสื่อม (Dementia)</span>
+                        <span>620 เคส/สัปดาห์ <span class="demand-growth">↑ 15%</span></span>
+                    </div>
+                    <div class="demand-bar-bg"><div class="demand-bar-fill" style="width: 65%; background: var(--secondary-500);"></div></div>
+                </div>
+
+                <div class="demand-item">
+                    <div class="demand-info">
+                        <span style="font-weight: 600;">กายภาพบำบัดพื้นฐาน</span>
+                        <span>410 เคส/สัปดาห์ <span class="demand-growth">↑ 8%</span></span>
+                    </div>
+                    <div class="demand-bar-bg"><div class="demand-bar-fill" style="width: 45%; background: var(--info);"></div></div>
+                </div>
+
+                <div class="demand-item">
+                    <div class="demand-info">
+                        <span style="font-weight: 600;">ดูแลผู้ป่วยพักฟื้นหลังผ่าตัด</span>
+                        <span>320 เคส/สัปดาห์ <span class="demand-growth">↑ 5%</span></span>
+                    </div>
+                    <div class="demand-bar-bg"><div class="demand-bar-fill" style="width: 35%; background: var(--neutral-300);"></div></div>
+                </div>
+
+                <div style="background: var(--neutral-100); padding: 16px; border-radius: 12px; margin-top: 24px;">
+                    <p style="font-size: 13px; font-weight: 700;">💡 ข้อเสนอแนะเชิงกลยุทธ์:</p>
+                    <p style="font-size: 12px; color: var(--neutral-600); margin-top: 4px;">
+                        ความต้องการดูแลผู้ป่วยติดเตียงเติบโตแบบก้าวกระโดด สถาบันควรเพิ่มรอบการอบรม "Bedbound Specialty" เพื่อรองรับความต้องการที่ล้นตลาด
+                    </p>
+                </div>
+            </div>
+
+            <!-- Geographical Heatmap -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">พื้นที่ขาดแคลนแรงงาน (Geographical Heatmap)</h2>
+                    <p style="font-size: 12px; color: var(--neutral-600);">พื้นที่ที่มี Demand > Supply</p>
+                </div>
+                <div class="heatmap-container">
+                    <!-- Fake Map Representation -->
+                    <svg width="300" height="250" viewBox="0 0 100 100" style="fill: #CBD5E0; stroke: white; stroke-width: 0.5;">
+                        <path d="M20,20 Q40,10 60,20 T90,40 Q80,70 60,90 T20,80 Q10,50 20,20 Z" />
+                        <path d="M50,30 Q70,40 80,60 T60,80 Q40,70 50,30 Z" style="fill: #A0AEC0;" />
+                    </svg>
+                    
+                    <div class="map-marker" style="top: 30%; left: 45%;" title="นนทบุรี (สูงมาก)"></div>
+                    <div class="map-marker" style="top: 55%; left: 60%; width: 30px; height: 30px;" title="เขตบางนา (วิกฤต)"></div>
+                    <div class="map-marker" style="top: 40%; left: 70%;" title="เขตลาดกระบัง (สูง)"></div>
+                    
+                    <div style="position: absolute; bottom: 20px; right: 20px; background: white; padding: 12px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); font-size: 11px;">
+                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+                            <div style="width: 12px; height: 12px; background: var(--error); border-radius: 2px;"></div> ขาดแคลนวิกฤต
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <div style="width: 12px; height: 12px; background: rgba(234, 84, 85, 0.4); border-radius: 2px;"></div> ขาดแคลนปานกลาง
+                        </div>
+                    </div>
+                </div>
+                <div style="margin-top: 20px;">
+                    <p style="font-size: 14px; font-weight: 600;">Top 3 พื้นที่โอกาสทอง:</p>
+                    <ol style="font-size: 13px; color: var(--neutral-600); margin-left: 20px; margin-top: 8px;">
+                        <li><strong>บางนา-ตราด:</strong> ความต้องการสูงแต่มีผู้ดูแลในพื้นที่น้อย (เดินทางไกล)</li>
+                        <li><strong>นนทบุรี (เมือง):</strong> กลุ่มผู้สูงอายุอาศัยหนาแน่น มีการจองซ้ำสูง</li>
+                        <li><strong>พระราม 2:</strong> พื้นที่กำลังขยายตัว มีการหาผู้ดูแลใหม่เพิ่มขึ้น 15%</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+        <!-- Employment Rate Card -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">ดัชนีความสำเร็จของผู้สำเร็จการศึกษา (Employment Rate)</h2>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 48px; align-items: center;">
+                <div class="employment-chart">
+                    <!-- Conic gradient set in CSS -->
+                </div>
+                <div>
+                    <h3 style="font-size: 20px; margin-bottom: 12px;">คนจบจากสถาบันคุณ "มีงานทำ" มากกว่าค่าเฉลี่ยตลาด</h3>
+                    <p style="font-size: 14px; color: var(--neutral-600); line-height: 1.6; margin-bottom: 24px;">
+                        จากศิษย์เก่าทั้งหมด 1,240 คน มีผู้เปิดรับงานใน CareDee แล้ว 850 คน และในกลุ่มนั้น 700 คน (82%) ได้รับการจองงานอย่างน้อย 1 ครั้งภายใน 30 วันหลังเรียนจบ
+                    </p>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div style="padding: 16px; background: var(--neutral-100); border-radius: 12px;">
+                            <div style="font-size: 12px; color: var(--neutral-600);">รายได้เฉลี่ยเดือนแรก</div>
+                            <div style="font-size: 18px; font-weight: 700; color: var(--primary-600);">18,500 - 22,000 ฿</div>
+                        </div>
+                        <div style="padding: 16px; background: var(--neutral-100); border-radius: 12px;">
+                            <div style="font-size: 12px; color: var(--neutral-600);">คะแนนความพึงพอใจลูกค้า</div>
+                            <div style="font-size: 18px; font-weight: 700; color: var(--success);">4.8 / 5.0</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div style="font-size: 11px; text-align: center; color: var(--neutral-600); padding: 24px; border-top: 1px solid var(--neutral-100); margin-top: 20px;">
+            * ข้อมูลคำนวณจากสถิติการใช้งานจริงบน CareDee Platform และ Update แบบ Real-time ทุก 24 ชั่วโมง
+        </div>
+    </main>
+
+</body>
+</html>

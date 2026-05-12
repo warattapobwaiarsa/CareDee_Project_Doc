@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareDee Operator Portal - Caregiver Management</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Brand Colors */
+            --primary-600: #007A8C;
+            --primary-100: #E0F2F4;
+            --secondary-500: #FF9F43;
+            --secondary-100: #FFF3E6;
+            
+            /* Semantic Colors */
+            --success: #28C76F;
+            --warning: #FF9F43;
+            --error: #EA5455;
+            --info: #00CFE8;
+            
+            /* Neutral Colors */
+            --white: #FFFFFF;
+            --neutral-100: #F8F8F8;
+            --neutral-300: #B9B9C3;
+            --neutral-600: #6E6B7B;
+            --neutral-900: #1E1E1E;
+            
+            /* Interactive */
+            --pressed: #006675;
+            
+            /* Sidebar Specific */
+            --sidebar-bg: #004D58; 
+            --sidebar-width: 280px;
+
+            /* Typography */
+            --font-main: 'IBM Plex Sans Thai', 'Inter', sans-serif;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--font-main); }
+        body { background: var(--neutral-100); color: var(--neutral-900); display: flex; min-height: 100vh; }
+
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--sidebar-bg);
+            color: var(--white);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            z-index: 1000;
+        }
+        .sidebar-header { padding: 32px 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .logo-box { width: 44px; height: 44px; background: var(--white); color: var(--primary-600); border-radius: 10px; margin: 0 auto 12px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 20px; }
+        .sidebar-menu { flex: 1; padding: 20px 0; }
+        .menu-item { 
+            padding: 15px 25px; 
+            display: flex; 
+            align-items: center; 
+            text-decoration: none; 
+            color: rgba(255,255,255,0.7);
+            transition: 0.3s;
+            font-size: 15px;
+        }
+        .menu-item:hover, .menu-item.active { background: rgba(255,255,255,0.1); color: var(--white); border-left: 4px solid var(--secondary-500); }
+        .menu-item i { margin-right: 15px; width: 24px; text-align: center; font-style: normal; }
+
+        /* Main Content */
+        .main { margin-left: var(--sidebar-width); flex: 1; padding: 32px; }
+        header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 32px; 
+            background: var(--white);
+            padding: 16px 28px;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        }
+        .user-profile { display: flex; align-items: center; gap: 16px; }
+        .badge-mfa { font-size: 10px; background: var(--success); color: white; padding: 2px 8px; border-radius: 10px; font-weight: 600; }
+
+        /* Metrics */
+        .metrics-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 32px; }
+        .metric-card { 
+            background: var(--white); 
+            padding: 24px; 
+            border-radius: 16px; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            border-left: 4px solid var(--primary-600);
+        }
+        .metric-label { font-size: 14px; color: var(--neutral-600); margin-bottom: 8px; font-weight: 500; }
+        .metric-value { font-size: 26px; font-weight: 700; color: var(--neutral-900); }
+
+        /* Layout Sections */
+        .card { 
+            background: var(--white); 
+            border-radius: 16px; 
+            padding: 28px; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03); 
+            margin-bottom: 32px; 
+        }
+        .card-title { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; border-bottom: 1px solid var(--neutral-100); padding-bottom: 12px; }
+        .card-title h3 { font-size: 18px; color: var(--neutral-900); font-weight: 600; }
+        
+        /* Table */
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; padding: 14px; font-size: 13px; color: var(--neutral-600); background: var(--neutral-100); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+        td { padding: 16px 14px; font-size: 14px; border-bottom: 1px solid var(--neutral-100); }
+        
+        .status-badge { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+        .bg-available { background: rgba(40, 199, 111, 0.12); color: var(--success); }
+        .bg-busy { background: rgba(255, 159, 67, 0.12); color: var(--secondary-500); }
+        .bg-leave { background: rgba(110, 107, 123, 0.12); color: var(--neutral-600); }
+        .bg-pending { background: var(--primary-100); color: var(--primary-600); }
+
+        /* Performance Badges */
+        .perf-badge { 
+            display: inline-flex; 
+            align-items: center; 
+            gap: 4px; 
+            padding: 2px 8px; 
+            border-radius: 4px; 
+            font-size: 11px; 
+            font-weight: 700; 
+            text-transform: uppercase;
+        }
+        .badge-elite { background: #FFF9C4; color: #FBC02D; border: 1px solid #FBC02D; }
+        .badge-adv { background: #E1F5FE; color: #0288D1; border: 1px solid #0288D1; }
+        .badge-std { background: #F5F5F5; color: #616161; border: 1px solid #9E9E9E; }
+
+        /* Document Icons */
+        .doc-icon { 
+            display: inline-block; 
+            width: 28px; 
+            height: 28px; 
+            line-height: 28px; 
+            text-align: center; 
+            background: var(--neutral-100); 
+            border-radius: 6px; 
+            margin-right: 4px; 
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .doc-icon:hover { background: var(--primary-100); color: var(--primary-600); }
+        .doc-verified { color: var(--success); }
+
+        /* Actions */
+        .btn { 
+            padding: 8px 16px; 
+            border-radius: 8px; 
+            border: none; 
+            cursor: pointer; 
+            font-size: 13px; 
+            font-weight: 600; 
+            transition: 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-primary { background: var(--primary-600); color: white; }
+        .btn-primary:hover { background: var(--pressed); }
+        .btn-outline { background: var(--white); color: var(--primary-600); border: 1px solid var(--primary-600); }
+        .btn-outline:hover { background: var(--primary-100); }
+        .btn-sm { padding: 6px 12px; font-size: 12px; }
+
+        /* Passport Summary Tooltip-like */
+        .passport-summary {
+            font-size: 12px;
+            color: var(--neutral-600);
+            margin-top: 4px;
+        }
+        .skill-tag {
+            display: inline-block;
+            background: #eee;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-right: 4px;
+            margin-top: 2px;
+            font-size: 10px;
+        }
+
+        /* Filter Bar */
+        .filter-bar {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 24px;
+            align-items: center;
+        }
+        .search-input {
+            flex: 1;
+            padding: 10px 16px;
+            border-radius: 8px;
+            border: 1px solid var(--neutral-300);
+            font-size: 14px;
+        }
+        .filter-select {
+            padding: 10px 16px;
+            border-radius: 8px;
+            border: 1px solid var(--neutral-300);
+            background: white;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo-box">CD</div>
+            <h2 style="font-weight: 700; font-size: 22px;">CareDee</h2>
+            <span style="font-size: 11px; color: rgba(255,255,255,0.5); text-transform: uppercase;">Service Operator Portal</span>
+        </div>
+        <div class="sidebar-menu">
+            <a href="operator_mockup2.html" class="menu-item"><i>🏠</i> หน้าหลัก Dashboard</a>
+            <a href="#" class="menu-item active"><i>👥</i> จัดการทีมผู้ดูแล (Team)</a>
+            <a href="#" class="menu-item"><i>📅</i> ตารางงาน & การจอง</a>
+            <a href="#" class="menu-item"><i>📋</i> ติดตามรายงานหน้างาน</a>
+            <a href="#" class="menu-item"><i>⚠️</i> ข้อร้องเรียน & อุทธรณ์</a>
+            <a href="#" class="menu-item"><i>📊</i> รายงาน & รายได้</a>
+        </div>
+        <div style="padding: 24px; border-top: 1px solid rgba(255,255,255,0.1);">
+            <a href="#" class="menu-item" style="padding: 0;"><i>🚪</i> ออกจากระบบ</a>
+        </div>
+    </nav>
+
+    <main class="main">
+        <header>
+            <div>
+                <h1 style="font-size: 20px; font-weight: 700;">จัดการทีมผู้ดูแล (Caregiver Management)</h1>
+                <p style="font-size: 13px; color: var(--neutral-600);">บริหารจัดการสถานะ คุณภาพ และเอกสารของบุคลากรในสังกัด</p>
+            </div>
+            <div class="user-profile">
+                <div style="text-align: right;">
+                    <p style="font-weight: 600; font-size: 14px;">Michael Jackson <span class="badge-mfa">2FA VERIFIED</span></p>
+                    <p style="font-size: 12px; color: var(--neutral-600);">หัวหน้าฝ่ายปฏิบัติการ</p>
+                </div>
+                <div style="width: 48px; height: 48px; border-radius: 12px; background: var(--primary-100); display: flex; align-items: center; justify-content: center; color: var(--primary-600); font-weight: 700;">MJ</div>
+            </div>
+        </header>
+
+        <!-- Metrics -->
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-label">ทีมผู้ดูแลทั้งหมด</div>
+                <div class="metric-value">48 คน</div>
+            </div>
+            <div class="metric-card" style="border-left-color: var(--success);">
+                <div class="metric-label">พร้อมรับงาน (Available)</div>
+                <div class="metric-value">12 คน</div>
+            </div>
+            <div class="metric-card" style="border-left-color: var(--secondary-500);">
+                <div class="metric-label">กำลังปฏิบัติงาน</div>
+                <div class="metric-value">32 คน</div>
+            </div>
+            <div class="metric-card" style="border-left-color: var(--info);">
+                <div class="metric-label">รออนุมัติจาก TI</div>
+                <div class="metric-value">4 รายการ</div>
+            </div>
+        </div>
+
+        <!-- Inbound Requests from Training Institute -->
+        <div class="card">
+            <div class="card-title">
+                <h3>📥 คำขอยืนยันผู้ดูแลใหม่ (Inbound Requests from TI)</h3>
+                <span class="status-badge bg-pending">4 Pending</span>
+            </div>
+            <p style="font-size: 13px; color: var(--neutral-600); margin-bottom: 16px;">รายชื่อผู้สำเร็จการศึกษาที่สถาบันฝึกอบรม (TI) ส่งต่อมายังศูนย์ของคุณ</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ชื่อ-นามสกุล</th>
+                        <th>สถาบัน (TI)</th>
+                        <th>คะแนนเฉลี่ย (GPA)</th>
+                        <th>ทักษะเชี่ยวชาญ</th>
+                        <th>การจัดการ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="font-weight: 600;">น.ส. อารีรัตน์ สุขใจ</td>
+                        <td>BKK Nursing Academy</td>
+                        <td style="color: var(--success); font-weight: 700;">3.85 / 4.00</td>
+                        <td>
+                            <span class="skill-tag">กายภาพบำบัด</span>
+                            <span class="skill-tag">โภชนาการ</span>
+                        </td>
+                        <td>
+                            <button class="btn btn-primary btn-sm">ยืนยันรับเข้าทีม</button>
+                            <button class="btn btn-outline btn-sm">ดูรายละเอียด</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight: 600;">นาย สมชาย สายชล</td>
+                        <td>Elderly Care Center</td>
+                        <td style="color: var(--success); font-weight: 700;">3.70 / 4.00</td>
+                        <td>
+                            <span class="skill-tag">ดูแลผู้ป่วยติดเตียง</span>
+                        </td>
+                        <td>
+                            <button class="btn btn-primary btn-sm">ยืนยันรับเข้าทีม</button>
+                            <button class="btn btn-outline btn-sm">ดูรายละเอียด</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Caregiver List -->
+        <div class="card">
+            <div class="card-title">
+                <h3>👥 รายชื่อทีมผู้ดูแล (Team Directory)</h3>
+                <button class="btn btn-outline btn-sm">+ เพิ่มผู้ดูแล (Manual)</button>
+            </div>
+
+            <div class="filter-bar">
+                <input type="text" class="search-input" placeholder="ค้นหาชื่อ, ทักษะ, หรือรหัสพนักงาน...">
+                <select class="filter-select">
+                    <option>สถานะทั้งหมด</option>
+                    <option>ว่าง (Available)</option>
+                    <option>ติดงาน (Busy)</option>
+                    <option>ลาพัก (On Leave)</option>
+                </select>
+                <select class="filter-select">
+                    <option>ระดับทั้งหมด</option>
+                    <option>Elite</option>
+                    <option>Advanced</option>
+                    <option>Standard</option>
+                </select>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>ผู้ดูแล / Performance</th>
+                        <th>สถานะ</th>
+                        <th>Caregiver Passport (TI)</th>
+                        <th>คลังเอกสาร</th>
+                        <th>การจัดการ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <div style="width: 40px; height: 40px; border-radius: 50%; background: #ddd; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700;">VW</div>
+                                <div>
+                                    <div style="font-weight: 600;">น.ส. วิภาวี รักเรียน</div>
+                                    <div class="perf-badge badge-elite">⭐ Elite</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td><span class="status-badge bg-available">ว่าง (Available)</span></td>
+                        <td>
+                            <div class="passport-summary">
+                                <strong>เกรด:</strong> 3.90 | <strong>ทักษะ:</strong> 
+                                <span class="skill-tag">ติดเตียง</span>
+                                <span class="skill-tag">เจาะคอ</span>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="doc-icon doc-verified" title="ใบรับรองวิชาชีพ">📜</span>
+                            <span class="doc-icon doc-verified" title="ประวัติอาชญากรรม">⚖️</span>
+                            <span class="doc-icon doc-verified" title="ผลตรวจสุขภาพ">🏥</span>
+                        </td>
+                        <td>
+                            <button class="btn btn-outline btn-sm">โปรไฟล์</button>
+                            <button class="btn btn-primary btn-sm">มอบหมายงาน</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <div style="width: 40px; height: 40px; border-radius: 50%; background: #ddd; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700;">RW</div>
+                                <div>
+                                    <div style="font-weight: 600;">น.ส. รวีวรรณ ผ่องใส</div>
+                                    <div class="perf-badge badge-adv">⭐ Advanced</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td><span class="status-badge bg-busy">ติดงาน (#BK-7721)</span></td>
+                        <td>
+                            <div class="passport-summary">
+                                <strong>เกรด:</strong> 3.65 | <strong>ทักษะ:</strong> 
+                                <span class="skill-tag">ผู้สูงอายุทั่วไป</span>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="doc-icon doc-verified" title="ใบรับรองวิชาชีพ">📜</span>
+                            <span class="doc-icon doc-verified" title="ประวัติอาชญากรรม">⚖️</span>
+                            <span class="doc-icon" title="ผลตรวจสุขภาพ (หมดอายุ)">⚠️</span>
+                        </td>
+                        <td>
+                            <button class="btn btn-outline btn-sm">โปรパイล์</button>
+                            <button class="btn btn-outline btn-sm" disabled>มอบหมายงาน</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <div style="width: 40px; height: 40px; border-radius: 50%; background: #ddd; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700;">SK</div>
+                                <div>
+                                    <div style="font-weight: 600;">นาย สมคิด พากเพียร</div>
+                                    <div class="perf-badge badge-std">⭐ Standard</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td><span class="status-badge bg-leave">ลาพัก (On Leave)</span></td>
+                        <td>
+                            <div class="passport-summary">
+                                <strong>เกรด:</strong> 3.40 | <strong>ทักษะ:</strong> 
+                                <span class="skill-tag">ดูแลทั่วไป</span>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="doc-icon doc-verified" title="ใบรับรองวิชาชีพ">📜</span>
+                            <span class="doc-icon doc-verified" title="ประวัติอาชญากรรม">⚖️</span>
+                            <span class="doc-icon doc-verified" title="ผลตรวจสุขภาพ">🏥</span>
+                        </td>
+                        <td>
+                            <button class="btn btn-outline btn-sm">โปรไฟล์</button>
+                            <button class="btn btn-outline btn-sm">ตั้งค่าวันลา</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </main>
+
+</body>
+</html>
