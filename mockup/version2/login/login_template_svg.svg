@@ -15,8 +15,7 @@
   <circle cx="690" cy="100" r="150" fill="white" fill-opacity="0.05"/>
   
   <!-- Logo Section (Branding) -->
-  <rect x="188" y="248" width="64" height="64" rx="12" fill="white"/>
-  <text x="220" y="288" font-family="'IBM Plex Sans Thai', 'Inter', sans-serif" font-size="24" font-weight="700" fill="#007A8C" text-anchor="middle">CD</text>
+  <image href="../../../logo_design/caredee_v2.svg" x="188" y="225" width="240" height="130" />
   
   <text x="188" y="348" font-family="'IBM Plex Sans Thai', 'Inter', sans-serif" font-size="32" font-weight="700" fill="white">ดูแลคนที่คุณรัก</text>
   <text x="188" y="390" font-family="'IBM Plex Sans Thai', 'Inter', sans-serif" font-size="32" font-weight="700" fill="white">ด้วยมืออาชีพจาก CareDee</text>
