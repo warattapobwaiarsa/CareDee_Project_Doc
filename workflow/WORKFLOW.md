@@ -405,3 +405,21 @@ sequenceDiagram
 | **Auto-Rematch Alert**| Customer | Push | แจ้งว่าระบบกำลังหาคนใหม่ให้กรณีคนเดิมไม่ว่าง |
 | **Refund Processed** | Customer | Email | แจ้งยืนยันการคืนเงินสำเร็จ |
 
+---
+
+## 9. Prototype Technical Mandates
+
+เพื่อความสมจริงและตรงตามมาตรฐาน UX/UI ใน Prototype ชุดนี้ ได้มีการกำหนดหลักเกณฑ์ทางเทคนิคไว้ดังนี้:
+
+*   **SPA Architecture (Single Page Application):** พอร์ทัลทั้ง 3 ส่วน (Admin, Operator, Training) ได้รับการออกแบบให้เป็น SPA โดยใช้การสลับมุมมองผ่าน CSS `display` และ JavaScript เพื่อรักษา State ของข้อมูลโดยไม่ต้องโหลดหน้าใหม่
+*   **Operational Safety:**
+    *   **Double Confirmation:** การดำเนินการที่มีความเสี่ยงสูง (เช่น การระงับบัญชี, การอนุมัติโอนเงิน Payout) ต้องผ่านระบบ Re-authentication หรือ Double Confirmation Modal เสมอ
+    *   **Broadcaster Preview:** ระบบประกาศ Maintenance ต้องมีการแสดงผล Preview ให้แอดมินเห็นก่อนกดยืนยันส่งข้อมูลเข้าระบบจริง
+*   **Data Compliance:**
+    *   **PDPA Transparency:** มีการแสดง Timestamp การยอมรับ Consent ล่าสุดของผู้ใช้ในหน้าจัดการบัญชี
+    *   **Audit Trail Context:** ระบบบันทึก Log กิจกรรมสำคัญ (เช่น การเรียกดูข้อมูลส่วนบุคคล, การแก้ไขการตั้งค่าระบบ) และแสดงผลในรูปแบบ Audit Trail Timeline
+*   **Real-time Logic Simulation:**
+    *   **Sync Indicator:** แสดงสถานะการเชื่อมต่อข้อมูล (Live Sync) ตลอดเวลาใน Header
+    *   **Dynamic Matching:** ระบบปรับค่าน้ำหนัก (Matching Weight) จะส่งผลต่อลำดับการแนะนำผู้ดูแลทันทีใน Prototype นี้
+
+

@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>นำเข้าข้อมูลการอบรม V2 - CareDee Academy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Brand Colors */
+            --primary-600: #007A8C;
+            --primary-100: #E0F2F4;
+            --secondary-500: #FF9F43;
+            --secondary-100: #FFF3E6;
+            
+            /* Semantic Colors */
+            --success: #28C76F;
+            --warning: #FF9F43;
+            --error: #EA5455;
+            --info: #00CFE8;
+            
+            /* Neutral Colors */
+            --white: #FFFFFF;
+            --neutral-100: #F8F8F8;
+            --neutral-200: #F3F2F7;
+            --neutral-300: #B9B9C3;
+            --neutral-600: #6E6B7B;
+            --neutral-900: #1E1E1E;
+            
+            /* Interactive */
+            --pressed: #006675;
+            
+            /* Sidebar */
+            --sidebar-width: 280px;
+
+            /* Typography */
+            --font-main: 'IBM Plex Sans Thai', 'Inter', sans-serif;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--font-main); }
+        body { background: var(--neutral-100); color: var(--neutral-900); display: flex; min-height: 100vh; }
+
+        /* --- Sidebar --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--white);
+            height: 100vh;
+            position: fixed;
+            border-right: 1px solid var(--neutral-300);
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+        }
+        .sidebar-brand { padding: 32px 24px; text-align: center; border-bottom: 1px solid var(--neutral-100); }
+        .logo-box { width: 44px; height: 44px; background: var(--primary-600); color: var(--white); border-radius: 10px; margin: 0 auto 12px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 20px; }
+        .sidebar-brand h2 { color: var(--primary-600); font-size: 20px; font-weight: 700; }
+        .sidebar-menu { flex: 1; padding: 20px 0; }
+        .menu-link {
+            padding: 14px 24px;
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: var(--neutral-600);
+            font-weight: 500;
+            transition: 0.2s;
+            font-size: 15px;
+        }
+        .menu-link:hover, .menu-link.active { background: var(--primary-100); color: var(--primary-600); border-right: 4px solid var(--primary-600); }
+        .menu-link i { margin-right: 12px; width: 24px; text-align: center; font-style: normal; }
+
+        /* --- Main Layout --- */
+        .main { margin-left: var(--sidebar-width); flex: 1; padding: 32px; }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            background: var(--white);
+            padding: 16px 28px;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        }
+        .user-status { display: flex; align-items: center; gap: 12px; }
+        .mfa-tag { background: var(--success); color: white; font-size: 11px; padding: 4px 12px; border-radius: 20px; font-weight: 600; }
+
+        /* --- Components --- */
+        .card { background: var(--white); border-radius: 16px; padding: 28px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); margin-bottom: 32px; }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; border-bottom: 1px solid var(--neutral-100); padding-bottom: 12px; }
+        .card-title { font-size: 18px; font-weight: 700; color: var(--neutral-900); }
+
+        .badge { padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; white-space: nowrap; }
+        .bg-matched { background: var(--primary-100); color: var(--primary-600); }
+        .bg-unmatched { background: var(--secondary-100); color: var(--secondary-500); }
+        .bg-error { background: #FFF5F5; color: var(--error); }
+        .bg-pending { background: var(--neutral-100); color: var(--neutral-600); }
+
+        .btn { padding: 10px 20px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; font-size: 13px; transition: 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn-primary { background: var(--primary-600); color: white; }
+        .btn-primary:hover { background: var(--pressed); }
+        .btn-secondary { background: var(--neutral-200); color: var(--neutral-600); }
+        .btn-outline-danger { background: var(--white); border: 1px solid var(--error); color: var(--error); }
+        .btn-invite { background: var(--secondary-500); color: white; }
+        .btn-invite:hover { background: #E67E22; }
+        .btn-sm { padding: 6px 12px; font-size: 12px; }
+        .btn-ghost { background: transparent; color: var(--primary-600); border: 1px solid var(--primary-600); }
+
+        /* --- Import Specific --- */
+        .import-grid { display: grid; grid-template-columns: 1fr 350px; gap: 24px; margin-bottom: 32px; }
+        .upload-zone { border: 2px dashed var(--neutral-300); padding: 48px; text-align: center; border-radius: 16px; cursor: pointer; background: var(--neutral-100); transition: 0.3s; }
+        .upload-zone:hover { border-color: var(--primary-600); background: var(--primary-100); }
+        
+        .validation-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
+        .stat-box { padding: 16px; border-radius: 12px; border: 1px solid var(--neutral-200); }
+        .stat-label { font-size: 12px; color: var(--neutral-600); margin-bottom: 4px; font-weight: 500; }
+        .stat-value { font-size: 20px; font-weight: 700; }
+
+        .table-container { overflow-x: auto; margin-top: 16px; }
+        .data-table { width: 100%; border-collapse: collapse; }
+        .data-table th { text-align: left; padding: 14px; font-size: 13px; background: var(--neutral-100); color: var(--neutral-600); font-weight: 600; }
+        .data-table td { padding: 14px; border-bottom: 1px solid var(--neutral-100); font-size: 14px; vertical-align: middle; }
+
+        .row-error { background: #FFFBFB; }
+        .text-error { color: var(--error); font-weight: 600; }
+
+        /* Modal */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 1000; }
+        .modal-content { background: white; padding: 32px; border-radius: 16px; width: 500px; max-width: 90%; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--neutral-100); padding-bottom: 12px; }
+        
+        .form-group { margin-bottom: 16px; }
+        .form-label { font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px; }
+        .form-control { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--neutral-300); outline: none; }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <div class="logo-box">CD</div>
+            <h2>CareDee Academy</h2>
+            <p style="font-size: 11px; color: var(--neutral-600); margin-top: 4px; text-transform: uppercase;">Training Institute Interface</p>
+        </div>
+        <nav class="sidebar-menu">
+            <a href="#" class="menu-link"><i>🏠</i> ภาพรวมสถาบัน</a>
+            <a href="#" class="menu-link active"><i>📥</i> นำเข้าข้อมูลการอบรม</a>
+            <a href="#" class="menu-link"><i>🏅</i> จัดการใบรับรอง</a>
+            <a href="#" class="menu-link"><i>📈</i> สถิติตลาดแรงงาน</a>
+            <a href="#" class="menu-link"><i>🛡️</i> นโยบายการตรวจสอบ</a>
+        </nav>
+        <div style="padding: 24px; border-top: 1px solid var(--neutral-100);">
+            <a href="#" class="menu-link" style="color: var(--error); padding: 0;"><i>🚪</i> ออกจากระบบ</a>
+        </div>
+    </aside>
+
+    <main class="main">
+        <header>
+            <div class="page-title">
+                <h1 style="font-size: 20px; font-weight: 700;">นำเข้าข้อมูลการอบรม (Bulk Import)</h1>
+                <p style="font-size: 13px; color: var(--neutral-600);">จัดการข้อมูลผู้ผ่านการอบรมปริมาณมากและตรวจสอบความถูกต้อง</p>
+            </div>
+            <div class="user-status">
+                <span class="mfa-tag">MFA : ยืนยันตัวตนแล้ว</span>
+                <div style="width: 44px; height: 44px; background: var(--primary-100); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--primary-600); font-weight: 700;">SM</div>
+            </div>
+        </header>
+
+        <!-- Step 1 & 2: Upload & Stats -->
+        <div class="import-grid">
+            <div class="card" style="margin-bottom: 0;">
+                <div class="card-header">
+                    <h2 class="card-title">ขั้นตอนที่ 1: อัปโหลดและตรวจสอบ</h2>
+                </div>
+                <div class="upload-zone" id="uploadZone">
+                    <div style="font-size: 40px; margin-bottom: 12px;">📁</div>
+                    <p style="font-weight: 700; font-size: 16px; color: var(--primary-600);">อัปโหลดไฟล์รายชื่อผู้ผ่านการอบรม</p>
+                    <p style="font-size: 12px; color: var(--neutral-600); margin-top: 4px;">ไฟล์ปัจจุบัน: <span id="fileName">training_result_batch_A.xlsx</span></p>
+                </div>
+            </div>
+            <div class="card" style="margin-bottom: 0;">
+                <div class="card-header">
+                    <h2 class="card-title">สรุปการตรวจสอบ</h2>
+                </div>
+                <div class="validation-stats">
+                    <div class="stat-box" style="background: var(--primary-100);">
+                        <div class="stat-label">ทั้งหมด</div>
+                        <div class="stat-value">50</div>
+                    </div>
+                    <div class="stat-box" style="background: #E6F9F0;">
+                        <div class="stat-label">ถูกต้อง</div>
+                        <div class="stat-value" style="color: var(--success);">42</div>
+                    </div>
+                    <div class="stat-box" style="background: #FFF5F5;">
+                        <div class="stat-label">ต้องแก้ไข</div>
+                        <div class="stat-value" style="color: var(--error);">8</div>
+                    </div>
+                </div>
+                <div style="font-size: 12px; color: var(--neutral-600);">
+                    * ระบบตรวจพบรายชื่อที่ยังไม่มีบัญชีใน CareDee 2 รายการ
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 3: Preview & Resolution -->
+        <div class="card">
+            <div class="card-header">
+                <div>
+                    <h2 class="card-title">ขั้นตอนที่ 2: พรีวิวและจัดการข้อมูล (Conflict Resolution)</h2>
+                    <p style="font-size: 13px; color: var(--neutral-600); margin-top: 4px;">ตรวจสอบสถานะการจับคู่บัญชีและแก้ไขข้อผิดพลาดรายบรรทัด</p>
+                </div>
+                <div style="display: flex; gap: 12px;">
+                    <button class="btn btn-outline-danger" onclick="rollbackImport()">ยกเลิกการนำเข้าทั้งหมด</button>
+                    <button class="btn btn-primary" onclick="confirmImport()">ยืนยันบันทึก 50 รายการ</button>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>รหัสประจำตัวประชาชน</th>
+                            <th>ชื่อ-นามสกุล</th>
+                            <th>รหัสใบรับรอง</th>
+                            <th>สถานะในระบบ</th>
+                            <th style="text-align: right;">การจัดการ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Case 1: Perfectly Matched -->
+                        <tr>
+                            <td>1</td>
+                            <td style="font-family: monospace;">1-1002-XXXXX-XX-X</td>
+                            <td style="font-weight: 500;">น.ส. กัญญาวีร์ สีใส</td>
+                            <td style="font-weight: 600; color: var(--primary-600);">CERT-2026-001</td>
+                            <td><span class="badge bg-matched">Matched</span></td>
+                            <td style="text-align: right;">
+                                <button class="btn btn-ghost btn-sm" onclick="editRow(1)">แก้ไข</button>
+                            </td>
+                        </tr>
+
+                        <!-- Case 2: Data Error (Inline Correction Needed) -->
+                        <tr class="row-error">
+                            <td>12</td>
+                            <td style="font-family: monospace;" class="text-error">12345 (Invalid)</td>
+                            <td style="font-weight: 500;">นาย สมเกียรติ พากเพียร</td>
+                            <td style="font-weight: 600; color: var(--primary-600);">CERT-2026-012</td>
+                            <td><span class="badge bg-error">Error: ID Format</span></td>
+                            <td style="text-align: right;">
+                                <button class="btn btn-primary btn-sm" onclick="editRow(12)">แก้ไขข้อมูลทันที</button>
+                            </td>
+                        </tr>
+
+                        <!-- Case 3: Not Found / Unmatched (Needs Invite or Manual Match) -->
+                        <tr>
+                            <td>25</td>
+                            <td style="font-family: monospace;">3-6602-XXXXX-XX-X</td>
+                            <td style="font-weight: 500;">นาย สมชาย สายลม</td>
+                            <td style="font-weight: 600; color: var(--primary-600);">CERT-2026-025</td>
+                            <td><span class="badge bg-unmatched">Not Found in System</span></td>
+                            <td style="text-align: right; display: flex; justify-content: flex-end; gap: 8px;">
+                                <button class="btn btn-invite btn-sm" onclick="sendInvite('สมชาย')">ส่งคำเชิญ</button>
+                                <button class="btn btn-ghost btn-sm" onclick="openManualMatch()">Manual Match</button>
+                                <button class="btn btn-ghost btn-sm" onclick="editRow(25)">แก้ไข</button>
+                            </td>
+                        </tr>
+
+                        <!-- Case 4: Matched but Name differs slightly (Manual Match recommended) -->
+                        <tr>
+                            <td>42</td>
+                            <td style="font-family: monospace;">5-1234-XXXXX-XX-X</td>
+                            <td style="font-weight: 500;">น.ส. รัตนา ใจดี</td>
+                            <td style="font-weight: 600; color: var(--primary-600);">CERT-2026-042</td>
+                            <td><span class="badge bg-unmatched">Unmatched (Name Conflict)</span></td>
+                            <td style="text-align: right; display: flex; justify-content: flex-end; gap: 8px;">
+                                <button class="btn btn-ghost btn-sm" style="color: var(--secondary-500); border-color: var(--secondary-500);" onclick="openManualMatch()">Manual Match</button>
+                                <button class="btn btn-ghost btn-sm" onclick="editRow(42)">แก้ไข</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal: Manual Match -->
+    <div class="modal-overlay" id="manualMatchModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 style="font-size: 18px; font-weight: 700;">จับคู่บัญชีด้วยตนเอง (Manual Match)</h3>
+                <span style="cursor: pointer;" onclick="closeModal('manualMatchModal')">✕</span>
+            </div>
+            <p style="font-size: 14px; color: var(--neutral-600); margin-bottom: 20px;">ข้อมูลในไฟล์: <strong>นาย สมชาย สายลม</strong> (3-6602-XXXXX-XX-X)</p>
+            
+            <div class="form-group">
+                <label class="form-label">ค้นหาบัญชีในระบบ CareDee</label>
+                <input type="text" class="form-control" placeholder="ระบุชื่อ หรือ เบอร์โทรศัพท์ เพื่อค้นหา...">
+            </div>
+
+            <div style="background: var(--neutral-100); padding: 12px; border-radius: 8px;">
+                <p style="font-size: 12px; color: var(--neutral-600);">ผลลัพธ์ที่ใกล้เคียง:</p>
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 8px; padding: 10px; background: white; border-radius: 6px; border: 1px solid var(--primary-100);">
+                    <div>
+                        <p style="font-size: 14px; font-weight: 600;">นาย สมชาย สายชล</p>
+                        <p style="font-size: 11px; color: var(--neutral-600);">ID: CG-8890 | 081-XXX-XXXX</p>
+                    </div>
+                    <button class="btn btn-primary btn-sm">เลือกบัญชีนี้</button>
+                </div>
+            </div>
+
+            <div style="margin-top: 24px; display: flex; justify-content: flex-end; gap: 12px;">
+                <button class="btn btn-secondary" onclick="closeModal('manualMatchModal')">ยกเลิก</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Edit Row -->
+    <div class="modal-overlay" id="editRowModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 style="font-size: 18px; font-weight: 700;">แก้ไขข้อมูลรายบรรทัด</h3>
+                <span style="cursor: pointer;" onclick="closeModal('editRowModal')">✕</span>
+            </div>
+            <div class="form-group">
+                <label class="form-label">เลขประจำตัวประชาชน</label>
+                <input type="text" class="form-control" id="editId" value="12345">
+            </div>
+            <div class="form-group">
+                <label class="form-label">ชื่อ-นามสกุล</label>
+                <input type="text" class="form-control" id="editName" value="นาย สมเกียรติ พากเพียร">
+            </div>
+            <div class="form-group">
+                <label class="form-label">รหัสใบรับรอง</label>
+                <input type="text" class="form-control" value="CERT-2026-012">
+            </div>
+            <div style="margin-top: 24px; display: flex; justify-content: flex-end; gap: 12px;">
+                <button class="btn btn-secondary" onclick="closeModal('editRowModal')">ยกเลิก</button>
+                <button class="btn btn-primary" onclick="saveEdit()">บันทึกการแก้ไข</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openManualMatch() {
+            document.getElementById('manualMatchModal').style.display = 'flex';
+        }
+
+        function editRow(id) {
+            document.getElementById('editRowModal').style.display = 'flex';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function sendInvite(name) {
+            alert('ส่งคำเชิญสมัครสมาชิกไปยัง ' + name + ' เรียบร้อยแล้ว (SMS/Email)');
+        }
+
+        function rollbackImport() {
+            if(confirm('คุณแน่ใจหรือไม่ว่าต้องการยกเลิกการนำเข้าข้อมูลชุดนี้ทั้งหมด?')) {
+                alert('ยกเลิกการนำเข้าแล้ว ข้อมูลในพรีวิวจะถูกล้างออก');
+                location.reload();
+            }
+        }
+
+        function saveEdit() {
+            alert('บันทึกการแก้ไขข้อมูลเรียบร้อยแล้ว');
+            closeModal('editRowModal');
+        }
+
+        function confirmImport() {
+            if(confirm('ยืนยันการนำเข้าข้อมูล 50 รายการเข้าสู่ฐานข้อมูล CareDee?')) {
+                alert('นำเข้าข้อมูลสำเร็จ! ระบบจะทำการออก Digital Badge ให้กับผู้ที่มีบัญชีแล้วทันที');
+                location.reload();
+            }
+        }
+    </script>
+
+</body>
+</html>

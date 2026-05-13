@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareDee Admin SPA - Platform Control Center</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Brand Colors */
+            --primary-600: #007A8C;
+            --primary-100: #E0F2F4;
+            --secondary-500: #FF9F43;
+            --secondary-100: #FFF3E6;
+            
+            /* Semantic Colors */
+            --success: #28C76F;
+            --warning: #FF9F43;
+            --error: #EA5455;
+            --info: #00CFE8;
+            
+            /* Neutral Colors */
+            --white: #FFFFFF;
+            --neutral-100: #F8F8F8;
+            --neutral-300: #B9B9C3;
+            --neutral-600: #6E6B7B;
+            --neutral-900: #1E1E1E;
+            
+            /* Layout */
+            --sidebar-bg: #004D58; 
+            --sidebar-width: 260px;
+            --font-main: 'IBM Plex Sans Thai', 'Inter', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-main);
+        }
+
+        body {
+            background-color: var(--neutral-100);
+            color: var(--neutral-900);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Global Maintenance Banner */
+        .global-banner {
+            position: fixed;
+            top: 0;
+            left: var(--sidebar-width);
+            right: 0;
+            padding: 12px 32px;
+            z-index: 1100;
+            display: none; /* Initially hidden */
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            font-weight: 600;
+            font-size: 14px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .global-banner.urgent { background: var(--error); color: white; }
+        .global-banner.normal { background: var(--secondary-500); color: white; }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--sidebar-bg);
+            color: white;
+            position: fixed;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            z-index: 1000;
+        }
+
+        .sidebar-header {
+            padding: 32px 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .logo-box {
+            width: 44px;
+            height: 44px;
+            background: var(--white);
+            color: var(--primary-600);
+            border-radius: 10px;
+            margin: 0 auto 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 20px;
+        }
+
+        .sidebar-menu {
+            flex: 1;
+            padding: 20px 0;
+        }
+
+        .menu-item {
+            padding: 14px 24px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            font-size: 15px;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+        }
+
+        .menu-item:hover, .menu-item.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-left: 4px solid var(--secondary-500);
+        }
+
+        .menu-item i {
+            margin-right: 12px;
+            width: 24px;
+            text-align: center;
+            font-style: normal;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            flex: 1;
+            padding: 32px;
+            padding-top: 60px; /* Space for banner */
+            transition: padding-top 0.3s;
+        }
+        body.has-banner .main-content { padding-top: 100px; }
+
+        header {
+            background: white;
+            padding: 16px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            margin-bottom: 32px;
+        }
+
+        /* View Section Handling */
+        .view-section {
+            display: none;
+        }
+        .view-section.active {
+            display: block;
+        }
+
+        /* Common Components */
+        .card { background: white; padding: 24px; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); margin-bottom: 24px; }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--neutral-100); padding-bottom: 12px; }
+        h2 { font-size: 18px; font-weight: 700; }
+        
+        .dashboard-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-bottom: 32px; }
+        .metric-card { background: white; padding: 24px; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); border-left: 4px solid var(--primary-600); }
+        .metric-title { font-size: 14px; color: var(--neutral-600); margin-bottom: 12px; }
+        .metric-value { font-size: 28px; font-weight: 700; }
+
+        .btn { padding: 10px 18px; border-radius: 8px; border: none; cursor: pointer; font-size: 13px; font-weight: 600; transition: 0.2s; }
+        .btn-primary { background: var(--primary-600); color: white; }
+        .btn-success { background: var(--success); color: white; }
+        .btn-error { background: var(--error); color: white; }
+        .btn-warning { background: var(--warning); color: white; }
+        .btn-outline { border: 1px solid var(--neutral-300); background: transparent; color: var(--neutral-600); }
+
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; padding: 14px; background: var(--neutral-100); font-size: 13px; color: var(--neutral-600); }
+        td { padding: 16px 14px; border-bottom: 1px solid var(--neutral-100); font-size: 14px; }
+        
+        .status-pill { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+        .status-success { background: rgba(40, 199, 111, 0.12); color: var(--success); }
+        .status-pending { background: var(--secondary-100); color: var(--secondary-500); }
+        .status-error { background: rgba(234, 84, 85, 0.12); color: var(--error); }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); display: none; justify-content: center; align-items: center; z-index: 2000;
+        }
+        .modal-content {
+            background: white; padding: 32px; border-radius: 20px; width: 500px; max-width: 90%;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2); text-align: center;
+        }
+
+        /* Specific Page Styles */
+        /* Review Masking */
+        .masked-text { filter: blur(4px); cursor: pointer; transition: filter 0.2s; }
+        .masked-text.revealed { filter: blur(0); }
+        
+        /* Heatmap Pulse */
+        @keyframes pulse { 0% { transform: scale(0.95); opacity: 0.7; } 50% { transform: scale(1.1); opacity: 0.4; } 100% { transform: scale(0.95); opacity: 0.7; } }
+        .heatmap-dot { position: absolute; background: rgba(234, 84, 85, 0.4); width: 60px; height: 60px; border-radius: 50%; filter: blur(15px); animation: pulse 2s infinite; }
+
+        /* Uptime Chart */
+        .uptime-chart { height: 60px; display: flex; align-items: flex-end; gap: 2px; }
+        .uptime-bar { flex: 1; background: var(--success); border-radius: 2px; }
+        .uptime-bar.down { background: var(--error); height: 20% !important; }
+        .uptime-bar.warn { background: var(--warning); height: 50% !important; }
+
+    </style>
+</head>
+<body id="app-body">
+
+    <!-- Sidebar -->
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo-box">CD</div>
+            <h3 style="font-weight: 700; font-size: 20px;">CareDee Admin</h3>
+            <p style="font-size: 11px; color: rgba(255,255,255,0.5); text-transform: uppercase;">System Control Panel</p>
+        </div>
+        <div class="sidebar-menu">
+            <button onclick="switchView('view-dashboard')" class="menu-item active" id="btn-dashboard"><i>📊</i> Dashboard</button>
+            <button onclick="switchView('view-users')" class="menu-item" id="btn-users"><i>👤</i> ผู้ดูแล/ผู้ให้บริการ</button>
+            <button onclick="switchView('view-finance')" class="menu-item" id="btn-finance"><i>💰</i> จัดการการเงิน</button>
+            <button onclick="switchView('view-reviews')" class="menu-item" id="btn-reviews"><i>✨</i> คุณภาพรีวิว & อุทธรณ์</button>
+            <button onclick="switchView('view-reports')" class="menu-item" id="btn-reports"><i>📈</i> รายงานระบบ</button>
+            <button onclick="switchView('view-pdpa')" class="menu-item" id="btn-pdpa"><i>🛡️</i> นโยบาย & PDPA</button>
+            <button onclick="switchView('view-cloud')" class="menu-item" id="btn-cloud"><i>🖥️</i> เฝ้าระวังระบบคลาวด์</button>
+        </div>
+        <div class="sidebar-footer" style="padding: 24px; border-top: 1px solid rgba(255,255,255,0.1);">
+            <button class="menu-item" style="padding: 0;"><i>🚪</i> ออกจากระบบ</button>
+        </div>
+    </nav>
+
+    <!-- Global Banner -->
+    <div id="global-maintenance-banner" class="global-banner">
+        <span id="banner-icon">📢</span>
+        <span id="banner-text">ระบบจะปิดปรับปรุงเวลา 02:00 - 04:00 น.</span>
+        <button onclick="hideBanner()" style="background: none; border: none; color: white; cursor: pointer; font-size: 18px; margin-left: auto;">&times;</button>
+    </div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Shared Header -->
+        <header>
+            <div style="display: flex; gap: 16px; align-items: center;">
+                <div class="search-bar">
+                    <input type="text" placeholder="ค้นหาข้อมูลในระบบ..." style="padding: 10px 20px; border-radius: 12px; border: 1px solid var(--neutral-300); width: 300px;">
+                </div>
+                <select id="operator-filter" class="btn-outline" style="padding: 8px 12px; border-radius: 8px;" onchange="applyGlobalFilter(this.value)">
+                    <option value="all">-- ทุกหน่วยงาน (Global View) --</option>
+                    <option value="en">บริษัท บริบาลไทย จำกัด</option>
+                    <option value="mk">ศูนย์ดูแลมีสุข</option>
+                </select>
+            </div>
+            <div class="user-info" style="display: flex; align-items: center; gap: 16px;">
+                <div style="text-align: right;">
+                    <p style="font-weight: 700; font-size: 14px;">Michael Jackson</p>
+                    <p style="font-size: 12px; color: var(--neutral-600);">Platform Operator</p>
+                </div>
+                <div style="width: 44px; height: 44px; background: var(--primary-100); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: var(--primary-600); font-weight: 700;">MJ</div>
+            </div>
+        </header>
+
+        <!-- VIEW: DASHBOARD -->
+        <section id="view-dashboard" class="view-section active">
+            <div class="dashboard-grid">
+                <div class="metric-card">
+                    <div class="metric-title">รายการจองวันนี้</div>
+                    <div class="metric-value">42 รายการ</div>
+                    <p style="font-size: 12px; color: var(--success); margin-top: 8px;">↑ 12% จากเมื่อวาน</p>
+                </div>
+                <div class="metric-card" style="border-left-color: var(--info);">
+                    <div class="metric-title">รายได้รวม (เดือนนี้)</div>
+                    <div class="metric-value">฿ 154,200</div>
+                    <p style="font-size: 12px; color: var(--neutral-600); margin-top: 8px;">อัปเดตล่าสุด: 2 นาทีที่แล้ว</p>
+                </div>
+                <div class="metric-card" style="border-left-color: var(--warning);">
+                    <div class="metric-title">รออนุมัติ (Pending)</div>
+                    <div class="metric-value" id="dash-pending-count">12</div>
+                    <p style="font-size: 12px; color: var(--error); margin-top: 8px;">ต้องการการตรวจสอบด่วน</p>
+                </div>
+                <div class="metric-card" style="border-left-color: var(--success);">
+                    <div class="metric-title">System Uptime</div>
+                    <div class="metric-value">99.98%</div>
+                    <p style="font-size: 12px; color: var(--success); margin-top: 8px;">สถานะปกติ</p>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px;">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>รายการรออนุมัติล่าสุด</h2>
+                        <button class="btn btn-outline" onclick="switchView('view-users')">ดูทั้งหมด</button>
+                    </div>
+                    <table id="dash-approval-table">
+                        <thead>
+                            <tr><th>ชื่อ-นามสกุล</th><th>ประเภท</th><th>สถานะ</th><th>จัดการ</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr id="row-user-dash-1">
+                                <td>สมชาย ใจดี</td><td>Caregiver</td><td><span class="status-pill status-pending">รอตรวจ</span></td>
+                                <td><button class="btn btn-success" style="padding: 4px 12px;" onclick="approveUser('row-user-dash-1')">อนุมัติ</button></td>
+                            </tr>
+                            <tr id="row-user-dash-2">
+                                <td>บริบาลไทย จำกัด</td><td>Operator</td><td><span class="status-pill status-pending">รอเอกสาร</span></td>
+                                <td><button class="btn btn-outline" style="padding: 4px 12px;">ตรวจ</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card">
+                    <div class="card-header"><h2>สถานะทรัพยากร</h2></div>
+                    <div style="text-align: center; padding: 20px;">
+                        <div style="width: 120px; height: 120px; border: 10px solid var(--neutral-100); border-top-color: var(--success); border-radius: 50%; margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 700;">45%</div>
+                        <p style="font-weight: 600;">CPU Load Normal</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW: USERS -->
+        <section id="view-users" class="view-section">
+            <div class="card">
+                <div class="card-header">
+                    <h2>จัดการบัญชีผู้ดูแลและผู้ให้บริการ</h2>
+                    <div style="display: flex; gap: 8px;">
+                        <button class="btn btn-outline">ส่งออกข้อมูล</button>
+                        <button class="btn btn-primary">+ เพิ่มผู้ใช้</button>
+                    </div>
+                </div>
+                <table>
+                    <thead>
+                        <tr><th>ชื่อ-นามสกุล</th><th>ประเภท</th><th>สังกัด</th><th>ใบรับรอง</th><th>Consent Date</th><th>สถานะ</th><th>จัดการ</th></tr>
+                    </thead>
+                    <tbody id="user-table-body">
+                        <tr id="user-row-1">
+                            <td>วิภาวดี รักดี</td><td>Caregiver</td><td>EN Enterprise</td><td><span style="color: var(--success);">✓ Verified</span></td>
+                            <td style="font-size: 11px; color: var(--neutral-600);">12/05/26 09:45</td>
+                            <td><span class="status-pill status-pending">รอดำเนินการ</span></td>
+                            <td>
+                                <button class="btn btn-success" style="padding: 4px 12px;" onclick="approveUser('user-row-1')">อนุมัติ</button>
+                                <button class="btn btn-error" style="padding: 4px 12px;" onclick="rejectUser('user-row-1')">ระงับ</button>
+                            </td>
+                        </tr>
+                        <tr id="user-row-2">
+                            <td>มานะ อดทน</td><td>Caregiver</td><td>Independent</td><td>-</td>
+                            <td style="font-size: 11px; color: var(--neutral-600);">05/01/26 11:30</td>
+                            <td id="status-mana"><span class="status-pill status-success">ปกติ</span></td>
+                            <td>
+                                <button class="btn btn-error" style="padding: 4px 12px;" onclick="openConfirmModal('ระงับสิทธิ์ มานะ อดทน', 'การระงับสิทธิ์จะทำให้ผู้ใช้เข้าสู่ระบบไม่ได้ทันที', () => suspendUser('status-mana'))">ระงับ</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- VIEW: FINANCE -->
+        <section id="view-finance" class="view-section">
+            <div class="dashboard-grid">
+                <div class="metric-card">
+                    <div class="metric-title">ยอด Gross รวม</div>
+                    <div class="metric-value">฿ 1.24M</div>
+                </div>
+                <div class="metric-card" style="border-left-color: var(--info);">
+                    <div class="metric-title">Commission (10%)</div>
+                    <div class="metric-value">฿ 124,050</div>
+                </div>
+                <div class="metric-card" style="border-left-color: var(--warning);">
+                    <div class="metric-title">ยอดรอโอน (Pending)</div>
+                    <div class="metric-value">฿ 45,200</div>
+                </div>
+                <div class="metric-card" style="border-left-color: var(--success);">
+                    <div class="metric-title">โอนสำเร็จแล้ว</div>
+                    <div class="metric-value">฿ 1.07M</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header"><h2>รายการรอโอนเงิน (Payout Queue)</h2></div>
+                <table>
+                    <thead>
+                        <tr><th>ID จอง</th><th>ผู้รับเงิน</th><th>ยอดสุทธิ</th><th>สถานะ Gateway</th><th>จัดการ</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>#BK-9915</td><td>สมชาย บริบาล</td><td>฿ 1,620</td>
+                            <td><span class="status-pill status-success">Success</span></td>
+                            <td><button class="btn btn-success" style="padding: 4px 12px;" onclick="openConfirmModal('ยืนยันการโอนเงิน', 'ระบบจะส่งคำสั่งโอนเงินไปยังธนาคารปลายทางทันที', () => alert('โอนเงินสำเร็จ!'))">โอนเงิน</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- VIEW: REVIEWS -->
+        <section id="view-reviews" class="view-section">
+            <div class="card">
+                <div class="card-header">
+                    <h2>คุณภาพรีวิวและรายการอุทธรณ์</h2>
+                    <span style="font-size: 13px; color: var(--neutral-600);">Auto-Moderation: ACTIVE</span>
+                </div>
+                <table>
+                    <thead>
+                        <tr><th>รีวิว / วันที่</th><th>คะแนน</th><th>สถานะ</th><th>จัดการ</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="masked-text" onclick="this.classList.toggle('revealed')">"บริการแย่มาก ทำงานไม่ [คำหยาบ] เลย..." (คลิกเพื่อดู)</div>
+                                <div style="font-size: 11px; color: var(--neutral-600); margin-top: 4px;">#BK-9801 | 12 พ.ค. 26</div>
+                            </td>
+                            <td><span style="color: var(--warning);">★☆☆☆☆</span></td>
+                            <td><span class="status-pill status-error">Flagged</span></td>
+                            <td style="display: flex; gap: 8px;">
+                                <button class="btn btn-success" title="กู้คืน">✓</button>
+                                <button class="btn btn-error" title="ลบ">🗑️</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- VIEW: REPORTS -->
+        <section id="view-reports" class="view-section">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Market Insights (Demand vs Supply)</h2>
+                </div>
+                <div style="height: 300px; background: var(--neutral-100); border-radius: 12px; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+                    <p style="color: var(--neutral-600); z-index: 1;">[ Interactive Heatmap Visualization ]</p>
+                    <div class="heatmap-dot" style="top: 20%; left: 30%;"></div>
+                    <div class="heatmap-dot" style="top: 60%; left: 70%; background: var(--secondary-500);"></div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header"><h2>ศูนย์ส่งออกรายงาน</h2></div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px;">
+                    <button class="btn btn-outline" style="text-align: left; padding: 20px;">📄 รายงานสรุปรายได้ (Monthly)</button>
+                    <button class="btn btn-outline" style="text-align: left; padding: 20px;">🛡️ รายงาน PDPA Audit</button>
+                    <button class="btn btn-primary" style="text-align: center; padding: 20px;">🚀 สร้างรายงาน Custom</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW: PDPA -->
+        <section id="view-pdpa" class="view-section">
+            <div class="card">
+                <div class="card-header"><h2>Privacy & Consent Control</h2></div>
+                <div style="background: var(--secondary-100); padding: 20px; border-radius: 12px; border: 1px dashed var(--secondary-500); margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <p style="font-weight: 700;">Broadcast Policy Update (v2.4)</p>
+                        <p style="font-size: 13px; color: var(--neutral-600);">ส่งแจ้งเตือน Re-consent ให้ผู้ใช้ทุกคนในระบบ</p>
+                    </div>
+                    <button class="btn btn-warning" onclick="openConfirmModal('ส่งแจ้งเตือน Re-consent', 'ผู้ใช้ทุกคนจะต้องกดยอมรับนโยบายใหม่เมื่อเข้าสู่ระบบครั้งถัดไป', () => alert('ส่งแจ้งเตือนสำเร็จ!'))">ประกาศแจ้งเตือน</button>
+                </div>
+                <div class="card-header"><h2>Privacy Access Log</h2></div>
+                <div style="background: var(--neutral-100); padding: 16px; border-radius: 12px; font-size: 13px;">
+                    <p style="margin-bottom: 8px;"><b>14:20</b> | <b>Admin Michael</b> เข้าถึงข้อมูลส่วนบุคคล #U-5501 (Reason: Support)</p>
+                    <p><b>11:45</b> | <b>System</b> ทำการลบข้อมูล (Auto-purge) ประวัติ 7 ปี</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW: CLOUD -->
+        <section id="view-cloud" class="view-section">
+            <div class="dashboard-grid">
+                <div class="metric-card">
+                    <div class="metric-title">Availability</div>
+                    <div class="metric-value" style="color: var(--success);">99.98%</div>
+                </div>
+                <div class="metric-card" style="border-left-color: var(--info);">
+                    <div class="metric-title">Active Users</div>
+                    <div class="metric-value">1,245</div>
+                </div>
+                <div class="metric-card" style="border-left-color: var(--error);">
+                    <div class="metric-title">Security Alerts</div>
+                    <div class="metric-value">3</div>
+                </div>
+                <div class="metric-card" style="border-left-color: var(--secondary-500);">
+                    <div class="metric-title">Avg Response Time</div>
+                    <div class="metric-value">124ms</div>
+                </div>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                <div class="card">
+                    <div class="card-header"><h2>Service Health</h2></div>
+                    <div id="service-health-list">
+                        <!-- Simulated service items -->
+                    </div>
+                    <div style="margin-top: 20px;">
+                        <h3 style="font-size: 14px; margin-bottom: 12px;">Uptime History (24h)</h3>
+                        <div class="uptime-chart" id="uptime-chart-bars"></div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><h2>Maintenance Broadcaster</h2></div>
+                    <div style="display: flex; flex-direction: column; gap: 16px;">
+                        <textarea id="broadcast-msg-input" placeholder="พิมพ์ข้อความแจ้งปิดปรับปรุงระบบ..." style="width: 100%; height: 100px; padding: 12px; border-radius: 12px; border: 1px solid var(--neutral-300); resize: none;"></textarea>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <input type="checkbox" id="urgent-check">
+                            <label for="urgent-check" style="font-size: 14px; font-weight: 600;">ตั้งเป็นแถบสีแดง (Urgent)</label>
+                        </div>
+                        <button class="btn btn-warning" style="width: 100%;" onclick="broadcastMaintenance()">🚀 ประกาศแจ้งเตือนทันที (Global)</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Shared Modal: Confirmation -->
+    <div id="confirm-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div style="font-size: 48px; margin-bottom: 16px;">⚠️</div>
+            <h2 id="modal-title">ยืนยันการดำเนินการ</h2>
+            <p id="modal-body" style="color: var(--neutral-600); margin: 16px 0; line-height: 1.5;"></p>
+            <div style="display: flex; gap: 12px; margin-top: 24px;">
+                <button class="btn btn-outline" style="flex: 1;" onclick="closeModal()">ยกเลิก</button>
+                <button id="modal-confirm-btn" class="btn btn-primary" style="flex: 1;">ยืนยัน</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- State Management ---
+        let currentView = 'view-dashboard';
+        let pendingCount = 12;
+
+        // --- View Switching ---
+        function switchView(viewId) {
+            document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
+            document.getElementById(viewId).classList.add('active');
+            
+            document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
+            const btnId = 'btn-' + viewId.replace('view-', '');
+            document.getElementById(btnId).classList.add('active');
+            
+            currentView = viewId;
+        }
+
+        // --- Global Actions ---
+        function applyGlobalFilter(operator) {
+            alert('กำลังคัดกรองข้อมูลของหน่วยงาน: ' + operator);
+            // In a real app, this would filter the table data across all views
+        }
+
+        function broadcastMaintenance() {
+            const msg = document.getElementById('broadcast-msg-input').value;
+            const urgent = document.getElementById('urgent-check').checked;
+            
+            if (!msg) {
+                alert('กรุณาใส่ข้อความประกาศ');
+                return;
+            }
+
+            openConfirmModal(
+                'ยืนยันการประกาศ Global Maintenance?',
+                'การกดประกาศนี้จะส่งผลกระทบต่อผู้ใช้ทุกคนในระบบทันที และจะแสดงแถบประกาศในทุกหน้าของ Admin Portal',
+                () => {
+                    const banner = document.getElementById('global-maintenance-banner');
+                    const bannerText = document.getElementById('banner-text');
+                    bannerText.innerText = msg;
+                    banner.className = 'global-banner ' + (urgent ? 'urgent' : 'normal');
+                    banner.style.display = 'flex';
+                    document.getElementById('app-body').classList.add('has-banner');
+                    alert('ประกาศสำเร็จ!');
+                }
+            );
+        }
+
+        function hideBanner() {
+            document.getElementById('global-maintenance-banner').style.display = 'none';
+            document.getElementById('app-body').classList.remove('has-banner');
+        }
+
+        // --- List Management ---
+        function approveUser(rowId) {
+            const row = document.getElementById(rowId);
+            row.style.opacity = '0.5';
+            row.style.pointerEvents = 'none';
+            setTimeout(() => {
+                row.remove();
+                pendingCount--;
+                document.getElementById('dash-pending-count').innerText = pendingCount;
+                alert('อนุมัติเรียบร้อยแล้ว');
+            }, 500);
+        }
+
+        function rejectUser(rowId) {
+            if(confirm('ยืนยันการระงับบัญชีนี้?')) {
+                const row = document.getElementById(rowId);
+                row.remove();
+                alert('ระงับบัญชีเรียบร้อย');
+            }
+        }
+
+        function suspendUser(statusId) {
+            const status = document.getElementById(statusId);
+            status.innerHTML = '<span class="status-pill status-error">Suspended</span>';
+            closeModal();
+        }
+
+        // --- Modal Handling ---
+        let onConfirmCallback = null;
+
+        function openConfirmModal(title, body, onConfirm) {
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById('modal-body').innerText = body;
+            onConfirmCallback = onConfirm;
+            document.getElementById('confirm-modal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('confirm-modal').style.display = 'none';
+        }
+
+        document.getElementById('modal-confirm-btn').onclick = () => {
+            if (onConfirmCallback) onConfirmCallback();
+            closeModal();
+        };
+
+        // --- Initialize Mock Data ---
+        function initCharts() {
+            const chart = document.getElementById('uptime-chart-bars');
+            for (let i = 0; i < 48; i++) {
+                const bar = document.createElement('div');
+                bar.className = 'uptime-bar';
+                const rand = Math.random();
+                if (rand > 0.95) bar.classList.add('down');
+                else if (rand > 0.85) bar.classList.add('warn');
+                bar.style.height = (80 + Math.random() * 20) + '%';
+                chart.appendChild(bar);
+            }
+        }
+
+        const services = [
+            { name: 'CareDee Main API', status: 'green', msg: 'Healthy' },
+            { name: 'Payment Gateway', status: 'yellow', msg: 'Latency High' },
+            { name: 'Notification Service', status: 'green', msg: 'Online' }
+        ];
+
+        function initCloudStatus() {
+            const list = document.getElementById('service-health-list');
+            services.forEach(s => {
+                const item = document.createElement('div');
+                item.className = 'service-item';
+                item.style.padding = '12px';
+                item.style.background = 'var(--neutral-100)';
+                item.style.borderRadius = '12px';
+                item.style.marginBottom = '8px';
+                item.style.display = 'flex';
+                item.style.justifyContent = 'space-between';
+                item.style.alignItems = 'center';
+                item.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <span style="width: 10px; height: 10px; border-radius: 50%; background: var(--${s.status === 'green' ? 'success' : 'warning'});"></span>
+                        <span style="font-weight: 600;">${s.name}</span>
+                    </div>
+                    <span style="font-size: 12px; font-weight: 700; color: var(--${s.status === 'green' ? 'success' : 'warning'});">${s.msg}</span>
+                `;
+                list.appendChild(item);
+            });
+        }
+
+        initCharts();
+        initCloudStatus();
+
+    </script>
+</body>
+</html>

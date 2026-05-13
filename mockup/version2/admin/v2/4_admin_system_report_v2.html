@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>รายงานระบบ (Executive Insights) - CareDee Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Brand Colors */
+            --primary-600: #007A8C;
+            --primary-100: #E0F2F4;
+            --secondary-500: #FF9F43;
+            --secondary-100: #FFF3E6;
+            
+            /* Semantic Colors */
+            --success: #28C76F;
+            --warning: #FF9F43;
+            --error: #EA5455;
+            --info: #00CFE8;
+            
+            /* Neutral Colors */
+            --white: #FFFFFF;
+            --neutral-100: #F8F8F8;
+            --neutral-300: #B9B9C3;
+            --neutral-600: #6E6B7B;
+            --neutral-900: #1E1E1E;
+            
+            /* Sidebar Specific */
+            --sidebar-bg: #004D58; 
+            --sidebar-width: 260px;
+
+            /* Typography */
+            --font-main: 'IBM Plex Sans Thai', 'Inter', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-main);
+        }
+
+        body {
+            background-color: var(--neutral-100);
+            color: var(--neutral-900);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--sidebar-bg);
+            color: white;
+            position: fixed;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .sidebar-header {
+            padding: 32px 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .logo-box {
+            width: 44px;
+            height: 44px;
+            background: var(--white);
+            color: var(--primary-600);
+            border-radius: 10px;
+            margin: 0 auto 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 20px;
+        }
+
+        .sidebar-menu {
+            flex: 1;
+            padding: 20px 0;
+        }
+
+        .menu-item {
+            padding: 14px 24px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            font-size: 15px;
+        }
+
+        .menu-item:hover, .menu-item.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-left: 4px solid var(--secondary-500);
+        }
+
+        .menu-item i {
+            margin-right: 12px;
+            width: 24px;
+            text-align: center;
+            font-style: normal;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            flex: 1;
+            padding: 32px;
+        }
+
+        header {
+            background: white;
+            padding: 16px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            margin-bottom: 32px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        /* Report Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .metric-card {
+            background: white;
+            padding: 24px;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            border-left: 4px solid var(--primary-600);
+        }
+
+        .metric-title {
+            font-size: 14px;
+            color: var(--neutral-600);
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+
+        .metric-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--neutral-900);
+        }
+
+        .metric-sub {
+            font-size: 12px;
+            margin-top: 8px;
+            font-weight: 500;
+        }
+
+        /* Sections */
+        .section-container {
+            display: grid;
+            grid-template-columns: 3fr 2fr;
+            gap: 24px;
+        }
+
+        .card {
+            background: white;
+            padding: 24px;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            margin-bottom: 24px;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--neutral-100);
+            padding-bottom: 12px;
+        }
+
+        h2 {
+            font-size: 18px;
+            color: var(--neutral-900);
+            font-weight: 700;
+        }
+
+        /* Heatmap Placeholder */
+        .heatmap-placeholder {
+            width: 100%;
+            height: 300px;
+            background: #eef2f5;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            border: 1px dashed var(--neutral-300);
+        }
+
+        .heatmap-overlay {
+            position: absolute;
+            background: rgba(234, 84, 85, 0.4);
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            filter: blur(20px);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); opacity: 0.7; }
+            50% { transform: scale(1.1); opacity: 0.4; }
+            100% { transform: scale(0.95); opacity: 0.7; }
+        }
+
+        /* Table Styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            padding: 12px;
+            background: var(--neutral-100);
+            color: var(--neutral-600);
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        td {
+            padding: 14px 12px;
+            border-bottom: 1px solid var(--neutral-100);
+            font-size: 14px;
+        }
+
+        /* Export Center Form */
+        .export-form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--neutral-600);
+        }
+
+        select, input {
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid var(--neutral-300);
+            font-size: 14px;
+        }
+
+        .btn {
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            text-align: center;
+            transition: 0.2s;
+        }
+
+        .btn-primary { background: var(--primary-600); color: white; }
+        .btn-primary:hover { background: var(--pressed); }
+
+        .rank-badge {
+            width: 24px;
+            height: 24px;
+            background: var(--neutral-100);
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 12px;
+            margin-right: 8px;
+        }
+
+        .rank-1 { background: #FFD700; color: #000; }
+        .rank-2 { background: #C0C0C0; color: #000; }
+        .rank-3 { background: #CD7F32; color: #fff; }
+
+        /* Audit & PDPA Specifics */
+        .audit-log-row {
+            border-left: 3px solid var(--primary-600);
+            padding: 12px;
+            margin-bottom: 8px;
+            background: var(--neutral-100);
+            border-radius: 0 8px 8px 0;
+            font-size: 13px;
+        }
+
+        .consent-bar-container {
+            display: flex;
+            height: 24px;
+            width: 100%;
+            background: var(--neutral-100);
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 16px 0;
+        }
+
+        .consent-bar-fill {
+            height: 100%;
+        }
+
+        .recon-alert {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: #fff5f5;
+            border: 1px solid #feb2b2;
+            border-radius: 8px;
+            color: var(--error);
+            font-size: 13px;
+            margin-top: 12px;
+        }
+
+        /* Filter Section Enhancements */
+        .global-filter {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 24px;
+            align-items: center;
+            background: white;
+            padding: 16px 24px;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo-box">CD</div>
+            <h3 style="font-weight: 700; font-size: 20px;">CareDee Admin</h3>
+            <p style="font-size: 11px; color: rgba(255,255,255,0.5); margin-top: 4px; text-transform: uppercase;">System Control Panel</p>
+        </div>
+        <div class="sidebar-menu">
+            <a href="admin_mockup2.html" class="menu-item"><i>📊</i> Dashboard</a>
+            <a href="admin_user_provider.html" class="menu-item"><i>👤</i> บัญชีผู้ดูแล/ผู้ให้บริการ</a>
+            <a href="admin_finance_revenue.html" class="menu-item"><i>💰</i> จัดการการเงิน & รายได้</a>
+            <a href="admin_review_quality.html" class="menu-item"><i>✨</i> คุณภาพรีวิว & อุทธรณ์</a>
+            <a href="admin_system_report.html" class="menu-item active"><i>📈</i> รายงานระบบ</a>
+            <a href="#" class="menu-item"><i>🛡️</i> นโยบาย & PDPA</a>
+            <a href="#" class="menu-item"><i>🖥️</i> เฝ้าระวังระบบคลาวด์</a>
+        </div>
+        <div class="sidebar-footer" style="padding: 24px; border-top: 1px solid rgba(255,255,255,0.1);">
+            <a href="#" class="menu-item" style="padding: 0;"><i>🚪</i> ออกจากระบบ</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Header -->
+        <header>
+            <div>
+                <h1 style="font-size: 22px; font-weight: 700;">รายงานระบบและการวิเคราะห์เชิงกลยุทธ์</h1>
+                <p style="font-size: 14px; color: var(--neutral-600);">สรุปภาพรวมประสิทธิภาพแพลตฟอร์มสำหรับผู้บริหาร</p>
+            </div>
+            <div class="user-info">
+                <div style="text-align: right;">
+                    <p style="font-weight: 700; font-size: 14px;">Michael Jackson</p>
+                    <p style="font-size: 12px; color: var(--neutral-600);">Platform Operator</p>
+                </div>
+                <div style="width: 48px; height: 48px; background: var(--primary-100); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--primary-600); font-weight: 700;">VW</div>
+            </div>
+        </header>
+
+        <!-- Global Filter -->
+        <div class="global-filter">
+            <div style="display: flex; flex-direction: column; gap: 4px;">
+                <span class="filter-label">เลือกดูตาม Operator:</span>
+                <select class="select-input" style="width: 250px;">
+                    <option value="all">ทั้งหมด (ทุกหน่วยงานในระบบ)</option>
+                    <option value="en">บริษัท บริบาลไทย จำกัด</option>
+                    <option value="jr">ศูนย์ดูแลผู้สูงอายุ ใจรัก</option>
+                    <option value="cs">CareStation Network</option>
+                </select>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 4px;">
+                <span class="filter-label">ช่วงเวลาสรุปผล:</span>
+                <select class="select-input" style="width: 200px;">
+                    <option value="m">เดือนปัจจุบัน (พฤษภาคม 2569)</option>
+                    <option value="q">ไตรมาสที่ 2/2569</option>
+                    <option value="y">ปีงบประมาณ 2569</option>
+                    <option value="custom">กำหนดเอง (Custom Range)</option>
+                </select>
+            </div>
+            <button class="btn btn-primary" style="align-self: flex-end; padding: 10px 24px;">อัปเดตข้อมูล</button>
+        </div>
+
+        <!-- KPI Dashboard -->
+        <div class="dashboard-grid">
+            <div class="metric-card">
+                <div class="metric-title">อัตราการเติบโตของผู้ใช้ (User Growth)</div>
+                <div class="metric-value">+15.8%</div>
+                <p class="metric-sub" style="color: var(--success);">↑ เพิ่มขึ้นจากเดือนที่แล้ว 2,450 ราย</p>
+            </div>
+            <div class="metric-card" style="border-left-color: var(--error);">
+                <div class="metric-title">อัตราการเลิกใช้งาน (Churn Rate)</div>
+                <div class="metric-value">2.4%</div>
+                <p class="metric-sub" style="color: var(--success);">↓ ลดลง 0.5% (ต่ำกว่าเป้าหมาย 3%)</p>
+            </div>
+            <div class="metric-card" style="border-left-color: var(--secondary-500);">
+                <div class="metric-title">Top Performers (CS Score)</div>
+                <div class="metric-value">4.92 / 5.0</div>
+                <p class="metric-sub" style="color: var(--secondary-500);">จาก 12 หน่วยงานชั้นนำ</p>
+            </div>
+        </div>
+
+        <div class="section-container">
+            <!-- Left Column -->
+            <div class="left-section">
+                <!-- Market Heatmap -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Market Heatmap (Demand vs Supply)</h2>
+                        <span style="font-size: 12px; color: var(--neutral-600);">ข้อมูลเรียลไทม์ตามพื้นที่</span>
+                    </div>
+                    <div class="heatmap-placeholder">
+                        <div style="text-align: center; z-index: 1;">
+                            <p style="font-weight: 600; color: var(--neutral-600);">พื้นที่ที่มีความต้องการสูง (Supply Shortage)</p>
+                            <p style="font-size: 12px; color: var(--neutral-600);">นนทบุรี, บางนา, ห้วยขวาง</p>
+                        </div>
+                        <!-- Decorative Heatmap Elements -->
+                        <div class="heatmap-overlay" style="top: 20%; left: 30%;"></div>
+                        <div class="heatmap-overlay" style="top: 60%; left: 70%; background: rgba(255, 159, 67, 0.4);"></div>
+                        <div class="heatmap-overlay" style="top: 40%; left: 50%; background: rgba(40, 199, 111, 0.4); width: 120px; height: 120px;"></div>
+                    </div>
+                    <div style="margin-top: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                        <div style="background: var(--neutral-100); padding: 12px; border-radius: 10px;">
+                            <p style="font-size: 12px; color: var(--neutral-600);">ความต้องการสูงสุด</p>
+                            <p style="font-weight: 700;">กรุงเทพฯ (โซนชั้นใน)</p>
+                        </div>
+                        <div style="background: var(--neutral-100); padding: 12px; border-radius: 10px;">
+                            <p style="font-size: 12px; color: var(--neutral-600);">ช่องว่างบริการ (Service Gap)</p>
+                            <p style="font-weight: 700; color: var(--error);">ปริมณฑล (+22%)</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Financial Reconciliation Report -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Financial Reconciliation (การกระทบยอด)</h2>
+                        <span style="font-size: 12px; color: var(--success); font-weight: 600;">Last Sync: Today, 09:00 AM</span>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>หมวดหมู่</th>
+                                <th>ยอดในระบบ (System)</th>
+                                <th>ยอดธนาคาร (Settled)</th>
+                                <th>ส่วนต่าง (Diff)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>ยอดรับชำระ (Revenue)</td>
+                                <td>฿ 1,240,500.00</td>
+                                <td>฿ 1,240,500.00</td>
+                                <td style="color: var(--success); font-weight: 700;">฿ 0.00</td>
+                            </tr>
+                            <tr>
+                                <td>ยอดโอนออก (Payouts)</td>
+                                <td>฿ 1,071,250.00</td>
+                                <td>฿ 1,071,200.00</td>
+                                <td style="color: var(--error); font-weight: 700;">-฿ 50.00</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="recon-alert">
+                        <i>⚠️</i> พบส่วนต่าง ฿ 50.00 ในรายการ Payout (คาดว่าเป็นค่าธรรมเนียมธนาคารที่ยังไม่หักลบ)
+                    </div>
+                </div>
+
+                <!-- Audit Trail Viewer -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Audit Trail Viewer (ประวัติกิจกรรมสำคัญ)</h2>
+                        <div style="display: flex; gap: 8px;">
+                            <input type="text" placeholder="ค้นหาตัวตน/กิจกรรม..." style="font-size: 12px; padding: 4px 12px;">
+                            <button class="btn btn-primary" style="font-size: 12px; padding: 4px 12px;">ค้นหา</button>
+                        </div>
+                    </div>
+                    <div style="max-height: 300px; overflow-y: auto;">
+                        <div class="audit-log-row">
+                            <span style="font-weight: 700;">12 พ.ค. 26 14:35</span> | <b>Admin Michael</b> แก้ไขค่าธรรมเนียม Payout จาก 15 เป็น 20 บาท <span style="color: var(--neutral-600);">(IP: 182.1.2.3)</span>
+                        </div>
+                        <div class="audit-log-row">
+                            <span style="font-weight: 700;">12 พ.ค. 26 10:15</span> | <b>System</b> อนุมัติ Payout จำนวน 45 รายการ (Batch ID: #B-554)
+                        </div>
+                        <div class="audit-log-row">
+                            <span style="font-weight: 700;">11 พ.ค. 26 16:20</span> | <b>Admin Sarah</b> ระงับบัญชีผู้ใช้ ID: CG-4421 (Reason: Violation)
+                        </div>
+                        <div class="audit-log-row">
+                            <span style="font-weight: 700;">11 พ.ค. 26 09:00</span> | <b>System</b> อัปเดตนโยบาย PDPA เป็นเวอร์ชัน 2.1 (Trigger Re-consent)
+                        </div>
+                    </div>
+                    <a href="#" style="display: block; text-align: center; margin-top: 16px; font-size: 13px; color: var(--primary-600); text-decoration: none; font-weight: 600;">ดูประวัติทั้งหมดแบบละเอียด</a>
+                </div>
+            </div>
+
+            <!-- Right Column -->
+            <div class="right-section">
+                <!-- PDPA Consent Dashboard -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2>PDPA Consent Status</h2>
+                    </div>
+                    <p style="font-size: 13px; color: var(--neutral-600);">การยอมรับนโยบายเวอร์ชันล่าสุด (v2.1)</p>
+                    <div class="consent-bar-container">
+                        <div class="consent-bar-fill" style="width: 82%; background: var(--success);" title="ยอมรับแล้ว"></div>
+                        <div class="consent-bar-fill" style="width: 12%; background: var(--warning);" title="รอการกดยอมรับ"></div>
+                        <div class="consent-bar-fill" style="width: 6%; background: var(--neutral-300);" title="ยังไม่ดำเนินการ"></div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 12px;">
+                        <div><span style="color: var(--success);">●</span> ยอมรับแล้ว: <b>82%</b></div>
+                        <div><span style="color: var(--warning);">●</span> รอ Re-consent: <b>12%</b></div>
+                        <div><span style="color: var(--neutral-300);">●</span> ผู้ใช้ใหม่: <b>6%</b></div>
+                    </div>
+                    <button class="btn btn-view" style="width: 100%; margin-top: 16px; font-size: 12px; background: var(--primary-100); color: var(--primary-600);">ส่งแจ้งเตือน Re-consent (Push Notification)</button>
+                </div>
+
+                <!-- Operator Ranking -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Operator Performance Ranking</h2>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Operator</th>
+                                <th>Success</th>
+                                <th>Score</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="rank-badge rank-1">1</span></td>
+                                <td style="font-weight: 600;">บริบาลไทย</td>
+                                <td>98%</td>
+                                <td style="color: var(--success); font-weight: 700;">96.8</td>
+                            </tr>
+                            <tr>
+                                <td><span class="rank-badge rank-2">2</span></td>
+                                <td style="font-weight: 600;">ใจรัก</td>
+                                <td>96%</td>
+                                <td style="color: var(--success); font-weight: 700;">94.2</td>
+                            </tr>
+                            <tr>
+                                <td><span class="rank-badge rank-3">3</span></td>
+                                <td style="font-weight: 600;">CS Network</td>
+                                <td>94%</td>
+                                <td style="color: var(--success); font-weight: 700;">92.5</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Export Center -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2>ศูนย์ส่งออกรายงาน (Export Center)</h2>
+                    </div>
+                    <div class="export-form">
+                        <div class="form-group">
+                            <label>เลือกช่วงเวลา (Presets)</label>
+                            <select id="export-preset">
+                                <option value="m">เดือนปัจจุบัน (Current Month)</option>
+                                <option value="q2">ไตรมาสที่ 2/2569</option>
+                                <option value="q1">ไตรมาสที่ 1/2569</option>
+                                <option value="y2026">ปีปฏิทิน 2569</option>
+                                <option value="custom">กำหนดช่วงวันที่เอง...</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>ประเภทรายงาน</label>
+                            <select>
+                                <option>สรุปผลการดำเนินงาน (Executive Summary)</option>
+                                <option>รายงาน PDPA & Consent Audit</option>
+                                <option>รายงานกระทบยอดการเงิน (Reconciliation)</option>
+                                <option>รายงานวิเคราะห์ประสิทธิภาพ Operator</option>
+                            </select>
+                        </div>
+                        <div class="form-group" id="custom-date-group" style="display: none;">
+                            <label>ช่วงวันที่กำหนดเอง</label>
+                            <div style="display: flex; gap: 8px;">
+                                <input type="date" style="flex: 1;">
+                                <input type="date" style="flex: 1;">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>รูปแบบไฟล์</label>
+                            <div style="display: flex; gap: 12px; margin-top: 4px;">
+                                <label style="display: flex; align-items: center; gap: 4px; font-weight: 400;">
+                                    <input type="radio" name="format" checked> PDF
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 4px; font-weight: 400;">
+                                    <input type="radio" name="format"> XLSX
+                                </label>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" style="margin-top: 8px;" onclick="alert('กำลังประมวลผลรายงานและบันทึกลง Audit Log...')">🚀 สร้างและดาวน์โหลดรายงาน</button>
+                    </div>
+                </div>
+
+                <!-- Strategy Insights (Mini Card) -->
+                <div class="card" style="background: var(--primary-100); border: none;">
+                    <h2 style="color: var(--primary-600); margin-bottom: 12px;">Strategy Tip 💡</h2>
+                    <p style="font-size: 14px; color: var(--primary-600); line-height: 1.6;">
+                        พื้นที่ <b>"สมุทรปราการ"</b> มีการเติบโตของ Demand สูงถึง 30% แต่ Supply ต่ำ
+                        <br><br>
+                        <b>ข้อเสนอแนะ:</b> จัดแคมเปญส่งเสริมร่วมกับ Operator โซนสมุทรปราการ
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.getElementById('export-preset').addEventListener('change', function() {
+            const customGroup = document.getElementById('custom-date-group');
+            customGroup.style.display = this.value === 'custom' ? 'flex' : 'none';
+        });
+    </script>
+</body>
+</html>

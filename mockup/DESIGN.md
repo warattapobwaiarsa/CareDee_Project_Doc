@@ -112,4 +112,20 @@
 
 ---
 
+## 5. Portal Components & Architecture (Single Page Application)
+
+เพื่อให้ Prototype พอร์ทัลมีความทันสมัยและตอบสนองได้รวดเร็วเหมือนแอปพลิเคชันจริง เราใช้สถาปัตยกรรม **SPA** ดังนี้:
+
+### **View Management (การสลับหน้าจอ)**
+*   **Logic:** ใช้ CSS `display: none/block` ควบคุมโดยฟังก์ชัน `switchView(id)` หรือ `showPage(id)` ใน JavaScript
+*   **Benefits:** รักษา State ของข้อมูล (เช่น ข้อมูลที่คีย์ค้างไว้) และช่วยให้การเปลี่ยนหน้าไม่มีรอยต่อ (Instant Transitions)
+
+### **Safety & Compliance UI Patterns**
+*   **Double Confirmation (High Risk):** สำหรับการลบข้อมูล (Delete), ระงับสิทธิ์ (Suspend) หรืออนุมัติการเงิน (Payout) จะมี Modal ยืนยันซ้ำเสมอ พร้อมช่องใส่รหัสผ่าน/PIN จำลอง
+*   **Sync Group:** ใน Header จะมีกลุ่มข้อมูล `sync-indicator` (จุดกะพริบ) และ `sync-time` (Timestamp) เพื่อสร้างความเชื่อมั่นว่าข้อมูลที่เห็นเป็นข้อมูลล่าสุด
+*   **PDPA Evidence:** ตารางจัดการผู้ใช้ต้องมีคอลัมน์ `Consent Timestamp` เพื่อแสดงความโปร่งใสในการจัดการข้อมูลส่วนบุคคล
+*   **Audit Timeline:** การบันทึก Log กิจกรรมสำคัญจะแสดงผลในรูปแบบเส้นเวลา (Vertical Timeline) เพื่อให้แอดมินหรือ Operator ตรวจสอบย้อนหลังได้ง่าย
+
+---
+
 © 2026 CareDee Design Foundation

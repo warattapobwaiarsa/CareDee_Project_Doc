@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review Quality & Appeals - CareDee Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Brand Colors */
+            --primary-600: #007A8C;
+            --primary-100: #E0F2F4;
+            --secondary-500: #FF9F43;
+            --secondary-100: #FFF3E6;
+            
+            /* Semantic Colors */
+            --success: #28C76F;
+            --warning: #FF9F43;
+            --error: #EA5455;
+            --info: #00CFE8;
+            
+            /* Neutral Colors */
+            --white: #FFFFFF;
+            --neutral-100: #F8F8F8;
+            --neutral-300: #B9B9C3;
+            --neutral-600: #6E6B7B;
+            --neutral-900: #1E1E1E;
+            
+            /* Interactive */
+            --pressed: #006675;
+            
+            /* Sidebar Specific */
+            --sidebar-bg: #004D58; 
+            --sidebar-width: 260px;
+
+            /* Typography */
+            --font-main: 'IBM Plex Sans Thai', 'Inter', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-main);
+        }
+
+        body {
+            background-color: var(--neutral-100);
+            color: var(--neutral-900);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--sidebar-bg);
+            color: white;
+            position: fixed;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .sidebar-header {
+            padding: 32px 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .logo-box {
+            width: 44px;
+            height: 44px;
+            background: var(--white);
+            color: var(--primary-600);
+            border-radius: 10px;
+            margin: 0 auto 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 20px;
+        }
+
+        .sidebar-menu {
+            flex: 1;
+            padding: 20px 0;
+        }
+
+        .menu-item {
+            padding: 14px 24px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            font-size: 15px;
+        }
+
+        .menu-item:hover, .menu-item.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-left: 4px solid var(--secondary-500);
+        }
+
+        .menu-item i {
+            margin-right: 12px;
+            width: 24px;
+            text-align: center;
+            font-style: normal;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            flex: 1;
+            padding: 32px;
+        }
+
+        header {
+            background: white;
+            padding: 16px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            margin-bottom: 32px;
+        }
+
+        .search-bar input {
+            padding: 12px 20px;
+            border-radius: 12px;
+            border: 1px solid var(--neutral-300);
+            width: 360px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+            color: var(--neutral-900);
+        }
+
+        .search-bar input:focus {
+            border-color: var(--primary-600);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .badge-2fa {
+            background: var(--success);
+            color: white;
+            font-size: 10px;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .metric-card {
+            background: white;
+            padding: 24px;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            border-left: 4px solid var(--primary-600);
+        }
+
+        .metric-title {
+            font-size: 14px;
+            color: var(--neutral-600);
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+
+        .metric-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--neutral-900);
+        }
+
+        .metric-sub {
+            font-size: 12px;
+            margin-top: 8px;
+            font-weight: 500;
+        }
+
+        /* Sections */
+        .section-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 32px;
+        }
+
+        .card {
+            background: white;
+            padding: 28px;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            margin-bottom: 32px;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            border-bottom: 1px solid var(--neutral-100);
+            padding-bottom: 12px;
+        }
+
+        h2 {
+            font-size: 18px;
+            color: var(--neutral-900);
+            font-weight: 700;
+        }
+
+        /* Table Styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            padding: 14px;
+            background: var(--neutral-100);
+            color: var(--neutral-600);
+            font-weight: 600;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 16px 14px;
+            border-bottom: 1px solid var(--neutral-100);
+            font-size: 14px;
+        }
+
+        .status-pill {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-flagged { background: rgba(234, 84, 85, 0.12); color: var(--error); }
+        .status-pending { background: var(--secondary-100); color: var(--secondary-500); }
+        .status-resolved { background: rgba(40, 199, 111, 0.12); color: var(--success); }
+
+        /* Action Buttons */
+        .btn {
+            padding: 10px 18px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-view { background: var(--primary-100); color: var(--primary-600); }
+        .btn-view:hover { background: var(--primary-600); color: white; }
+        
+        .btn-approve { background: var(--success); color: white; }
+        .btn-approve:hover { filter: brightness(92%); }
+
+        .btn-remove { background: var(--error); color: white; }
+        .btn-remove:hover { filter: brightness(92%); }
+
+        .btn-outline { border: 1px solid var(--neutral-300); background: transparent; color: var(--neutral-600); }
+        .btn-outline:hover { background: var(--neutral-100); }
+
+        /* Content Masking & Reveal */
+        .masked-text {
+            filter: blur(4px);
+            user-select: none;
+            cursor: pointer;
+            transition: filter 0.2s;
+        }
+        .masked-text.revealed {
+            filter: blur(0);
+        }
+        .reveal-toggle {
+            font-size: 10px;
+            color: var(--primary-600);
+            cursor: pointer;
+            text-decoration: underline;
+            margin-left: 4px;
+        }
+
+        /* Filter Section Enhancements */
+        .filter-section {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 24px;
+            align-items: center;
+            background: white;
+            padding: 16px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        }
+
+        .filter-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--neutral-600);
+        }
+
+        .select-input {
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--neutral-300);
+            font-size: 13px;
+            color: var(--neutral-900);
+            outline: none;
+        }
+
+        /* Modals */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 32px;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .reason-box {
+            background: var(--neutral-100);
+            padding: 16px;
+            border-radius: 12px;
+            margin: 16px 0;
+        }
+
+        .evidence-preview {
+            width: 100%;
+            height: 300px;
+            background: #eee;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 16px;
+            border: 1px dashed var(--neutral-300);
+            color: var(--neutral-600);
+        }
+
+        /* Rating Widget */
+        .rating-analysis {
+            text-align: center;
+        }
+
+        .rating-circle {
+            width: 140px;
+            height: 140px;
+            border: 12px solid var(--neutral-100);
+            border-top: 12px solid var(--secondary-500);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 24px;
+        }
+
+        .formula-box {
+            font-size: 11px;
+            color: var(--primary-600);
+            margin-top: 16px;
+            padding: 12px;
+            background: var(--primary-100);
+            border-radius: 10px;
+            text-align: left;
+            font-family: monospace;
+        }
+
+        /* Star Rating */
+        .stars { color: var(--secondary-500); letter-spacing: 2px; }
+
+        /* Audit Log Float */
+        .audit-info {
+            position: fixed;
+            bottom: 32px;
+            right: 32px;
+            background: var(--neutral-900);
+            color: white;
+            padding: 14px 28px;
+            border-radius: 40px;
+            font-size: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 1001;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            background: var(--success);
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 10px var(--success);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo-box">CD</div>
+            <h3 style="font-weight: 700; font-size: 20px;">CareDee Admin</h3>
+            <p style="font-size: 11px; color: rgba(255,255,255,0.5); margin-top: 4px; text-transform: uppercase;">System Control Panel</p>
+        </div>
+        <div class="sidebar-menu">
+            <a href="admin_mockup2.html" class="menu-item"><i>📊</i> Dashboard</a>
+            <a href="admin_user_provider.html" class="menu-item"><i>👤</i> บัญชีผู้ดูแล/ผู้ให้บริการ</a>
+            <a href="admin_finance_revenue.html" class="menu-item"><i>💰</i> จัดการการเงิน & รายได้</a>
+            <a href="#" class="menu-item active"><i>✨</i> คุณภาพรีวิว & อุทธรณ์</a>
+            <a href="#" class="menu-item"><i>📈</i> รายงานระบบ</a>
+            <a href="#" class="menu-item"><i>🛡️</i> นโยบาย & PDPA</a>
+            <a href="#" class="menu-item"><i>🖥️</i> เฝ้าระวังระบบคลาวด์</a>
+        </div>
+        <div class="sidebar-footer" style="padding: 24px; border-top: 1px solid rgba(255,255,255,0.1);">
+            <a href="#" class="menu-item" style="padding: 0;"><i>🚪</i> ออกจากระบบ</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Header -->
+        <header>
+            <div class="search-bar">
+                <input type="text" placeholder="ค้นหารีวิว, หมายเลขจอง หรือชื่อผู้ให้บริการ...">
+            </div>
+            <div class="user-info">
+                <div style="text-align: right;">
+                    <p style="font-weight: 700; font-size: 14px;">Michael jackson</p>
+                    <p style="font-size: 12px; color: var(--neutral-600);">Platform Operator <span class="badge-2fa">MFA ACTIVE</span></p>
+                </div>
+                <div style="width: 48px; height: 48px; background: var(--primary-100); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--primary-600); font-weight: 700;">VW</div>
+            </div>
+        </header>
+
+        <!-- Filter Section -->
+        <div class="filter-section">
+            <div style="display: flex; flex-direction: column; gap: 4px;">
+                <span class="filter-label">สังกัด Operator:</span>
+                <select class="select-input" style="width: 200px;">
+                    <option value="all">ทั้งหมด (ทุกสังกัด)</option>
+                    <option value="en">EN Enterprise</option>
+                    <option value="th_care">Thai Care Group</option>
+                </select>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 4px;">
+                <span class="filter-label">ประเภทรีวิว:</span>
+                <select class="select-input" style="width: 200px;">
+                    <option value="all">ทั้งหมด</option>
+                    <option value="flagged">ถูกระงับ (Flagged)</option>
+                    <option value="low_quality">คุณภาพต่ำ (Low Quality)</option>
+                    <option value="no_text">มีแค่ดาวไม่มีข้อความ</option>
+                </select>
+            </div>
+            <div style="display: flex; align-items: flex-end; padding-bottom: 2px;">
+                <button class="btn btn-view" style="padding: 8px 16px;">กรองข้อมูล</button>
+            </div>
+        </div>
+
+        <!-- Rating Metrics -->
+        <div class="dashboard-grid">
+            <div class="metric-card">
+                <div class="metric-title">คะแนนเฉลี่ยรวม</div>
+                <div class="metric-value">4.82</div>
+                <p class="metric-sub" style="color: var(--success);">↑ 0.05 จากเดือนที่แล้ว</p>
+            </div>
+            <div class="metric-card" style="border-left-color: var(--error);">
+                <div class="metric-title">Flagged Reviews</div>
+                <div class="metric-value">12 เคส</div>
+                <p class="metric-sub" style="color: var(--error);">รอการตรวจสอบด่วน</p>
+            </div>
+            <div class="metric-card" style="border-left-color: var(--warning);">
+                <div class="metric-title">Appeal Pending</div>
+                <div class="metric-value">5 เคส</div>
+                <p class="metric-sub" style="color: var(--secondary-500);">SLA: ภายใน 3 วัน</p>
+            </div>
+            <div class="metric-card" style="border-left-color: var(--info);">
+                <div class="metric-title">Low Quality Content</div>
+                <div class="metric-value">28</div>
+                <p class="metric-sub" style="color: var(--neutral-600);">ต้องการการตรวจสอบเชิงรุก</p>
+            </div>
+        </div>
+
+        <!-- Moderation & Appeals Section -->
+        <div class="section-container">
+            <!-- Left Side: Lists -->
+            <div class="operation-lists">
+                <!-- Flagged Reviews -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2>รีวิวที่ถูกระงับ (Flagged Reviews)</h2>
+                        <span style="font-size: 12px; color: var(--neutral-600);">Profanity Filter: ON | Masking: ACTIVE</span>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>รีวิว / วันที่</th>
+                                <th>ผู้ให้บริการ</th>
+                                <th>คะแนน</th>
+                                <th>สถานะ</th>
+                                <th>จัดการ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div style="font-size: 13px; font-weight: 500;">
+                                        <span id="review-text-1" class="masked-text">"บริการแย่มาก ทำงานไม่ [คำหยาบคาย] เลย..."</span>
+                                        <span class="reveal-toggle" onclick="toggleReveal(1)">👁️ Reveal</span>
+                                    </div>
+                                    <div style="font-size: 11px; color: var(--neutral-600); margin-top: 4px;">#BK-9801 | 12 พ.ค. 26 | EN Enterprise</div>
+                                </td>
+                                <td>สมจิตร ดีใจ</td>
+                                <td><span class="stars">★☆☆☆☆</span></td>
+                                <td><span class="status-pill status-flagged">Hidden</span></td>
+                                <td style="display: flex; gap: 4px;">
+                                    <button class="btn btn-view" title="ตรวจสอบหลักฐาน" onclick="openEvidenceModal('Evidence for #BK-9801', 'ระบบตรวจพบคำไม่สุภาพในรีวิวนี้')">📄</button>
+                                    <button class="btn btn-approve" title="กู้คืนรีวิว" onclick="openReasonModal(1, 'restore')">✅</button>
+                                    <button class="btn btn-remove" title="ยืนยันการลบ" onclick="openReasonModal(1, 'delete')">🗑️</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div style="font-size: 13px; font-weight: 500;">
+                                        <span id="review-text-2" class="masked-text">"จองแล้วติดต่อไม่ได้เลย เสียความ [คำหยาบคาย] จริงๆ"</span>
+                                        <span class="reveal-toggle" onclick="toggleReveal(2)">👁️ Reveal</span>
+                                    </div>
+                                    <div style="font-size: 11px; color: var(--neutral-600); margin-top: 4px;">#BK-9820 | 11 พ.ค. 26 | Independent</div>
+                                </td>
+                                <td>บจก. สุขกาย</td>
+                                <td><span class="stars">★☆☆☆☆</span></td>
+                                <td><span class="status-pill status-flagged">Hidden</span></td>
+                                <td style="display: flex; gap: 4px;">
+                                    <button class="btn btn-view" title="ตรวจสอบหลักฐาน" onclick="openEvidenceModal('Evidence for #BK-9820', 'ระบบตรวจพบเนื้อหาที่อาจเป็นสแปม')">📄</button>
+                                    <button class="btn btn-approve" title="กู้คืนรีวิว" onclick="openReasonModal(2, 'restore')">✅</button>
+                                    <button class="btn btn-remove" title="ยืนยันการลบ" onclick="openReasonModal(2, 'delete')">🗑️</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Appeal List -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2>รายการอุทธรณ์ (Review Appeals)</h2>
+                        <a href="#" style="font-size: 13px; color: var(--primary-600); font-weight: 700; text-decoration: none;">ประวัติการอุทธรณ์</a>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID จอง / ผู้ยื่น</th>
+                                <th>เหตุผลการอุทธรณ์</th>
+                                <th>หลักฐาน</th>
+                                <th>สถานะ</th>
+                                <th>จัดการ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div style="font-weight: 700; color: var(--primary-600);">#BK-9902</div>
+                                    <div style="font-size: 11px; color: var(--neutral-600);">รวีวรรณ (Caregiver) | EN</div>
+                                </td>
+                                <td>รีวิวไม่เป็นความจริง ลูกค้าเข้าใจผิดเรื่องเวลา</td>
+                                <td><a href="javascript:void(0)" onclick="openEvidenceModal('ChatLog.pdf', 'หลักฐานการแชทระหว่างผู้ให้บริการและลูกค้า')" style="color: var(--primary-600); text-decoration: underline;">ChatLog.pdf</a></td>
+                                <td><span class="status-pill status-pending">In Review</span></td>
+                                <td><button class="btn btn-view" onclick="openReasonModal(9902, 'decision')">ตัดสิน</button></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div style="font-weight: 700; color: var(--primary-600);">#BK-9750</div>
+                                    <div style="font-size: 11px; color: var(--neutral-600);">วิชัย (Operator) | Thai Care</div>
+                                </td>
+                                <td>รีวิวกลั่นแกล้ง (Spam)</td>
+                                <td><span style="color: var(--neutral-300);">ไม่มีหลักฐาน</span></td>
+                                <td><span class="status-pill status-resolved">Resolved</span></td>
+                                <td><button class="btn btn-outline" style="padding: 4px 12px; font-size: 11px; border: 1px solid var(--neutral-300);">ดูย้อนหลัง</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Right Side -->
+            <div class="side-widgets">
+                <!-- Weighted Rating Display -->
+                <div class="card rating-analysis">
+                    <h2 style="margin-bottom: 24px;">วิเคราะห์คะแนนถ่วงน้ำหนัก</h2>
+                    <div class="rating-circle">
+                        <span style="font-size: 32px; font-weight: 700;">4.85</span>
+                        <span style="font-size: 11px; color: var(--neutral-600); text-transform: uppercase;">6-Month Weighted</span>
+                    </div>
+                    <p style="font-size: 13px; margin-bottom: 8px; font-weight: 600;">คะแนนเฉลี่ย (Raw): 4.70</p>
+                    <div class="formula-box">
+                        <b>SRS Calculation Rule:</b><br>
+                        Rating = Σ(Score * Weight<sub>t</sub>) / Σ(Weight<sub>t</sub>)<br>
+                        <i>* Weight decreases monthly (t=0 to 6)</i>
+                    </div>
+                </div>
+
+                <!-- Moderation Tools -->
+                <div class="card">
+                    <h2 style="margin-bottom: 24px;">เครื่องมือจัดการรีวิว</h2>
+                    <button class="btn btn-view" style="width: 100%; margin-bottom: 12px; padding: 14px; text-align: left;">🔍 ค้นหารีวิว Low Quality</button>
+                    <button class="btn btn-view" style="width: 100%; margin-bottom: 12px; padding: 14px; text-align: left;">📜 ตั้งค่าคำหยาบ (Keywords)</button>
+                    <div style="margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--neutral-100);">
+                        <p style="font-size: 12px; color: var(--neutral-600); margin-bottom: 12px;">Auto-Moderation Status:</p>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="font-size: 14px; font-weight: 600;">Profanity Filter</span>
+                            <span style="color: var(--success); font-weight: 700;">ACTIVE</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Audit Log Float -->
+        <div class="audit-info">
+            <span class="dot"></span>
+            Moderation Log Enabled (All changes recorded)
+        </div>
+    </main>
+
+    <!-- Evidence Viewer Modal -->
+    <div id="evidenceModal" class="modal">
+        <div class="modal-content">
+            <h2 id="evidenceTitle">หลักฐานการตรวจสอบ</h2>
+            <p id="evidenceSubtitle" style="color: var(--neutral-600); margin-top: 4px;"></p>
+            <div class="evidence-preview">
+                [ FILE PREVIEW MOCKUP: IMAGE / CHAT LOG / ACTIVITY RECORD ]
+            </div>
+            <div style="margin-top: 24px; display: flex; justify-content: flex-end;">
+                <button class="btn btn-outline" onclick="closeModal('evidenceModal')">ปิดหน้าต่าง</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Moderation Reason Modal -->
+    <div id="reasonModal" class="modal">
+        <div class="modal-content">
+            <h2 id="reasonTitle">ยืนยันการดำเนินการ</h2>
+            <div class="reason-box">
+                <p style="font-size: 14px; font-weight: 600; margin-bottom: 8px;">ระบุเหตุผลในการตัดสินใจ (Reason Code):</p>
+                <select class="select-input" style="width: 100%; margin-bottom: 12px;">
+                    <option value="r1">ละเมิดนโยบายเนื้อหา (Profanity)</option>
+                    <option value="r2">เนื้อหาไม่เป็นความจริง (False Information)</option>
+                    <option value="r3">เนื้อหากลั่นแกล้งหรือสแปม (Spam/Malicious)</option>
+                    <option value="r4">ยืนยันความถูกต้องแล้ว (Valid Content)</option>
+                </select>
+                <textarea class="select-input" style="width: 100%; height: 80px; resize: none;" placeholder="ระบุรายละเอียดเพิ่มเติมเพื่อบันทึกใน Audit Log..."></textarea>
+            </div>
+            <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                <button class="btn btn-outline" onclick="closeModal('reasonModal')">ยกเลิก</button>
+                <button class="btn btn-approve" id="confirmActionBtn" onclick="submitModeration()">ยืนยันและบันทึก</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Content Masking
+        function toggleReveal(id) {
+            const text = document.getElementById(`review-text-${id}`);
+            text.classList.toggle('revealed');
+        }
+
+        // Modal Logic
+        function openEvidenceModal(title, subtitle) {
+            document.getElementById('evidenceTitle').textContent = title;
+            document.getElementById('evidenceSubtitle').textContent = subtitle;
+            document.getElementById('evidenceModal').style.display = 'flex';
+        }
+
+        function openReasonModal(id, action) {
+            const modal = document.getElementById('reasonModal');
+            const title = document.getElementById('reasonTitle');
+            const btn = document.getElementById('confirmActionBtn');
+            
+            if (action === 'restore') {
+                title.textContent = 'ยืนยันการกู้คืนรีวิว (Restore)';
+                btn.className = 'btn btn-approve';
+            } else if (action === 'delete') {
+                title.textContent = 'ยืนยันการลบรีวิวถาวร (Permanent Delete)';
+                btn.className = 'btn btn-remove';
+            } else {
+                title.textContent = 'ตัดสินการอุทธรณ์ (Appeal Decision)';
+                btn.className = 'btn btn-approve';
+            }
+            
+            modal.style.display = 'flex';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function submitModeration() {
+            alert('บันทึกการตัดสินใจเรียบร้อยแล้ว (Audit Log Updated: PF-MOD-003)');
+            closeModal('reasonModal');
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+            }
+        }
+
+        // Simulation of rating recalculation per SRS
+        setInterval(() => {
+            console.log("Recalculating 6-month weighted average rating...");
+        }, 60000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareDee Training Portal SPA - V2</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Brand Colors */
+            --primary-600: #007A8C;
+            --primary-100: #E0F2F4;
+            --secondary-500: #FF9F43;
+            --secondary-100: #FFF3E6;
+            
+            /* Semantic Colors */
+            --success: #28C76F;
+            --warning: #FF9F43;
+            --error: #EA5455;
+            --info: #00CFE8;
+            
+            /* Neutral Colors */
+            --white: #FFFFFF;
+            --neutral-100: #F8F8F8;
+            --neutral-200: #F3F2F7;
+            --neutral-300: #B9B9C3;
+            --neutral-600: #6E6B7B;
+            --neutral-900: #1E1E1E;
+            
+            /* Interactive */
+            --pressed: #006675;
+            
+            /* Sidebar */
+            --sidebar-width: 280px;
+
+            /* Typography */
+            --font-main: 'IBM Plex Sans Thai', 'Inter', sans-serif;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--font-main); }
+        body { background: var(--neutral-100); color: var(--neutral-900); display: flex; min-height: 100vh; overflow-x: hidden; }
+
+        /* --- Sidebar --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--white);
+            height: 100vh;
+            position: fixed;
+            border-right: 1px solid var(--neutral-300);
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+        }
+        .sidebar-brand { padding: 32px 24px; text-align: center; border-bottom: 1px solid var(--neutral-100); }
+        .logo-box { width: 44px; height: 44px; background: var(--primary-600); color: var(--white); border-radius: 10px; margin: 0 auto 12px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 20px; }
+        .sidebar-brand h2 { color: var(--primary-600); font-size: 20px; font-weight: 700; }
+        .sidebar-menu { flex: 1; padding: 20px 0; }
+        .menu-link {
+            padding: 14px 24px;
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: var(--neutral-600);
+            font-weight: 500;
+            transition: 0.2s;
+            font-size: 15px;
+            cursor: pointer;
+            position: relative;
+        }
+        .menu-link:hover, .menu-link.active { background: var(--primary-100); color: var(--primary-600); border-right: 4px solid var(--primary-600); }
+        .menu-link i { margin-right: 12px; width: 24px; text-align: center; font-style: normal; }
+        .nav-badge { position: absolute; right: 20px; background: var(--error); color: white; font-size: 10px; padding: 2px 6px; border-radius: 10px; font-weight: 700; }
+
+        /* --- Main Layout --- */
+        .main { margin-left: var(--sidebar-width); flex: 1; padding: 32px; width: calc(100% - var(--sidebar-width)); }
+        .page-content { display: none; }
+        .page-content.active { display: block; animation: fadeIn 0.3s ease-in-out; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            background: var(--white);
+            padding: 16px 28px;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        }
+        .user-status { display: flex; align-items: center; gap: 12px; }
+        .mfa-tag { background: var(--success); color: white; font-size: 11px; padding: 4px 12px; border-radius: 20px; font-weight: 600; }
+
+        /* --- Components --- */
+        .card { background: var(--white); border-radius: 16px; padding: 28px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); margin-bottom: 32px; position: relative; }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; border-bottom: 1px solid var(--neutral-100); padding-bottom: 12px; }
+        .card-title { font-size: 18px; font-weight: 700; color: var(--neutral-900); }
+        .card-subtitle { font-size: 13px; color: var(--neutral-600); margin-top: 4px; }
+
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 32px; }
+        .stat-card { background: var(--white); padding: 24px; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); border-bottom: 4px solid var(--primary-600); }
+        .stat-label { font-size: 14px; color: var(--neutral-600); margin-bottom: 8px; font-weight: 500; }
+        .stat-value { font-size: 26px; font-weight: 700; color: var(--neutral-900); }
+
+        .btn { padding: 10px 20px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; font-size: 13px; transition: 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn-primary { background: var(--primary-600); color: white; }
+        .btn-primary:hover { background: var(--pressed); }
+        .btn-secondary { background: var(--neutral-200); color: var(--neutral-600); }
+        .btn-outline-danger { background: var(--white); border: 1px solid var(--error); color: var(--error); }
+        .btn-outline-danger:hover { background: var(--error); color: white; }
+        .btn-sm { padding: 6px 12px; font-size: 12px; }
+        .btn-ghost { background: transparent; color: var(--primary-600); border: 1px solid var(--primary-600); }
+        .btn-ghost:hover { background: var(--primary-100); }
+
+        .badge { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; white-space: nowrap; display: inline-block; }
+        .bg-matched { background: var(--primary-100); color: var(--primary-600); }
+        .bg-unmatched { background: var(--secondary-100); color: var(--secondary-500); }
+        .bg-notfound, .bg-error { background: #FFF5F5; color: var(--error); }
+        .bg-pending { background: var(--neutral-100); color: var(--neutral-600); }
+        .bg-success { background: #E6F9F0; color: var(--success); }
+
+        .data-table { width: 100%; border-collapse: collapse; }
+        .data-table th { text-align: left; padding: 14px; font-size: 12px; background: var(--neutral-100); color: var(--neutral-600); font-weight: 700; text-transform: uppercase; }
+        .data-table td { padding: 16px 14px; border-bottom: 1px solid var(--neutral-100); font-size: 14px; vertical-align: middle; }
+
+        /* --- Specific Page Styles --- */
+        /* Import Wizard */
+        .wizard-step { display: none; }
+        .wizard-step.active { display: block; }
+        .upload-zone { border: 2px dashed var(--neutral-300); padding: 48px; text-align: center; border-radius: 16px; cursor: pointer; background: var(--neutral-100); transition: 0.3s; }
+        .upload-zone:hover { border-color: var(--primary-600); background: var(--primary-100); }
+        .progress-container { margin: 24px 0; }
+        .progress-bar-bg { height: 12px; background: var(--neutral-200); border-radius: 6px; overflow: hidden; }
+        .progress-bar-fill { height: 100%; background: var(--primary-600); width: 0%; transition: width 0.3s ease; }
+
+        /* Bulk Actions */
+        .bulk-actions { background: var(--primary-600); color: white; padding: 12px 24px; border-radius: 12px; display: none; justify-content: space-between; align-items: center; margin-bottom: 24px; animation: slideDown 0.3s ease-out; }
+        @keyframes slideDown { from { transform: translateY(-10px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        /* Modals */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 1000; }
+        .modal-content { background: white; padding: 32px; border-radius: 16px; width: 500px; max-width: 90%; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--neutral-100); padding-bottom: 12px; }
+        .modal-footer { display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--neutral-100); }
+
+        /* Form */
+        .form-group { margin-bottom: 16px; }
+        .form-label { font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px; }
+        .form-control { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid var(--neutral-300); outline: none; font-size: 14px; }
+        
+        /* Market Stats */
+        .skill-item { display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-bottom: 1px solid var(--neutral-100); }
+        .skill-bar-container { flex: 1; margin: 0 20px; height: 10px; background: var(--neutral-100); border-radius: 5px; overflow: hidden; }
+        .skill-bar { height: 100%; background: var(--primary-600); border-radius: 5px; }
+        
+        /* Layout Grids */
+        .grid-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-bottom: 32px; }
+        .dashboard-grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 32px; }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <div class="logo-box">CD</div>
+            <h2>CareDee Academy</h2>
+            <p style="font-size: 11px; color: var(--neutral-600); margin-top: 4px; text-transform: uppercase;">Training Institute Interface</p>
+        </div>
+        <nav class="sidebar-menu">
+            <a onclick="switchPage('dashboard', this)" class="menu-link active"><i>🏠</i> ภาพรวมสถาบัน</a>
+            <a onclick="switchPage('import', this)" class="menu-link"><i>📥</i> นำเข้าข้อมูลการอบรม</a>
+            <a onclick="switchPage('certificates', this)" class="menu-link"><i>🏅</i> จัดการใบรับรอง</a>
+            <a onclick="switchPage('market', this)" class="menu-link"><i>📈</i> สถิติตลาดแรงงาน</a>
+            <a onclick="switchPage('verification', this)" class="menu-link"><i>🛡️</i> มาตรฐานการตรวจสอบ <span class="nav-badge">12</span></a>
+        </nav>
+        <div style="padding: 24px; border-top: 1px solid var(--neutral-100);">
+            <a onclick="logout()" class="menu-link" style="color: var(--error); padding: 0;"><i>🚪</i> ออกจากระบบ</a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main">
+        <header>
+            <div class="page-title">
+                <h1 id="headerTitle" style="font-size: 20px; font-weight: 700;">สถาบันการพยาบาลไทย (Bangkok Branch)</h1>
+                <p id="headerSubtitle" style="font-size: 13px; color: var(--neutral-600);">เจ้าหน้าที่: Michael Jackson</p>
+            </div>
+            <div class="user-status">
+                <span class="mfa-tag">MFA : ยืนยันตัวตนแล้ว</span>
+                <div style="width: 44px; height: 44px; background: var(--primary-100); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--primary-600); font-weight: 700;">SM</div>
+            </div>
+        </header>
+
+        <!-- PAGE: DASHBOARD -->
+        <div id="page-dashboard" class="page-content active">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">ผู้อบรมทั้งหมด</div>
+                    <div class="stat-value">1,240 คน</div>
+                </div>
+                <div class="stat-card" style="border-bottom-color: var(--info);">
+                    <div class="stat-label">เชื่อมโยงบัญชีแล้ว</div>
+                    <div class="stat-value">850 คน</div>
+                </div>
+                <div class="stat-card" style="border-bottom-color: var(--secondary-500);">
+                    <div class="stat-label">รอสมัครสมาชิก (Pending)</div>
+                    <div class="stat-value">390 คน</div>
+                </div>
+                <div class="stat-card" style="border-bottom-color: var(--success);">
+                    <div class="stat-label">ดัชนีความต้องการ</div>
+                    <div class="stat-value" style="color: var(--success);">↑ 15%</div>
+                </div>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="col-left">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">ความสอดคล้องของหลักสูตร (Course-Demand Fit)</h2>
+                        </div>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ชื่อหลักสูตร</th>
+                                    <th>Market Demand</th>
+                                    <th>สถานะ</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><b>การดูแลผู้สูงอายุเบื้องต้น (420 ชม.)</b></td>
+                                    <td><div class="skill-bar-container" style="margin:0; width: 100px;"><div class="skill-bar" style="width: 90%;"></div></div></td>
+                                    <td><span class="badge bg-success">Match (High)</span></td>
+                                </tr>
+                                <tr>
+                                    <td><b>ดูแลผู้ป่วยติดเตียง Specialty</b></td>
+                                    <td><div class="skill-bar-container" style="margin:0; width: 100px;"><div class="skill-bar" style="width: 95%; background: var(--error);"></div></div></td>
+                                    <td><span class="badge bg-error">Under Supply</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">การเชื่อมโยงใบรับรองล่าสุด</h2>
+                        </div>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ชื่อ-นามสกุล</th>
+                                    <th>รหัสใบรับรอง</th>
+                                    <th>สถานะ</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="font-weight: 500;">น.ส. กัญญาวีร์ สีใส</td>
+                                    <td style="font-weight: 600; color: var(--primary-600);">CERT-2026-001</td>
+                                    <td><span class="badge bg-matched">Matched</span></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: 500;">นาย ธนพล รักงาน</td>
+                                    <td style="font-weight: 600; color: var(--primary-600);">CERT-2026-002</td>
+                                    <td><span class="badge bg-pending">รอสมัครสมาชิก</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-right">
+                    <!-- Expiry Alert Widget (Added Gap) -->
+                    <div class="card" style="border-left-color: var(--warning);">
+                        <div class="card-header">
+                            <h2 class="card-title">⚠️ ใกล้หมดอายุ (ใน 30 วัน)</h2>
+                        </div>
+                        <div style="padding: 10px; background: var(--secondary-100); border-radius: 12px; margin-bottom: 12px;">
+                            <p style="font-size: 13px; font-weight: 700; color: var(--secondary-500);">3 รายการต้องการการต่ออายุ</p>
+                            <p style="font-size: 11px; color: var(--neutral-600);">ส่งแจ้งเตือนให้ผู้อบรมเตรียมตัวสอบใหม่</p>
+                        </div>
+                        <button class="btn btn-ghost btn-sm" style="width: 100%;" onclick="switchPage('certificates', document.querySelector('[onclick*=\'certificates\']'))">ดูรายการทั้งหมด</button>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">ทักษะที่ตลาดต้องการ</h2>
+                        </div>
+                        <div class="skill-item">
+                            <div style="width: 140px; font-size: 13px; font-weight: 500;">ดูแลผู้ป่วยติดเตียง</div>
+                            <div class="skill-bar-container"><div class="skill-bar" style="width: 85%;"></div></div>
+                            <div style="font-size: 13px; font-weight: 700; color: var(--primary-600);">85%</div>
+                        </div>
+                        <div class="skill-item">
+                            <div style="width: 140px; font-size: 13px; font-weight: 500;">กายภาพบำบัดเบื้องต้น</div>
+                            <div class="skill-bar-container"><div class="skill-bar" style="width: 60%;"></div></div>
+                            <div style="font-size: 13px; font-weight: 700; color: var(--primary-600);">60%</div>
+                        </div>
+                        <p style="font-size: 11px; color: var(--neutral-600); margin-top: 20px;">* คำนวณจากสถิติการจองจริงในระบบ CareDee</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE: IMPORT WIZARD -->
+        <div id="page-import" class="page-content">
+            <div class="grid-layout" style="grid-template-columns: 1fr 350px;">
+                <div class="card" style="margin-bottom: 0;">
+                    <div class="card-header">
+                        <h2 class="card-title">ขั้นตอนที่ 1: อัปโหลดและตรวจสอบ</h2>
+                    </div>
+                    <div id="step-upload" class="wizard-step active">
+                        <div class="upload-zone" onclick="startImportProcess()">
+                            <div style="font-size: 40px; margin-bottom: 12px;">📁</div>
+                            <p style="font-weight: 700; font-size: 16px; color: var(--primary-600);">คลิกเพื่ออัปโหลดไฟล์รายชื่อผู้ผ่านการอบรม</p>
+                            <p style="font-size: 12px; color: var(--neutral-600); margin-top: 4px;">รองรับไฟล์ CSV, XLSX, JSON (สูงสุด 10MB)</p>
+                        </div>
+                    </div>
+                    <!-- Step Processing -->
+                    <div id="step-processing" class="wizard-step">
+                        <div style="text-align: center; padding: 20px 0;">
+                            <h3 style="margin-bottom: 8px; font-size: 18px;">กำลังประมวลผลข้อมูล...</h3>
+                            <div class="progress-container" style="max-width: 400px; margin: 32px auto;">
+                                <div class="progress-bar-bg">
+                                    <div id="importProgressBar" class="progress-bar-fill"></div>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; font-size: 13px; margin-top: 8px; color: var(--neutral-600);">
+                                    <span>data_export_v2.xlsx</span>
+                                    <span id="importProgressPercent">0%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card" style="margin-bottom: 0;">
+                    <div class="card-header">
+                        <h2 class="card-title">สรุปการตรวจสอบ</h2>
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px;">
+                        <div style="padding: 12px; border-radius: 8px; background: var(--neutral-100); text-align: center;">
+                            <div style="font-size: 11px; color: var(--neutral-600);">ทั้งหมด</div>
+                            <div style="font-size: 18px; font-weight: 700;">50</div>
+                        </div>
+                        <div style="padding: 12px; border-radius: 8px; background: #E6F9F0; text-align: center;">
+                            <div style="font-size: 11px; color: var(--neutral-600);">ถูกต้อง</div>
+                            <div style="font-size: 18px; font-weight: 700; color: var(--success);">42</div>
+                        </div>
+                        <div style="padding: 12px; border-radius: 8px; background: #FFF5F5; text-align: center;">
+                            <div style="font-size: 11px; color: var(--neutral-600);">ต้องแก้ไข</div>
+                            <div style="font-size: 18px; font-weight: 700; color: var(--error);">8</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mapping Step (Hidden initially) -->
+            <div id="step-mapping" class="card" style="margin-top: 32px; display: none;">
+                <div class="card-header">
+                    <h2 class="card-title">ขั้นตอนที่ 2: ตรวจสอบข้อมูล (Preview & Conflict)</h2>
+                    <div style="display: flex; gap: 12px;">
+                        <button class="btn btn-secondary" onclick="resetImport()">ยกเลิก</button>
+                        <button class="btn btn-primary" onclick="confirmImport()">ยืนยันนำเข้าทั้งหมด</button>
+                    </div>
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>รหัสประจำตัวประชาชน</th>
+                            <th>ชื่อ-นามสกุล</th>
+                            <th>รหัสใบรับรอง</th>
+                            <th>สถานะในระบบ</th>
+                            <th>การจัดการ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>1-1002-XXXXX-XX-X</td>
+                            <td style="font-weight: 500;">น.ส. กัญญาวีร์ สีใส</td>
+                            <td style="font-weight: 600; color: var(--primary-600);">CERT-2026-001</td>
+                            <td><span class="badge bg-matched">Matched</span></td>
+                            <td><button class="btn btn-ghost btn-sm">แก้ไข</button></td>
+                        </tr>
+                        <tr style="background: #FFFBFB;">
+                            <td>12</td>
+                            <td style="color: var(--error);">12345 (Invalid)</td>
+                            <td style="font-weight: 500;">นาย สมเกียรติ พากเพียร</td>
+                            <td>CERT-2026-012</td>
+                            <td><span class="badge bg-error">ID Format Error</span></td>
+                            <td><button class="btn btn-primary btn-sm">แก้ไขทันที</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- PAGE: CERTIFICATE MANAGEMENT -->
+        <div id="page-certificates" class="page-content">
+            <div class="filter-bar" style="display: flex; gap: 16px; margin-bottom: 24px;">
+                <input type="text" class="form-control" style="flex:1" placeholder="ค้นหาด้วยชื่อ, รหัส ปชช., หรือเลขที่ใบรับรอง...">
+                <select class="form-control" style="width: 200px;">
+                    <option>เลือกหลักสูตร</option>
+                </select>
+                <button class="btn btn-primary">ค้นหา</button>
+            </div>
+
+            <!-- Bulk Actions Bar -->
+            <div class="bulk-actions" id="certBulkActions">
+                <div style="display: flex; align-items: center; gap: 16px;">
+                    <div style="font-size: 14px; font-weight: 600;">เลือกแล้ว <span id="selectedCertCount">0</span> รายการ</div>
+                    <div style="height: 20px; width: 1px; background: rgba(255,255,255,0.3);"></div>
+                    <button class="btn btn-sm" style="background: rgba(255,255,255,0.2); color: white;"><i>🔄</i> ต่ออายุพร้อมกัน</button>
+                    <button class="btn btn-sm" style="background: rgba(255,255,255,0.2); color: white;"><i>🚫</i> เพิกถอนพร้อมกัน</button>
+                </div>
+                <button class="btn btn-sm" style="background: white; color: var(--primary-600);"><i>🖨️</i> พิมพ์ใบรับรองดิจิทัล</button>
+            </div>
+
+            <div class="card">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 40px;"><input type="checkbox" id="selectAllCerts" onchange="toggleSelectAllCerts()"></th>
+                            <th>ชื่อ-นามสกุล</th>
+                            <th>เลขที่ใบรับรอง</th>
+                            <th>หลักสูตร / รุ่น</th>
+                            <th>สถานะ</th>
+                            <th style="text-align: right;">การจัดการ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="certTableBody">
+                        <tr>
+                            <td><input type="checkbox" class="cert-checkbox" onchange="updateCertBulkUI()"></td>
+                            <td>
+                                <div style="font-weight: 600;">น.ส. กัญญาวีร์ สีใส</div>
+                                <div style="font-size: 12px; color: var(--neutral-600);">ID: 1-1002-XXXXX-XX-X</div>
+                            </td>
+                            <td style="font-family: monospace; font-weight: 700; color: var(--primary-600);">CERT-2026-001</td>
+                            <td>ผู้ดูแลผู้สูงอายุ (รุ่น 24)</td>
+                            <td><span class="badge bg-success">Verified</span></td>
+                            <td style="text-align: right;">
+                                <button class="btn btn-ghost btn-sm" onclick="openRevokeModal('น.ส. กัญญาวีร์ สีใส')">เพิกถอน</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" class="cert-checkbox" onchange="updateCertBulkUI()"></td>
+                            <td>
+                                <div style="font-weight: 600;">นาย ธนพล รักงาน</div>
+                                <div style="font-size: 12px; color: var(--neutral-600);">ID: 3-4501-XXXXX-XX-X</div>
+                            </td>
+                            <td style="font-family: monospace; font-weight: 700; color: var(--primary-600);">CERT-2026-002</td>
+                            <td>ปฐมพยาบาล (รุ่น 12)</td>
+                            <td><span class="badge bg-unmatched" style="background:#FFF3E6; color:var(--warning);">Expiring Soon</span></td>
+                            <td style="text-align: right;">
+                                <button class="btn btn-ghost btn-sm">ต่ออายุ</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- PAGE: MARKET INTELLIGENCE -->
+        <div id="page-market" class="page-content">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">ความต้องการแรงงาน</div>
+                    <div class="stat-value">4,500 งาน/เดือน</div>
+                    <div style="font-size: 12px; color: var(--success); font-weight: 600;">↑ 12% จากไตรมาสก่อน</div>
+                </div>
+                <div class="stat-card" style="border-bottom-color: var(--error);">
+                    <div class="stat-label">ทักษะที่ขาดแคลนวิกฤต</div>
+                    <div class="stat-value">ดูแลผู้ป่วยติดเตียง</div>
+                    <div style="font-size: 12px; color: var(--error); font-weight: 600;">Gap: ขาด 250 คน/เดือน</div>
+                </div>
+                <div class="stat-card" style="border-bottom-color: var(--info);">
+                    <div class="stat-label">คำค้นหาพุ่งแรง</div>
+                    <div class="stat-value">ประคับประคอง</div>
+                    <div style="font-size: 12px; color: var(--info); font-weight: 600;">↑ 45% (Hot Trend)</div>
+                </div>
+                <div class="stat-card" style="border-bottom-color: var(--success);">
+                    <div class="stat-label">Success Rate</div>
+                    <div class="stat-value">85%</div>
+                    <div style="font-size: 12px; color: var(--success); font-weight: 600;">↑ สูงกว่ามาตรฐาน</div>
+                </div>
+            </div>
+
+            <div class="grid-layout">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">แผนที่ความร้อนพื้นที่ขาดแคลน (Heatmap)</h2>
+                    </div>
+                    <div style="height: 300px; background: #DCECF7; border-radius: 12px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;">
+                        <div style="position: absolute; width: 100%; height: 100%; background: radial-gradient(circle at 45% 35%, rgba(234, 84, 85, 0.4) 0%, transparent 25%), radial-gradient(circle at 60% 60%, rgba(234, 84, 85, 0.5) 0%, transparent 30%);"></div>
+                        <span style="font-weight: 700; color: #4A5568; z-index: 1;">Macro View: กรุงเทพและปริมณฑล</span>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">คำค้นหาที่ "ไม่พบผู้ดูแล" (Unmet Demand)</h2>
+                    </div>
+                    <div style="padding: 12px; background: var(--neutral-100); border-radius: 10px; margin-bottom: 10px; border-left: 4px solid var(--secondary-500);">
+                        <div style="font-weight: 600;">ดูแลผู้ป่วยพักฟื้นหลังผ่าตัดเปลี่ยนข้อเข่า</div>
+                        <div style="font-size: 12px; color: var(--neutral-600);">ค้นหา 320 ครั้ง/เดือน | พบ 0 คน</div>
+                    </div>
+                    <div style="padding: 12px; background: var(--neutral-100); border-radius: 10px; border-left: 4px solid var(--info);">
+                        <div style="font-weight: 600;">ผู้ช่วยพยาบาลที่พูดภาษาญี่ปุ่นได้</div>
+                        <div style="font-size: 12px; color: var(--neutral-600);">ค้นหา 150 ครั้ง/เดือน | พบ 2 คน (ไม่ว่าง)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE: VERIFICATION -->
+        <div id="page-verification" class="page-content">
+            <div class="stats-grid">
+                <div class="stat-card" style="border-bottom-color: var(--warning);">
+                    <div class="stat-label">รอตรวจสอบ</div>
+                    <div class="stat-value">12 รายการ</div>
+                </div>
+                <div class="stat-card" style="border-bottom-color: var(--success);">
+                    <div class="stat-label">ยืนยันแล้ววันนี้</div>
+                    <div class="stat-value">45 รายการ</div>
+                </div>
+                <div class="stat-card" style="border-bottom-color: var(--error);">
+                    <div class="stat-label">ปฏิเสธแล้ว</div>
+                    <div class="stat-value">3 รายการ</div>
+                </div>
+                <div class="stat-card" style="border-bottom-color: var(--info);">
+                    <div class="stat-label">Trust Score</div>
+                    <div class="stat-value">9.8 / 10</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">รายการรอการยืนยัน (Verification Queue)</h2>
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ผู้สมัคร (Caregiver)</th>
+                            <th>หลักสูตรที่อ้างอิง</th>
+                            <th>Certificate ID</th>
+                            <th>ไฟล์หลักฐาน</th>
+                            <th>ดำเนินการ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <div style="width: 36px; height: 36px; border-radius: 50%; background: var(--primary-100); display: flex; align-items: center; justify-content: center; color: var(--primary-600); font-weight: 700;">SJ</div>
+                                    <div>
+                                        <div style="font-weight: 700;">น.ส. สมใจ ใใฝ่เรียน</div>
+                                        <div style="font-size: 11px; color: var(--neutral-600);">ID: 1-1234-5XXX-XX</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>การดูแลผู้สูงอายุ (420 ชม.)</td>
+                            <td style="font-family: monospace;">CERT-2025-998</td>
+                            <td><span style="color: var(--primary-600); text-decoration: underline; cursor: pointer;">view_cert.jpg</span></td>
+                            <td>
+                                <div style="display: flex; gap: 8px;">
+                                    <button class="btn btn-primary btn-sm" onclick="alert('Confirmed!')">Confirm</button>
+                                    <button class="btn btn-outline-danger btn-sm" onclick="openRejectModal('น.ส. สมใจ ใใฝ่เรียน')">Reject</button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <footer style="font-size: 11px; text-align: center; color: var(--neutral-600); padding: 24px; border-top: 1px solid var(--neutral-100); margin-top: 20px;">
+            © 2026 CareDee Academy System | บันทึกข้อมูลด้วยเทคโนโลยี Ledger ป้องกันการแก้ไขย้อนหลัง
+        </footer>
+    </main>
+
+    <!-- Modals -->
+    <!-- Revoke Modal -->
+    <div class="modal-overlay" id="revokeModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 style="font-size: 18px; font-weight: 700; color: var(--error);">ยืนยันการเพิกถอนใบรับรอง</h3>
+                <span style="cursor: pointer;" onclick="closeModal('revokeModal')">✕</span>
+            </div>
+            <p style="font-size: 14px; margin-bottom: 20px;">คุณกำลังจะเพิกถอนใบรับรองของ <strong id="revokeTargetName">...</strong></p>
+            <div class="form-group">
+                <label class="form-label">ระบุเหตุผลในการเพิกถอน</label>
+                <textarea class="form-control" style="height: 100px; resize: none;" placeholder="ระบุเหตุผล..."></textarea>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('revokeModal')">ยกเลิก</button>
+                <button class="btn btn-primary" style="background: var(--error);" onclick="confirmRevoke()">ยืนยันเพิกถอน</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reject Modal -->
+    <div class="modal-overlay" id="rejectModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 style="font-size: 18px; font-weight: 700; color: var(--error);">ระบุเหตุผลการปฏิเสธ</h3>
+                <span style="cursor: pointer;" onclick="closeModal('rejectModal')">✕</span>
+            </div>
+            <p style="font-size: 13px; color: var(--neutral-600); margin-bottom: 16px;">ข้อมูลนี้จะถูกส่งกลับไปยังผู้สมัครและ Operator</p>
+            <div class="form-group">
+                <label style="display: block; margin-bottom: 8px;"><input type="radio" name="rejectReason" value="fake"> เอกสารปลอม / มีร่องรอยการแก้ไข</label>
+                <label style="display: block; margin-bottom: 8px;"><input type="radio" name="rejectReason" value="mismatch"> ข้อมูลไม่ตรงกับฐานข้อมูล</label>
+                <label style="display: block; margin-bottom: 8px;"><input type="radio" name="rejectReason" value="lowqual"> ไฟล์ภาพไม่ชัดเจน / อ่านไม่ออก</label>
+                <label style="display: block; margin-bottom: 8px;"><input type="radio" name="rejectReason" value="other"> อื่นๆ</label>
+                <textarea class="form-control" style="height: 80px; resize: none; margin-top: 10px;" placeholder="รายละเอียดเพิ่มเติม..."></textarea>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('rejectModal')">ยกเลิก</button>
+                <button class="btn btn-primary" style="background: var(--error);" onclick="confirmReject()">ยืนยันการปฏิเสธ</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Navigation ---
+        function switchPage(pageId, element) {
+            // Update Sidebar
+            document.querySelectorAll('.menu-link').forEach(link => link.classList.remove('active'));
+            element.classList.add('active');
+
+            // Hide all pages
+            document.querySelectorAll('.page-content').forEach(page => page.classList.remove('active'));
+            
+            // Show target page
+            const target = document.getElementById('page-' + pageId);
+            target.classList.add('active');
+
+            // Update Header Title based on page
+            const titles = {
+                'dashboard': 'สถาบันการพยาบาลไทย (Bangkok Branch)',
+                'import': 'นำเข้าข้อมูลการอบรม (Bulk Import)',
+                'certificates': 'จัดการใบรับรอง (Certificate Management)',
+                'market': 'สถิติตลาดแรงงาน (Market Intelligence)',
+                'verification': 'มาตรฐานการตรวจสอบ (Verification)'
+            };
+            document.getElementById('headerTitle').innerText = titles[pageId];
+        }
+
+        function logout() {
+            if(confirm('คุณต้องการออกจากระบบใช่หรือไม่?')) {
+                alert('ออกจากระบบเรียบร้อย');
+                // In a real SPA, this would redirect or clear state.
+                // For mockup, we just go back to dashboard.
+                switchPage('dashboard', document.querySelector('.menu-link'));
+            }
+        }
+
+        // --- Import Wizard Logic ---
+        function startImportProcess() {
+            document.getElementById('step-upload').classList.remove('active');
+            document.getElementById('step-processing').classList.add('active');
+            
+            let progress = 0;
+            const bar = document.getElementById('importProgressBar');
+            const text = document.getElementById('importProgressPercent');
+            
+            const interval = setInterval(() => {
+                progress += Math.random() * 20;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        document.getElementById('step-processing').classList.remove('active');
+                        document.getElementById('step-mapping').style.display = 'block';
+                    }, 500);
+                }
+                bar.style.width = progress + '%';
+                text.innerText = Math.round(progress) + '%';
+            }, 300);
+        }
+
+        function resetImport() {
+            document.getElementById('step-mapping').style.display = 'none';
+            document.getElementById('step-processing').classList.remove('active');
+            document.getElementById('step-upload').classList.add('active');
+            document.getElementById('importProgressBar').style.width = '0%';
+            document.getElementById('importProgressPercent').innerText = '0%';
+        }
+
+        function confirmImport() {
+            alert('นำเข้าข้อมูลสำเร็จ! เชื่อมโยงบัญชีแล้ว 42 รายการ');
+            resetImport();
+            switchPage('dashboard', document.querySelector('.menu-link'));
+        }
+
+        // --- Certificate Management Logic ---
+        function toggleSelectAllCerts() {
+            const master = document.getElementById('selectAllCerts');
+            const checks = document.querySelectorAll('.cert-checkbox');
+            checks.forEach(c => c.checked = master.checked);
+            updateCertBulkUI();
+        }
+
+        function updateCertBulkUI() {
+            const checked = document.querySelectorAll('.cert-checkbox:checked');
+            const bar = document.getElementById('certBulkActions');
+            const countSpan = document.getElementById('selectedCertCount');
+            
+            if (checked.length > 0) {
+                bar.style.display = 'flex';
+                countSpan.innerText = checked.length;
+            } else {
+                bar.style.display = 'none';
+            }
+        }
+
+        // --- Modals ---
+        function openRevokeModal(name) {
+            document.getElementById('revokeTargetName').innerText = name;
+            document.getElementById('revokeModal').style.display = 'flex';
+        }
+
+        function openRejectModal(name) {
+            document.getElementById('rejectModal').style.display = 'flex';
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).style.display = 'none';
+        }
+
+        function confirmRevoke() {
+            alert('เพิกถอนใบรับรองเรียบร้อยแล้ว');
+            closeModal('revokeModal');
+        }
+
+        function confirmReject() {
+            alert('ปฏิเสธคำร้องขอเรียบร้อยแล้ว');
+            closeModal('rejectModal');
+        }
+    </script>
+</body>
+</html>
