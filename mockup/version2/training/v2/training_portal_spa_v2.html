@@ -135,6 +135,13 @@
         .progress-bar-bg { height: 12px; background: var(--neutral-200); border-radius: 6px; overflow: hidden; }
         .progress-bar-fill { height: 100%; background: var(--primary-600); width: 0%; transition: width 0.3s ease; }
 
+        /* Empty State */
+        .empty-state { text-align: center; padding: 64px 24px; display: none; }
+        .empty-state.active { display: block; animation: fadeIn 0.5s ease-in-out; }
+        .empty-state-icon { font-size: 64px; margin-bottom: 24px; color: var(--neutral-300); }
+        .empty-state-title { font-size: 20px; font-weight: 700; color: var(--neutral-900); margin-bottom: 12px; }
+        .empty-state-desc { font-size: 14px; color: var(--neutral-600); margin-bottom: 32px; max-width: 400px; margin-left: auto; margin-right: auto; }
+
         /* Bulk Actions */
         .bulk-actions { background: var(--primary-600); color: white; padding: 12px 24px; border-radius: 12px; display: none; justify-content: space-between; align-items: center; margin-bottom: 24px; animation: slideDown 0.3s ease-out; }
         @keyframes slideDown { from { transform: translateY(-10px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
@@ -158,6 +165,12 @@
         /* Layout Grids */
         .grid-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-bottom: 32px; }
         .dashboard-grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 32px; }
+
+        /* Tab System */
+        .tab-container { display: flex; gap: 24px; border-bottom: 1px solid var(--neutral-200); margin-bottom: 24px; }
+        .tab-item { padding: 12px 0; font-size: 15px; font-weight: 600; color: var(--neutral-600); cursor: pointer; position: relative; }
+        .tab-item.active { color: var(--primary-600); }
+        .tab-item.active::after { content: ''; position: absolute; bottom: -1px; left: 0; width: 100%; height: 2px; background: var(--primary-600); }
     </style>
 </head>
 <body>
@@ -174,9 +187,12 @@
             <a onclick="switchPage('import', this)" class="menu-link"><i>📥</i> นำเข้าข้อมูลการอบรม</a>
             <a onclick="switchPage('certificates', this)" class="menu-link"><i>🏅</i> จัดการใบรับรอง</a>
             <a onclick="switchPage('market', this)" class="menu-link"><i>📈</i> สถิติตลาดแรงงาน</a>
-            <a onclick="switchPage('verification', this)" class="menu-link"><i>🛡️</i> มาตรฐานการตรวจสอบ <span class="nav-badge">12</span></a>
+            <a onclick="switchPage('verification', this)" class="menu-link"><i>🛡️</i> การตรวจสอบ & เกณฑ์ <span class="nav-badge">12</span></a>
+            <a onclick="switchPage('profile', this)" class="menu-link"><i>🏢</i> โปรไฟล์สถาบัน & KYC</a>
+            <a onclick="switchPage('gap', this)" class="menu-link" style="color: var(--secondary-500);"><i>⚠️</i> Gap Analysis</a>
         </nav>
         <div style="padding: 24px; border-top: 1px solid var(--neutral-100);">
+            <button onclick="toggleEmptyState()" class="btn btn-secondary btn-sm" style="width: 100%; margin-bottom: 12px;">Toggle Empty State (Demo)</button>
             <a onclick="logout()" class="menu-link" style="color: var(--error); padding: 0;"><i>🚪</i> ออกจากระบบ</a>
         </div>
     </aside>
@@ -194,111 +210,139 @@
             </div>
         </header>
 
+        <!-- EMPTY STATE VIEW (Common) -->
+        <div id="common-empty-state" class="empty-state">
+            <div class="empty-state-icon">📂</div>
+            <h3 class="empty-state-title">ยังไม่มีข้อมูลในระบบ</h3>
+            <p class="empty-state-desc">เริ่มต้นใช้งานโดยการนำเข้าข้อมูลรายชื่อผู้ผ่านการอบรม หรืออัปโหลดเอกสารยืนยันสถาบันเพื่อเปิดใช้งานฟีเจอร์ทั้งหมด</p>
+            <div style="display: flex; gap: 12px; justify-content: center;">
+                <button class="btn btn-primary" onclick="switchPage('import', document.querySelector('[onclick*=\'import\']'))">นำเข้าข้อมูลครั้งแรก</button>
+                <button class="btn btn-ghost" onclick="switchPage('profile', document.querySelector('[onclick*=\'profile\']'))">ตั้งค่าโปรไฟล์สถาบัน</button>
+            </div>
+        </div>
+
         <!-- PAGE: DASHBOARD -->
         <div id="page-dashboard" class="page-content active">
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-label">ผู้อบรมทั้งหมด</div>
-                    <div class="stat-value">1,240 คน</div>
-                </div>
-                <div class="stat-card" style="border-bottom-color: var(--info);">
-                    <div class="stat-label">เชื่อมโยงบัญชีแล้ว</div>
-                    <div class="stat-value">850 คน</div>
-                </div>
-                <div class="stat-card" style="border-bottom-color: var(--secondary-500);">
-                    <div class="stat-label">รอสมัครสมาชิก (Pending)</div>
-                    <div class="stat-value">390 คน</div>
-                </div>
-                <div class="stat-card" style="border-bottom-color: var(--success);">
-                    <div class="stat-label">ดัชนีความต้องการ</div>
-                    <div class="stat-value" style="color: var(--success);">↑ 15%</div>
-                </div>
-            </div>
-
-            <div class="dashboard-grid">
-                <div class="col-left">
-                    <div class="card">
-                        <div class="card-header">
-                            <h2 class="card-title">ความสอดคล้องของหลักสูตร (Course-Demand Fit)</h2>
-                        </div>
-                        <table class="data-table">
-                            <thead>
-                                <tr>
-                                    <th>ชื่อหลักสูตร</th>
-                                    <th>Market Demand</th>
-                                    <th>สถานะ</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><b>การดูแลผู้สูงอายุเบื้องต้น (420 ชม.)</b></td>
-                                    <td><div class="skill-bar-container" style="margin:0; width: 100px;"><div class="skill-bar" style="width: 90%;"></div></div></td>
-                                    <td><span class="badge bg-success">Match (High)</span></td>
-                                </tr>
-                                <tr>
-                                    <td><b>ดูแลผู้ป่วยติดเตียง Specialty</b></td>
-                                    <td><div class="skill-bar-container" style="margin:0; width: 100px;"><div class="skill-bar" style="width: 95%; background: var(--error);"></div></div></td>
-                                    <td><span class="badge bg-error">Under Supply</span></td>
-                                </tr>
-                            </tbody>
-                        </table>
+            <div id="dashboard-real-content">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">ผู้อบรมทั้งหมด</div>
+                        <div class="stat-value">1,240 คน</div>
                     </div>
-
-                    <div class="card">
-                        <div class="card-header">
-                            <h2 class="card-title">การเชื่อมโยงใบรับรองล่าสุด</h2>
-                        </div>
-                        <table class="data-table">
-                            <thead>
-                                <tr>
-                                    <th>ชื่อ-นามสกุล</th>
-                                    <th>รหัสใบรับรอง</th>
-                                    <th>สถานะ</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td style="font-weight: 500;">น.ส. กัญญาวีร์ สีใส</td>
-                                    <td style="font-weight: 600; color: var(--primary-600);">CERT-2026-001</td>
-                                    <td><span class="badge bg-matched">Matched</span></td>
-                                </tr>
-                                <tr>
-                                    <td style="font-weight: 500;">นาย ธนพล รักงาน</td>
-                                    <td style="font-weight: 600; color: var(--primary-600);">CERT-2026-002</td>
-                                    <td><span class="badge bg-pending">รอสมัครสมาชิก</span></td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div class="stat-card" style="border-bottom-color: var(--info);">
+                        <div class="stat-label">เชื่อมโยงบัญชีแล้ว</div>
+                        <div class="stat-value">850 คน</div>
+                    </div>
+                    <div class="stat-card" style="border-bottom-color: var(--secondary-500);">
+                        <div class="stat-label">รอสมัครสมาชิก (Pending)</div>
+                        <div class="stat-value">390 คน</div>
+                    </div>
+                    <div class="stat-card" style="border-bottom-color: var(--success);">
+                        <div class="stat-label">ดัชนีความต้องการ</div>
+                        <div class="stat-value" style="color: var(--success);">↑ 15%</div>
                     </div>
                 </div>
-                <div class="col-right">
-                    <!-- Expiry Alert Widget (Added Gap) -->
-                    <div class="card" style="border-left-color: var(--warning);">
-                        <div class="card-header">
-                            <h2 class="card-title">⚠️ ใกล้หมดอายุ (ใน 30 วัน)</h2>
-                        </div>
-                        <div style="padding: 10px; background: var(--secondary-100); border-radius: 12px; margin-bottom: 12px;">
-                            <p style="font-size: 13px; font-weight: 700; color: var(--secondary-500);">3 รายการต้องการการต่ออายุ</p>
-                            <p style="font-size: 11px; color: var(--neutral-600);">ส่งแจ้งเตือนให้ผู้อบรมเตรียมตัวสอบใหม่</p>
-                        </div>
-                        <button class="btn btn-ghost btn-sm" style="width: 100%;" onclick="switchPage('certificates', document.querySelector('[onclick*=\'certificates\']'))">ดูรายการทั้งหมด</button>
-                    </div>
 
-                    <div class="card">
-                        <div class="card-header">
-                            <h2 class="card-title">ทักษะที่ตลาดต้องการ</h2>
+                <div class="dashboard-grid">
+                    <div class="col-left">
+                        <div class="card">
+                            <div class="card-header">
+                                <h2 class="card-title">ความสอดคล้องของหลักสูตร (Course-Demand Fit)</h2>
+                            </div>
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>ชื่อหลักสูตร</th>
+                                        <th>Market Demand</th>
+                                        <th>สถานะ</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><b>การดูแลผู้สูงอายุเบื้องต้น (420 ชม.)</b></td>
+                                        <td><div class="skill-bar-container" style="margin:0; width: 100px;"><div class="skill-bar" style="width: 90%;"></div></div></td>
+                                        <td><span class="badge bg-success">Match (High)</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>ดูแลผู้ป่วยติดเตียง Specialty</b></td>
+                                        <td><div class="skill-bar-container" style="margin:0; width: 100px;"><div class="skill-bar" style="width: 95%; background: var(--error);"></div></div></td>
+                                        <td><span class="badge bg-error">Under Supply</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
-                        <div class="skill-item">
-                            <div style="width: 140px; font-size: 13px; font-weight: 500;">ดูแลผู้ป่วยติดเตียง</div>
-                            <div class="skill-bar-container"><div class="skill-bar" style="width: 85%;"></div></div>
-                            <div style="font-size: 13px; font-weight: 700; color: var(--primary-600);">85%</div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h2 class="card-title">การเชื่อมโยงใบรับรองล่าสุด</h2>
+                            </div>
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>ชื่อ-นามสกุล</th>
+                                        <th>รหัสใบรับรอง</th>
+                                        <th>สถานะ</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td style="font-weight: 500;">น.ส. กัญญาวีร์ สีใส</td>
+                                        <td style="font-weight: 600; color: var(--primary-600);">CERT-2026-001</td>
+                                        <td><span class="badge bg-matched">Matched</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-weight: 500;">นาย ธนพล รักงาน</td>
+                                        <td style="font-weight: 600; color: var(--primary-600);">CERT-2026-002</td>
+                                        <td><span class="badge bg-pending">รอสมัครสมาชิก</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
-                        <div class="skill-item">
-                            <div style="width: 140px; font-size: 13px; font-weight: 500;">กายภาพบำบัดเบื้องต้น</div>
-                            <div class="skill-bar-container"><div class="skill-bar" style="width: 60%;"></div></div>
-                            <div style="font-size: 13px; font-weight: 700; color: var(--primary-600);">60%</div>
+                    </div>
+                    <div class="col-right">
+                        <!-- Institute Status Widget -->
+                        <div class="card" style="border-left: 4px solid var(--success);">
+                            <div class="card-header">
+                                <h2 class="card-title">สถานะสถาบัน</h2>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+                                <div style="font-size: 24px;">✅</div>
+                                <div>
+                                    <p style="font-weight: 700; color: var(--success);">Verified Institute</p>
+                                    <p style="font-size: 11px; color: var(--neutral-600);">KYC ล่าสุด: 10/01/2026</p>
+                                </div>
+                            </div>
+                            <button class="btn btn-ghost btn-sm" style="width: 100%;" onclick="switchPage('profile', document.querySelector('[onclick*=\'profile\']'))">จัดการเอกสารสถาบัน</button>
                         </div>
-                        <p style="font-size: 11px; color: var(--neutral-600); margin-top: 20px;">* คำนวณจากสถิติการจองจริงในระบบ CareDee</p>
+
+                        <!-- Expiry Alert Widget -->
+                        <div class="card" style="border-left: 4px solid var(--warning);">
+                            <div class="card-header">
+                                <h2 class="card-title">⚠️ ใกล้หมดอายุ (ใน 30 วัน)</h2>
+                            </div>
+                            <div style="padding: 10px; background: var(--secondary-100); border-radius: 12px; margin-bottom: 12px;">
+                                <p style="font-size: 13px; font-weight: 700; color: var(--secondary-500);">3 รายการต้องการการต่ออายุ</p>
+                                <p style="font-size: 11px; color: var(--neutral-600);">ส่งแจ้งเตือนให้ผู้อบรมเตรียมตัวสอบใหม่</p>
+                            </div>
+                            <button class="btn btn-ghost btn-sm" style="width: 100%;" onclick="switchPage('certificates', document.querySelector('[onclick*=\'certificates\']'))">ดูรายการทั้งหมด</button>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h2 class="card-title">ทักษะที่ตลาดต้องการ</h2>
+                            </div>
+                            <div class="skill-item">
+                                <div style="width: 140px; font-size: 13px; font-weight: 500;">ดูแลผู้ป่วยติดเตียง</div>
+                                <div class="skill-bar-container"><div class="skill-bar" style="width: 85%;"></div></div>
+                                <div style="font-size: 13px; font-weight: 700; color: var(--primary-600);">85%</div>
+                            </div>
+                            <div class="skill-item">
+                                <div style="width: 140px; font-size: 13px; font-weight: 500;">กายภาพบำบัดเบื้องต้น</div>
+                                <div class="skill-bar-container"><div class="skill-bar" style="width: 60%;"></div></div>
+                                <div style="font-size: 13px; font-weight: 700; color: var(--primary-600);">60%</div>
+                            </div>
+                            <p style="font-size: 11px; color: var(--neutral-600); margin-top: 20px;">* คำนวณจากสถิติการจองจริงในระบบ CareDee</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -352,13 +396,17 @@
                             <div style="font-size: 18px; font-weight: 700; color: var(--error);">8</div>
                         </div>
                     </div>
+                    <p style="font-size: 11px; color: var(--neutral-600);">* พบ 2 รายชื่อที่ยังไม่มีบัญชี และ 1 รายชื่อที่ข้อมูลไม่สมบูรณ์</p>
                 </div>
             </div>
 
             <!-- Mapping Step (Hidden initially) -->
             <div id="step-mapping" class="card" style="margin-top: 32px; display: none;">
                 <div class="card-header">
-                    <h2 class="card-title">ขั้นตอนที่ 2: ตรวจสอบข้อมูล (Preview & Conflict)</h2>
+                    <div>
+                        <h2 class="card-title">ขั้นตอนที่ 2: ตรวจสอบข้อมูล (Preview & Conflict Resolution)</h2>
+                        <p class="card-subtitle">แก้ไขข้อมูลรายบรรทัด หรือจับคู่บัญชีด้วยตนเองก่อนบันทึก</p>
+                    </div>
                     <div style="display: flex; gap: 12px;">
                         <button class="btn btn-secondary" onclick="resetImport()">ยกเลิก</button>
                         <button class="btn btn-primary" onclick="confirmImport()">ยืนยันนำเข้าทั้งหมด</button>
@@ -378,19 +426,32 @@
                     <tbody>
                         <tr>
                             <td>1</td>
-                            <td>1-1002-XXXXX-XX-X</td>
+                            <td style="font-family: monospace;">1-1002-XXXXX-XX-X</td>
                             <td style="font-weight: 500;">น.ส. กัญญาวีร์ สีใส</td>
                             <td style="font-weight: 600; color: var(--primary-600);">CERT-2026-001</td>
                             <td><span class="badge bg-matched">Matched</span></td>
-                            <td><button class="btn btn-ghost btn-sm">แก้ไข</button></td>
+                            <td><button class="btn btn-ghost btn-sm" onclick="openEditRowModal('น.ส. กัญญาวีร์ สีใส', '1-1002-XXXXX-XX-X')">แก้ไข</button></td>
                         </tr>
                         <tr style="background: #FFFBFB;">
                             <td>12</td>
-                            <td style="color: var(--error);">12345 (Invalid)</td>
+                            <td style="color: var(--error); font-family: monospace;">12345 (Invalid)</td>
                             <td style="font-weight: 500;">นาย สมเกียรติ พากเพียร</td>
                             <td>CERT-2026-012</td>
                             <td><span class="badge bg-error">ID Format Error</span></td>
-                            <td><button class="btn btn-primary btn-sm">แก้ไขทันที</button></td>
+                            <td><button class="btn btn-primary btn-sm" onclick="openEditRowModal('นาย สมเกียรติ พากเพียร', '12345')">แก้ไขทันที (Inline)</button></td>
+                        </tr>
+                        <tr>
+                            <td>25</td>
+                            <td style="font-family: monospace;">3-6602-XXXXX-XX-X</td>
+                            <td style="font-weight: 500;">นาย สมชาย สายลม</td>
+                            <td>CERT-2026-025</td>
+                            <td><span class="badge bg-unmatched">Not Found</span></td>
+                            <td>
+                                <div style="display: flex; gap: 4px;">
+                                    <button class="btn btn-primary btn-sm" style="background: var(--secondary-500);" onclick="sendInvite('นาย สมชาย สายลม')">ส่งคำเชิญ (Invite)</button>
+                                    <button class="btn btn-ghost btn-sm" onclick="openManualMatchModal('นาย สมชาย สายลม')">Manual Match</button>
+                                </div>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -403,6 +464,8 @@
                 <input type="text" class="form-control" style="flex:1" placeholder="ค้นหาด้วยชื่อ, รหัส ปชช., หรือเลขที่ใบรับรอง...">
                 <select class="form-control" style="width: 200px;">
                     <option>เลือกหลักสูตร</option>
+                    <option>ดูแลผู้สูงอายุเบื้องต้น</option>
+                    <option>การปฐมพยาบาลพื้นฐาน</option>
                 </select>
                 <button class="btn btn-primary">ค้นหา</button>
             </div>
@@ -424,8 +487,8 @@
                         <tr>
                             <th style="width: 40px;"><input type="checkbox" id="selectAllCerts" onchange="toggleSelectAllCerts()"></th>
                             <th>ชื่อ-นามสกุล</th>
+                            <th>การเชื่อมโยง</th>
                             <th>เลขที่ใบรับรอง</th>
-                            <th>หลักสูตร / รุ่น</th>
                             <th>สถานะ</th>
                             <th style="text-align: right;">การจัดการ</th>
                         </tr>
@@ -437,8 +500,8 @@
                                 <div style="font-weight: 600;">น.ส. กัญญาวีร์ สีใส</div>
                                 <div style="font-size: 12px; color: var(--neutral-600);">ID: 1-1002-XXXXX-XX-X</div>
                             </td>
+                            <td><span style="color: var(--success); font-size: 12px; font-weight: 600;"><i>🔗</i> Matched</span></td>
                             <td style="font-family: monospace; font-weight: 700; color: var(--primary-600);">CERT-2026-001</td>
-                            <td>ผู้ดูแลผู้สูงอายุ (รุ่น 24)</td>
                             <td><span class="badge bg-success">Verified</span></td>
                             <td style="text-align: right;">
                                 <button class="btn btn-ghost btn-sm" onclick="openRevokeModal('น.ส. กัญญาวีร์ สีใส')">เพิกถอน</button>
@@ -450,8 +513,8 @@
                                 <div style="font-weight: 600;">นาย ธนพล รักงาน</div>
                                 <div style="font-size: 12px; color: var(--neutral-600);">ID: 3-4501-XXXXX-XX-X</div>
                             </td>
+                            <td><span style="color: var(--neutral-300); font-size: 12px;"><i>❓</i> Unmatched</span></td>
                             <td style="font-family: monospace; font-weight: 700; color: var(--primary-600);">CERT-2026-002</td>
-                            <td>ปฐมพยาบาล (รุ่น 12)</td>
                             <td><span class="badge bg-unmatched" style="background:#FFF3E6; color:var(--warning);">Expiring Soon</span></td>
                             <td style="text-align: right;">
                                 <button class="btn btn-ghost btn-sm">ต่ออายุ</button>
@@ -464,6 +527,15 @@
 
         <!-- PAGE: MARKET INTELLIGENCE -->
         <div id="page-market" class="page-content">
+            <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 24px;">
+                <div>
+                    <p style="font-size: 12px; color: var(--neutral-600);">* ข้อมูลแบบรวม (Aggregated Data) เพื่อการวิเคราะห์ตลาด</p>
+                </div>
+                <div style="background: var(--neutral-100); padding: 4px 12px; border-radius: 20px; font-size: 11px; border: 1px solid var(--neutral-300);">
+                    🔄 อัปเดตล่าสุด: 14 พ.ค. 2569 | 08:00 (อัปเดตทุก 24 ชม.)
+                </div>
+            </div>
+            
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-label">ความต้องการแรงงาน</div>
@@ -504,10 +576,12 @@
                     <div style="padding: 12px; background: var(--neutral-100); border-radius: 10px; margin-bottom: 10px; border-left: 4px solid var(--secondary-500);">
                         <div style="font-weight: 600;">ดูแลผู้ป่วยพักฟื้นหลังผ่าตัดเปลี่ยนข้อเข่า</div>
                         <div style="font-size: 12px; color: var(--neutral-600);">ค้นหา 320 ครั้ง/เดือน | พบ 0 คน</div>
+                        <a href="#" style="font-size: 11px; color: var(--primary-600);">ดูแนวทางหลักสูตร →</a>
                     </div>
                     <div style="padding: 12px; background: var(--neutral-100); border-radius: 10px; border-left: 4px solid var(--info);">
                         <div style="font-weight: 600;">ผู้ช่วยพยาบาลที่พูดภาษาญี่ปุ่นได้</div>
                         <div style="font-size: 12px; color: var(--neutral-600);">ค้นหา 150 ครั้ง/เดือน | พบ 2 คน (ไม่ว่าง)</div>
+                        <a href="#" style="font-size: 11px; color: var(--primary-600);">ดูแนวทางหลักสูตร →</a>
                     </div>
                 </div>
             </div>
@@ -515,71 +589,286 @@
 
         <!-- PAGE: VERIFICATION -->
         <div id="page-verification" class="page-content">
-            <div class="stats-grid">
-                <div class="stat-card" style="border-bottom-color: var(--warning);">
-                    <div class="stat-label">รอตรวจสอบ</div>
-                    <div class="stat-value">12 รายการ</div>
+            <div class="tab-container">
+                <div class="tab-item active" onclick="switchVerificationTab('queue', this)">รายการรอการยืนยัน</div>
+                <div class="tab-item" onclick="switchVerificationTab('standards', this)">เกณฑ์มาตรฐาน & นโยบาย</div>
+                <div class="tab-item" onclick="switchVerificationTab('audit', this)">ประวัติการตรวจสอบ (Audit Log)</div>
+            </div>
+
+            <!-- Tab: Verification Queue -->
+            <div id="ver-tab-queue" class="ver-tab-content active">
+                <div class="stats-grid">
+                    <div class="stat-card" style="border-bottom-color: var(--warning);">
+                        <div class="stat-label">รอตรวจสอบ</div>
+                        <div class="stat-value">12 รายการ</div>
+                    </div>
+                    <div class="stat-card" style="border-bottom-color: var(--success);">
+                        <div class="stat-label">ยืนยันแล้ววันนี้</div>
+                        <div class="stat-value">45 รายการ</div>
+                    </div>
+                    <div class="stat-card" style="border-bottom-color: var(--error);">
+                        <div class="stat-label">ปฏิเสธแล้ว</div>
+                        <div class="stat-value">3 รายการ</div>
+                    </div>
+                    <div class="stat-card" style="border-bottom-color: var(--info);">
+                        <div class="stat-label">Trust Score</div>
+                        <div class="stat-value">9.8 / 10</div>
+                    </div>
                 </div>
-                <div class="stat-card" style="border-bottom-color: var(--success);">
-                    <div class="stat-label">ยืนยันแล้ววันนี้</div>
-                    <div class="stat-value">45 รายการ</div>
-                </div>
-                <div class="stat-card" style="border-bottom-color: var(--error);">
-                    <div class="stat-label">ปฏิเสธแล้ว</div>
-                    <div class="stat-value">3 รายการ</div>
-                </div>
-                <div class="stat-card" style="border-bottom-color: var(--info);">
-                    <div class="stat-label">Trust Score</div>
-                    <div class="stat-value">9.8 / 10</div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">รายการรอการยืนยัน (Verification Queue)</h2>
+                        <button class="btn btn-primary btn-sm">✅ Bulk Approve Selected</button>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 40px;"><input type="checkbox"></th>
+                                <th>ผู้สมัคร (Caregiver)</th>
+                                <th>หลักสูตรที่อ้างอิง</th>
+                                <th>Certificate ID</th>
+                                <th>ดำเนินการ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input type="checkbox"></td>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 10px;">
+                                        <div style="width: 36px; height: 36px; border-radius: 50%; background: var(--primary-100); display: flex; align-items: center; justify-content: center; color: var(--primary-600); font-weight: 700;">SJ</div>
+                                        <div>
+                                            <div style="font-weight: 700;">น.ส. สมใจ ใฝ่เรียน</div>
+                                            <div style="font-size: 11px; color: var(--neutral-600);">ID: 1-1234-5XXX-XX</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>การดูแลผู้สูงอายุ (420 ชม.)</td>
+                                <td style="font-family: monospace;">CERT-2025-998</td>
+                                <td>
+                                    <div style="display: flex; gap: 8px;">
+                                        <button class="btn btn-primary btn-sm" onclick="alert('Confirmed!')">Confirm</button>
+                                        <button class="btn btn-outline-danger btn-sm" onclick="openRejectModal('น.ส. สมใจ ใฝ่เรียน')">Reject</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
-            <div class="card">
-                <div class="card-header">
-                    <h2 class="card-title">รายการรอการยืนยัน (Verification Queue)</h2>
+            <!-- Tab: Standards (Gap addressed: Standard Reading) -->
+            <div id="ver-tab-standards" class="ver-tab-content" style="display: none;">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">เกณฑ์มาตรฐานการพิจารณาใบรับรอง (Global Policy)</h2>
+                        <span class="badge bg-pending" style="font-weight: 500;">Role: Read Only</span>
+                    </div>
+                    <div style="color: var(--neutral-600); font-size: 14px;">
+                        <p style="margin-bottom: 16px;">สถาบันสามารถอ่านเกณฑ์มาตรฐานที่ CareDee Admin กำหนดขึ้น เพื่อให้การตรวจสอบเป็นไปในทิศทางเดียวกัน</p>
+                        <div style="background: var(--neutral-100); padding: 20px; border-radius: 12px; margin-bottom: 20px;">
+                            <h4 style="color: var(--neutral-900); margin-bottom: 12px;">✅ ข้อกำหนดพื้นฐาน</h4>
+                            <ul style="margin-left: 20px; line-height: 1.8;">
+                                <li>ต้องมีตราประทับของสถาบันที่ชัดเจน</li>
+                                <li>ชื่อ-นามสกุล และรหัส ปชช. ต้องตรงกับหน้าบัตร</li>
+                                <li>วันที่ออกใบรับรองต้องไม่เกิน 5 ปี (หากหลักสูตรไม่มีวันหมดอายุ)</li>
+                                <li>หลักสูตรต้องได้รับการรับรองจาก สบส. หรือหน่วยงานที่เกี่ยวข้อง</li>
+                            </ul>
+                        </div>
+                        <div style="background: var(--neutral-100); padding: 20px; border-radius: 12px;">
+                            <h4 style="color: var(--neutral-900); margin-bottom: 12px;">🚫 เกณฑ์การปฏิเสธ (Automatic Rejection)</h4>
+                            <ul style="margin-left: 20px; line-height: 1.8;">
+                                <li>พบร่องรอยการแก้ไขข้อมูล (Forgery)</li>
+                                <li>ไฟล์ภาพมืดหรือเบลอจนอ่านข้อความวิกฤตไม่ออก</li>
+                                <li>สถาบันผู้ออกใบรับรองถูกระงับการใช้งานในระบบ</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>ผู้สมัคร (Caregiver)</th>
-                            <th>หลักสูตรที่อ้างอิง</th>
-                            <th>Certificate ID</th>
-                            <th>ไฟล์หลักฐาน</th>
-                            <th>ดำเนินการ</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                <div style="display: flex; align-items: center; gap: 10px;">
-                                    <div style="width: 36px; height: 36px; border-radius: 50%; background: var(--primary-100); display: flex; align-items: center; justify-content: center; color: var(--primary-600); font-weight: 700;">SJ</div>
-                                    <div>
-                                        <div style="font-weight: 700;">น.ส. สมใจ ใใฝ่เรียน</div>
-                                        <div style="font-size: 11px; color: var(--neutral-600);">ID: 1-1234-5XXX-XX</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>การดูแลผู้สูงอายุ (420 ชม.)</td>
-                            <td style="font-family: monospace;">CERT-2025-998</td>
-                            <td><span style="color: var(--primary-600); text-decoration: underline; cursor: pointer;">view_cert.jpg</span></td>
-                            <td>
-                                <div style="display: flex; gap: 8px;">
-                                    <button class="btn btn-primary btn-sm" onclick="alert('Confirmed!')">Confirm</button>
-                                    <button class="btn btn-outline-danger btn-sm" onclick="openRejectModal('น.ส. สมใจ ใใฝ่เรียน')">Reject</button>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+            </div>
+
+            <!-- Tab: Audit Log (Gap addressed: IP, Metadata, PDPA) -->
+            <div id="ver-tab-audit" class="ver-tab-content" style="display: none;">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">ประวัติการตรวจสอบ (Audit Log - PDPA Compliant)</h2>
+                        <button class="btn btn-ghost btn-sm">Export CSV</button>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>วัน-เวลา</th>
+                                <th>เจ้าหน้าที่ / IP</th>
+                                <th>การดำเนินการ (Activity)</th>
+                                <th>Metadata / เหตุผล</th>
+                                <th>สถานะ</th>
+                            </tr>
+                        </thead>
+                        <tbody style="font-size: 13px;">
+                            <tr>
+                                <td>14/05/2026 10:45</td>
+                                <td><b>USER-001</b><br><span style="font-size: 10px; color: var(--neutral-300);">IP: 182.232.1.XX</span></td>
+                                <td>ยืนยันใบรับรอง CERT-2026-881 (น.ส.ใจดี)</td>
+                                <td style="font-size: 11px; color: var(--neutral-600);">Auto-Matched by ID Card</td>
+                                <td><span class="badge bg-success">Approved</span></td>
+                            </tr>
+                            <tr>
+                                <td>14/05/2026 09:30</td>
+                                <td><b>USER-001</b><br><span style="font-size: 10px; color: var(--neutral-300);">IP: 182.232.1.XX</span></td>
+                                <td>ปฏิเสธใบรับรอง CERT-2026-005</td>
+                                <td style="font-size: 11px; color: var(--error);">[Rejected] เอกสารไม่ชัดเจน</td>
+                                <td><span class="badge bg-error">Rejected</span></td>
+                            </tr>
+                            <tr>
+                                <td>13/05/2026 16:20</td>
+                                <td><b>SYSTEM</b><br><span style="font-size: 10px; color: var(--neutral-300);">Internal Cron</span></td>
+                                <td>อัปเดตสถานะใบรับรอง CERT-2024-XXX</td>
+                                <td style="font-size: 11px; color: var(--neutral-600);">Marked as Expired</td>
+                                <td><span class="badge bg-pending">Expired</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p style="font-size: 11px; color: var(--neutral-600); margin-top: 16px;">* บันทึกข้อมูลตามมาตรฐาน PDPA เก็บประวัติย้อนหลัง 90 วัน</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE: INSTITUTE PROFILE & KYC -->
+        <div id="page-profile" class="page-content">
+            <div class="grid-layout">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">ข้อมูลสถาบัน (Institute Profile)</h2>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">ชื่อสถาบัน (ภาษาไทย)</label>
+                        <input type="text" class="form-control" value="สถาบันการพยาบาลไทย">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">ชื่อสถาบัน (ภาษาอังกฤษ)</label>
+                        <input type="text" class="form-control" value="Thai Nursing Institute">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">ที่อยู่ติดต่อ</label>
+                        <textarea class="form-control" style="height: 80px;">เลขที่ 123 ถ.สุขุมวิท แขวงคลองเตย เขตคลองเตย กทม. 10110</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">เบอร์โทรศัพท์กลาง (สำหรับแสดงบนโปรไฟล์ผู้ดูแล)</label>
+                        <input type="text" class="form-control" value="02-XXX-XXXX">
+                    </div>
+                    <button class="btn btn-primary" style="width: 100%;">บันทึกข้อมูลสถาบัน</button>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">เอกสารยืนยันตัวตน (KYC Documents)</h2>
+                        <span class="badge bg-success">Verified</span>
+                    </div>
+                    <p class="card-subtitle" style="margin-bottom: 20px;">อัปโหลดเอกสารเพื่อรักษาสถานะสถาบันที่ผ่านการรับรอง</p>
+                    
+                    <div style="border: 1px solid var(--neutral-200); border-radius: 12px; padding: 16px; margin-bottom: 16px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <p style="font-weight: 700; font-size: 14px;">ใบอนุญาตจัดตั้งสถาบัน</p>
+                                <p style="font-size: 11px; color: var(--neutral-600);">license_2026.pdf | อัปโหลดเมื่อ 10/01/2026</p>
+                            </div>
+                            <button class="btn btn-ghost btn-sm">ดูไฟล์</button>
+                        </div>
+                    </div>
+
+                    <div class="upload-zone" style="padding: 24px;">
+                        <p style="font-size: 13px; font-weight: 700;">+ อัปโหลดเอกสารใหม่ / อัปเดต</p>
+                        <p style="font-size: 11px; color: var(--neutral-600);">รองรับ PDF, JPG, PNG ไม่เกิน 5MB</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE: GAP ANALYSIS -->
+        <div id="page-gap" class="page-content">
+            <div class="card" style="border-left: 4px solid var(--success);">
+                <div class="card-header">
+                    <h2 class="card-title">Gap Analysis & Implementation Roadmap (V2.1 - Completed)</h2>
+                </div>
+                <div style="font-size: 14px; line-height: 1.8; color: var(--neutral-900);">
+                    <h3 style="margin-top: 20px; font-size: 16px; color: var(--primary-600);">1. รายการที่ดำเนินการแล้ว (Fully Implemented)</h3>
+                    <ul style="margin-left: 24px; margin-top: 10px;">
+                        <li><b>Manual Match UI:</b> เพิ่มปุ่มและ Modal สำหรับจับคู่บัญชีด้วยตนเองในหน้า Import.</li>
+                        <li><b>Inline Edit:</b> เพิ่มฟังก์ชันแก้ไขข้อมูลรายบรรทัดในหน้า Preview ก่อนนำเข้า.</li>
+                        <li><b>Invite Trigger:</b> เพิ่มปุ่มส่ง SMS/Email เชิญชวนผู้ที่ยังไม่มีบัญชีในระบบ.</li>
+                        <li><b>Audit Log (Enhanced):</b> เพิ่ม IP Address, Metadata และรายละเอียดการดำเนินการตามมาตรฐาน PDPA.</li>
+                        <li><b>Bulk Actions:</b> เพิ่มปุ่ม Approve แบบกลุ่ม และ Bulk Actions ในหน้าจัดการใบรับรอง.</li>
+                        <li><b>Institute Profile & KYC:</b> เพิ่มหน้าสำหรับจัดการข้อมูลสถาบันและอัปโหลดเอกสาร.</li>
+                        <li><b>Empty State Designs:</b> เพิ่มหน้า Onboarding และสถานะ "ไม่มีข้อมูล" สำหรับสถาบันใหม่.</li>
+                        <li><b>Standard Guidelines Tab:</b> เพิ่มหน้าอ่านเกณฑ์นโยบายกลางในเมนูการตรวจสอบ.</li>
+                    </ul>
+
+                    <h3 style="margin-top: 24px; font-size: 16px; color: var(--info);">2. สิ่งที่ควรดำเนินการต่อ (Future Roadmap)</h3>
+                    <ul style="margin-left: 24px; margin-top: 10px;">
+                        <li><b>Backend API Integration:</b> เชื่อมต่อ Logic การส่ง Reject Reason กลับไปยัง Mobile App.</li>
+                        <li><b>Advanced Analytics:</b> เพิ่มกราฟเปรียบเทียบการผลิตบุคลากรกับความต้องการตลาดแบบ Real-time.</li>
+                        <li><b>Multi-Branch Support:</b> ระบบจัดการสถาบันที่มีหลายสาขาภายใต้ Account เดียว.</li>
+                    </ul>
+                </div>
             </div>
         </div>
 
         <footer style="font-size: 11px; text-align: center; color: var(--neutral-600); padding: 24px; border-top: 1px solid var(--neutral-100); margin-top: 20px;">
-            © 2026 CareDee Academy System | บันทึกข้อมูลด้วยเทคโนโลยี Ledger ป้องกันการแก้ไขย้อนหลัง
+            ระบบทำการบันทึก Audit Log ทุกการเปลี่ยนแปลงข้อมูลตามมาตรฐาน PDPA | © 2026 CareDee Academy
         </footer>
     </main>
 
     <!-- Modals -->
+    <!-- Manual Match Modal -->
+    <div class="modal-overlay" id="manualMatchModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 style="font-size: 18px; font-weight: 700;">Manual Match (จับคู่ด้วยตนเอง)</h3>
+                <span style="cursor: pointer;" onclick="closeModal('manualMatchModal')">✕</span>
+            </div>
+            <p style="font-size: 13px; color: var(--neutral-600); margin-bottom: 20px;">ข้อมูลในไฟล์: <strong id="matchTargetName">...</strong></p>
+            <div class="form-group">
+                <label class="form-label">ค้นหาบัญชีในระบบ CareDee</label>
+                <input type="text" class="form-control" placeholder="ชื่อ-นามสกุล หรือ เบอร์โทรศัพท์...">
+            </div>
+            <div style="background: var(--neutral-100); padding: 12px; border-radius: 12px; border: 1px solid var(--neutral-200);">
+                <p style="font-size: 11px; color: var(--neutral-600); margin-bottom: 8px;">ผลลัพธ์ที่แนะนำ:</p>
+                <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px; background: white; border-radius: 8px;">
+                    <div>
+                        <p style="font-size: 13px; font-weight: 700;">นาย สมชาย สายชล</p>
+                        <p style="font-size: 11px; color: var(--neutral-600);">UID: CD-8890 | 081-XXX-XXXX</p>
+                    </div>
+                    <button class="btn btn-primary btn-sm" onclick="alert('Matched!'); closeModal('manualMatchModal')">เลือก</button>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('manualMatchModal')">ยกเลิก</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Row Modal (Inline Correction) -->
+    <div class="modal-overlay" id="editRowModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 style="font-size: 18px; font-weight: 700;">แก้ไขข้อมูล (Inline Correction)</h3>
+                <span style="cursor: pointer;" onclick="closeModal('editRowModal')">✕</span>
+            </div>
+            <div class="form-group">
+                <label class="form-label">ชื่อ-นามสกุล</label>
+                <input type="text" class="form-control" id="editNameField">
+            </div>
+            <div class="form-group">
+                <label class="form-label">รหัสประจำตัวประชาชน</label>
+                <input type="text" class="form-control" id="editIdField">
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('editRowModal')">ยกเลิก</button>
+                <button class="btn btn-primary" onclick="alert('Saved!'); closeModal('editRowModal')">บันทึก</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Revoke Modal -->
     <div class="modal-overlay" id="revokeModal">
         <div class="modal-content">
@@ -589,12 +878,12 @@
             </div>
             <p style="font-size: 14px; margin-bottom: 20px;">คุณกำลังจะเพิกถอนใบรับรองของ <strong id="revokeTargetName">...</strong></p>
             <div class="form-group">
-                <label class="form-label">ระบุเหตุผลในการเพิกถอน</label>
-                <textarea class="form-control" style="height: 100px; resize: none;" placeholder="ระบุเหตุผล..."></textarea>
+                <label class="form-label">ระบุเหตุผลในการเพิกถอน (Mandatory)</label>
+                <textarea class="form-control" style="height: 100px; resize: none;" placeholder="เช่น ตรวจพบเอกสารเท็จ, พ้นสภาพการเป็นนักเรียน..."></textarea>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" onclick="closeModal('revokeModal')">ยกเลิก</button>
-                <button class="btn btn-primary" style="background: var(--error);" onclick="confirmRevoke()">ยืนยันเพิกถอน</button>
+                <button class="btn btn-primary" style="background: var(--error);" onclick="confirmRevoke()">ยืนยันเพิกถอน (บันทึก Audit Log)</button>
             </div>
         </div>
     </div>
@@ -611,6 +900,7 @@
                 <label style="display: block; margin-bottom: 8px;"><input type="radio" name="rejectReason" value="fake"> เอกสารปลอม / มีร่องรอยการแก้ไข</label>
                 <label style="display: block; margin-bottom: 8px;"><input type="radio" name="rejectReason" value="mismatch"> ข้อมูลไม่ตรงกับฐานข้อมูล</label>
                 <label style="display: block; margin-bottom: 8px;"><input type="radio" name="rejectReason" value="lowqual"> ไฟล์ภาพไม่ชัดเจน / อ่านไม่ออก</label>
+                <label style="display: block; margin-bottom: 8px;"><input type="radio" name="rejectReason" value="expired"> ใบรับรองหมดอายุ / ยกเลิกแล้ว</label>
                 <label style="display: block; margin-bottom: 8px;"><input type="radio" name="rejectReason" value="other"> อื่นๆ</label>
                 <textarea class="form-control" style="height: 80px; resize: none; margin-top: 10px;" placeholder="รายละเอียดเพิ่มเติม..."></textarea>
             </div>
@@ -626,14 +916,22 @@
         function switchPage(pageId, element) {
             // Update Sidebar
             document.querySelectorAll('.menu-link').forEach(link => link.classList.remove('active'));
-            element.classList.add('active');
+            if (element) element.classList.add('active');
 
             // Hide all pages
             document.querySelectorAll('.page-content').forEach(page => page.classList.remove('active'));
+            document.getElementById('common-empty-state').classList.remove('active');
             
             // Show target page
             const target = document.getElementById('page-' + pageId);
-            target.classList.add('active');
+            
+            // Check Empty State Logic
+            const isEmpty = document.body.classList.contains('is-empty');
+            if (isEmpty && (pageId === 'dashboard' || pageId === 'certificates' || pageId === 'market')) {
+                document.getElementById('common-empty-state').classList.add('active');
+            } else {
+                target.classList.add('active');
+            }
 
             // Update Header Title based on page
             const titles = {
@@ -641,16 +939,30 @@
                 'import': 'นำเข้าข้อมูลการอบรม (Bulk Import)',
                 'certificates': 'จัดการใบรับรอง (Certificate Management)',
                 'market': 'สถิติตลาดแรงงาน (Market Intelligence)',
-                'verification': 'มาตรฐานการตรวจสอบ (Verification)'
+                'verification': 'การตรวจสอบ & เกณฑ์มาตรฐาน',
+                'profile': 'โปรไฟล์สถาบัน & KYC',
+                'gap': 'Gap Analysis & Roadmap'
             };
             document.getElementById('headerTitle').innerText = titles[pageId];
+        }
+
+        function switchVerificationTab(tabId, element) {
+            document.querySelectorAll('.tab-item').forEach(tab => tab.classList.remove('active'));
+            element.classList.add('active');
+            document.querySelectorAll('.ver-tab-content').forEach(content => content.style.display = 'none');
+            document.getElementById('ver-tab-' + tabId).style.display = 'block';
+        }
+
+        function toggleEmptyState() {
+            document.body.classList.toggle('is-empty');
+            const activeLink = document.querySelector('.menu-link.active');
+            const pageId = activeLink.onclick.toString().match(/'(.*?)'/)[1];
+            switchPage(pageId, activeLink);
         }
 
         function logout() {
             if(confirm('คุณต้องการออกจากระบบใช่หรือไม่?')) {
                 alert('ออกจากระบบเรียบร้อย');
-                // In a real SPA, this would redirect or clear state.
-                // For mockup, we just go back to dashboard.
                 switchPage('dashboard', document.querySelector('.menu-link'));
             }
         }
@@ -688,9 +1000,13 @@
         }
 
         function confirmImport() {
-            alert('นำเข้าข้อมูลสำเร็จ! เชื่อมโยงบัญชีแล้ว 42 รายการ');
+            alert('นำเข้าข้อมูลสำเร็จ! เชื่อมโยงบัญชีแล้ว 42 รายการ และส่งคำเชิญ 2 รายการ');
             resetImport();
             switchPage('dashboard', document.querySelector('.menu-link'));
+        }
+
+        function sendInvite(name) {
+            alert('ส่งคำเชิญสมัครสมาชิกไปยัง ' + name + ' เรียบร้อยแล้ว (SMS/Email)');
         }
 
         // --- Certificate Management Logic ---
@@ -724,12 +1040,23 @@
             document.getElementById('rejectModal').style.display = 'flex';
         }
 
+        function openManualMatchModal(name) {
+            document.getElementById('matchTargetName').innerText = name;
+            document.getElementById('manualMatchModal').style.display = 'flex';
+        }
+
+        function openEditRowModal(name, id) {
+            document.getElementById('editNameField').value = name;
+            document.getElementById('editIdField').value = id;
+            document.getElementById('editRowModal').style.display = 'flex';
+        }
+
         function closeModal(id) {
             document.getElementById(id).style.display = 'none';
         }
 
         function confirmRevoke() {
-            alert('เพิกถอนใบรับรองเรียบร้อยแล้ว');
+            alert('เพิกถอนใบรับรองเรียบร้อยแล้ว และบันทึกใน Audit Log');
             closeModal('revokeModal');
         }
 
@@ -738,5 +1065,7 @@
             closeModal('rejectModal');
         }
     </script>
+</body>
+</html>
 </body>
 </html>

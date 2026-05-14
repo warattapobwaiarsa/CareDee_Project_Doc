@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>โปรไฟล์สถาบัน & KYC - CareDee Academy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Brand Colors */
+            --primary-600: #007A8C;
+            --primary-100: #E0F2F4;
+            --secondary-500: #FF9F43;
+            --secondary-100: #FFF3E6;
+            
+            /* Semantic Colors */
+            --success: #28C76F;
+            --warning: #FF9F43;
+            --error: #EA5455;
+            --info: #00CFE8;
+            
+            /* Neutral Colors */
+            --white: #FFFFFF;
+            --neutral-100: #F8F8F8;
+            --neutral-200: #F3F2F7;
+            --neutral-300: #B9B9C3;
+            --neutral-600: #6E6B7B;
+            --neutral-900: #1E1E1E;
+            
+            /* Interactive */
+            --pressed: #006675;
+            
+            /* Sidebar */
+            --sidebar-width: 280px;
+
+            /* Typography */
+            --font-main: 'IBM Plex Sans Thai', 'Inter', sans-serif;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--font-main); }
+        body { background: var(--neutral-100); color: var(--neutral-900); display: flex; min-height: 100vh; }
+
+        /* --- Sidebar --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--white);
+            height: 100vh;
+            position: fixed;
+            border-right: 1px solid var(--neutral-300);
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+        }
+        .sidebar-brand { padding: 32px 24px; text-align: center; border-bottom: 1px solid var(--neutral-100); }
+        .logo-box { width: 44px; height: 44px; background: var(--primary-600); color: var(--white); border-radius: 10px; margin: 0 auto 12px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 20px; }
+        .sidebar-brand h2 { color: var(--primary-600); font-size: 20px; font-weight: 700; }
+        .sidebar-menu { flex: 1; padding: 20px 0; }
+        .menu-link {
+            padding: 14px 24px;
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: var(--neutral-600);
+            font-weight: 500;
+            transition: 0.2s;
+            font-size: 15px;
+            position: relative;
+        }
+        .menu-link:hover, .menu-link.active { background: var(--primary-100); color: var(--primary-600); border-right: 4px solid var(--primary-600); }
+        .menu-link i { margin-right: 12px; width: 24px; text-align: center; font-style: normal; }
+
+        /* --- Main Layout --- */
+        .main { margin-left: var(--sidebar-width); flex: 1; padding: 32px; }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            background: var(--white);
+            padding: 16px 28px;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        }
+        .user-status { display: flex; align-items: center; gap: 12px; }
+
+        /* --- Components --- */
+        .card { background: var(--white); border-radius: 16px; padding: 28px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); margin-bottom: 32px; position: relative; }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; border-bottom: 1px solid var(--neutral-100); padding-bottom: 12px; }
+        .card-title { font-size: 18px; font-weight: 700; color: var(--neutral-900); }
+        .card-subtitle { font-size: 13px; color: var(--neutral-600); margin-top: 4px; }
+
+        .btn { padding: 10px 20px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; font-size: 13px; transition: 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn-primary { background: var(--primary-600); color: white; }
+        .btn-ghost { background: transparent; color: var(--primary-600); border: 1px solid var(--primary-600); }
+
+        .badge { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; white-space: nowrap; display: inline-block; }
+        .bg-success { background: #E6F9F0; color: var(--success); }
+
+        .form-group { margin-bottom: 16px; }
+        .form-label { font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px; }
+        .form-control { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid var(--neutral-300); outline: none; font-size: 14px; }
+
+        .upload-zone { border: 2px dashed var(--neutral-300); padding: 48px; text-align: center; border-radius: 16px; cursor: pointer; background: var(--neutral-100); transition: 0.3s; }
+        .upload-zone:hover { border-color: var(--primary-600); background: var(--primary-100); }
+
+        .grid-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <div class="logo-box">CD</div>
+            <h2>CareDee Academy</h2>
+            <p style="font-size: 11px; color: var(--neutral-600); margin-top: 4px; text-transform: uppercase;">Training Institute Interface</p>
+        </div>
+        <nav class="sidebar-menu">
+            <a href="0_training_dashboard_v2.html" class="menu-link"><i>🏠</i> ภาพรวมสถาบัน</a>
+            <a href="1_training_import_v2.html" class="menu-link"><i>📥</i> นำเข้าข้อมูลการอบรม</a>
+            <a href="2_training_cert_manage_v2.html" class="menu-link"><i>🏅</i> จัดการใบรับรอง</a>
+            <a href="3_training_market_intelligence_v2.html" class="menu-link"><i>📈</i> สถิติตลาดแรงงาน</a>
+            <a href="4_training_verification_standard_v2.html" class="menu-link"><i>🛡️</i> มาตรฐานการตรวจสอบ</a>
+            <a href="#" class="menu-link active"><i>🏢</i> โปรไฟล์สถาบัน & KYC</a>
+            <a href="gap.md" class="menu-link" style="color: var(--secondary-500);"><i>⚠️</i> Gap Analysis</a>
+        </nav>
+    </aside>
+
+    <main class="main">
+        <header>
+            <div class="page-title">
+                <h1 style="font-size: 20px; font-weight: 700;">โปรไฟล์สถาบัน & KYC (Institute Profile)</h1>
+                <p style="font-size: 13px; color: var(--neutral-600);">จัดการข้อมูลสถาบันและเอกสารยืนยันตัวตนสำหรับ Admin</p>
+            </div>
+        </header>
+
+        <div class="grid-layout">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">ข้อมูลสถาบัน</h2>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">ชื่อสถาบัน (ภาษาไทย)</label>
+                    <input type="text" class="form-control" value="สถาบันการพยาบาลไทย">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">ที่อยู่ติดต่อ</label>
+                    <textarea class="form-control" style="height: 80px;">เลขที่ 123 ถ.สุขุมวิท แขวงคลองเตย เขตคลองเตย กทม. 10110</textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">เบอร์โทรศัพท์กลาง</label>
+                    <input type="text" class="form-control" value="02-XXX-XXXX">
+                </div>
+                <button class="btn btn-primary" style="width: 100%;">บันทึกข้อมูลสถาบัน</button>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">เอกสาร KYC</h2>
+                    <span class="badge bg-success">Verified</span>
+                </div>
+                <p class="card-subtitle" style="margin-bottom: 20px;">อัปโหลดเอกสารเพื่อรักษาสถานะสถาบันที่ผ่านการรับรอง</p>
+                
+                <div style="border: 1px solid var(--neutral-200); border-radius: 12px; padding: 16px; margin-bottom: 16px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <p style="font-weight: 700; font-size: 14px;">ใบอนุญาตจัดตั้งสถาบัน</p>
+                            <p style="font-size: 11px; color: var(--neutral-600);">license_2026.pdf | 10/01/2026</p>
+                        </div>
+                        <button class="btn btn-ghost btn-sm">ดูไฟล์</button>
+                    </div>
+                </div>
+
+                <div class="upload-zone" style="padding: 24px;" onclick="alert('File Dialog...')">
+                    <p style="font-size: 13px; font-weight: 700;">+ อัปโหลดเอกสารใหม่ / อัปเดต</p>
+                    <p style="font-size: 11px; color: var(--neutral-600);">รองรับ PDF, JPG, PNG ไม่เกิน 5MB</p>
+                </div>
+            </div>
+        </div>
+
+        <footer style="font-size: 11px; text-align: center; color: var(--neutral-600); padding: 24px; border-top: 1px solid var(--neutral-100); margin-top: 20px;">
+            © 2026 CareDee Academy
+        </footer>
+    </main>
+
+</body>
+</html>

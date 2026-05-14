@@ -233,9 +233,45 @@
         }
         .alert-error { background: rgba(234, 84, 85, 0.12); color: var(--error); border: 1px solid var(--error); }
 
+        /* Accessibility Mode */
+        body.accessibility-mode { font-size: 1.15em; }
+        body.accessibility-mode .sidebar { width: 320px; }
+        body.accessibility-mode .main { margin-left: 320px; }
+        body.accessibility-mode * { contrast: 1.2; }
+        
+        /* Critical Alert Header */
+        .critical-alert-bar {
+            background: var(--error);
+            color: white;
+            padding: 10px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 14px;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            z-index: 2000;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        .critical-alert-bar .btn-close {
+            background: none;
+            border: 1px solid white;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
     </style>
 </head>
 <body>
+
+    <!-- Critical Alert Bar -->
+    <div id="critical-alert" class="critical-alert-bar" style="display: none;">
+        <span>🚨 <strong>Critical Incident Reported:</strong> #BK-7755 (วิภาวี) ความดันโลหิตสูงผิดปกติ โปรดตรวจสอบด่วน!</span>
+        <button class="btn-close" onclick="document.getElementById('critical-alert').style.display='none'">Dismiss</button>
+    </div>
 
     <nav class="sidebar">
         <div class="sidebar-header">
@@ -272,6 +308,7 @@
                 </div>
             </div>
             <div class="user-profile">
+                <button class="btn btn-outline btn-sm" onclick="toggleAccessibility()" style="margin-right: 12px; font-size: 11px;">[A] Accessibility</button>
                 <div style="text-align: right;">
                     <p style="font-weight: 600; font-size: 14px;">Michael Jackson</p>
                     <p style="font-size: 12px; color: var(--neutral-600);">Operator Manager</p>
@@ -484,6 +521,15 @@
                             </tr>
                         </tbody>
                     </table>
+
+                    <!-- Scheduling Audit Log (Gap Fill) -->
+                    <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--neutral-100);">
+                        <h4 style="font-size: 14px; margin-bottom: 12px; color: var(--neutral-600);">🕒 Recent Scheduling Changes (Audit Log)</h4>
+                        <div style="font-size: 12px; color: var(--neutral-600);">
+                            <div style="margin-bottom: 8px;">• <strong>12/05/26 10:45</strong>: #BK-7721 - Re-assigned to 'วิภาวี' by 'Michael J.' (Reason: Proximity optimized)</div>
+                            <div>• <strong>12/05/26 09:15</strong>: #BK-7725 - Job Created (Auto-Match Pending)</div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -565,6 +611,19 @@
         setInterval(() => {
             syncDot.style.opacity = (syncDot.style.opacity == '0.5') ? '1' : '0.5';
         }, 1000);
+
+        // Accessibility Toggle
+        function toggleAccessibility() {
+            document.body.classList.toggle('accessibility-mode');
+            const isModeOn = document.body.classList.contains('accessibility-mode');
+            alert(isModeOn ? 'Accessibility Mode: ON (High Contrast & Larger Text)' : 'Accessibility Mode: OFF');
+        }
+
+        // Mock Critical Alert (Show after 3 seconds)
+        setTimeout(() => {
+            const alertBar = document.getElementById('critical-alert');
+            if (alertBar) alertBar.style.display = 'flex';
+        }, 3000);
     </script>
 </body>
 </html>

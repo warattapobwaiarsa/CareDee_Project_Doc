@@ -162,11 +162,48 @@
         .bg-success { background: rgba(40, 199, 111, 0.12); color: var(--success); }
         .bg-warning { background: rgba(255, 159, 67, 0.12); color: var(--warning); }
 
+        /* Accessibility Mode */
+        body.accessibility-mode { font-size: 1.15em; }
+        body.accessibility-mode .sidebar { width: 320px; }
+        body.accessibility-mode .main { margin-left: 320px; }
+        body.accessibility-mode * { contrast: 1.2; }
+        
+        /* Critical Alert Header */
+        .critical-alert-bar {
+            background: var(--error);
+            color: white;
+            padding: 10px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 14px;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            z-index: 2000;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        .critical-alert-bar .btn-close {
+            background: none;
+            border: 1px solid white;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
         /* Footer Note */
         .footer-note { margin-top: 40px; padding: 20px; text-align: center; color: var(--neutral-600); font-size: 12px; border-top: 1px solid var(--neutral-100); }
     </style>
 </head>
 <body>
+
+    <!-- Critical Alert Bar -->
+    <div id="critical-alert" class="critical-alert-bar" style="display: none;">
+        <span>🚨 <strong>Critical Incident Reported:</strong> #BK-7755 (วิภาวี) ความดันโลหิตสูงผิดปกติ โปรดตรวจสอบด่วน!</span>
+        <button class="btn-close" onclick="document.getElementById('critical-alert').style.display='none'">Dismiss</button>
+    </div>
 
     <nav class="sidebar">
         <div class="sidebar-header">
@@ -202,6 +239,7 @@
             <div style="display: flex; gap: 12px; align-items: center;">
                 <span class="retention-badge">📦 DATA RETENTION: 3 YEARS ACTIVE</span>
                 <div class="user-profile">
+                    <button class="btn btn-outline btn-sm" onclick="toggleAccessibility()" style="margin-right: 12px; font-size: 11px; padding: 6px 12px; width: auto; margin-bottom: 0;">[A] Accessibility</button>
                     <div style="width: 48px; height: 48px; border-radius: 12px; background: var(--primary-100); display: flex; align-items: center; justify-content: center; color: var(--primary-600); font-weight: 700;">MJ</div>
                 </div>
             </div>
@@ -276,7 +314,7 @@
         <!-- Payout Status Table -->
         <div class="card">
             <div class="card-title">
-                <h3>รายการสรุปยอดโอนคืน (Monthly Payout Settlement)</h3>
+                <h3>รายการสรุปยอดโอนคืน (Settlement Logic: Gross - 15% GP = Net)</h3>
                 <span style="font-size: 12px; color: var(--neutral-600);">ตรวจสอบยอดเงินที่บริษัทจะได้รับคืนจาก Platform Admin</span>
             </div>
             <table>
@@ -284,7 +322,7 @@
                     <tr>
                         <th>รอบบัญชี (Period)</th>
                         <th>ยอดขายรวม (Gross)</th>
-                        <th>ค่าธรรมเนียม (Fee)</th>
+                        <th>ค่าธรรมเนียม (15% GP)</th>
                         <th>ยอดโอนสุทธิ (Net Payout)</th>
                         <th>สถานะการโอน (Status)</th>
                         <th>เลขที่เอกสาร</th>
@@ -293,24 +331,24 @@
                 <tbody>
                     <tr>
                         <td>01/05/2026 - 15/05/2026</td>
-                        <td>฿ 75,000</td>
-                        <td>฿ 3,750 (5%)</td>
+                        <td>฿ 83,823</td>
+                        <td>- ฿ 12,573</td>
                         <td style="font-weight: 700; color: var(--primary-600);">฿ 71,250</td>
                         <td><span class="status-badge bg-warning">🕒 รอดำเนินการ (Pending)</span></td>
                         <td>#PAY-202605-02</td>
                     </tr>
                     <tr>
                         <td>16/04/2026 - 30/04/2026</td>
-                        <td>฿ 82,000</td>
-                        <td>฿ 4,100 (5%)</td>
+                        <td>฿ 91,647</td>
+                        <td>- ฿ 13,747</td>
                         <td style="font-weight: 700; color: var(--primary-600);">฿ 77,900</td>
                         <td><span class="status-badge bg-success">✓ โอนสำเร็จ (Paid)</span></td>
                         <td>#PAY-202604-02</td>
                     </tr>
                     <tr>
                         <td>01/04/2026 - 15/04/2026</td>
-                        <td>฿ 68,500</td>
-                        <td>฿ 3,425 (5%)</td>
+                        <td>฿ 76,558</td>
+                        <td>- ฿ 11,483</td>
                         <td style="font-weight: 700; color: var(--primary-600);">฿ 65,075</td>
                         <td><span class="status-badge bg-success">✓ โอนสำเร็จ (Paid)</span></td>
                         <td>#PAY-202604-01</td>
@@ -388,5 +426,19 @@
         <p>🔒 ข้อมูลทางการเงินและประวัติกิจกรรมทั้งหมดถูกจัดเก็บภายใต้นโยบาย Data Retention เป็นเวลา 3 ปี เพื่อการตรวจสอบบัญชีและ Audit Trail ตามมาตรฐานสากล</p>
     </footer>
 
+    <script>
+        // Accessibility Toggle
+        function toggleAccessibility() {
+            document.body.classList.toggle('accessibility-mode');
+            const isModeOn = document.body.classList.contains('accessibility-mode');
+            alert(isModeOn ? 'Accessibility Mode: ON (High Contrast & Larger Text)' : 'Accessibility Mode: OFF');
+        }
+
+        // Mock Critical Alert (Show after 3 seconds)
+        setTimeout(() => {
+            const alertBar = document.getElementById('critical-alert');
+            if (alertBar) alertBar.style.display = 'flex';
+        }, 3000);
+    </script>
 </body>
 </html>

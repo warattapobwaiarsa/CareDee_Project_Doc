@@ -65,6 +65,7 @@
             font-weight: 500;
             transition: 0.2s;
             font-size: 15px;
+            position: relative;
         }
         .menu-link:hover, .menu-link.active { background: var(--primary-100); color: var(--primary-600); border-right: 4px solid var(--primary-600); }
         .menu-link i { margin-right: 12px; width: 24px; text-align: center; font-style: normal; }
@@ -205,9 +206,11 @@
         <nav class="sidebar-menu">
             <a href="0_training_dashboard_v2.html" class="menu-link"><i>🏠</i> ภาพรวมสถาบัน</a>
             <a href="1_training_import_v2.html" class="menu-link"><i>📥</i> นำเข้าข้อมูลการอบรม</a>
-            <a href="2_training_cert_manage.html" class="menu-link active"><i>🏅</i> จัดการใบรับรอง</a>
-            <a href="#" class="menu-link"><i>📈</i> สถิติตลาดแรงงาน</a>
-            <a href="#" class="menu-link"><i>🛡️</i> นโยบายการตรวจสอบ</a>
+            <a href="2_training_cert_manage_v2.html" class="menu-link active"><i>🏅</i> จัดการใบรับรอง</a>
+            <a href="3_training_market_intelligence_v2.html" class="menu-link"><i>📈</i> สถิติตลาดแรงงาน</a>
+            <a href="4_training_verification_standard_v2.html" class="menu-link"><i>🛡️</i> มาตรฐานการตรวจสอบ</a>
+            <a href="#" class="menu-link"><i>🏢</i> โปรไฟล์สถาบัน & KYC</a>
+            <a href="gap.md" class="menu-link" style="color: var(--secondary-500);"><i>⚠️</i> Gap Analysis</a>
         </nav>
         <div style="padding: 24px; border-top: 1px solid var(--neutral-100);">
             <a href="#" class="menu-link" style="color: var(--error); padding: 0;"><i>🚪</i> ออกจากระบบ</a>
@@ -345,6 +348,7 @@
                             </td>
                             <td>
                                 <div class="match-status match-no"><i>❓</i> Unmatched</div>
+                                <button class="btn btn-primary btn-sm" style="font-size: 9px; padding: 2px 6px;" onclick="alert('Sending Invite...')">Invite</button>
                             </td>
                             <td style="font-family: monospace; font-weight: 700; color: var(--neutral-600);">Pending...</td>
                             <td>

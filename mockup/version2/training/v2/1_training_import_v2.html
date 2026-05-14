@@ -66,6 +66,7 @@
             font-weight: 500;
             transition: 0.2s;
             font-size: 15px;
+            position: relative;
         }
         .menu-link:hover, .menu-link.active { background: var(--primary-100); color: var(--primary-600); border-right: 4px solid var(--primary-600); }
         .menu-link i { margin-right: 12px; width: 24px; text-align: center; font-style: normal; }
@@ -143,11 +144,13 @@
             <p style="font-size: 11px; color: var(--neutral-600); margin-top: 4px; text-transform: uppercase;">Training Institute Interface</p>
         </div>
         <nav class="sidebar-menu">
-            <a href="#" class="menu-link"><i>🏠</i> ภาพรวมสถาบัน</a>
-            <a href="#" class="menu-link active"><i>📥</i> นำเข้าข้อมูลการอบรม</a>
-            <a href="#" class="menu-link"><i>🏅</i> จัดการใบรับรอง</a>
-            <a href="#" class="menu-link"><i>📈</i> สถิติตลาดแรงงาน</a>
-            <a href="#" class="menu-link"><i>🛡️</i> นโยบายการตรวจสอบ</a>
+            <a href="0_training_dashboard_v2.html" class="menu-link"><i>🏠</i> ภาพรวมสถาบัน</a>
+            <a href="1_training_import_v2.html" class="menu-link active"><i>📥</i> นำเข้าข้อมูลการอบรม</a>
+            <a href="2_training_cert_manage_v2.html" class="menu-link"><i>🏅</i> จัดการใบรับรอง</a>
+            <a href="3_training_market_intelligence_v2.html" class="menu-link"><i>📈</i> สถิติตลาดแรงงาน</a>
+            <a href="4_training_verification_standard_v2.html" class="menu-link"><i>🛡️</i> มาตรฐานการตรวจสอบ</a>
+            <a href="#" class="menu-link"><i>🏢</i> โปรไฟล์สถาบัน & KYC</a>
+            <a href="gap.md" class="menu-link" style="color: var(--secondary-500);"><i>⚠️</i> Gap Analysis</a>
         </nav>
         <div style="padding: 24px; border-top: 1px solid var(--neutral-100);">
             <a href="#" class="menu-link" style="color: var(--error); padding: 0;"><i>🚪</i> ออกจากระบบ</a>
@@ -172,7 +175,7 @@
                 <div class="card-header">
                     <h2 class="card-title">ขั้นตอนที่ 1: อัปโหลดและตรวจสอบ</h2>
                 </div>
-                <div class="upload-zone" id="uploadZone">
+                <div class="upload-zone" id="uploadZone" onclick="alert('File Dialog Opened...')">
                     <div style="font-size: 40px; margin-bottom: 12px;">📁</div>
                     <p style="font-weight: 700; font-size: 16px; color: var(--primary-600);">อัปโหลดไฟล์รายชื่อผู้ผ่านการอบรม</p>
                     <p style="font-size: 12px; color: var(--neutral-600); margin-top: 4px;">ไฟล์ปัจจุบัน: <span id="fileName">training_result_batch_A.xlsx</span></p>
@@ -305,7 +308,7 @@
                         <p style="font-size: 14px; font-weight: 600;">นาย สมชาย สายชล</p>
                         <p style="font-size: 11px; color: var(--neutral-600);">ID: CG-8890 | 081-XXX-XXXX</p>
                     </div>
-                    <button class="btn btn-primary btn-sm">เลือกบัญชีนี้</button>
+                    <button class="btn btn-primary btn-sm" onclick="alert('Matched!'); closeModal('manualMatchModal')">เลือกบัญชีนี้</button>
                 </div>
             </div>
 
@@ -319,7 +322,7 @@
     <div class="modal-overlay" id="editRowModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 style="font-size: 18px; font-weight: 700;">แก้ไขข้อมูลรายบรรทัด</h3>
+                <h3 style="font-size: 18px; font-weight: 700;">แก้ไขข้อมูลรายบรรทัด (Inline Edit)</h3>
                 <span style="cursor: pointer;" onclick="closeModal('editRowModal')">✕</span>
             </div>
             <div class="form-group">
@@ -373,7 +376,7 @@
         function confirmImport() {
             if(confirm('ยืนยันการนำเข้าข้อมูล 50 รายการเข้าสู่ฐานข้อมูล CareDee?')) {
                 alert('นำเข้าข้อมูลสำเร็จ! ระบบจะทำการออก Digital Badge ให้กับผู้ที่มีบัญชีแล้วทันที');
-                location.reload();
+                location.href='0_training_dashboard_v2.html';
             }
         }
     </script>

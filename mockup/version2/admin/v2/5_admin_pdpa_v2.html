@@ -625,9 +625,14 @@
             <h2 style="color: var(--error); margin-bottom: 8px;">🛡️ Security Verification</h2>
             <p style="font-size: 13px; color: var(--neutral-600); margin-bottom: 20px;">คุณกำลังดำเนินการที่มีความเสี่ยงสูง โปรดใส่รหัสผ่าน Admin เพื่อยืนยัน</p>
             
-            <div class="form-group" style="margin-bottom: 20px;">
+            <div class="form-group" style="margin-bottom: 16px;">
                 <label>Admin Password / PIN</label>
                 <input type="password" id="adminPass" placeholder="••••••••" style="width: 100%; text-align: center; letter-spacing: 4px; font-size: 18px;">
+            </div>
+
+            <div class="form-group" style="margin-bottom: 24px;">
+                <label>ระบุเหตุผล (Reason Code - Audit Trail)</label>
+                <textarea id="adminReason" placeholder="ระบุเหตุผลในการทำรายการความเสี่ยงสูงนี้..." style="width: 100%; height: 60px; padding: 10px; border-radius: 8px; border: 1px solid var(--neutral-300); font-size: 13px; resize: none;"></textarea>
             </div>
 
             <div style="display: flex; gap: 12px;">

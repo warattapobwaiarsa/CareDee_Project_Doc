@@ -150,11 +150,48 @@
         /* Review Star */
         .stars { color: #FF9F43; font-size: 14px; }
 
+        /* Accessibility Mode */
+        body.accessibility-mode { font-size: 1.15em; }
+        body.accessibility-mode .sidebar { width: 320px; }
+        body.accessibility-mode .main { margin-left: 320px; }
+        body.accessibility-mode * { contrast: 1.2; }
+        
+        /* Critical Alert Header */
+        .critical-alert-bar {
+            background: var(--error);
+            color: white;
+            padding: 10px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 14px;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            z-index: 2000;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        .critical-alert-bar .btn-close {
+            background: none;
+            border: 1px solid white;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
         /* Footer Note */
         .footer-note { margin-top: 40px; padding: 20px; text-align: center; color: var(--neutral-600); font-size: 12px; border-top: 1px solid var(--neutral-100); }
     </style>
 </head>
 <body>
+
+    <!-- Critical Alert Bar -->
+    <div id="critical-alert" class="critical-alert-bar" style="display: none;">
+        <span>🚨 <strong>Critical Incident Reported:</strong> #BK-7755 (วิภาวี) ความดันโลหิตสูงผิดปกติ โปรดตรวจสอบด่วน!</span>
+        <button class="btn-close" onclick="document.getElementById('critical-alert').style.display='none'">Dismiss</button>
+    </div>
 
     <nav class="sidebar">
         <div class="sidebar-header">
@@ -188,6 +225,7 @@
                 </div>
             </div>
             <div class="user-profile">
+                <button class="btn btn-outline btn-sm" onclick="toggleAccessibility()" style="margin-right: 12px; font-size: 11px; padding: 6px 12px; width: auto; margin-bottom: 0;">[A] Accessibility</button>
                 <div style="text-align: right; margin-right: 16px;">
                     <p style="font-weight: 600; font-size: 14px;">Michael Jackson <span style="font-size: 10px; background: var(--success); color: white; padding: 2px 6px; border-radius: 10px;">MFA ON</span></p>
                     <p style="font-size: 12px; color: var(--neutral-600);">Operator Manager</p>
@@ -279,6 +317,21 @@
                         </div>
                     </div>
 
+                    <!-- Locked Case (Gap Fill) -->
+                    <div class="dispute-item" style="opacity: 0.6; cursor: not-allowed; background: #f9f9f9;">
+                        <div class="dispute-header">
+                            <span class="case-id">#AP-850</span>
+                            <span class="sla-tag" style="background: var(--neutral-600); color: white;">SLA: หมดเวลา (72h+)</span>
+                        </div>
+                        <div class="dispute-meta">
+                            <strong>ผู้ดูแล:</strong> มานะ | <strong>จอง:</strong> #BK-8801 | <strong>ระดับ:</strong> <span class="stars">★★☆☆☆</span>
+                        </div>
+                        <div class="dispute-summary">
+                            [LOCKED] ไม่สามารถยื่นอุทธรณ์ได้เนื่องจากเกินกำหนดเวลา 3 วันทำการ (72 ชม.) ตามข้อกำหนด SRS
+                        </div>
+                        <div style="margin-top: 12px;"><span class="status-badge" style="background: #ddd;">สถานะ: สิ้นสุดอุทธรณ์</span></div>
+                    </div>
+
                 </div>
             </div>
 
@@ -290,7 +343,10 @@
                     </div>
 
                     <div class="evidence-box">
-                        <div class="evidence-title">💬 แชทหลักฐาน (Chat Snippet)</div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                            <div class="evidence-title" style="margin-bottom: 0;">💬 แชทหลักฐาน (Chat Snippet)</div>
+                            <button class="btn btn-outline btn-sm" onclick="alert('เลือกไฟล์หลักฐาน (รูปภาพ/PDF) เพื่อแนบเข้าระบบ Audit Trail...') " style="width: auto; padding: 4px 12px; font-size: 11px;">📎 แนบหลักฐานเพิ่ม</button>
+                        </div>
                         <div class="chat-snippet">
                             <strong>07:55 - รวีวรรณ:</strong> "สวัสดีค่ะคุณสมหญิง ตอนนี้ถึงหน้าหมู่บ้านแล้วนะคะ แต่ในแอพขึ้นว่าอยู่นอกพื้นที่ กำลังแจ้งแอดมินนะคะ"
                         </div>
@@ -337,5 +393,19 @@
         <p>🔒 ข้อมูลการตัดสินและการพิจารณาข้อพิพาทจะถูกเก็บรักษาไว้เป็นเวลา 3 ปี เพื่อใช้เป็นหลักฐานทางกฎหมายและตรวจสอบย้อนหลัง (Audit Trail)</p>
     </footer>
 
+    <script>
+        // Accessibility Toggle
+        function toggleAccessibility() {
+            document.body.classList.toggle('accessibility-mode');
+            const isModeOn = document.body.classList.contains('accessibility-mode');
+            alert(isModeOn ? 'Accessibility Mode: ON (High Contrast & Larger Text)' : 'Accessibility Mode: OFF');
+        }
+
+        // Mock Critical Alert (Show after 3 seconds)
+        setTimeout(() => {
+            const alertBar = document.getElementById('critical-alert');
+            if (alertBar) alertBar.style.display = 'flex';
+        }, 3000);
+    </script>
 </body>
 </html>

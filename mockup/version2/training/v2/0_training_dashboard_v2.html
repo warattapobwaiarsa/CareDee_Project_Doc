@@ -66,6 +66,7 @@
             font-weight: 500;
             transition: 0.2s;
             font-size: 15px;
+            position: relative;
         }
         .menu-link:hover, .menu-link.active { background: var(--primary-100); color: var(--primary-600); border-right: 4px solid var(--primary-600); }
         .menu-link i { margin-right: 12px; width: 24px; text-align: center; font-style: normal; }
@@ -206,11 +207,13 @@
             <p style="font-size: 11px; color: var(--neutral-600); margin-top: 4px; text-transform: uppercase;">Training Institute Interface</p>
         </div>
         <nav class="sidebar-menu">
-            <a href="#" class="menu-link active"><i>🏠</i> ภาพรวมสถาบัน</a>
-            <a href="#" class="menu-link"><i>📥</i> นำเข้าข้อมูลการอบรม</a>
-            <a href="#" class="menu-link"><i>🏅</i> จัดการใบรับรอง</a>
-            <a href="#" class="menu-link"><i>📈</i> สถิติตลาดแรงงาน</a>
-            <a href="#" class="menu-link"><i>🛡️</i> นโยบายการตรวจสอบ</a>
+            <a href="0_training_dashboard_v2.html" class="menu-link active"><i>🏠</i> ภาพรวมสถาบัน</a>
+            <a href="1_training_import_v2.html" class="menu-link"><i>📥</i> นำเข้าข้อมูลการอบรม</a>
+            <a href="2_training_cert_manage_v2.html" class="menu-link"><i>🏅</i> จัดการใบรับรอง</a>
+            <a href="3_training_market_intelligence_v2.html" class="menu-link"><i>📈</i> สถิติตลาดแรงงาน</a>
+            <a href="4_training_verification_standard_v2.html" class="menu-link"><i>🛡️</i> มาตรฐานการตรวจสอบ</a>
+            <a href="#" class="menu-link"><i>🏢</i> โปรไฟล์สถาบัน & KYC</a>
+            <a href="gap.md" class="menu-link" style="color: var(--secondary-500);"><i>⚠️</i> Gap Analysis</a>
         </nav>
         <div style="padding: 24px; border-top: 1px solid var(--neutral-100);">
             <a href="#" class="menu-link" style="color: var(--error); padding: 0;"><i>🚪</i> ออกจากระบบ</a>
@@ -431,6 +434,33 @@
 
             <!-- Right Column: Analytics & Management -->
             <div class="col-right">
+                <!-- Institute Status Widget (Gap Feature) -->
+                <div class="card" style="border-left: 4px solid var(--success);">
+                    <div class="card-header">
+                        <h2 class="card-title">สถานะสถาบัน</h2>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+                        <div style="font-size: 24px;">✅</div>
+                        <div>
+                            <p style="font-weight: 700; color: var(--success);">Verified Institute</p>
+                            <p style="font-size: 11px; color: var(--neutral-600);">KYC ล่าสุด: 10/01/2026</p>
+                        </div>
+                    </div>
+                    <button class="btn btn-ghost btn-sm" style="width: 100%;">จัดการเอกสารสถาบัน</button>
+                </div>
+
+                <!-- Expiry Alert Widget (Gap Feature) -->
+                <div class="card" style="border-left: 4px solid var(--warning);">
+                    <div class="card-header">
+                        <h2 class="card-title">⚠️ ใกล้หมดอายุ (ใน 30 วัน)</h2>
+                    </div>
+                    <div style="padding: 10px; background: var(--secondary-100); border-radius: 12px; margin-bottom: 12px;">
+                        <p style="font-size: 13px; font-weight: 700; color: var(--secondary-500);">3 รายการต้องการการต่ออายุ</p>
+                        <p style="font-size: 11px; color: var(--neutral-600);">ส่งแจ้งเตือนให้ผู้อบรมเตรียมตัวสอบใหม่</p>
+                    </div>
+                    <button class="btn btn-ghost btn-sm" style="width: 100%;" onclick="location.href='2_training_cert_manage_v2.html'">ดูรายการทั้งหมด</button>
+                </div>
+
                 <!-- Market Demand Analysis -->
                 <div class="card">
                     <div class="card-header">
@@ -446,30 +476,7 @@
                         <div class="skill-bar-container"><div class="skill-bar" style="width: 60%;"></div></div>
                         <div style="font-size: 13px; font-weight: 700; color: var(--primary-600);">60%</div>
                     </div>
-                    <div class="skill-item">
-                        <div style="width: 140px; font-size: 13px; font-weight: 500;">ดูแลผู้สูงอายุสมองเสื่อม</div>
-                        <div class="skill-bar-container"><div class="skill-bar" style="width: 45%;"></div></div>
-                        <div style="font-size: 13px; font-weight: 700; color: var(--primary-600);">45%</div>
-                    </div>
                     <p style="font-size: 11px; color: var(--neutral-600); margin-top: 20px;">* คำนวณจากสถิติการจองจริงในระบบ CareDee</p>
-                </div>
-
-                <!-- Certificate Status Management -->
-                <div class="card">
-                    <div class="card-header">
-                        <h2 class="card-title">จัดการสถานะใบรับรอง</h2>
-                    </div>
-                    <div class="form-group">
-                        <input type="text" class="form-control" placeholder="ค้นหาด้วยรหัสใบรับรอง หรือ ชื่อ...">
-                    </div>
-                    <div style="padding: 20px; background: var(--neutral-100); border-radius: 12px; border: 1px solid var(--neutral-200);">
-                        <p style="font-weight: 700; font-size: 15px;">น.ส. สมฤทัย ใจดี</p>
-                        <p style="font-size: 12px; color: var(--neutral-600); margin-top: 4px;">ID: CERT-2025-442 (Certified)</p>
-                        <div style="margin-top: 16px;">
-                            <textarea class="form-control" placeholder="ระบุเหตุผลในการระงับสถานะ..." style="height: 80px; resize: none;"></textarea>
-                        </div>
-                        <button class="btn btn-outline-danger" style="width: 100%; margin-top: 16px;">ระงับสถานะทันที</button>
-                    </div>
                 </div>
             </div>
         </div>

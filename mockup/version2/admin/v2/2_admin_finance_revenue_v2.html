@@ -659,9 +659,18 @@
             
             <div class="payout-security">
                 <p style="font-weight: 700; color: var(--secondary-500); margin-bottom: 12px;">🛡️ Security Verification Required</p>
-                <div class="setting-group" style="margin-bottom: 0;">
+                <div class="setting-group">
                     <label>กรุณาใส่รหัส PIN หรือรหัสผ่าน Admin</label>
-                    <input type="password" id="adminPin" placeholder="Enter PIN..." style="text-align: center; letter-spacing: 8px; font-size: 20px;">
+                    <input type="password" id="adminPin" placeholder="Enter PIN..." style="text-align: center; letter-spacing: 8px; font-size: 20px; margin-bottom: 16px;">
+                </div>
+                <div class="setting-group" style="margin-bottom: 0;">
+                    <label>ระบุเหตุผลการอนุมัติ (Audit Log - Reason Code)</label>
+                    <select class="btn-outline" style="width: 100%; padding: 10px; border-radius: 8px; margin-bottom: 12px;">
+                        <option value="R1">รอบการโอนปกติ (Standard Cycle)</option>
+                        <option value="R2">กรณีเร่งด่วน (Urgent Request)</option>
+                        <option value="R3">แก้ไขรายการย้อนหลัง (Adjustment)</option>
+                    </select>
+                    <input type="text" id="payoutReason" placeholder="ระบุรายละเอียดเพิ่มเติม..." style="width: 100%; padding: 10px; border: 1px solid var(--neutral-300); border-radius: 8px;">
                 </div>
             </div>
 

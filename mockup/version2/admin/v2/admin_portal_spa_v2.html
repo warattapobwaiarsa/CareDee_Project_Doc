@@ -231,6 +231,7 @@
             <button onclick="switchView('view-reports')" class="menu-item" id="btn-reports"><i>📈</i> รายงานระบบ</button>
             <button onclick="switchView('view-pdpa')" class="menu-item" id="btn-pdpa"><i>🛡️</i> นโยบาย & PDPA</button>
             <button onclick="switchView('view-cloud')" class="menu-item" id="btn-cloud"><i>🖥️</i> เฝ้าระวังระบบคลาวด์</button>
+            <button onclick="switchView('view-gap')" class="menu-item" id="btn-gap" style="color: var(--secondary-500);"><i>⚠️</i> Gap Analysis</button>
         </div>
         <div class="sidebar-footer" style="padding: 24px; border-top: 1px solid rgba(255,255,255,0.1);">
             <button class="menu-item" style="padding: 0;"><i>🚪</i> ออกจากระบบ</button>
@@ -334,26 +335,40 @@
                         <button class="btn btn-primary">+ เพิ่มผู้ใช้</button>
                     </div>
                 </div>
+
+                <!-- Bulk Actions (Gap 3) -->
+                <div id="bulk-users-bar" style="background: var(--primary-100); padding: 12px 20px; border-radius: 12px; margin-bottom: 16px; display: none; align-items: center; gap: 16px; border-left: 4px solid var(--primary-600);">
+                    <span style="font-weight: 600; font-size: 14px;">เลือกแล้ว <span id="user-sel-count">0</span> รายการ:</span>
+                    <button class="btn btn-success" onclick="bulkApproveUsers()">✅ อนุมัติพร้อมกัน (Batch Approval)</button>
+                    <button class="btn btn-outline" style="background:white" onclick="alert('Batch suspended')">🚫 ระงับชั่วคราว</button>
+                </div>
+
                 <table>
                     <thead>
-                        <tr><th>ชื่อ-นามสกุล</th><th>ประเภท</th><th>สังกัด</th><th>ใบรับรอง</th><th>Consent Date</th><th>สถานะ</th><th>จัดการ</th></tr>
+                        <tr>
+                            <th style="width: 40px;"><input type="checkbox" onchange="toggleUsersAll(this)"></th>
+                            <th>ชื่อ-นามสกุล</th><th>ประเภท</th><th>สังกัด</th><th>ใบรับรอง</th><th>Consent Date</th><th>สถานะ</th><th>จัดการ</th></tr>
                     </thead>
                     <tbody id="user-table-body">
                         <tr id="user-row-1">
+                            <td><input type="checkbox" class="user-check" onchange="updateUserBulk()"></td>
                             <td>วิภาวดี รักดี</td><td>Caregiver</td><td>EN Enterprise</td><td><span style="color: var(--success);">✓ Verified</span></td>
                             <td style="font-size: 11px; color: var(--neutral-600);">12/05/26 09:45</td>
                             <td><span class="status-pill status-pending">รอดำเนินการ</span></td>
                             <td>
-                                <button class="btn btn-success" style="padding: 4px 12px;" onclick="approveUser('user-row-1')">อนุมัติ</button>
-                                <button class="btn btn-error" style="padding: 4px 12px;" onclick="rejectUser('user-row-1')">ระงับ</button>
+                                <div style="display: flex; gap: 4px;">
+                                    <button class="btn btn-outline" style="padding: 4px 8px;" onclick="openEvidenceModal('วิภาวดี รักดี')">📄 ตรวจ</button>
+                                    <button class="btn btn-success" style="padding: 4px 8px;" onclick="approveUser('user-row-1')">อนุมัติ</button>
+                                </div>
                             </td>
                         </tr>
                         <tr id="user-row-2">
+                            <td><input type="checkbox" class="user-check" onchange="updateUserBulk()"></td>
                             <td>มานะ อดทน</td><td>Caregiver</td><td>Independent</td><td>-</td>
                             <td style="font-size: 11px; color: var(--neutral-600);">05/01/26 11:30</td>
                             <td id="status-mana"><span class="status-pill status-success">ปกติ</span></td>
                             <td>
-                                <button class="btn btn-error" style="padding: 4px 12px;" onclick="openConfirmModal('ระงับสิทธิ์ มานะ อดทน', 'การระงับสิทธิ์จะทำให้ผู้ใช้เข้าสู่ระบบไม่ได้ทันที', () => suspendUser('status-mana'))">ระงับ</button>
+                                <button class="btn btn-error" style="padding: 4px 12px;" onclick="openConfirmModal('ระงับสิทธิ์ มานะ อดทน', 'การระงับสิทธิ์จะทำให้ผู้ใช้เข้าสู่ระบบไม่ได้ทันที', () => suspendUser('status-mana'), true)">ระงับ</button>
                             </td>
                         </tr>
                     </tbody>
@@ -389,9 +404,15 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td>#BK-9915</td><td>สมชาย บริบาล</td><td>฿ 1,620</td>
+                            <td>
+                                <div style="display: flex; flex-direction: column;">
+                                    <span style="font-weight: 700; color: var(--primary-600);">#BK-9915</span>
+                                    <button class="btn btn-outline" style="font-size: 10px; padding: 2px 6px; margin-top: 4px;" onclick="openPayoutDetail('#BK-9915')">🔍 Breakdown (Gap 4)</button>
+                                </div>
+                            </td>
+                            <td>สมชาย บริบาล</td><td>฿ 1,620</td>
                             <td><span class="status-pill status-success">Success</span></td>
-                            <td><button class="btn btn-success" style="padding: 4px 12px;" onclick="openConfirmModal('ยืนยันการโอนเงิน', 'ระบบจะส่งคำสั่งโอนเงินไปยังธนาคารปลายทางทันที', () => alert('โอนเงินสำเร็จ!'))">โอนเงิน</button></td>
+                            <td><button class="btn btn-success" style="padding: 4px 12px;" onclick="openConfirmModal('ยืนยันการโอนเงิน', 'ระบบจะส่งคำสั่งโอนเงินไปยังธนาคารปลายทางทันที โดยระบุเหตุผลการอนุมัติใน Log', () => alert('โอนเงินสำเร็จ!'), true)">โอนเงิน</button></td>
                         </tr>
                     </tbody>
                 </table>
@@ -407,7 +428,7 @@
                 </div>
                 <table>
                     <thead>
-                        <tr><th>รีวิว / วันที่</th><th>คะแนน</th><th>สถานะ</th><th>จัดการ</th></tr>
+                        <tr><th>รีวิว / วันที่</th><th>คะแนน</th><th>หลักฐานอุทธรณ์</th><th>สถานะ</th><th>จัดการ</th></tr>
                     </thead>
                     <tbody>
                         <tr>
@@ -416,6 +437,9 @@
                                 <div style="font-size: 11px; color: var(--neutral-600); margin-top: 4px;">#BK-9801 | 12 พ.ค. 26</div>
                             </td>
                             <td><span style="color: var(--warning);">★☆☆☆☆</span></td>
+                            <td>
+                                <button class="btn btn-outline" style="font-size: 11px; padding: 4px 8px;" onclick="openEvidenceModal('#BK-9801 Appeal')">👁️ View Evidence (Gap 1)</button>
+                            </td>
                             <td><span class="status-pill status-error">Flagged</span></td>
                             <td style="display: flex; gap: 8px;">
                                 <button class="btn btn-success" title="กู้คืน">✓</button>
@@ -432,6 +456,13 @@
             <div class="card">
                 <div class="card-header">
                     <h2>Market Insights (Demand vs Supply)</h2>
+                    <div style="display: flex; gap: 12px; align-items: center;">
+                        <span style="font-size: 12px; font-weight: 600;">Custom Range (Gap 2):</span>
+                        <input type="date" class="btn-outline" style="padding: 4px 8px; border-radius: 6px;">
+                        <span>-</span>
+                        <input type="date" class="btn-outline" style="padding: 4px 8px; border-radius: 6px;">
+                        <button class="btn btn-primary btn-sm">Filter</button>
+                    </div>
                 </div>
                 <div style="height: 300px; background: var(--neutral-100); border-radius: 12px; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center;">
                     <p style="color: var(--neutral-600); z-index: 1;">[ Interactive Heatmap Visualization ]</p>
@@ -458,7 +489,10 @@
                         <p style="font-weight: 700;">Broadcast Policy Update (v2.4)</p>
                         <p style="font-size: 13px; color: var(--neutral-600);">ส่งแจ้งเตือน Re-consent ให้ผู้ใช้ทุกคนในระบบ</p>
                     </div>
-                    <button class="btn btn-warning" onclick="openConfirmModal('ส่งแจ้งเตือน Re-consent', 'ผู้ใช้ทุกคนจะต้องกดยอมรับนโยบายใหม่เมื่อเข้าสู่ระบบครั้งถัดไป', () => alert('ส่งแจ้งเตือนสำเร็จ!'))">ประกาศแจ้งเตือน</button>
+                    <div style="display: flex; gap: 8px;">
+                        <button class="btn btn-outline" onclick="openPolicyPreview('v2.4')">👁️ Policy Preview (Gap 5)</button>
+                        <button class="btn btn-warning" onclick="openConfirmModal('ส่งแจ้งเตือน Re-consent', 'ผู้ใช้ทุกคนจะต้องกดยอมรับนโยบายใหม่เมื่อเข้าสู่ระบบครั้งถัดไป', () => alert('ส่งแจ้งเตือนสำเร็จ!'), true)">ประกาศแจ้งเตือน</button>
+                    </div>
                 </div>
                 <div class="card-header"><h2>Privacy Access Log</h2></div>
                 <div style="background: var(--neutral-100); padding: 16px; border-radius: 12px; font-size: 13px;">
@@ -514,6 +548,74 @@
             </div>
         </section>
 
+        <!-- VIEW: GAP ANALYSIS -->
+        <section id="view-gap" class="view-section">
+            <div class="card" style="border-left: 4px solid var(--secondary-500);">
+                <div class="card-header">
+                    <h2 style="color: var(--secondary-500);">🛠️ รายการสิ่งที่ยังขาด (Gaps Analysis)</h2>
+                </div>
+                <div style="font-size: 14px; line-height: 1.8; color: var(--neutral-900);">
+                    <p>จากการตรวจสอบไฟล์ออกแบบ UI SPA เปรียบเทียบกับข้อกำหนดในเอกสาร <b>SRS v1.2</b> และ <b>UX Admin Requirements</b> รายการที่ได้ดำเนินการเติมเต็มในเวอร์ชันนี้มีดังนี้:</p>
+                    
+                    <table style="margin-top: 20px;">
+                        <thead>
+                            <tr><th>หัวข้อ</th><th>รายการที่เติมเต็ม / ความต้องการ (Requirements)</th><th>สถานะใน SPA</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><b>1. คุณภาพรีวิว & อุทธรณ์</b></td>
+                                <td><b>Evidence Viewer:</b> ส่วนแสดงหลักฐานประกอบการอุทธรณ์ (Appeal Logic)</td>
+                                <td><span class="status-pill status-success">Implemented</span></td>
+                            </tr>
+                            <tr>
+                                <td><b>2. รายงานระบบ</b></td>
+                                <td><b>Custom Date Range Picker:</b> รองรับการเลือกช่วงวันที่ได้ตามเงื่อนไขทางธุรกิจ</td>
+                                <td><span class="status-pill status-success">Implemented</span></td>
+                            </tr>
+                            <tr>
+                                <td><b>3. การจัดการผู้ใช้</b></td>
+                                <td><b>Bulk Actions:</b> Batch Approval การจัดการข้อมูลจำนวนมาก (Efficiency at Scale)</td>
+                                <td><span class="status-pill status-success">Implemented</span></td>
+                            </tr>
+                            <tr>
+                                <td><b>4. จัดการการเงิน</b></td>
+                                <td><b>Payout Verification Details:</b> Transaction Breakdown ความโปร่งใสของที่มาของยอดเงิน</td>
+                                <td><span class="status-pill status-success">Implemented</span></td>
+                            </tr>
+                            <tr>
+                                <td><b>5. นโยบาย & PDPA</b></td>
+                                <td><b>Policy Preview:</b> การตรวจสอบความถูกต้องของเนื้อหากฎหมายก่อนประกาศใช้ (Broadcast)</td>
+                                <td><span class="status-pill status-success">Implemented</span></td>
+                            </tr>
+                            <tr>
+                                <td><b>6. เฝ้าระวังคลาวด์</b></td>
+                                <td><b>Incident Link:</b> รายละเอียดข้อผิดพลาดทางเทคนิค (Technical Alert Detail)</td>
+                                <td><span class="status-pill status-success">Implemented</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div style="margin-top: 32px; padding-top: 24px; border-top: 1px dashed var(--neutral-300);">
+                        <h3 style="font-size: 16px; margin-bottom: 16px; color: var(--primary-600);">💡 ข้อแนะนำเพิ่มเติมสำหรับ UI/UX (Strategic Suggestions)</h3>
+                        <ul style="list-style-type: none; padding-left: 0;">
+                            <li style="margin-bottom: 12px; display: flex; gap: 12px;">
+                                <span style="font-size: 20px;">📏</span>
+                                <div>
+                                    <b>Condensed Design:</b> ปรับระยะห่าง (Padding) ให้กระชับขึ้นในหน้าที่มีตารางข้อมูลหนาแน่น (Data Density) เพื่อลดการ Scroll ตามหลักการ Admin Portal
+                                </div>
+                            </li>
+                            <li style="margin-bottom: 12px; display: flex; gap: 12px;">
+                                <span style="font-size: 20px;">🛡️</span>
+                                <div>
+                                    <b>Security Context:</b> เพิ่มการระบุ <b>Reason Code (เหตุผล)</b> กำกับไว้ใน Audit Log สำหรับทุกการดำเนินการที่มีความเสี่ยงสูง (High Risk Actions) เช่น การลบข้อมูล หรือการโอนเงิน
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
     </main>
 
     <!-- Shared Modal: Confirmation -->
@@ -522,9 +624,71 @@
             <div style="font-size: 48px; margin-bottom: 16px;">⚠️</div>
             <h2 id="modal-title">ยืนยันการดำเนินการ</h2>
             <p id="modal-body" style="color: var(--neutral-600); margin: 16px 0; line-height: 1.5;"></p>
+            
+            <!-- Reason Field (Gap Analysis) -->
+            <div id="reason-field" style="display: none; text-align: left; margin-top: 16px;">
+                <label for="action-reason" style="font-size: 13px; font-weight: 600; color: var(--neutral-600);">ระบุเหตุผล (Reason for Audit Log):</label>
+                <textarea id="action-reason" placeholder="โปรดระบุเหตุผลในการดำเนินการ..." style="width: 100%; height: 80px; padding: 10px; border-radius: 8px; border: 1px solid var(--neutral-300); margin-top: 8px; font-size: 13px; resize: none;"></textarea>
+            </div>
+
             <div style="display: flex; gap: 12px; margin-top: 24px;">
                 <button class="btn btn-outline" style="flex: 1;" onclick="closeModal()">ยกเลิก</button>
                 <button id="modal-confirm-btn" class="btn btn-primary" style="flex: 1;">ยืนยัน</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Evidence Modal (Gap 1) -->
+    <div id="evidence-modal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 600px;">
+            <h2 id="ev-title">หลักฐานประกอบ (Evidence Viewer)</h2>
+            <div style="height: 300px; background: #eee; border-radius: 12px; margin: 20px 0; display: flex; align-items: center; justify-content: center; color: var(--neutral-600);">
+                [ MOCKUP IMAGE: CHAT LOG / RECEIPT / PHOTO ]
+            </div>
+            <p style="font-size: 13px; color: var(--neutral-600); margin-bottom: 24px;">รายละเอียด: ข้อมูลที่ระบบจัดเก็บเพื่อใช้ตัดสินใจอุทธรณ์</p>
+            <button class="btn btn-outline" style="width: 100%;" onclick="document.getElementById('evidence-modal').style.display='none'">ปิด</button>
+        </div>
+    </div>
+
+    <!-- Payout Detail Modal (Gap 4) -->
+    <div id="payout-modal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 600px; text-align: left;">
+            <h2>Transaction Breakdown (#BK-9915)</h2>
+            <div style="background: var(--neutral-100); padding: 16px; border-radius: 12px; margin-top: 16px;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                    <span>ยอดจอง (Gross Service Fee):</span>
+                    <b>฿ 1,800.00</b>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                    <span>Commission (10%):</span>
+                    <b style="color: var(--error);">- ฿ 180.00</b>
+                </div>
+                <div style="display: flex; justify-content: space-between; border-top: 1px solid var(--neutral-300); padding-top: 8px; font-weight: 700;">
+                    <span>ยอดสุทธิรอโอน (Net Payout):</span>
+                    <span style="color: var(--success);">฿ 1,620.00</span>
+                </div>
+            </div>
+            <div style="margin-top: 20px;">
+                <p style="font-size: 12px; color: var(--neutral-600);">* ภาษี ณ ที่จ่าย (WHT) จะถูกคำนวณและหักอัตโนมัติหากผู้ให้บริการเป็นนิติบุคคล</p>
+            </div>
+            <button class="btn btn-outline" style="width: 100%; margin-top: 24px;" onclick="document.getElementById('payout-modal').style.display='none'">ปิด</button>
+        </div>
+    </div>
+
+    <!-- Policy Preview Modal (Gap 5) -->
+    <div id="policy-modal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 700px; text-align: left;">
+            <h2>Policy Content Preview</h2>
+            <div style="height: 350px; overflow-y: auto; background: var(--neutral-100); padding: 20px; border-radius: 12px; font-size: 13px; line-height: 1.6; margin-top: 16px; border: 1px solid var(--neutral-300);">
+                <h3>Privacy Policy Version 2.4</h3>
+                <p>หมวดที่ 1: การเก็บรวบรวมข้อมูลส่วนบุคคล...</p>
+                <p>เรามีการจัดเก็บข้อมูลพิกัด GPS เพื่อความปลอดภัยของผู้รับบริการในขณะปฏิบัติหน้าที่...</p>
+                <p>หมวดที่ 2: วัตถุประสงค์ในการประมวลผลข้อมูล...</p>
+                <p>เพื่อใช้ในการยืนยันวุฒิการศึกษาผ่านสถาบันฝึกอบรม (Training Institute API)...</p>
+            </div>
+            <div style="display: flex; gap: 12px; margin-top: 24px;">
+                <button class="btn btn-outline" style="flex:1" onclick="document.getElementById('policy-modal').style.display='none'">ปิด</button>
+                <button class="btn btn-primary" style="flex:1">Export as PDF (Legal)</button>
             </div>
         </div>
     </div>
@@ -549,7 +713,6 @@
         // --- Global Actions ---
         function applyGlobalFilter(operator) {
             alert('กำลังคัดกรองข้อมูลของหน่วยงาน: ' + operator);
-            // In a real app, this would filter the table data across all views
         }
 
         function broadcastMaintenance() {
@@ -572,7 +735,8 @@
                     banner.style.display = 'flex';
                     document.getElementById('app-body').classList.add('has-banner');
                     alert('ประกาศสำเร็จ!');
-                }
+                },
+                true
             );
         }
 
@@ -608,12 +772,54 @@
             closeModal();
         }
 
-        // --- Modal Handling ---
+        // --- Bulk Actions Logic (Gap 3) ---
+        function toggleUsersAll(master) {
+            const checks = document.querySelectorAll('.user-check');
+            checks.forEach(c => c.checked = master.checked);
+            updateUserBulk();
+        }
+
+        function updateUserBulk() {
+            const checked = document.querySelectorAll('.user-check:checked');
+            const bar = document.getElementById('bulk-users-bar');
+            const count = document.getElementById('user-sel-count');
+            if (checked.length > 0) {
+                bar.style.display = 'flex';
+                count.innerText = checked.length;
+            } else {
+                bar.style.display = 'none';
+            }
+        }
+
+        function bulkApproveUsers() {
+            const count = document.querySelectorAll('.user-check:checked').length;
+            openConfirmModal('Batch Approval', `คุณกำลังจะอนุมัติผู้ใช้จำนวน ${count} รายการพร้อมกัน ยืนยันหรือไม่?`, () => {
+                alert(`อนุมัติ ${count} รายการสำเร็จ!`);
+                location.reload();
+            }, true);
+        }
+
+        // --- Modals Logic (Gaps 1, 4, 5) ---
+        function openEvidenceModal(title) {
+            document.getElementById('ev-title').innerText = 'Evidence Viewer: ' + title;
+            document.getElementById('evidence-modal').style.display = 'flex';
+        }
+
+        function openPayoutDetail(id) {
+            document.getElementById('payout-modal').style.display = 'flex';
+        }
+
+        function openPolicyPreview(ver) {
+            document.getElementById('policy-modal').style.display = 'flex';
+        }
+
         let onConfirmCallback = null;
 
-        function openConfirmModal(title, body, onConfirm) {
+        function openConfirmModal(title, body, onConfirm, showReason = false) {
             document.getElementById('modal-title').innerText = title;
             document.getElementById('modal-body').innerText = body;
+            document.getElementById('reason-field').style.display = showReason ? 'block' : 'none';
+            if(showReason) document.getElementById('action-reason').value = '';
             onConfirmCallback = onConfirm;
             document.getElementById('confirm-modal').style.display = 'flex';
         }
@@ -630,6 +836,7 @@
         // --- Initialize Mock Data ---
         function initCharts() {
             const chart = document.getElementById('uptime-chart-bars');
+            if (!chart) return;
             for (let i = 0; i < 48; i++) {
                 const bar = document.createElement('div');
                 bar.className = 'uptime-bar';
@@ -649,6 +856,7 @@
 
         function initCloudStatus() {
             const list = document.getElementById('service-health-list');
+            if (!list) return;
             services.forEach(s => {
                 const item = document.createElement('div');
                 item.className = 'service-item';
@@ -662,7 +870,10 @@
                 item.innerHTML = `
                     <div style="display: flex; align-items: center; gap: 12px;">
                         <span style="width: 10px; height: 10px; border-radius: 50%; background: var(--${s.status === 'green' ? 'success' : 'warning'});"></span>
-                        <span style="font-weight: 600;">${s.name}</span>
+                        <div style="display:flex; flex-direction:column;">
+                            <span style="font-weight: 600;">${s.name}</span>
+                            <a href="#" style="font-size: 10px; color: var(--primary-600);" onclick="alert('Incident Log Details (Gap 6)')">View Technical Incident (Gap 6)</a>
+                        </div>
                     </div>
                     <span style="font-size: 12px; font-weight: 700; color: var(--${s.status === 'green' ? 'success' : 'warning'});">${s.msg}</span>
                 `;

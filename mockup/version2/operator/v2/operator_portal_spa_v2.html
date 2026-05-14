@@ -219,9 +219,46 @@
         /* Interactive Classes */
         .resolved-badge { background: var(--success) !important; color: white !important; }
 
+        /* Accessibility Mode */
+        body.accessibility-mode { font-size: 1.15em; }
+        body.accessibility-mode .sidebar { width: 320px; }
+        body.accessibility-mode .main { margin-left: 320px; }
+        body.accessibility-mode * { contrast: 1.2; }
+        
+        /* Critical Alert Header */
+        .critical-alert-bar {
+            background: var(--error);
+            color: white;
+            padding: 10px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 14px;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            z-index: 2000;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        .critical-alert-bar .btn-close {
+            background: none;
+            border: 1px solid white;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
     </style>
 </head>
 <body>
+
+    <!-- Critical Alert Bar (System Wide) -->
+    <div id="critical-alert" class="critical-alert-bar" style="display: none;">
+        <span>🚨 <strong>Critical Incident Reported:</strong> #BK-7755 (วิภาวี) ความดันโลหิตสูงผิดปกติ โปรดตรวจสอบด่วน!</span>
+        <button class="btn-close" onclick="document.getElementById('critical-alert').style.display='none'">Dismiss</button>
+    </div>
 
     <!-- Shared Sidebar -->
     <nav class="sidebar">
@@ -260,6 +297,7 @@
                 </div>
             </div>
             <div class="user-profile">
+                <button class="btn btn-outline btn-sm" onclick="toggleAccessibility()" style="margin-right: 12px;">[A] Accessibility</button>
                 <div style="text-align: right;">
                     <p style="font-weight: 600; font-size: 14px;">Michael Jackson <span class="badge-mfa">2FA VERIFIED</span></p>
                     <p style="font-size: 12px; color: var(--neutral-600);">หัวหน้าฝ่ายปฏิบัติการ</p>
@@ -388,15 +426,22 @@
         </div>
 
         <div class="card">
-            <div class="card-title"><h3>📥 คำขอยืนยันผู้ดูแลใหม่ (Onboarding Tracker)</h3></div>
+            <div class="card-title">
+                <h3>📥 คำขอยืนยันผู้ดูแลใหม่ (Onboarding Tracker)</h3>
+                <button class="btn btn-outline btn-sm" onclick="alert('กำลังดึงข้อมูลชุดใหม่จากสถาบันฝึกอบรม (TI Inbound)...')">🔄 Check TI Inbound</button>
+            </div>
+            <p style="font-size: 13px; color: var(--neutral-600); margin-bottom: 16px;">กด 'Verify' เพื่อตรวจสอบเอกสารคู่กับข้อมูลจาก TI สถาบันฝึกอบรม</p>
             <table>
                 <thead><tr><th>ชื่อ-นามสกุล / สถาบัน</th><th>Onboarding Progress</th><th>สถานะปัจจุบัน</th><th>การจัดการ</th></tr></thead>
                 <tbody>
                     <tr>
-                        <td>น.ส. อารีรัตน์ สุขใจ<div style="font-size: 11px; color: var(--neutral-600);">BKK Nursing Academy</div></td>
+                        <td>น.ส. อารีรัตน์ สุขใจ<div style="font-size: 11px; color: var(--neutral-600);">BKK Nursing Academy <span class="badge-mfa" style="background: var(--info);">⭐ Elite Grade</span></div></td>
                         <td><div class="onboarding-tracker"><div class="step done"></div><div class="step-line done"></div><div class="step done"></div><div class="step-line done"></div><div class="step current"></div><div class="step-line"></div><div class="step"></div></div></td>
                         <td><span class="status-badge bg-pending">รอผลสอบ Final</span></td>
-                        <td><button class="btn btn-outline btn-sm" disabled>ยืนยันเข้าทีม</button></td>
+                        <td style="display: flex; gap: 8px;">
+                            <button class="btn btn-outline btn-sm" onclick="alert('เปิดโหมด Verify Side-by-Side:\n[ซ้าย]: เอกสารที่อัปโหลด\n[ขวา]: ข้อมูลยืนยันจาก BKK Nursing Academy\n\nสถานะ: ข้อมูลตรงกัน 100%')">👁️ Verify Documents</button>
+                            <button class="btn btn-primary btn-sm" disabled>ยืนยันเข้าทีม</button>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -446,10 +491,21 @@
                         <td><strong>คุณมานพ</strong><br><span style="font-size: 11px;">บางนา (5 กม.)</span></td>
                         <td><strong>฿1,200</strong><br><span class="status-badge bg-success" style="font-size: 10px;">ชำระแล้ว</span></td>
                         <td><span class="status-badge bg-error">⚠️ ตารางซ้อน</span></td>
-                        <td><button class="btn btn-secondary btn-sm" onclick="alert('ระบบกำลังจำลองการสแกนหาผู้ดูแลที่ว่างที่สุดในรัศมี 5 กม...\n\nพบ: นายสมชาย (ว่าง)\n\nดำเนินการย้ายงานเรียบร้อย!')">Smart Re-assign</button></td>
+                        <td style="display: flex; gap: 8px;">
+                            <button class="btn btn-secondary btn-sm" onclick="alert('ระบบกำลังจำลองการสแกนหาผู้ดูแลที่ว่างที่สุดในรัศมี 5 กม...\n\nพบ: นายสมชาย (Expertise: Standard)\n\nดำเนินการย้ายงานเรียบร้อย!')">Smart Re-assign</button>
+                        </td>
                     </tr>
                 </tbody>
             </table>
+
+            <!-- Scheduling Audit Log (Gap Fill) -->
+            <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--neutral-100);">
+                <h4 style="font-size: 14px; margin-bottom: 12px; color: var(--neutral-600);">🕒 Recent Scheduling Changes (Audit Log)</h4>
+                <div style="font-size: 12px; color: var(--neutral-600);">
+                    <div style="margin-bottom: 8px;">• <strong>12/05/26 10:45</strong>: #BK-7721 - Re-assigned to 'วิภาวี' by 'Michael J.' (Reason: Proximity optimized)</div>
+                    <div>• <strong>12/05/26 09:15</strong>: #BK-7725 - Job Created (Auto-Match Pending)</div>
+                </div>
+            </div>
         </div>
     </main>
 
@@ -513,19 +569,36 @@
         <div class="layout-grid">
             <div class="card">
                 <div class="card-title"><h3>รายการรอการพิจารณา</h3></div>
+                
+                <!-- Active Case -->
                 <div class="dispute-item selected" id="dispute-990">
                     <div style="display: flex; justify-content: space-between;">
                         <span class="case-id">#AP-990</span>
-                        <span class="sla-tag sla-urgent">เหลือ 1 วัน 4 ชม.</span>
+                        <span class="sla-tag sla-urgent">SLA: เหลือ 1 วัน 4 ชม.</span>
                     </div>
                     <p style="font-size: 13px; margin: 8px 0;"><strong>ผู้ดูแล:</strong> รวีวรรณ | <span class="stars">★☆☆☆☆</span></p>
                     <p style="font-size: 13px;">"ลูกค้าให้ 1 ดาวเนื่องจากเข้างานสาย ผู้ดูแลอุทธรณ์ว่า GPS แอปมีปัญหา"</p>
                     <div style="margin-top: 12px;"><span class="status-badge bg-pending" id="status-990">รอพิจารณา</span></div>
                 </div>
+
+                <!-- Locked Case (Gap Fill) -->
+                <div class="dispute-item" style="opacity: 0.6; cursor: not-allowed; background: #f9f9f9;">
+                    <div style="display: flex; justify-content: space-between;">
+                        <span class="case-id">#AP-850</span>
+                        <span class="sla-tag" style="background: var(--neutral-600); color: white;">SLA: หมดเวลา (72h+)</span>
+                    </div>
+                    <p style="font-size: 13px; margin: 8px 0;"><strong>ผู้ดูแล:</strong> มานะ | <span class="stars">★★☆☆☆</span></p>
+                    <p style="font-size: 13px;">[LOCKED] ไม่สามารถยื่นอุทธรณ์ได้เนื่องจากเกินกำหนดเวลา 3 วันทำการ</p>
+                    <div style="margin-top: 12px;"><span class="status-badge" style="background: #ddd;">สถานะ: สิ้นสุดอุทธรณ์</span></div>
+                </div>
             </div>
             <div class="card">
                 <div class="card-title"><h3>รายละเอียดเคส #AP-990</h3></div>
                 <div class="evidence-box">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                        <strong>💬 แชทหลักฐาน (Chat Snippet)</strong>
+                        <button class="btn btn-outline btn-sm" onclick="alert('เลือกไฟล์หลักฐาน (รูปภาพ/PDF) เพื่อแนบเข้าระบบ Audit Trail...')">📎 แนบหลักฐานเพิ่ม</button>
+                    </div>
                     <div class="chat-snippet"><strong>รวีวรรณ:</strong> "สวัสดีค่ะ ถึงหน้าหมู่บ้านแล้วแต่แอปขึ้นว่าอยู่นอกพื้นที่"</div>
                     <div style="font-size: 12px;">📍 เช็กอิน: 08:00:05 (ตรงพิกัดจริง)</div>
                 </div>
@@ -557,12 +630,12 @@
         </div>
 
         <div class="card">
-            <div class="card-title"><h3>รายการสรุปยอดโอนคืน (Settlement)</h3></div>
+            <div class="card-title"><h3>รายการสรุปยอดโอนคืน (Settlement Logic: Gross - 15% GP = Net)</h3></div>
             <table>
-                <thead><tr><th>รอบบัญชี</th><th>ยอดโอนสุทธิ</th><th>สถานะการโอน</th></tr></thead>
+                <thead><tr><th>รอบบัญชี</th><th>ยอดขายรวม (Gross)</th><th>Platform Fee (15% GP)</th><th>ยอดโอนสุทธิ (Net)</th><th>สถานะการโอน</th></tr></thead>
                 <tbody>
-                    <tr><td>01/05/2026 - 15/05/2026</td><td style="font-weight: 700;">฿ 71,250</td><td><span class="status-badge bg-pending">🕒 Pending</span></td></tr>
-                    <tr><td>16/04/2026 - 30/04/2026</td><td style="font-weight: 700;">฿ 77,900</td><td><span class="status-badge bg-success">✓ Paid</span></td></tr>
+                    <tr><td>01/05/2026 - 15/05/2026</td><td>฿ 83,823</td><td>- ฿ 12,573</td><td style="font-weight: 700; color: var(--primary-600);">฿ 71,250</td><td><span class="status-badge bg-pending">🕒 Pending</span></td></tr>
+                    <tr><td>16/04/2026 - 30/04/2026</td><td>฿ 91,647</td><td>- ฿ 13,747</td><td style="font-weight: 700; color: var(--primary-600);">฿ 77,900</td><td><span class="status-badge bg-success">✓ Paid</span></td></tr>
                 </tbody>
             </table>
         </div>
@@ -570,6 +643,7 @@
         <div class="export-grid">
             <div class="export-card"><span>📊</span><div style="font-weight: 600;">สรุปงานรายวัน</div></div>
             <div class="export-card"><span>💰</span><div style="font-weight: 600;">รายงานรายได้</div></div>
+            <div class="export-card" onclick="alert('กำลังเข้าสู่ระบบ Audit Log Viewer (เก็บข้อมูลย้อนหลัง 3 ปี ตามนโยบาย PDPA)...')"><span>📜</span><div style="font-weight: 600;">Audit Log Viewer</div></div>
         </div>
     </main>
 
@@ -626,6 +700,19 @@
                 dot.style.background = isOnline ? 'var(--success)' : 'var(--error)';
             });
         }, 5000);
+
+        // Accessibility Toggle
+        function toggleAccessibility() {
+            document.body.classList.toggle('accessibility-mode');
+            const isModeOn = document.body.classList.contains('accessibility-mode');
+            alert(isModeOn ? 'Accessibility Mode: ON (High Contrast & Larger Text)' : 'Accessibility Mode: OFF');
+        }
+
+        // Mock Critical Alert (Show after 3 seconds)
+        setTimeout(() => {
+            const alertBar = document.getElementById('critical-alert');
+            if (alertBar) alertBar.style.display = 'flex';
+        }, 3000);
     </script>
 </body>
 </html>

@@ -161,11 +161,54 @@
         .utilization-mini { height: 6px; background: var(--neutral-100); border-radius: 3px; margin-top: 10px; overflow: hidden; }
         .utilization-mini-fill { height: 100%; background: var(--secondary-500); border-radius: 3px; }
 
-        /* Footer Note */
-        .footer-note { margin-top: 40px; padding: 20px; text-align: center; color: var(--neutral-600); font-size: 12px; border-top: 1px solid var(--neutral-100); }
+        /* Accessibility Mode */
+        body.accessibility-mode { font-size: 1.15em; }
+        body.accessibility-mode .sidebar { width: 320px; }
+        body.accessibility-mode .main { margin-left: 320px; }
+        body.accessibility-mode * { contrast: 1.2; }
+        
+        /* Critical Alert Header */
+        .critical-alert-bar {
+            background: var(--error);
+            color: white;
+            padding: 10px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 14px;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            z-index: 2000;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        .critical-alert-bar .btn-close {
+            background: none;
+            border: 1px solid white;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        /* Highlight Critical Reports */
+        .report-item.critical {
+            border-left: 6px solid var(--error);
+            background: rgba(234, 84, 85, 0.05);
+            animation: highlight-pulse 2s infinite;
+        }
+        @keyframes highlight-pulse { 0% { box-shadow: 0 0 0 0 rgba(234, 84, 85, 0.2); } 70% { box-shadow: 0 0 0 10px rgba(234, 84, 85, 0); } 100% { box-shadow: 0 0 0 0 rgba(234, 84, 85, 0); } }
+
     </style>
 </head>
 <body>
+
+    <!-- Critical Alert Bar -->
+    <div id="critical-alert" class="critical-alert-bar" style="display: none;">
+        <span>🚨 <strong>Critical Incident Reported:</strong> #BK-7755 (วิภาวี) ความดันโลหิตสูงผิดปกติ โปรดตรวจสอบด่วน!</span>
+        <button class="btn-close" onclick="document.getElementById('critical-alert').style.display='none'">Dismiss</button>
+    </div>
 
     <nav class="sidebar">
         <div class="sidebar-header">
@@ -199,6 +242,7 @@
                 </div>
             </div>
             <div class="user-profile">
+                <button class="btn btn-outline btn-sm" onclick="toggleAccessibility()" style="margin-right: 12px; font-size: 11px;">[A] Accessibility</button>
                 <div style="text-align: right; margin-right: 16px;">
                     <p style="font-weight: 600; font-size: 14px;">Michael Jackson</p>
                     <p style="font-size: 12px; color: var(--neutral-600);">Operator Manager</p>
@@ -206,6 +250,28 @@
                 <div style="width: 48px; height: 48px; border-radius: 12px; background: var(--primary-100); display: flex; align-items: center; justify-content: center; color: var(--primary-600); font-weight: 700;">MJ</div>
             </div>
         </header>
+
+    <script>
+        // Sync Indicator Pulse Simulation (Mock)
+        const syncDot = document.querySelector('.sync-dot');
+        setInterval(() => {
+            const isOnline = Math.random() > 0.05;
+            if(syncDot) syncDot.style.background = isOnline ? 'var(--success)' : 'var(--error)';
+        }, 3000);
+
+        // Accessibility Toggle
+        function toggleAccessibility() {
+            document.body.classList.toggle('accessibility-mode');
+            const isModeOn = document.body.classList.contains('accessibility-mode');
+            alert(isModeOn ? 'Accessibility Mode: ON (High Contrast & Larger Text)' : 'Accessibility Mode: OFF');
+        }
+
+        // Mock Critical Alert (Show after 3 seconds)
+        setTimeout(() => {
+            const alertBar = document.getElementById('critical-alert');
+            if (alertBar) alertBar.style.display = 'flex';
+        }, 3000);
+    </script>
 
         <div class="metrics-grid" style="grid-template-columns: repeat(5, 1fr);">
             <div class="metric-card">

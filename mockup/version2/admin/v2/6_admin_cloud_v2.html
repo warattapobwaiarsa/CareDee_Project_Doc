@@ -64,7 +64,7 @@
         }
 
         .sidebar-header {
-            padding: 32px 20px;
+            padding: 24px 20px;
             text-align: center;
             border-bottom: 1px solid rgba(255,255,255,0.1);
         }
@@ -116,12 +116,12 @@
         .main-content {
             margin-left: var(--sidebar-width);
             flex: 1;
-            padding: 32px;
+            padding: 24px;
         }
 
         header {
             background: white;
-            padding: 16px 32px;
+            padding: 16px 24px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -146,7 +146,7 @@
 
         .metric-card {
             background: white;
-            padding: 24px;
+            padding: 20px;
             border-radius: 16px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.03);
             border-bottom: 4px solid var(--primary-600);
@@ -179,7 +179,7 @@
 
         .card {
             background: white;
-            padding: 24px;
+            padding: 20px;
             border-radius: 16px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.03);
             margin-bottom: 24px;
@@ -569,7 +569,13 @@
         <div class="modal-content">
             <div style="font-size: 40px; margin-bottom: 16px;">⚠️</div>
             <h2 style="margin-bottom: 12px;">ยืนยันการประกาศ Global Maintenance?</h2>
-            <p style="font-size: 14px; color: var(--neutral-600); line-height: 1.5;">การกดประกาศนี้จะส่งผลกระทบต่อ <b>ผู้ใช้ทุกคน (Global)</b> ในระบบทันที โปรดตรวจสอบข้อความให้ถูกต้องก่อนกดยืนยัน</p>
+            <p style="font-size: 14px; color: var(--neutral-600); line-height: 1.5; margin-bottom: 20px;">การกดประกาศนี้จะส่งผลกระทบต่อ <b>ผู้ใช้ทุกคน (Global)</b> ในระบบทันที โปรดตรวจสอบข้อความให้ถูกต้องก่อนกดยืนยัน</p>
+            
+            <div style="text-align: left; margin-bottom: 20px;">
+                <label style="font-size: 13px; font-weight: 600; color: var(--neutral-600); margin-bottom: 8px; display: block;">ระบุเหตุผลการประกาศ (Reason for Audit Log):</label>
+                <textarea id="maintenanceReason" placeholder="เช่น ปรับปรุงเซิร์ฟเวอร์ประจำเดือน, แก้ไขบั๊กด่วน..." style="height: 80px;"></textarea>
+            </div>
+
             <div class="modal-btns">
                 <button class="btn btn-cancel" onclick="hideConfirmation()">ยกเลิก</button>
                 <button class="btn btn-confirm" onclick="confirmBroadcast()">ใช่, ยืนยันการประกาศ</button>

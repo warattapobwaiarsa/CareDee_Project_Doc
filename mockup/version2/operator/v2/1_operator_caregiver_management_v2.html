@@ -228,9 +228,46 @@
             background: white;
             font-size: 14px;
         }
+
+        /* Accessibility Mode */
+        body.accessibility-mode { font-size: 1.15em; }
+        body.accessibility-mode .sidebar { width: 320px; }
+        body.accessibility-mode .main { margin-left: 320px; }
+        body.accessibility-mode * { contrast: 1.2; }
+        
+        /* Critical Alert Header */
+        .critical-alert-bar {
+            background: var(--error);
+            color: white;
+            padding: 10px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 14px;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            z-index: 2000;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        .critical-alert-bar .btn-close {
+            background: none;
+            border: 1px solid white;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
     </style>
 </head>
 <body>
+
+    <!-- Critical Alert Bar -->
+    <div id="critical-alert" class="critical-alert-bar" style="display: none;">
+        <span>🚨 <strong>Critical Incident Reported:</strong> #BK-7755 (วิภาวี) ความดันโลหิตสูงผิดปกติ โปรดตรวจสอบด่วน!</span>
+        <button class="btn-close" onclick="document.getElementById('critical-alert').style.display='none'">Dismiss</button>
+    </div>
 
     <nav class="sidebar">
         <div class="sidebar-header">
@@ -264,6 +301,7 @@
                 </div>
             </div>
             <div class="user-profile">
+                <button class="btn btn-outline btn-sm" onclick="toggleAccessibility()" style="margin-right: 12px; font-size: 11px;">[A] Accessibility</button>
                 <div style="text-align: right;">
                     <p style="font-weight: 600; font-size: 14px;">Michael Jackson <span class="badge-mfa">2FA VERIFIED</span></p>
                     <p style="font-size: 12px; color: var(--neutral-600);">หัวหน้าฝ่ายปฏิบัติการ</p>
@@ -329,11 +367,13 @@
             </div>
         </div>
 
-        <!-- Inbound Requests with Onboarding Progress Tracker -->
         <div class="card">
             <div class="card-title">
                 <h3>📥 คำขอยืนยันผู้ดูแลใหม่ (Onboarding Progress Tracker)</h3>
-                <span class="status-badge bg-pending">4 Pending TI</span>
+                <div style="display: flex; gap: 8px;">
+                    <button class="btn btn-outline btn-sm" onclick="alert('กำลังดึงข้อมูลชุดใหม่จากสถาบันฝึกอบรม (TI Inbound)...')">🔄 Check TI Inbound</button>
+                    <span class="status-badge bg-pending">4 Pending TI</span>
+                </div>
             </div>
             <p style="font-size: 13px; color: var(--neutral-600); margin-bottom: 16px;">ติดตามสถานะผู้สมัครจากสถาบันฝึกอบรม (Training Institute) ก่อนรับเข้าทีม</p>
             <table>
@@ -350,7 +390,7 @@
                     <tr>
                         <td style="font-weight: 600;">
                             น.ส. อารีรัตน์ สุขใจ
-                            <div style="font-size: 11px; color: var(--neutral-600); font-weight: 400;">BKK Nursing Academy</div>
+                            <div style="font-size: 11px; color: var(--neutral-600); font-weight: 400;">BKK Nursing Academy <span class="badge-mfa" style="background: var(--info); font-size: 8px;">⭐ Elite Grade</span></div>
                         </td>
                         <td style="color: var(--success); font-weight: 700;">3.85</td>
                         <td>
@@ -365,8 +405,9 @@
                             </div>
                         </td>
                         <td><span class="status-badge bg-pending">รอผลสอบ Final</span></td>
-                        <td>
-                            <button class="btn btn-outline btn-sm" disabled>ยืนยันเข้าทีม</button>
+                        <td style="display: flex; gap: 8px;">
+                            <button class="btn btn-outline btn-sm" onclick="alert('เปิดโหมด Verify Side-by-Side:\n[ซ้าย]: เอกสารที่อัปโหลด\n[ขวา]: ข้อมูลยืนยันจาก BKK Nursing Academy\n\nสถานะ: ข้อมูลตรงกัน 100%')">👁️ Verify</button>
+                            <button class="btn btn-primary btn-sm" disabled title="ต้องผ่านผลสอบ Final ก่อน">ยืนยันรับ</button>
                         </td>
                     </tr>
                     <tr>
