@@ -1,0 +1,185 @@
+<svg width="1440" height="900" viewBox="0 0 1440 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="1440" height="900" fill="#F8F8F8"/>
+  
+  <!-- Sidebar -->
+  <rect width="280" height="900" fill="white"/>
+  <line x1="280" y1="0" x2="280" y2="900" stroke="#B9B9C3" stroke-opacity="0.5"/>
+  
+  <!-- Sidebar Brand -->
+  <g transform="translate(0, 32)">
+    <rect x="118" y="0" width="44" height="44" rx="10" fill="#007A8C"/>
+    <text x="140" y="31" text-anchor="middle" fill="white" font-family="Inter" font-size="20" font-weight="700">CD</text>
+    <text x="140" y="70" text-anchor="middle" fill="#007A8C" font-family="IBM Plex Sans Thai" font-size="20" font-weight="700">CareDee Academy</text>
+    <text x="140" y="88" text-anchor="middle" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="11" font-weight="400" letter-spacing="0.05em">TRAINING INSTITUTE INTERFACE</text>
+  </g>
+  
+  <!-- Sidebar Menu -->
+  <g transform="translate(0, 160)">
+    <text x="24" y="30" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="15">🏠 ภาพรวมสถาบัน</text>
+    <text x="24" y="78" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="15">📥 นำเข้าข้อมูลการอบรม</text>
+    <text x="24" y="126" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="15">🏅 จัดการใบรับรอง</text>
+    
+    <!-- Active Menu Item -->
+    <g transform="translate(0, 144)">
+      <rect width="280" height="48" fill="#E0F2F4"/>
+      <rect x="276" width="4" height="48" fill="#007A8C"/>
+      <text x="24" y="30" fill="#007A8C" font-family="IBM Plex Sans Thai" font-size="15" font-weight="500">📈 สถิติตลาดแรงงาน</text>
+    </g>
+    
+    <!-- Menu with Badge -->
+    <text x="24" y="222" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="15">🛡️ การตรวจสอบ &amp; เกณฑ์</text>
+    <rect x="220" y="204" width="28" height="20" rx="10" fill="#EA5455"/>
+    <text x="234" y="219" text-anchor="middle" fill="white" font-family="Inter" font-size="10" font-weight="700">12</text>
+    
+    <text x="24" y="270" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="15">🏢 โปรไฟล์สถาบัน &amp; KYC</text>
+  </g>
+  
+  <!-- Sidebar Footer -->
+  <g transform="translate(24, 820)">
+    <line x1="-24" y1="0" x2="256" y2="0" stroke="#F8F8F8"/>
+    <text x="0" y="35" fill="#EA5455" font-family="IBM Plex Sans Thai" font-size="15">🚪 ออกจากระบบ</text>
+  </g>
+
+  <!-- Main Content Area -->
+  <g transform="translate(280, 0)">
+    <!-- Header -->
+    <rect x="32" y="32" width="1096" height="76" rx="16" fill="white" filter="url(#shadow)"/>
+    <text x="64" y="68" fill="#1E1E1E" font-family="IBM Plex Sans Thai" font-size="20" font-weight="700">สถิติตลาดแรงงาน (Market Intelligence)</text>
+    <text x="64" y="88" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="13">เจาะลึกความต้องการตลาดเพื่อการวางแผนหลักสูตรที่แม่นยำ</text>
+    
+    <g transform="translate(900, 48)">
+      <rect x="0" y="4" width="140" height="24" rx="12" fill="#28C76F"/>
+      <text x="70" y="21" text-anchor="middle" fill="white" font-family="IBM Plex Sans Thai" font-size="11" font-weight="600">MFA : ยืนยันตัวตนแล้ว</text>
+      
+      <rect x="152" y="0" width="44" height="44" rx="12" fill="#E0F2F4"/>
+      <text x="174" y="28" text-anchor="middle" fill="#007A8C" font-family="Inter" font-size="16" font-weight="700">SM</text>
+    </g>
+
+    <!-- Info Section -->
+    <g transform="translate(32, 124)">
+      <text x="0" y="12" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="12">* ข้อมูลแบบรวม (Aggregated Data) เพื่อการวิเคราะห์ตลาด</text>
+      <rect x="750" y="-8" width="346" height="28" rx="14" fill="#F3F2F7" stroke="#B9B9C3"/>
+      <text x="923" y="11" text-anchor="middle" fill="#1E1E1E" font-family="IBM Plex Sans Thai" font-size="11">🔄 อัปเดตล่าสุด: 14 พ.ค. 2569 | 08:00 (อัปเดตทุก 24 ชม.)</text>
+    </g>
+
+    <!-- Stats Grid -->
+    <g transform="translate(32, 160)">
+      <!-- Stat 1 -->
+      <rect width="260" height="120" rx="16" fill="white" filter="url(#shadow)"/>
+      <rect x="0" y="116" width="260" height="4" fill="#007A8C"/>
+      <text x="24" y="36" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="14" font-weight="500">ความต้องการแรงงาน</text>
+      <text x="24" y="76" fill="#1E1E1E" font-family="IBM Plex Sans Thai" font-size="26" font-weight="700">4,500 งาน/เดือน</text>
+      <text x="24" y="100" fill="#28C76F" font-family="IBM Plex Sans Thai" font-size="12" font-weight="600">↑ 12% จากไตรมาสก่อน</text>
+
+      <!-- Stat 2 -->
+      <g transform="translate(278, 0)">
+        <rect width="260" height="120" rx="16" fill="white" filter="url(#shadow)"/>
+        <rect x="0" y="116" width="260" height="4" fill="#EA5455"/>
+        <text x="24" y="36" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="14" font-weight="500">ทักษะที่ขาดแคลนวิกฤต</text>
+        <text x="24" y="76" fill="#1E1E1E" font-family="IBM Plex Sans Thai" font-size="22" font-weight="700">ดูแลผู้ป่วยติดเตียง</text>
+        <text x="24" y="100" fill="#EA5455" font-family="IBM Plex Sans Thai" font-size="12" font-weight="600">Gap: ขาด 250 คน/เดือน</text>
+      </g>
+
+      <!-- Stat 3 -->
+      <g transform="translate(556, 0)">
+        <rect width="260" height="120" rx="16" fill="white" filter="url(#shadow)"/>
+        <rect x="0" y="116" width="260" height="4" fill="#00CFE8"/>
+        <text x="24" y="36" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="14" font-weight="500">คำค้นหาพุ่งแรง</text>
+        <text x="24" y="76" fill="#1E1E1E" font-family="IBM Plex Sans Thai" font-size="26" font-weight="700">ประคับประคอง</text>
+        <text x="24" y="100" fill="#00CFE8" font-family="IBM Plex Sans Thai" font-size="12" font-weight="600">↑ 45% (Hot Trend)</text>
+      </g>
+
+      <!-- Stat 4 -->
+      <g transform="translate(834, 0)">
+        <rect width="262" height="120" rx="16" fill="white" filter="url(#shadow)"/>
+        <rect x="0" y="116" width="262" height="4" fill="#28C76F"/>
+        <text x="24" y="36" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="14" font-weight="500">Success Rate</text>
+        <text x="24" y="76" fill="#1E1E1E" font-family="IBM Plex Sans Thai" font-size="26" font-weight="700">85%</text>
+        <text x="24" y="100" fill="#28C76F" font-family="IBM Plex Sans Thai" font-size="12" font-weight="600">↑ สูงกว่ามาตรฐาน</text>
+      </g>
+    </g>
+
+    <!-- Grid Layout -->
+    <g transform="translate(32, 312)">
+      <!-- Left Card: Heatmap -->
+      <rect width="532" height="380" rx="16" fill="white" filter="url(#shadow)"/>
+      <text x="24" y="44" fill="#1E1E1E" font-family="IBM Plex Sans Thai" font-size="18" font-weight="700">แผนที่ความร้อนพื้นที่ขาดแคลน (Heatmap)</text>
+      <line x1="24" y1="64" x2="508" y2="64" stroke="#F8F8F8"/>
+      
+      <rect x="24" y="80" width="484" height="276" rx="12" fill="#DCECF7"/>
+      <!-- Heatmap visualization circles -->
+      <circle cx="240" cy="180" r="50" fill="#EA5455" fill-opacity="0.3"/>
+      <circle cx="240" cy="180" r="30" fill="#EA5455" fill-opacity="0.5"/>
+      <circle cx="320" cy="240" r="60" fill="#EA5455" fill-opacity="0.2"/>
+      <circle cx="320" cy="240" r="40" fill="#EA5455" fill-opacity="0.4"/>
+      <text x="266" y="218" text-anchor="middle" fill="#4A5568" font-family="IBM Plex Sans Thai" font-size="16" font-weight="700">Macro View: กรุงเทพและปริมณฑล</text>
+
+      <!-- Right Card: Unmet Demand -->
+      <g transform="translate(564, 0)">
+        <rect width="532" height="380" rx="16" fill="white" filter="url(#shadow)"/>
+        <text x="24" y="44" fill="#1E1E1E" font-family="IBM Plex Sans Thai" font-size="18" font-weight="700">คำค้นหาที่ "ไม่พบผู้ดูแล" (Unmet Demand)</text>
+        <line x1="24" y1="64" x2="508" y2="64" stroke="#F8F8F8"/>
+        
+        <!-- Item 1 -->
+        <g transform="translate(24, 80)">
+          <rect width="484" height="90" rx="10" fill="#F8F8F8"/>
+          <rect width="4" height="90" fill="#FF9F43"/>
+          <text x="16" y="28" fill="#1E1E1E" font-family="IBM Plex Sans Thai" font-size="14" font-weight="600">ดูแลผู้ป่วยพักฟื้นหลังผ่าตัดเปลี่ยนข้อเข่า</text>
+          <text x="16" y="52" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="12">ค้นหา 320 ครั้ง/เดือน | พบ 0 คน</text>
+          <text x="16" y="72" fill="#007A8C" font-family="IBM Plex Sans Thai" font-size="11">ดูแนวทางหลักสูตร →</text>
+        </g>
+        
+        <!-- Item 2 -->
+        <g transform="translate(24, 186)">
+          <rect width="484" height="90" rx="10" fill="#F8F8F8"/>
+          <rect width="4" height="90" fill="#00CFE8"/>
+          <text x="16" y="28" fill="#1E1E1E" font-family="IBM Plex Sans Thai" font-size="14" font-weight="600">ผู้ช่วยพยาบาลที่พูดภาษาญี่ปุ่นได้</text>
+          <text x="16" y="52" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="12">ค้นหา 150 ครั้ง/เดือน | พบ 2 คน (ไม่ว่าง)</text>
+          <text x="16" y="72" fill="#007A8C" font-family="IBM Plex Sans Thai" font-size="11">ดูแนวทางหลักสูตร →</text>
+        </g>
+      </g>
+    </g>
+
+    <!-- Employment Success Rate -->
+    <g transform="translate(32, 724)">
+      <rect width="1096" height="120" rx="16" fill="white" filter="url(#shadow)"/>
+      <g transform="translate(48, 24)">
+        <text x="0" y="48" fill="#28C76F" font-family="Inter" font-size="48" font-weight="700">85%</text>
+        <text x="0" y="76" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="14">ผู้เรียนจากสถาบันคุณได้รับการจ้างงานภายใน 30 วัน</text>
+        
+        <line x1="450" y1="0" x2="450" y2="80" stroke="#F8F8F8"/>
+        
+        <g transform="translate(500, 16)">
+          <text x="0" y="0" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="12">รายได้เฉลี่ย/เดือน</text>
+          <text x="0" y="32" fill="#1E1E1E" font-family="IBM Plex Sans Thai" font-size="18" font-weight="700">22,500 ฿</text>
+        </g>
+        
+        <g transform="translate(700, 16)">
+          <text x="0" y="0" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="12">คะแนนรีวิวเฉลี่ย</text>
+          <text x="0" y="32" fill="#1E1E1E" font-family="IBM Plex Sans Thai" font-size="18" font-weight="700">4.9 / 5.0</text>
+        </g>
+        
+        <g transform="translate(900, 16)">
+          <text x="0" y="0" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="12">อัตราการจองซ้ำ</text>
+          <text x="0" y="32" fill="#1E1E1E" font-family="IBM Plex Sans Thai" font-size="18" font-weight="700">72%</text>
+        </g>
+      </g>
+    </g>
+    
+    <!-- Footer -->
+    <text x="548" y="880" text-anchor="middle" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="11">ระบบทำการบันทึก Audit Log ทุกการเปลี่ยนแปลงข้อมูลตามมาตรฐาน PDPA | © 2026 CareDee Academy</text>
+  </g>
+  
+  <defs>
+    <filter id="shadow" x="-4" y="0" width="100%" height="100%" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+      <feOffset dy="4"/>
+      <feGaussianBlur stdDeviation="6"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.03 0"/>
+      <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow"/>
+      <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow" result="shape"/>
+    </filter>
+  </defs>
+</svg>

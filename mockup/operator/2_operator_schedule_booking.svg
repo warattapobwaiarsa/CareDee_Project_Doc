@@ -1,0 +1,212 @@
+<svg width="1440" height="1100" viewBox="0 0 1440 1100" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="1440" height="1100" fill="#F8F8F8"/>
+  
+  <!-- Sidebar -->
+  <rect width="280" height="1100" fill="#004D58"/>
+  
+  <!-- Sidebar Header -->
+  <g transform="translate(0, 32)">
+    <rect x="118" y="0" width="44" height="44" rx="10" fill="white"/>
+    <text x="140" y="31" text-anchor="middle" fill="#007A8C" font-family="Inter" font-size="20" font-weight="700">CD</text>
+    <text x="140" y="70" text-anchor="middle" fill="white" font-family="Inter" font-size="22" font-weight="700">CareDee</text>
+    <text x="140" y="88" text-anchor="middle" fill="white" fill-opacity="0.5" font-family="Inter" font-size="11" font-weight="400" letter-spacing="0.05em">SERVICE OPERATOR PORTAL</text>
+  </g>
+  
+  <!-- Sidebar Menu -->
+  <g transform="translate(0, 160)">
+    <text x="24" y="30" fill="white" fill-opacity="0.7" font-family="IBM Plex Sans Thai" font-size="15">🏠 หน้าหลัก Dashboard</text>
+    <text x="24" y="78" fill="white" fill-opacity="0.7" font-family="IBM Plex Sans Thai" font-size="15">👥 จัดการทีมผู้ดูแล (Team)</text>
+    
+    <!-- Active Menu Item -->
+    <g transform="translate(0, 96)">
+      <rect width="280" height="48" fill="white" fill-opacity="0.1"/>
+      <rect width="4" height="48" fill="#FF9F43"/>
+      <text x="24" y="30" fill="white" font-family="IBM Plex Sans Thai" font-size="15" font-weight="500">📅 ตารางงาน &amp; การจอง</text>
+    </g>
+    
+    <text x="24" y="174" fill="white" fill-opacity="0.7" font-family="IBM Plex Sans Thai" font-size="15">📋 ติดตามรายงานหน้างาน</text>
+    <text x="24" y="222" fill="white" fill-opacity="0.7" font-family="IBM Plex Sans Thai" font-size="15">⚠️ ข้อร้องเรียน &amp; อุทธรณ์</text>
+    <text x="24" y="270" fill="white" fill-opacity="0.7" font-family="IBM Plex Sans Thai" font-size="15">📊 รายงาน &amp; รายได้</text>
+  </g>
+  
+  <!-- Sidebar Footer -->
+  <g transform="translate(24, 1020)">
+    <line x1="-24" y1="0" x2="256" y2="0" stroke="white" stroke-opacity="0.1"/>
+    <text x="0" y="35" fill="white" fill-opacity="0.7" font-family="IBM Plex Sans Thai" font-size="15">🚪 ออกจากระบบ</text>
+  </g>
+
+  <!-- Main Content Area -->
+  <g transform="translate(280, 0)">
+    <!-- Header -->
+    <rect x="32" y="32" width="1096" height="88" rx="16" fill="white" filter="url(#shadow)"/>
+    <g transform="translate(64, 56)">
+      <text y="16" fill="#1E1E1E" font-family="IBM Plex Sans Thai" font-size="20" font-weight="700">ตารางงาน &amp; การจอง (Schedule Control)</text>
+      <text y="38" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="13">บริหารจัดการคิวงาน ป้องกันตารางซ้อน</text>
+    </g>
+    
+    <g transform="translate(480, 62)">
+      <rect width="180" height="28" rx="14" fill="#E6F9F0"/>
+      <circle cx="16" cy="14" r="4" fill="#28C76F"/>
+      <text x="28" y="19" fill="#28C76F" font-family="IBM Plex Sans Thai" font-size="12" font-weight="600">System: Connected</text>
+    </g>
+
+    <g transform="translate(800, 52)">
+      <rect x="0" y="4" width="120" height="36" rx="8" stroke="#007A8C" fill="white"/>
+      <text x="60" y="27" text-anchor="middle" fill="#007A8C" font-family="IBM Plex Sans Thai" font-size="12" font-weight="600">[A] Accessibility</text>
+      
+      <g transform="translate(130, 0)">
+        <text x="100" y="16" text-anchor="end" fill="#1E1E1E" font-family="IBM Plex Sans Thai" font-size="14" font-weight="700">Michael Jackson <tspan fill="#28C76F" font-size="10">2FA VERIFIED</tspan></text>
+        <text x="100" y="32" text-anchor="end" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="12">หัวหน้าฝ่ายปฏิบัติการ</text>
+        <rect x="116" y="0" width="48" height="48" rx="12" fill="#E0F2F4"/>
+        <text x="140" y="30" text-anchor="middle" fill="#007A8C" font-family="Inter" font-size="16" font-weight="700">MJ</text>
+      </g>
+    </g>
+
+    <!-- Critical Alert Banner -->
+    <g transform="translate(32, 140)">
+      <rect width="1096" height="56" rx="12" fill="#FEEAEA" stroke="#EA5455" stroke-width="1"/>
+      <text x="16" y="33" fill="#EA5455" font-family="IBM Plex Sans Thai" font-size="14" font-weight="600">⚠️ Action Required: <tspan font-weight="400">พบผู้ดูแล 1 รายมีเอกสารใกล้หมดอายุ และมีงานซ้อน 1 รายการ</tspan></text>
+    </g>
+
+    <!-- Master Schedule Card -->
+    <g transform="translate(32, 220)">
+      <rect width="1096" height="260" rx="16" fill="white" filter="url(#shadow)"/>
+      <text x="28" y="44" fill="#1E1E1E" font-family="IBM Plex Sans Thai" font-size="18" font-weight="600">📅 Master Schedule (Today)</text>
+      <line x1="28" y1="64" x2="1068" y2="64" stroke="#F8F8F8"/>
+      
+      <!-- Timeline Grid -->
+      <g transform="translate(28, 84)">
+        <!-- Header -->
+        <rect width="180" height="40" fill="#F8F8F8" stroke="#B9B9C3" stroke-width="0.5"/>
+        <text x="90" y="25" text-anchor="middle" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="12" font-weight="600">ผู้ดูแล</text>
+        
+        <g transform="translate(180, 0)">
+          <rect width="126" height="40" fill="#F8F8F8" stroke="#B9B9C3" stroke-width="0.5"/>
+          <text x="63" y="25" text-anchor="middle" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="12" font-weight="600">08:00</text>
+        </g>
+        <g transform="translate(306, 0)">
+          <rect width="126" height="40" fill="#F8F8F8" stroke="#B9B9C3" stroke-width="0.5"/>
+          <text x="63" y="25" text-anchor="middle" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="12" font-weight="600">09:00</text>
+        </g>
+        <g transform="translate(432, 0)">
+          <rect width="126" height="40" fill="#F8F8F8" stroke="#B9B9C3" stroke-width="0.5"/>
+          <text x="63" y="25" text-anchor="middle" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="12" font-weight="600">10:00</text>
+        </g>
+        <g transform="translate(558, 0)">
+          <rect width="126" height="40" fill="#F8F8F8" stroke="#B9B9C3" stroke-width="0.5"/>
+          <text x="63" y="25" text-anchor="middle" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="12" font-weight="600">11:00</text>
+        </g>
+        <g transform="translate(684, 0)">
+          <rect width="126" height="40" fill="#F8F8F8" stroke="#B9B9C3" stroke-width="0.5"/>
+          <text x="63" y="25" text-anchor="middle" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="12" font-weight="600">12:00</text>
+        </g>
+        <g transform="translate(810, 0)">
+          <rect width="126" height="40" fill="#F8F8F8" stroke="#B9B9C3" stroke-width="0.5"/>
+          <text x="63" y="25" text-anchor="middle" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="12" font-weight="600">13:00</text>
+        </g>
+        <g transform="translate(936, 0)">
+          <rect width="104" height="40" fill="#F8F8F8" stroke="#B9B9C3" stroke-width="0.5"/>
+          <text x="52" y="25" text-anchor="middle" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="12" font-weight="600">14:00</text>
+        </g>
+
+        <!-- Row 1 -->
+        <g transform="translate(0, 40)">
+          <rect width="180" height="80" fill="white" stroke="#B9B9C3" stroke-width="0.5"/>
+          <text x="16" y="32" fill="#1E1E1E" font-family="IBM Plex Sans Thai" font-size="13" font-weight="600">น.ส. วิภาวี</text>
+          <rect x="16" y="44" width="70" height="20" rx="4" fill="#FEEAEA"/>
+          <text x="51" y="58" text-anchor="middle" fill="#EA5455" font-family="IBM Plex Sans Thai" font-size="10">Doc Expiry</text>
+          
+          <g transform="translate(180, 0)">
+            <rect width="126" height="80" fill="white" stroke="#F8F8F8" stroke-width="0.5"/>
+            <!-- Booking Bar 1 -->
+            <rect x="0" y="10" width="378" height="40" rx="4" fill="#E0F2F4" stroke="#007A8C" stroke-width="0.5" stroke-dasharray="0" stroke-opacity="1" style="border-left: 4px solid #007A8C;"/>
+            <rect x="0" y="10" width="4" height="40" fill="#007A8C"/>
+            <text x="12" y="35" fill="#007A8C" font-family="IBM Plex Sans Thai" font-size="10" font-weight="600">#BK-7721 (สมหญิง)</text>
+          </g>
+          <g transform="translate(306, 0)">
+            <rect width="126" height="80" fill="white" stroke="#F8F8F8" stroke-width="0.5"/>
+          </g>
+          <g transform="translate(432, 0)">
+            <rect width="126" height="80" fill="white" stroke="#F8F8F8" stroke-width="0.5"/>
+          </g>
+          <g transform="translate(558, 0)">
+            <rect width="126" height="80" fill="white" stroke="#F8F8F8" stroke-width="0.5"/>
+          </g>
+          <g transform="translate(684, 0)">
+            <rect width="126" height="80" fill="white" stroke="#F8F8F8" stroke-width="0.5"/>
+            <!-- Conflict Bar -->
+            <rect x="0" y="10" width="315" height="40" rx="4" fill="#FEEAEA" stroke="#EA5455" stroke-width="0.5"/>
+            <rect x="0" y="10" width="4" height="40" fill="#EA5455"/>
+            <text x="12" y="35" fill="#EA5455" font-family="IBM Plex Sans Thai" font-size="10" font-weight="600">⚠️ Conflict (#BK-7750)</text>
+          </g>
+          <g transform="translate(810, 0)">
+            <rect width="126" height="80" fill="white" stroke="#F8F8F8" stroke-width="0.5"/>
+          </g>
+          <g transform="translate(936, 0)">
+            <rect width="104" height="80" fill="white" stroke="#F8F8F8" stroke-width="0.5"/>
+          </g>
+        </g>
+      </g>
+    </g>
+
+    <!-- Booking Details Card -->
+    <g transform="translate(32, 510)">
+      <rect width="1096" height="360" rx="16" fill="white" filter="url(#shadow)"/>
+      <text x="28" y="44" fill="#1E1E1E" font-family="IBM Plex Sans Thai" font-size="18" font-weight="600">📋 รายละเอียดการจอง</text>
+      <line x1="28" y1="64" x2="1068" y2="64" stroke="#F8F8F8"/>
+      
+      <rect x="0" y="72" width="1096" height="44" fill="#F8F8F8"/>
+      <text x="28" y="100" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="13" font-weight="600">BOOKING ID</text>
+      <text x="200" y="100" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="13" font-weight="600">ลูกค้า / สถานที่</text>
+      <text x="450" y="100" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="13" font-weight="600">ยอดเงิน / การชำระ</text>
+      <text x="700" y="100" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="13" font-weight="600">สถานะงาน</text>
+      <text x="900" y="100" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="13" font-weight="600">ACTION</text>
+      
+      <!-- Table Row (Conflict) -->
+      <g transform="translate(0, 116)">
+        <rect width="1096" height="80" fill="#FEEAEA" fill-opacity="0.3"/>
+        <text x="28" y="44" fill="#EA5455" font-family="IBM Plex Sans Thai" font-size="14" font-weight="600">#BK-7750</text>
+        
+        <g transform="translate(200, 28)">
+          <text y="16" fill="#1E1E1E" font-family="IBM Plex Sans Thai" font-size="14" font-weight="700">คุณมานพ</text>
+          <text y="36" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="11">บางนา (5 กม.)</text>
+        </g>
+        
+        <g transform="translate(450, 28)">
+          <text y="16" fill="#1E1E1E" font-family="IBM Plex Sans Thai" font-size="14" font-weight="700">฿1,200</text>
+          <rect y="22" width="80" height="18" rx="9" fill="#E6F9F0"/>
+          <text x="40" y="35" text-anchor="middle" fill="#28C76F" font-family="IBM Plex Sans Thai" font-size="10" font-weight="600">ชำระแล้ว</text>
+        </g>
+        
+        <rect x="700" y="28" width="100" height="24" rx="12" fill="#FEEAEA"/>
+        <text x="750" y="45" text-anchor="middle" fill="#EA5455" font-family="IBM Plex Sans Thai" font-size="12" font-weight="600">⚠️ ตารางซ้อน</text>
+        
+        <rect x="900" y="24" width="150" height="32" rx="8" fill="#FF9F43"/>
+        <text x="975" y="45" text-anchor="middle" fill="white" font-family="IBM Plex Sans Thai" font-size="12" font-weight="600">Smart Re-assign</text>
+      </g>
+      
+      <!-- Audit Log Section -->
+      <g transform="translate(28, 230)">
+        <line x1="0" y1="0" x2="1040" y2="0" stroke="#F8F8F8"/>
+        <text y="30" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="14" font-weight="600">🕒 Recent Scheduling Changes (Audit Log)</text>
+        <g transform="translate(0, 50)">
+          <text y="16" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="12">• <tspan font-weight="700">12/05/26 10:45</tspan>: #BK-7721 - Re-assigned to 'วิภาวี' by 'Michael J.' (Reason: Proximity optimized)</text>
+          <text y="36" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="12">• <tspan font-weight="700">12/05/26 09:15</tspan>: #BK-7725 - Job Created (Auto-Match Pending)</text>
+        </g>
+      </g>
+    </g>
+  </g>
+  
+  <defs>
+    <filter id="shadow" x="-4" y="0" width="100%" height="100%" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+      <feOffset dy="4"/>
+      <feGaussianBlur stdDeviation="6"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.03 0"/>
+      <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow"/>
+      <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow" result="shape"/>
+    </filter>
+  </defs>
+</svg>

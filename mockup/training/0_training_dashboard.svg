@@ -1,0 +1,201 @@
+<svg width="1440" height="900" viewBox="0 0 1440 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="1440" height="900" fill="#F8F8F8"/>
+  
+  <!-- Sidebar -->
+  <rect width="280" height="900" fill="white"/>
+  <line x1="280" y1="0" x2="280" y2="900" stroke="#B9B9C3" stroke-opacity="0.5"/>
+  
+  <!-- Sidebar Brand -->
+  <g transform="translate(0, 32)">
+    <rect x="118" y="0" width="44" height="44" rx="10" fill="#007A8C"/>
+    <text x="140" y="31" text-anchor="middle" fill="white" font-family="Inter" font-size="20" font-weight="700">CD</text>
+    <text x="140" y="70" text-anchor="middle" fill="#007A8C" font-family="IBM Plex Sans Thai" font-size="20" font-weight="700">CareDee Academy</text>
+    <text x="140" y="88" text-anchor="middle" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="11" font-weight="400" letter-spacing="0.05em">TRAINING INSTITUTE INTERFACE</text>
+  </g>
+  
+  <!-- Sidebar Menu -->
+  <g transform="translate(0, 160)">
+    <!-- Active Menu Item -->
+    <rect width="280" height="48" fill="#E0F2F4"/>
+    <rect x="276" width="4" height="48" fill="#007A8C"/>
+    <text x="24" y="30" fill="#007A8C" font-family="IBM Plex Sans Thai" font-size="15" font-weight="500">🏠 ภาพรวมสถาบัน</text>
+    
+    <text x="24" y="78" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="15">📥 นำเข้าข้อมูลการอบรม</text>
+    <text x="24" y="126" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="15">🏅 จัดการใบรับรอง</text>
+    <text x="24" y="174" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="15">📈 สถิติตลาดแรงงาน</text>
+    
+    <!-- Menu with Badge -->
+    <text x="24" y="222" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="15">🛡️ การตรวจสอบ &amp; เกณฑ์</text>
+    <rect x="220" y="204" width="28" height="20" rx="10" fill="#EA5455"/>
+    <text x="234" y="219" text-anchor="middle" fill="white" font-family="Inter" font-size="10" font-weight="700">12</text>
+    
+    <text x="24" y="270" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="15">🏢 โปรไฟล์สถาบัน &amp; KYC</text>
+  </g>
+  
+  <!-- Sidebar Footer -->
+  <g transform="translate(24, 820)">
+    <line x1="-24" y1="0" x2="256" y2="0" stroke="#F8F8F8"/>
+    <text x="0" y="35" fill="#EA5455" font-family="IBM Plex Sans Thai" font-size="15">🚪 ออกจากระบบ</text>
+  </g>
+
+  <!-- Main Content Area -->
+  <g transform="translate(280, 0)">
+    <!-- Header -->
+    <rect x="32" y="32" width="1096" height="76" rx="16" fill="white" filter="url(#shadow)"/>
+    <text x="64" y="68" fill="#1E1E1E" font-family="IBM Plex Sans Thai" font-size="20" font-weight="700">สถาบันการพยาบาลไทย (Bangkok Branch)</text>
+    <text x="64" y="88" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="13">เจ้าหน้าที่: Michael Jackson</text>
+    
+    <g transform="translate(900, 48)">
+      <rect x="0" y="4" width="140" height="24" rx="12" fill="#28C76F"/>
+      <text x="70" y="21" text-anchor="middle" fill="white" font-family="IBM Plex Sans Thai" font-size="11" font-weight="600">MFA : ยืนยันตัวตนแล้ว</text>
+      
+      <rect x="152" y="0" width="44" height="44" rx="12" fill="#E0F2F4"/>
+      <text x="174" y="28" text-anchor="middle" fill="#007A8C" font-family="Inter" font-size="16" font-weight="700">SM</text>
+    </g>
+
+    <!-- Stats Grid -->
+    <g transform="translate(32, 140)">
+      <!-- Stat 1 -->
+      <rect width="260" height="110" rx="16" fill="white" filter="url(#shadow)"/>
+      <rect x="0" y="106" width="260" height="4" fill="#007A8C"/>
+      <text x="24" y="36" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="14" font-weight="500">ผู้อบรมทั้งหมด</text>
+      <text x="24" y="76" fill="#1E1E1E" font-family="IBM Plex Sans Thai" font-size="26" font-weight="700">1,240 คน</text>
+
+      <!-- Stat 2 -->
+      <g transform="translate(278, 0)">
+        <rect width="260" height="110" rx="16" fill="white" filter="url(#shadow)"/>
+        <rect x="0" y="106" width="260" height="4" fill="#00CFE8"/>
+        <text x="24" y="36" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="14" font-weight="500">เชื่อมโยงบัญชีแล้ว</text>
+        <text x="24" y="76" fill="#1E1E1E" font-family="IBM Plex Sans Thai" font-size="26" font-weight="700">850 คน</text>
+      </g>
+
+      <!-- Stat 3 -->
+      <g transform="translate(556, 0)">
+        <rect width="260" height="110" rx="16" fill="white" filter="url(#shadow)"/>
+        <rect x="0" y="106" width="260" height="4" fill="#FF9F43"/>
+        <text x="24" y="36" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="14" font-weight="500">รอสมัครสมาชิก (Pending)</text>
+        <text x="24" y="76" fill="#1E1E1E" font-family="IBM Plex Sans Thai" font-size="26" font-weight="700">390 คน</text>
+      </g>
+
+      <!-- Stat 4 -->
+      <g transform="translate(834, 0)">
+        <rect width="262" height="110" rx="16" fill="white" filter="url(#shadow)"/>
+        <rect x="0" y="106" width="262" height="4" fill="#28C76F"/>
+        <text x="24" y="36" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="14" font-weight="500">ดัชนีความต้องการ</text>
+        <text x="24" y="76" fill="#28C76F" font-family="IBM Plex Sans Thai" font-size="26" font-weight="700">↑ 15%</text>
+      </g>
+    </g>
+
+    <!-- Main Grid -->
+    <g transform="translate(32, 282)">
+      <!-- Col Left -->
+      <g>
+        <!-- Course-Demand Fit -->
+        <rect width="650" height="240" rx="16" fill="white" filter="url(#shadow)"/>
+        <text x="24" y="44" fill="#1E1E1E" font-family="IBM Plex Sans Thai" font-size="18" font-weight="700">ความสอดคล้องของหลักสูตร (Course-Demand Fit)</text>
+        <line x1="24" y1="64" x2="626" y2="64" stroke="#F8F8F8"/>
+        
+        <!-- Table Header -->
+        <rect y="72" width="650" height="44" fill="#F8F8F8"/>
+        <text x="24" y="100" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="12" font-weight="700">ชื่อหลักสูตร</text>
+        <text x="350" y="100" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="12" font-weight="700">MARKET DEMAND</text>
+        <text x="520" y="100" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="12" font-weight="700">สถานะ</text>
+        
+        <!-- Row 1 -->
+        <text x="24" y="148" fill="#1E1E1E" font-family="IBM Plex Sans Thai" font-size="14" font-weight="700">การดูแลผู้สูงอายุเบื้องต้น (420 ชม.)</text>
+        <rect x="350" y="136" width="100" height="10" rx="5" fill="#F8F8F8"/>
+        <rect x="350" y="136" width="90" height="10" rx="5" fill="#007A8C"/>
+        <rect x="520" y="132" width="110" height="24" rx="12" fill="#E6F9F0"/>
+        <text x="575" y="149" text-anchor="middle" fill="#28C76F" font-family="IBM Plex Sans Thai" font-size="12" font-weight="700">Match (High)</text>
+        
+        <!-- Row 2 -->
+        <text x="24" y="196" fill="#1E1E1E" font-family="IBM Plex Sans Thai" font-size="14" font-weight="700">ดูแลผู้ป่วยติดเตียง Specialty</text>
+        <rect x="350" y="184" width="100" height="10" rx="5" fill="#F8F8F8"/>
+        <rect x="350" y="184" width="95" height="10" rx="5" fill="#EA5455"/>
+        <rect x="520" y="180" width="110" height="24" rx="12" fill="#FFF5F5"/>
+        <text x="575" y="197" text-anchor="middle" fill="#EA5455" font-family="IBM Plex Sans Thai" font-size="12" font-weight="700">Under Supply</text>
+        
+        <!-- Recent Certificates -->
+        <g transform="translate(0, 272)">
+          <rect width="650" height="240" rx="16" fill="white" filter="url(#shadow)"/>
+          <text x="24" y="44" fill="#1E1E1E" font-family="IBM Plex Sans Thai" font-size="18" font-weight="700">การเชื่อมโยงใบรับรองล่าสุด</text>
+          <line x1="24" y1="64" x2="626" y2="64" stroke="#F8F8F8"/>
+          
+          <rect y="72" width="650" height="44" fill="#F8F8F8"/>
+          <text x="24" y="100" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="12" font-weight="700">ชื่อ-นามสกุล</text>
+          <text x="250" y="100" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="12" font-weight="700">รหัสใบรับรอง</text>
+          <text x="450" y="100" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="12" font-weight="700">สถานะ</text>
+          
+          <!-- Row 1 -->
+          <text x="24" y="148" fill="#1E1E1E" font-family="IBM Plex Sans Thai" font-size="14" font-weight="500">น.ส. กัญญาวีร์ สีใส</text>
+          <text x="250" y="148" fill="#007A8C" font-family="IBM Plex Sans Thai" font-size="14" font-weight="600">CERT-2026-001</text>
+          <rect x="450" y="132" width="80" height="24" rx="12" fill="#E0F2F4"/>
+          <text x="490" y="149" text-anchor="middle" fill="#007A8C" font-family="IBM Plex Sans Thai" font-size="12" font-weight="700">Matched</text>
+          
+          <!-- Row 2 -->
+          <text x="24" y="196" fill="#1E1E1E" font-family="IBM Plex Sans Thai" font-size="14" font-weight="500">นาย ธนพล รักงาน</text>
+          <text x="250" y="196" fill="#007A8C" font-family="IBM Plex Sans Thai" font-size="14" font-weight="600">CERT-2026-002</text>
+          <rect x="450" y="180" width="100" height="24" rx="12" fill="#F8F8F8"/>
+          <text x="500" y="197" text-anchor="middle" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="12" font-weight="700">รอสมัครสมาชิก</text>
+        </g>
+      </g>
+
+      <!-- Col Right -->
+      <g transform="translate(682, 0)">
+        <!-- Institute Status -->
+        <rect width="414" height="150" rx="16" fill="white" filter="url(#shadow)"/>
+        <rect width="4" height="150" fill="#28C76F"/>
+        <text x="24" y="44" fill="#1E1E1E" font-family="IBM Plex Sans Thai" font-size="18" font-weight="700">สถานะสถาบัน</text>
+        <text x="24" y="86" fill="#28C76F" font-size="24">✅</text>
+        <text x="64" y="84" fill="#28C76F" font-family="IBM Plex Sans Thai" font-size="16" font-weight="700">Verified Institute</text>
+        <text x="64" y="102" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="11">KYC ล่าสุด: 10/01/2026</text>
+        <rect x="24" y="120" width="366" height="32" rx="8" stroke="#007A8C" fill="white"/>
+        <text x="207" y="141" text-anchor="middle" fill="#007A8C" font-family="IBM Plex Sans Thai" font-size="13" font-weight="600">จัดการเอกสารสถาบัน</text>
+        
+        <!-- Expiry Alert -->
+        <g transform="translate(0, 182)">
+          <rect width="414" height="130" rx="16" fill="white" filter="url(#shadow)"/>
+          <rect width="4" height="130" fill="#FF9F43"/>
+          <text x="24" y="44" fill="#1E1E1E" font-family="IBM Plex Sans Thai" font-size="18" font-weight="700">⚠️ ใกล้หมดอายุ (ใน 30 วัน)</text>
+          <rect x="24" y="60" width="366" height="50" rx="12" fill="#FFF3E6"/>
+          <text x="36" y="82" fill="#FF9F43" font-family="IBM Plex Sans Thai" font-size="13" font-weight="700">3 รายการต้องการการต่ออายุ</text>
+          <text x="36" y="98" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="11">ส่งแจ้งเตือนให้ผู้อบรมเตรียมตัวสอบใหม่</text>
+        </g>
+        
+        <!-- Market Skills -->
+        <g transform="translate(0, 344)">
+          <rect width="414" height="168" rx="16" fill="white" filter="url(#shadow)"/>
+          <text x="24" y="44" fill="#1E1E1E" font-family="IBM Plex Sans Thai" font-size="18" font-weight="700">ทักษะที่ตลาดต้องการ</text>
+          
+          <text x="24" y="80" fill="#1E1E1E" font-family="IBM Plex Sans Thai" font-size="13" font-weight="500">ดูแลผู้ป่วยติดเตียง</text>
+          <rect x="160" y="70" width="180" height="10" rx="5" fill="#F8F8F8"/>
+          <rect x="160" y="70" width="153" height="10" rx="5" fill="#007A8C"/>
+          <text x="350" y="80" fill="#007A8C" font-family="Inter" font-size="13" font-weight="700">85%</text>
+          
+          <text x="24" y="116" fill="#1E1E1E" font-family="IBM Plex Sans Thai" font-size="13" font-weight="500">กายภาพบำบัดเบื้องต้น</text>
+          <rect x="160" y="106" width="180" height="10" rx="5" fill="#F8F8F8"/>
+          <rect x="160" y="106" width="108" height="10" rx="5" fill="#007A8C"/>
+          <text x="350" y="116" fill="#007A8C" font-family="Inter" font-size="13" font-weight="700">60%</text>
+          
+          <text x="24" y="148" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="11">* คำนวณจากสถิติการจองจริงในระบบ CareDee</text>
+        </g>
+      </g>
+    </g>
+    
+    <!-- Footer -->
+    <text x="580" y="850" text-anchor="middle" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="11">ระบบทำการบันทึก Audit Log ทุกการเปลี่ยนแปลงข้อมูลตามมาตรฐาน PDPA | © 2026 CareDee Academy</text>
+  </g>
+  
+  <defs>
+    <filter id="shadow" x="-4" y="0" width="100%" height="100%" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+      <feOffset dy="4"/>
+      <feGaussianBlur stdDeviation="6"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.03 0"/>
+      <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow"/>
+      <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow" result="shape"/>
+    </filter>
+  </defs>
+</svg>

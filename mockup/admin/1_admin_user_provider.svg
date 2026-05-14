@@ -1,0 +1,121 @@
+<svg width="1440" height="900" viewBox="0 0 1440 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="1440" height="900" fill="#F8F8F8"/>
+  
+  <!-- Sidebar -->
+  <rect width="260" height="900" fill="#004D58"/>
+  <rect x="108" y="32" width="44" height="44" rx="10" fill="white"/>
+  <text x="115" y="63" fill="#007A8C" font-family="Inter" font-size="20" font-weight="700">CD</text>
+  <text x="130" y="100" text-anchor="middle" fill="white" font-family="IBM Plex Sans Thai" font-size="20" font-weight="700">CareDee Admin</text>
+  <text x="130" y="118" text-anchor="middle" fill="white" fill-opacity="0.5" font-family="Inter" font-size="11" font-weight="400" letter-spacing="0.05em">SYSTEM CONTROL PANEL</text>
+  
+  <!-- Sidebar Menu -->
+  <g transform="translate(0, 160)">
+    <text x="24" y="30" fill="white" fill-opacity="0.7" font-family="IBM Plex Sans Thai" font-size="15">📊 Dashboard</text>
+    
+    <rect y="48" width="260" height="48" fill="white" fill-opacity="0.1"/>
+    <rect y="48" width="4" height="48" fill="#FF9F43"/>
+    <text x="24" y="78" fill="white" font-family="IBM Plex Sans Thai" font-size="15">👤 ผู้ดูแล/ผู้ให้บริการ</text>
+    
+    <text x="24" y="126" fill="white" fill-opacity="0.7" font-family="IBM Plex Sans Thai" font-size="15">💰 จัดการการเงิน</text>
+    <text x="24" y="174" fill="white" fill-opacity="0.7" font-family="IBM Plex Sans Thai" font-size="15">✨ คุณภาพรีวิว &amp; อุทธรณ์</text>
+    <text x="24" y="222" fill="white" fill-opacity="0.7" font-family="IBM Plex Sans Thai" font-size="15">📈 รายงานระบบ</text>
+    <text x="24" y="270" fill="white" fill-opacity="0.7" font-family="IBM Plex Sans Thai" font-size="15">🛡️ นโยบาย &amp; PDPA</text>
+    <text x="24" y="318" fill="white" fill-opacity="0.7" font-family="IBM Plex Sans Thai" font-size="15">🖥️ เฝ้าระวังระบบคลาวด์</text>
+  </g>
+  
+  <!-- Sidebar Footer -->
+  <line x1="0" y1="820" x2="260" y2="820" stroke="white" stroke-opacity="0.1"/>
+  <text x="24" y="855" fill="white" fill-opacity="0.7" font-family="IBM Plex Sans Thai" font-size="15">🚪 ออกจากระบบ</text>
+
+  <!-- Main Content Area -->
+  <g transform="translate(260, 0)">
+    <!-- Header -->
+    <rect x="32" y="32" width="1116" height="76" rx="16" fill="white" filter="url(#shadow)"/>
+    <rect x="64" y="52" width="300" height="36" rx="12" stroke="#B9B9C3" fill="white"/>
+    <text x="84" y="75" fill="#B9B9C3" font-family="IBM Plex Sans Thai" font-size="14">ค้นหาข้อมูลในระบบ...</text>
+    
+    <rect x="380" y="52" width="220" height="36" rx="8" stroke="#B9B9C3" fill="white"/>
+    <text x="396" y="75" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="14">-- ทุกหน่วยงาน (Global View) --</text>
+    
+    <g transform="translate(980, 48)">
+      <text x="40" y="16" text-anchor="end" fill="#1E1E1E" font-family="IBM Plex Sans Thai" font-size="14" font-weight="700">Michael Jackson</text>
+      <text x="40" y="32" text-anchor="end" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="12">Platform Operator</text>
+      <rect x="56" y="0" width="44" height="44" rx="10" fill="#E0F2F4"/>
+      <text x="78" y="28" text-anchor="middle" fill="#007A8C" font-family="Inter" font-size="16" font-weight="700">MJ</text>
+    </g>
+
+    <!-- Main Table Card -->
+    <g transform="translate(32, 140)">
+      <rect width="1116" height="728" rx="16" fill="white" filter="url(#shadow)"/>
+      <g transform="translate(24, 24)">
+        <text y="20" fill="#1E1E1E" font-family="IBM Plex Sans Thai" font-size="18" font-weight="700">จัดการบัญชีผู้ดูแลและผู้ให้บริการ</text>
+        <rect x="850" y="-8" width="100" height="36" rx="8" stroke="#B9B9C3" fill="white"/>
+        <text x="900" y="15" text-anchor="middle" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="13" font-weight="600">ส่งออกข้อมูล</text>
+        <rect x="960" y="-8" width="110" height="36" rx="8" fill="#007A8C"/>
+        <text x="1015" y="15" text-anchor="middle" fill="white" font-family="IBM Plex Sans Thai" font-size="13" font-weight="600">+ เพิ่มผู้ใช้</text>
+        
+        <line x1="0" y1="48" x2="1070" y2="48" stroke="#F8F8F8"/>
+        
+        <!-- Table Header -->
+        <rect x="0" y="60" width="1070" height="44" fill="#F8F8F8"/>
+        <rect x="12" y="74" width="16" height="16" rx="4" stroke="#B9B9C3" fill="white"/>
+        <text x="50" y="88" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="13">ชื่อ-นามสกุล</text>
+        <text x="250" y="88" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="13">ประเภท</text>
+        <text x="380" y="88" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="13">สังกัด</text>
+        <text x="520" y="88" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="13">ใบรับรอง</text>
+        <text x="680" y="88" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="13">Consent Date</text>
+        <text x="830" y="88" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="13">สถานะ</text>
+        <text x="950" y="88" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="13">จัดการ</text>
+
+        <!-- Table Row 1 -->
+        <g transform="translate(0, 104)">
+          <rect x="12" y="14" width="16" height="16" rx="4" stroke="#B9B9C3" fill="white"/>
+          <text x="50" y="28" fill="#1E1E1E" font-family="IBM Plex Sans Thai" font-size="14">วิภาวดี รักดี</text>
+          <text x="250" y="28" fill="#1E1E1E" font-family="IBM Plex Sans Thai" font-size="14">Caregiver</text>
+          <text x="380" y="28" fill="#1E1E1E" font-family="IBM Plex Sans Thai" font-size="14">EN Enterprise</text>
+          <text x="520" y="28" fill="#28C76F" font-family="IBM Plex Sans Thai" font-size="14">✓ Verified</text>
+          <text x="680" y="28" fill="#6E6B7B" font-family="Inter" font-size="11">12/05/26 09:45</text>
+          <rect x="830" y="10" width="100" height="24" rx="12" fill="#FFF3E6"/>
+          <text x="880" y="27" text-anchor="middle" fill="#FF9F43" font-family="IBM Plex Sans Thai" font-size="12" font-weight="600">รอดำเนินการ</text>
+          
+          <rect x="950" y="8" width="54" height="28" rx="8" stroke="#B9B9C3" fill="white"/>
+          <text x="977" y="27" text-anchor="middle" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="12" font-weight="600">📄 ตรวจ</text>
+          <rect x="1010" y="8" width="54" height="28" rx="8" fill="#28C76F"/>
+          <text x="1037" y="27" text-anchor="middle" fill="white" font-family="IBM Plex Sans Thai" font-size="12" font-weight="600">อนุมัติ</text>
+          
+          <line x1="0" y1="44" x2="1070" y2="44" stroke="#F8F8F8"/>
+        </g>
+
+        <!-- Table Row 2 -->
+        <g transform="translate(0, 148)">
+          <rect x="12" y="14" width="16" height="16" rx="4" stroke="#B9B9C3" fill="white"/>
+          <text x="50" y="28" fill="#1E1E1E" font-family="IBM Plex Sans Thai" font-size="14">มานะ อดทน</text>
+          <text x="250" y="28" fill="#1E1E1E" font-family="IBM Plex Sans Thai" font-size="14">Caregiver</text>
+          <text x="380" y="28" fill="#1E1E1E" font-family="IBM Plex Sans Thai" font-size="14">Independent</text>
+          <text x="520" y="28" fill="#1E1E1E" font-family="IBM Plex Sans Thai" font-size="14">-</text>
+          <text x="680" y="28" fill="#6E6B7B" font-family="Inter" font-size="11">05/01/26 11:30</text>
+          <rect x="830" y="10" width="80" height="24" rx="12" fill="#E0F2F4" fill-opacity="0.5"/>
+          <text x="870" y="27" text-anchor="middle" fill="#007A8C" font-family="IBM Plex Sans Thai" font-size="12" font-weight="600">ปกติ</text>
+          
+          <rect x="950" y="8" width="114" height="28" rx="8" fill="#EA5455"/>
+          <text x="1007" y="27" text-anchor="middle" fill="white" font-family="IBM Plex Sans Thai" font-size="12" font-weight="600">ระงับ</text>
+          
+          <line x1="0" y1="44" x2="1070" y2="44" stroke="#F8F8F8"/>
+        </g>
+      </g>
+    </g>
+  </g>
+  
+  <defs>
+    <filter id="shadow" x="-4" y="0" width="100%" height="100%" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+      <feOffset dy="4"/>
+      <feGaussianBlur stdDeviation="6"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.03 0"/>
+      <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow"/>
+      <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow" result="shape"/>
+    </filter>
+  </defs>
+</svg>

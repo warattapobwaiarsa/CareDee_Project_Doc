@@ -1,0 +1,113 @@
+<svg width="1440" height="900" viewBox="0 0 1440 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="1440" height="900" fill="#F8F8F8"/>
+  
+  <!-- Sidebar -->
+  <rect width="260" height="900" fill="#004D58"/>
+  <rect x="108" y="32" width="44" height="44" rx="10" fill="white"/>
+  <text x="115" y="63" fill="#007A8C" font-family="Inter" font-size="20" font-weight="700">CD</text>
+  <text x="130" y="100" text-anchor="middle" fill="white" font-family="IBM Plex Sans Thai" font-size="20" font-weight="700">CareDee Admin</text>
+  <text x="130" y="118" text-anchor="middle" fill="white" fill-opacity="0.5" font-family="Inter" font-size="11" font-weight="400" letter-spacing="0.05em">SYSTEM CONTROL PANEL</text>
+  
+  <!-- Sidebar Menu -->
+  <g transform="translate(0, 160)">
+    <text x="24" y="30" fill="white" fill-opacity="0.7" font-family="IBM Plex Sans Thai" font-size="15">📊 Dashboard</text>
+    <text x="24" y="78" fill="white" fill-opacity="0.7" font-family="IBM Plex Sans Thai" font-size="15">👤 ผู้ดูแล/ผู้ให้บริการ</text>
+    <text x="24" y="126" fill="white" fill-opacity="0.7" font-family="IBM Plex Sans Thai" font-size="15">💰 จัดการการเงิน</text>
+    <text x="24" y="174" fill="white" fill-opacity="0.7" font-family="IBM Plex Sans Thai" font-size="15">✨ คุณภาพรีวิว &amp; อุทธรณ์</text>
+    
+    <rect y="192" width="260" height="48" fill="white" fill-opacity="0.1"/>
+    <rect y="192" width="4" height="48" fill="#FF9F43"/>
+    <text x="24" y="222" fill="white" font-family="IBM Plex Sans Thai" font-size="15">📈 รายงานระบบ</text>
+    
+    <text x="24" y="270" fill="white" fill-opacity="0.7" font-family="IBM Plex Sans Thai" font-size="15">🛡️ นโยบาย &amp; PDPA</text>
+    <text x="24" y="318" fill="white" fill-opacity="0.7" font-family="IBM Plex Sans Thai" font-size="15">🖥️ เฝ้าระวังระบบคลาวด์</text>
+  </g>
+  
+  <!-- Sidebar Footer -->
+  <line x1="0" y1="820" x2="260" y2="820" stroke="white" stroke-opacity="0.1"/>
+  <text x="24" y="855" fill="white" fill-opacity="0.7" font-family="IBM Plex Sans Thai" font-size="15">🚪 ออกจากระบบ</text>
+
+  <!-- Main Content Area -->
+  <g transform="translate(260, 0)">
+    <!-- Header -->
+    <rect x="32" y="32" width="1116" height="76" rx="16" fill="white" filter="url(#shadow)"/>
+    <text x="64" y="76" fill="#1E1E1E" font-family="IBM Plex Sans Thai" font-size="20" font-weight="700">รายงานระบบและการวิเคราะห์</text>
+    
+    <!-- User Info -->
+    <g transform="translate(980, 48)">
+      <text x="40" y="16" text-anchor="end" fill="#1E1E1E" font-family="IBM Plex Sans Thai" font-size="14" font-weight="700">Michael Jackson</text>
+      <text x="40" y="32" text-anchor="end" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="12">Platform Operator</text>
+      <rect x="56" y="0" width="44" height="44" rx="10" fill="#E0F2F4"/>
+      <text x="78" y="28" text-anchor="middle" fill="#007A8C" font-family="Inter" font-size="16" font-weight="700">MJ</text>
+    </g>
+
+    <!-- Market Insights Card -->
+    <g transform="translate(32, 140)">
+      <rect width="1116" height="440" rx="16" fill="white" filter="url(#shadow)"/>
+      <g transform="translate(24, 24)">
+        <text y="20" fill="#1E1E1E" font-family="IBM Plex Sans Thai" font-size="18" font-weight="700">Market Insights (Demand vs Supply)</text>
+        
+        <!-- Filters -->
+        <g transform="translate(680, 0)">
+          <text y="15" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="12" font-weight="600">Custom Range:</text>
+          <rect x="100" y="-8" width="100" height="32" rx="6" stroke="#B9B9C3" fill="white"/>
+          <text x="150" y="14" text-anchor="middle" fill="#B9B9C3" font-size="12">YYYY-MM-DD</text>
+          <text x="210" y="15" fill="#1E1E1E" font-size="14">-</text>
+          <rect x="230" y="-8" width="100" height="32" rx="6" stroke="#B9B9C3" fill="white"/>
+          <text x="280" y="14" text-anchor="middle" fill="#B9B9C3" font-size="12">YYYY-MM-DD</text>
+          <rect x="340" y="-8" width="60" height="32" rx="8" fill="#007A8C"/>
+          <text x="370" y="13" text-anchor="middle" fill="white" font-family="IBM Plex Sans Thai" font-size="12" font-weight="600">Filter</text>
+        </g>
+        
+        <line x1="0" y1="48" x2="1070" y2="48" stroke="#F8F8F8"/>
+        
+        <!-- Heatmap Area -->
+        <rect y="64" width="1070" height="320" rx="12" fill="#F8F8F8"/>
+        <text x="535" y="224" text-anchor="middle" fill="#6E6B7B" font-family="Inter" font-size="14">[ Interactive Heatmap Visualization ]</text>
+        
+        <!-- Heatmap Dots -->
+        <circle cx="320" cy="120" r="30" fill="#EA5455" fill-opacity="0.4" filter="url(#heatmapBlur)"/>
+        <circle cx="750" cy="280" r="30" fill="#FF9F43" fill-opacity="0.4" filter="url(#heatmapBlur)"/>
+      </g>
+    </g>
+
+    <!-- Report Export Center Card -->
+    <g transform="translate(32, 604)">
+      <rect width="1116" height="264" rx="16" fill="white" filter="url(#shadow)"/>
+      <g transform="translate(24, 24)">
+        <text y="20" fill="#1E1E1E" font-family="IBM Plex Sans Thai" font-size="18" font-weight="700">ศูนย์ส่งออกรายงาน</text>
+        <line x1="0" y1="48" x2="1070" y2="48" stroke="#F8F8F8"/>
+        
+        <g transform="translate(0, 72)">
+          <!-- Button 1 -->
+          <rect width="346" height="80" rx="12" stroke="#B9B9C3" fill="white"/>
+          <text x="20" y="45" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="14">📄 รายงานสรุปรายได้ (Monthly)</text>
+          
+          <!-- Button 2 -->
+          <rect x="362" width="346" height="80" rx="12" stroke="#B9B9C3" fill="white"/>
+          <text x="382" y="45" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="14">🛡️ รายงาน PDPA Audit</text>
+          
+          <!-- Button 3 -->
+          <rect x="724" width="346" height="80" rx="12" fill="#007A8C"/>
+          <text x="897" y="45" text-anchor="middle" fill="white" font-family="IBM Plex Sans Thai" font-size="14" font-weight="600">🚀 สร้างรายงาน Custom</text>
+        </g>
+      </g>
+    </g>
+  </g>
+  
+  <defs>
+    <filter id="shadow" x="-4" y="0" width="100%" height="100%" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+      <feOffset dy="4"/>
+      <feGaussianBlur stdDeviation="6"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.03 0"/>
+      <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow"/>
+      <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow" result="shape"/>
+    </filter>
+    <filter id="heatmapBlur">
+      <feGaussianBlur stdDeviation="15"/>
+    </filter>
+  </defs>
+</svg>

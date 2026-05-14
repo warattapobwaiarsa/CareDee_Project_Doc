@@ -1,0 +1,168 @@
+<svg width="1440" height="900" viewBox="0 0 1440 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="1440" height="900" fill="#F8F8F8"/>
+  
+  <!-- Sidebar -->
+  <rect width="260" height="900" fill="#004D58"/>
+  <rect x="108" y="32" width="44" height="44" rx="10" fill="white"/>
+  <text x="115" y="63" fill="#007A8C" font-family="Inter" font-size="20" font-weight="700">CD</text>
+  <text x="130" y="100" text-anchor="middle" fill="white" font-family="IBM Plex Sans Thai" font-size="20" font-weight="700">CareDee Admin</text>
+  <text x="130" y="118" text-anchor="middle" fill="white" fill-opacity="0.5" font-family="Inter" font-size="11" font-weight="400" letter-spacing="0.05em">SYSTEM CONTROL PANEL</text>
+  
+  <!-- Sidebar Menu -->
+  <g transform="translate(0, 160)">
+    <text x="24" y="30" fill="white" fill-opacity="0.7" font-family="IBM Plex Sans Thai" font-size="15">📊 Dashboard</text>
+    <text x="24" y="78" fill="white" fill-opacity="0.7" font-family="IBM Plex Sans Thai" font-size="15">👤 ผู้ดูแล/ผู้ให้บริการ</text>
+    <text x="24" y="126" fill="white" fill-opacity="0.7" font-family="IBM Plex Sans Thai" font-size="15">💰 จัดการการเงิน</text>
+    <text x="24" y="174" fill="white" fill-opacity="0.7" font-family="IBM Plex Sans Thai" font-size="15">✨ คุณภาพรีวิว &amp; อุทธรณ์</text>
+    <text x="24" y="222" fill="white" fill-opacity="0.7" font-family="IBM Plex Sans Thai" font-size="15">📈 รายงานระบบ</text>
+    <text x="24" y="270" fill="white" fill-opacity="0.7" font-family="IBM Plex Sans Thai" font-size="15">🛡️ นโยบาย &amp; PDPA</text>
+    
+    <rect y="288" width="260" height="48" fill="white" fill-opacity="0.1"/>
+    <rect y="288" width="4" height="48" fill="#FF9F43"/>
+    <text x="24" y="318" fill="white" font-family="IBM Plex Sans Thai" font-size="15">🖥️ เฝ้าระวังระบบคลาวด์</text>
+  </g>
+  
+  <!-- Sidebar Footer -->
+  <line x1="0" y1="820" x2="260" y2="820" stroke="white" stroke-opacity="0.1"/>
+  <text x="24" y="855" fill="white" fill-opacity="0.7" font-family="IBM Plex Sans Thai" font-size="15">🚪 ออกจากระบบ</text>
+
+  <!-- Main Content Area -->
+  <g transform="translate(260, 0)">
+    <!-- Header -->
+    <rect x="32" y="32" width="1116" height="76" rx="16" fill="white" filter="url(#shadow)"/>
+    <text x="64" y="76" fill="#1E1E1E" font-family="IBM Plex Sans Thai" font-size="20" font-weight="700">เฝ้าระวังระบบคลาวด์ (Cloud Monitoring)</text>
+    
+    <!-- User Info -->
+    <g transform="translate(980, 48)">
+      <text x="40" y="16" text-anchor="end" fill="#1E1E1E" font-family="IBM Plex Sans Thai" font-size="14" font-weight="700">Michael Jackson</text>
+      <text x="40" y="32" text-anchor="end" fill="#6E6B7B" font-family="IBM Plex Sans Thai" font-size="12">Platform Operator</text>
+      <rect x="56" y="0" width="44" height="44" rx="10" fill="#E0F2F4"/>
+      <text x="78" y="28" text-anchor="middle" fill="#007A8C" font-family="Inter" font-size="16" font-weight="700">MJ</text>
+    </g>
+
+    <!-- Metrics Grid -->
+    <g transform="translate(32, 140)">
+      <!-- Metric 1 -->
+      <rect width="261" height="100" rx="16" fill="white" filter="url(#shadow)"/>
+      <rect width="4" height="100" fill="#007A8C"/>
+      <text x="24" y="36" fill="#6E6B7B" font-family="Inter" font-size="14">Availability</text>
+      <text x="24" y="76" fill="#28C76F" font-family="Inter" font-size="28" font-weight="700">99.98%</text>
+
+      <!-- Metric 2 -->
+      <g transform="translate(285, 0)">
+        <rect width="261" height="100" rx="16" fill="white" filter="url(#shadow)"/>
+        <rect width="4" height="100" fill="#00CFE8"/>
+        <text x="24" y="36" fill="#6E6B7B" font-family="Inter" font-size="14">Active Users</text>
+        <text x="24" y="76" fill="#1E1E1E" font-family="Inter" font-size="28" font-weight="700">1,245</text>
+      </g>
+
+      <!-- Metric 3 -->
+      <g transform="translate(570, 0)">
+        <rect width="261" height="100" rx="16" fill="white" filter="url(#shadow)"/>
+        <rect width="4" height="100" fill="#EA5455"/>
+        <text x="24" y="36" fill="#6E6B7B" font-family="Inter" font-size="14">Security Alerts</text>
+        <text x="24" y="76" fill="#EA5455" font-family="Inter" font-size="28" font-weight="700">3</text>
+      </g>
+
+      <!-- Metric 4 -->
+      <g transform="translate(855, 0)">
+        <rect width="261" height="100" rx="16" fill="white" filter="url(#shadow)"/>
+        <rect width="4" height="100" fill="#FF9F43"/>
+        <text x="24" y="36" fill="#6E6B7B" font-family="Inter" font-size="14">Avg Response Time</text>
+        <text x="24" y="76" fill="#1E1E1E" font-family="Inter" font-size="28" font-weight="700">124ms</text>
+      </g>
+    </g>
+
+    <!-- Service Health & Broadcaster -->
+    <g transform="translate(32, 264)">
+      <!-- Left Column: Service Health -->
+      <g>
+        <rect width="546" height="604" rx="16" fill="white" filter="url(#shadow)"/>
+        <g transform="translate(24, 24)">
+          <text y="20" fill="#1E1E1E" font-family="IBM Plex Sans Thai" font-size="18" font-weight="700">Service Health</text>
+          <line x1="0" y1="48" x2="500" y2="48" stroke="#F8F8F8"/>
+          
+          <g transform="translate(0, 64)">
+            <!-- Service 1 -->
+            <rect width="500" height="48" rx="12" fill="#F8F8F8"/>
+            <circle cx="20" cy="24" r="5" fill="#28C76F"/>
+            <text x="40" y="29" fill="#1E1E1E" font-family="Inter" font-size="14" font-weight="600">CareDee Main API</text>
+            <text x="480" y="29" text-anchor="end" fill="#28C76F" font-family="Inter" font-size="12" font-weight="700">Healthy</text>
+            
+            <!-- Service 2 -->
+            <g transform="translate(0, 56)">
+              <rect width="500" height="48" rx="12" fill="#F8F8F8"/>
+              <circle cx="20" cy="24" r="5" fill="#FF9F43"/>
+              <text x="40" y="29" fill="#1E1E1E" font-family="Inter" font-size="14" font-weight="600">Payment Gateway</text>
+              <text x="480" y="29" text-anchor="end" fill="#FF9F43" font-family="Inter" font-size="12" font-weight="700">Latency High</text>
+            </g>
+            
+            <!-- Service 3 -->
+            <g transform="translate(0, 112)">
+              <rect width="500" height="48" rx="12" fill="#F8F8F8"/>
+              <circle cx="20" cy="24" r="5" fill="#28C76F"/>
+              <text x="40" y="29" fill="#1E1E1E" font-family="Inter" font-size="14" font-weight="600">Notification Service</text>
+              <text x="480" y="29" text-anchor="end" fill="#28C76F" font-family="Inter" font-size="12" font-weight="700">Online</text>
+            </g>
+          </g>
+          
+          <!-- Uptime Chart -->
+          <g transform="translate(0, 240)">
+            <text y="20" fill="#1E1E1E" font-family="IBM Plex Sans Thai" font-size="14" font-weight="700">Uptime History (24h)</text>
+            <g transform="translate(0, 40)">
+              <!-- Mock bars -->
+              <rect x="0" y="10" width="8" height="50" rx="2" fill="#28C76F"/>
+              <rect x="10" y="15" width="8" height="45" rx="2" fill="#28C76F"/>
+              <rect x="20" y="40" width="8" height="20" rx="2" fill="#EA5455"/> <!-- Down -->
+              <rect x="30" y="20" width="8" height="40" rx="2" fill="#28C76F"/>
+              <rect x="40" y="35" width="8" height="25" rx="2" fill="#FF9F43"/> <!-- Warn -->
+              <rect x="50" y="5" width="8" height="55" rx="2" fill="#28C76F"/>
+              <rect x="60" y="0" width="8" height="60" rx="2" fill="#28C76F"/>
+              <rect x="70" y="10" width="8" height="50" rx="2" fill="#28C76F"/>
+              <rect x="80" y="5" width="8" height="55" rx="2" fill="#28C76F"/>
+              <rect x="90" y="15" width="8" height="45" rx="2" fill="#28C76F"/>
+              <rect x="100" y="0" width="8" height="60" rx="2" fill="#28C76F"/>
+              <!-- ... (simplified for SVG brevity) -->
+              <rect x="110" y="5" width="8" height="55" rx="2" fill="#28C76F"/>
+              <rect x="120" y="10" width="8" height="50" rx="2" fill="#28C76F"/>
+              <rect x="130" y="0" width="8" height="60" rx="2" fill="#28C76F"/>
+            </g>
+          </g>
+        </g>
+      </g>
+      
+      <!-- Right Column: Maintenance Broadcaster -->
+      <g transform="translate(570, 0)">
+        <rect width="546" height="604" rx="16" fill="white" filter="url(#shadow)"/>
+        <g transform="translate(24, 24)">
+          <text y="20" fill="#1E1E1E" font-family="IBM Plex Sans Thai" font-size="18" font-weight="700">Maintenance Broadcaster</text>
+          <line x1="0" y1="48" x2="500" y2="48" stroke="#F8F8F8"/>
+          
+          <rect y="64" width="500" height="120" rx="12" stroke="#B9B9C3" fill="white"/>
+          <text x="12" y="86" fill="#B9B9C3" font-family="IBM Plex Sans Thai" font-size="13">พิมพ์ข้อความแจ้งปิดปรับปรุงระบบ...</text>
+          
+          <g transform="translate(0, 200)">
+            <rect width="16" height="16" rx="4" stroke="#B9B9C3" fill="white"/>
+            <text x="24" y="14" fill="#1E1E1E" font-family="IBM Plex Sans Thai" font-size="14" font-weight="600">ตั้งเป็นแถบสีแดง (Urgent)</text>
+          </g>
+          
+          <rect y="240" width="500" height="48" rx="8" fill="#FF9F43"/>
+          <text x="250" y="270" text-anchor="middle" fill="white" font-family="IBM Plex Sans Thai" font-size="14" font-weight="600">🚀 ประกาศแจ้งเตือนทันที (Global)</text>
+        </g>
+      </g>
+    </g>
+  </g>
+  
+  <defs>
+    <filter id="shadow" x="-4" y="0" width="100%" height="100%" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+      <feOffset dy="4"/>
+      <feGaussianBlur stdDeviation="6"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.03 0"/>
+      <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow"/>
+      <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow" result="shape"/>
+    </filter>
+  </defs>
+</svg>
