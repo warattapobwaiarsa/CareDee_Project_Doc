@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>เฝ้าระวังระบบคลาวด์ (Cloud Monitoring) - CareDee Admin</title>
+    <title>CareDee Admin - Cloud Monitoring</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -28,11 +28,9 @@
             --neutral-600: #6E6B7B;
             --neutral-900: #1E1E1E;
             
-            /* Sidebar Specific */
+            /* Layout */
             --sidebar-bg: #004D58; 
             --sidebar-width: 260px;
-
-            /* Typography */
             --font-main: 'IBM Plex Sans Thai', 'Inter', sans-serif;
         }
 
@@ -50,6 +48,25 @@
             min-height: 100vh;
         }
 
+        /* Global Maintenance Banner */
+        .global-banner {
+            position: fixed;
+            top: 0;
+            left: var(--sidebar-width);
+            right: 0;
+            padding: 12px 32px;
+            z-index: 1100;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            font-weight: 600;
+            font-size: 14px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .global-banner.urgent { background: var(--error); color: white; }
+        .global-banner.normal { background: var(--secondary-500); color: white; }
+
         /* Sidebar Styles */
         .sidebar {
             width: var(--sidebar-width);
@@ -59,12 +76,11 @@
             height: 100%;
             display: flex;
             flex-direction: column;
-            transition: all 0.3s;
             z-index: 1000;
         }
 
         .sidebar-header {
-            padding: 24px 20px;
+            padding: 32px 20px;
             text-align: center;
             border-bottom: 1px solid rgba(255,255,255,0.1);
         }
@@ -97,6 +113,10 @@
             color: rgba(255, 255, 255, 0.7);
             text-decoration: none;
             font-size: 15px;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
         }
 
         .menu-item:hover, .menu-item.active {
@@ -116,12 +136,15 @@
         .main-content {
             margin-left: var(--sidebar-width);
             flex: 1;
-            padding: 24px;
+            padding: 32px;
+            padding-top: 60px;
+            transition: padding-top 0.3s;
         }
+        body.has-banner .main-content { padding-top: 100px; }
 
         header {
             background: white;
-            padding: 16px 24px;
+            padding: 16px 32px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -130,522 +153,249 @@
             margin-bottom: 32px;
         }
 
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 16px;
+        /* View Section Handling */
+        .view-section {
+            display: none;
+        }
+        .view-section.active {
+            display: block;
         }
 
-        /* Grid */
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 24px;
-            margin-bottom: 32px;
+        /* Common Components */
+        .card { background: white; padding: 24px; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); margin-bottom: 24px; }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--neutral-100); padding-bottom: 12px; }
+        h2 { font-size: 18px; font-weight: 700; }
+        
+        .dashboard-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-bottom: 32px; }
+        .metric-card { background: white; padding: 24px; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); border-left: 4px solid var(--primary-600); }
+        .metric-title { font-size: 14px; color: var(--neutral-600); margin-bottom: 12px; }
+        .metric-value { font-size: 28px; font-weight: 700; }
+
+        .btn { padding: 10px 18px; border-radius: 8px; border: none; cursor: pointer; font-size: 13px; font-weight: 600; transition: 0.2s; }
+        .btn-warning { background: var(--warning); color: white; }
+        .btn-outline { border: 1px solid var(--neutral-300); background: transparent; color: var(--neutral-600); }
+
+        /* Uptime Chart */
+        .uptime-chart { height: 60px; display: flex; align-items: flex-end; gap: 2px; }
+        .uptime-bar { flex: 1; background: var(--success); border-radius: 2px; }
+        .uptime-bar.down { background: var(--error); height: 20% !important; }
+        .uptime-bar.warn { background: var(--warning); height: 50% !important; }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); display: none; justify-content: center; align-items: center; z-index: 2000;
         }
-
-        .metric-card {
-            background: white;
-            padding: 20px;
-            border-radius: 16px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-            border-bottom: 4px solid var(--primary-600);
-        }
-
-        .metric-title {
-            font-size: 14px;
-            color: var(--neutral-600);
-            margin-bottom: 12px;
-            font-weight: 500;
-        }
-
-        .metric-value {
-            font-size: 28px;
-            font-weight: 700;
-        }
-
-        .metric-sub {
-            font-size: 12px;
-            margin-top: 8px;
-            font-weight: 500;
-        }
-
-        /* Sections */
-        .section-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 24px;
-        }
-
-        .card {
-            background: white;
-            padding: 20px;
-            border-radius: 16px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-            margin-bottom: 24px;
-        }
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            border-bottom: 1px solid var(--neutral-100);
-            padding-bottom: 12px;
-        }
-
-        h2 {
-            font-size: 18px;
-            color: var(--neutral-900);
-            font-weight: 700;
-        }
-
-        /* Service Health List */
-        .service-list {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        .service-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px;
-            background: var(--neutral-100);
-            border-radius: 12px;
-        }
-
-        .service-info {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .status-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-        }
-
-        .status-green { background: var(--success); box-shadow: 0 0 8px var(--success); }
-        .status-yellow { background: var(--warning); box-shadow: 0 0 8px var(--warning); }
-        .status-red { background: var(--error); box-shadow: 0 0 8px var(--error); }
-
-        /* Security Alerts */
-        .alert-item {
-            padding: 12px;
-            border-radius: 10px;
-            margin-bottom: 12px;
-            background: rgba(234, 84, 85, 0.05);
-            border: 1px solid rgba(234, 84, 85, 0.1);
-        }
-
-        /* Maintenance Form */
-        .broadcast-box {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        textarea {
-            width: 100%;
-            height: 100px;
-            padding: 16px;
-            border-radius: 12px;
-            border: 1px solid var(--neutral-300);
-            font-size: 14px;
-            resize: none;
-            background: var(--neutral-100);
-        }
-
-        .btn {
-            padding: 12px 24px;
-            border-radius: 10px;
-            border: none;
-            cursor: pointer;
-            font-weight: 700;
-            font-size: 14px;
-            transition: all 0.2s;
-        }
-.btn-broadcast { background: var(--secondary-500); color: white; }
-.btn-broadcast:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(255, 159, 67, 0.3); }
-
-/* Uptime Chart Styles */
-.uptime-chart-container {
-    margin-top: 16px;
-    height: 60px;
-    display: flex;
-    align-items: flex-end;
-    gap: 2px;
-}
-.uptime-bar {
-    flex: 1;
-    background: var(--success);
-    border-radius: 2px;
-    transition: height 0.3s;
-}
-.uptime-bar.down { background: var(--error); }
-.uptime-bar.warning { background: var(--warning); }
-
-/* Preview Banner */
-.preview-label {
-    font-size: 12px;
-    font-weight: 700;
-    color: var(--neutral-600);
-    margin-bottom: 8px;
-    display: block;
-}
-.banner-preview {
-    padding: 12px;
-    border-radius: 8px;
-    font-size: 13px;
-    margin-bottom: 16px;
-    border: 1px dashed var(--neutral-300);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-.banner-preview.urgent {
-    background: rgba(234, 84, 85, 0.1);
-    color: var(--error);
-    border-color: var(--error);
-}
-.banner-preview.normal {
-    background: var(--primary-100);
-    color: var(--primary-600);
-    border-color: var(--primary-600);
-}
-
-/* Modal Styles */
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.5);
-    display: none;
-    justify-content: center;
-    align-items: center;
-    z-index: 2000;
-}
-.modal-content {
-    background: white;
-    padding: 32px;
-    border-radius: 16px;
-    width: 400px;
-    text-align: center;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-}
-.modal-btns {
-    display: flex;
-    gap: 12px;
-    justify-content: center;
-    margin-top: 24px;
-}
-.btn-cancel { background: var(--neutral-100); color: var(--neutral-600); }
-.btn-confirm { background: var(--error); color: white; }
-
-/* Log Link */
-.log-link {
-    font-size: 11px;
-    color: var(--primary-600);
-    text-decoration: underline;
-    cursor: pointer;
-    margin-top: 4px;
-    display: inline-block;
-}
-
-</style>
-        /* Live User Indicator */
-        .live-pulse {
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            background: var(--success);
-            border-radius: 50%;
-            margin-right: 8px;
-            animation: pulse-live 2s infinite;
-        }
-
-        @keyframes pulse-live {
-            0% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.5); opacity: 0.5; }
-            100% { transform: scale(1); opacity: 1; }
+        .modal-content {
+            background: white; padding: 32px; border-radius: 20px; width: 500px; max-width: 90%;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2); text-align: center;
         }
 
     </style>
 </head>
-<body>
+<body id="app-body">
 
     <!-- Sidebar -->
     <nav class="sidebar">
         <div class="sidebar-header">
             <div class="logo-box">CD</div>
             <h3 style="font-weight: 700; font-size: 20px;">CareDee Admin</h3>
-            <p style="font-size: 11px; color: rgba(255,255,255,0.5); margin-top: 4px; text-transform: uppercase;">System Control Panel</p>
+            <p style="font-size: 11px; color: rgba(255,255,255,0.5); text-transform: uppercase;">System Control Panel</p>
         </div>
         <div class="sidebar-menu">
-            <a href="admin_mockup2.html" class="menu-item"><i>📊</i> Dashboard</a>
-            <a href="admin_user_provider.html" class="menu-item"><i>👤</i> บัญชีผู้ดูแล/ผู้ให้บริการ</a>
-            <a href="admin_finance_revenue.html" class="menu-item"><i>💰</i> จัดการการเงิน & รายได้</a>
-            <a href="admin_review_quality.html" class="menu-item"><i>✨</i> คุณภาพรีวิว & อุทธรณ์</a>
-            <a href="admin_system_report.html" class="menu-item"><i>📈</i> รายงานระบบ</a>
-            <a href="admin_pdpa.html" class="menu-item"><i>🛡️</i> นโยบาย & PDPA</a>
-            <a href="admin_cloud.html" class="menu-item active"><i>🖥️</i> เฝ้าระวังระบบคลาวด์</a>
+            <a href="0_admin_dashboard_v2.html" class="menu-item"><i>📊</i> Dashboard</a>
+            <a href="1_admin_user_provider_v2.html" class="menu-item"><i>👤</i> ผู้ดูแล/ผู้ให้บริการ</a>
+            <a href="2_admin_finance_revenue_v2.html" class="menu-item"><i>💰</i> จัดการการเงิน</a>
+            <a href="3_admin_review_quality_v2.html" class="menu-item"><i>✨</i> คุณภาพรีวิว & อุทธรณ์</a>
+            <a href="4_admin_system_report_v2.html" class="menu-item"><i>📈</i> รายงานระบบ</a>
+            <a href="5_admin_pdpa_v2.html" class="menu-item"><i>🛡️</i> นโยบาย & PDPA</a>
+            <a href="6_admin_cloud_v2.html" class="menu-item active"><i>🖥️</i> เฝ้าระวังระบบคลาวด์</a>
         </div>
         <div class="sidebar-footer" style="padding: 24px; border-top: 1px solid rgba(255,255,255,0.1);">
             <a href="#" class="menu-item" style="padding: 0;"><i>🚪</i> ออกจากระบบ</a>
         </div>
     </nav>
 
+    <!-- Global Banner -->
+    <div id="global-maintenance-banner" class="global-banner">
+        <span id="banner-icon">📢</span>
+        <span id="banner-text">ระบบจะปิดปรับปรุงเวลา 02:00 - 04:00 น.</span>
+        <button onclick="hideBanner()" style="background: none; border: none; color: white; cursor: pointer; font-size: 18px; margin-left: auto;">&times;</button>
+    </div>
+
     <!-- Main Content -->
     <main class="main-content">
-        <!-- Header -->
+        <!-- Shared Header -->
         <header>
-            <div>
-                <h1 style="font-size: 22px; font-weight: 700;">เฝ้าระวังระบบคลาวด์ (Cloud Monitoring)</h1>
-                <p style="font-size: 14px; color: var(--neutral-600);">ตรวจสอบความเสถียรของบริการและความปลอดภัยแบบเรียลไทม์</p>
-            </div>
-            <div class="user-info">
-                <div style="text-align: right;">
-                    <p style="font-weight: 700; font-size: 14px;">Michael Jackson</p>
-                    <p style="font-size: 12px; color: var(--neutral-600);">Platform Operator</p>
-                </div>
-                <div style="width: 48px; height: 48px; background: var(--primary-100); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--primary-600); font-weight: 700;">VW</div>
+            <div style="display: flex; gap: 16px; align-items: center;">
+                <h1 style="font-size: 20px; font-weight: 700;">เฝ้าระวังระบบคลาวด์ (Cloud Monitoring)</h1>
             </div>
         </header>
 
-        <!-- Monitoring Stats -->
-        <div class="dashboard-grid">
-            <div class="metric-card">
-                <div class="metric-title">System Availability (SLA)</div>
-                <div class="metric-value" style="color: var(--success);">99.98%</div>
-                <p class="metric-sub" style="color: var(--neutral-600);">เป้าหมาย: 99.90%</p>
-            </div>
-            <div class="metric-card" style="border-bottom-color: var(--info);">
-                <div class="metric-title">Active Connections</div>
-                <div class="metric-value"><span class="live-pulse"></span>1,245</div>
-                <p class="metric-sub" style="color: var(--neutral-600);">ผู้ใช้ที่ออนไลน์อยู่ขณะนี้</p>
-            </div>
-            <div class="metric-card" style="border-bottom-color: var(--error);">
-                <div class="metric-title">Security Alerts (24h)</div>
-                <div class="metric-value">3</div>
-                <p class="metric-sub" style="color: var(--error);">ต้องการการตรวจสอบ</p>
-            </div>
-            <div class="metric-card" style="border-bottom-color: var(--secondary-500);">
-                <div class="metric-title">Avg. Response Time</div>
-                <div class="metric-value">124ms</div>
-                <p class="metric-sub" style="color: var(--success);">สถานะ: ยอดเยี่ยม</p>
-            </div>
-        </div>
-
-        <div class="section-container">
-            <!-- Service Health -->
-            <div class="card">
-                <div class="card-header">
-                    <h2>สถานะบริการ (Service Health)</h2>
-                    <span style="font-size: 12px; color: var(--neutral-600);">อัปเดตทุก 30 วินาที</span>
+        <!-- VIEW: CLOUD -->
+        <section id="view-cloud" class="view-section active">
+            <div class="dashboard-grid">
+                <div class="metric-card">
+                    <div class="metric-title">Availability</div>
+                    <div class="metric-value" style="color: var(--success);">99.98%</div>
                 </div>
-                <div class="service-list">
-                    <div class="service-item">
-                        <div class="service-info">
-                            <span class="status-dot status-green"></span>
-                            <div>
-                                <p style="font-weight: 700; font-size: 14px;">CareDee Main API</p>
-                                <p style="font-size: 12px; color: var(--neutral-600);">Production Cluster</p>
-                                <a class="log-link">View Incident Logs</a>
-                            </div>
-                        </div>
-                        <span style="font-size: 12px; font-weight: 600; color: var(--success);">Healthy</span>
-                    </div>
-                    <div class="service-item">
-                        <div class="service-info">
-                            <span class="status-dot status-green"></span>
-                            <div>
-                                <p style="font-weight: 700; font-size: 14px;">SMS Gateway (AIS/True)</p>
-                                <p style="font-size: 12px; color: var(--neutral-600);">OTP & Notifications</p>
-                                <a class="log-link">View Incident Logs</a>
-                            </div>
-                        </div>
-                        <span style="font-size: 12px; font-weight: 600; color: var(--success);">Online</span>
-                    </div>
-                    <div class="service-item">
-                        <div class="service-info">
-                            <span class="status-dot status-yellow"></span>
-                            <div>
-                                <p style="font-weight: 700; font-size: 14px;">Payment Provider (K-Payment)</p>
-                                <p style="font-size: 12px; color: var(--neutral-600);">Checkout & Payouts</p>
-                                <a class="log-link" style="color: var(--warning); font-weight: 600;">⚠️ Check Latency Issues</a>
-                            </div>
-                        </div>
-                        <span style="font-size: 12px; font-weight: 600; color: var(--warning);">Latency High</span>
-                    </div>
-                    <div class="service-item">
-                        <div class="service-info">
-                            <span class="status-dot status-green"></span>
-                            <div>
-                                <p style="font-weight: 700; font-size: 14px;">File Storage (S3)</p>
-                                <p style="font-size: 12px; color: var(--neutral-600);">User Documents & Images</p>
-                                <a class="log-link">View Incident Logs</a>
-                            </div>
-                        </div>
-                        <span style="font-size: 12px; font-weight: 600; color: var(--success);">Healthy</span>
-                    </div>
+                <div class="metric-card" style="border-left-color: var(--info);">
+                    <div class="metric-title">Active Users</div>
+                    <div class="metric-value">1,245</div>
                 </div>
-
-                <!-- Historical Health Data (Added Gap) -->
-                <div style="margin-top: 32px; border-top: 1px solid var(--neutral-100); padding-top: 24px;">
-                    <div class="card-header" style="margin-bottom: 12px; border: none;">
-                        <h2 style="font-size: 15px;">ประวัติความเสถียรย้อนหลัง (Uptime History - 24h)</h2>
-                        <span style="font-size: 12px; color: var(--success); font-weight: 600;">SLA 99.9% Target</span>
-                    </div>
-                    <div class="uptime-chart-container" id="uptimeChart">
-                        <!-- Bars will be generated by JS -->
-                    </div>
-                    <div style="display: flex; justify-content: space-between; margin-top: 8px; font-size: 11px; color: var(--neutral-600);">
-                        <span>24 hours ago</span>
-                        <span>Now (Healthy)</span>
-                    </div>
+                <div class="metric-card" style="border-left-color: var(--error);">
+                    <div class="metric-title">Security Alerts</div>
+                    <div class="metric-value">3</div>
+                </div>
+                <div class="metric-card" style="border-left-color: var(--secondary-500);">
+                    <div class="metric-title">Avg Response Time</div>
+                    <div class="metric-value">124ms</div>
                 </div>
             </div>
-
-            <!-- Security & Maintenance Column -->
-            <div class="right-column">
-                <!-- Security Alerts -->
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
                 <div class="card">
-                    <div class="card-header">
-                        <h2>แจ้งเตือนความปลอดภัย (Security Alerts)</h2>
+                    <div class="card-header"><h2>Service Health</h2></div>
+                    <div id="service-health-list">
+                        <!-- Simulated service items -->
                     </div>
-                    <div class="alert-item">
-                        <p style="font-weight: 700; color: var(--error); font-size: 13px;">⚠️ Brute Force Detected</p>
-                        <p style="font-size: 12px; color: var(--neutral-900); margin: 4px 0;">IP 182.12.XX.XX พยายามล็อกอินบัญชี Admin 10 ครั้งใน 1 นาที</p>
-                        <p style="font-size: 11px; color: var(--neutral-600);">สถานะ: บล็อกชั่วคราว (IP Banned)</p>
-                    </div>
-                    <div class="alert-item" style="background: rgba(255, 159, 67, 0.05); border-color: rgba(255, 159, 67, 0.1);">
-                        <p style="font-weight: 700; color: var(--warning); font-size: 13px;">🔔 Unusual High Traffic</p>
-                        <p style="font-size: 12px; color: var(--neutral-900); margin: 4px 0;">มีการเรียก API /search เพิ่มขึ้น 300% ผิดปกติ</p>
-                        <p style="font-size: 11px; color: var(--neutral-600);">สถานะ: เฝ้าระวัง (Rate Limiting Active)</p>
+                    <div style="margin-top: 20px;">
+                        <h3 style="font-size: 14px; margin-bottom: 12px;">Uptime History (24h)</h3>
+                        <div class="uptime-chart" id="uptime-chart-bars"></div>
                     </div>
                 </div>
-
-                <!-- Maintenance Broadcaster (Enhanced) -->
                 <div class="card">
-                    <div class="card-header">
-                        <h2>Maintenance Broadcaster</h2>
-                    </div>
-                    <div class="broadcast-box">
-                        <p style="font-size: 13px; color: var(--neutral-600);">พิมพ์ข้อความเพื่อแสดงในแถบประกาศบนแอปพลิเคชัน (Global Banner)</p>
-                        <textarea id="broadcastMsg" placeholder="ตัวอย่าง: ขออภัย ระบบจะทำการปิดปรับปรุงชั่วคราวในวันที่ 15 พ.ค. 2569 เวลา 02:00 - 04:00 น."></textarea>
-                        
-                        <div style="display: flex; gap: 12px; align-items: center;">
-                            <input type="checkbox" id="urgent">
-                            <label for="urgent" style="font-size: 13px; font-weight: 600;">ตั้งเป็นแถบสีแดง (Urgent)</label>
+                    <div class="card-header"><h2>Maintenance Broadcaster</h2></div>
+                    <div style="display: flex; flex-direction: column; gap: 16px;">
+                        <textarea id="broadcast-msg-input" placeholder="พิมพ์ข้อความแจ้งปิดปรับปรุงระบบ..." style="width: 100%; height: 100px; padding: 12px; border-radius: 12px; border: 1px solid var(--neutral-300); resize: none;"></textarea>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <input type="checkbox" id="urgent-check">
+                            <label for="urgent-check" style="font-size: 14px; font-weight: 600;">ตั้งเป็นแถบสีแดง (Urgent)</label>
                         </div>
-
-                        <!-- Broadcaster Preview (Added Gap) -->
-                        <div style="margin-top: 8px;">
-                            <span class="preview-label">ตัวอย่างการแสดงผล (Preview):</span>
-                            <div id="bannerPreview" class="banner-preview normal">
-                                📢 <span id="previewText">กรุณาพิมพ์ข้อความประกาศ...</span>
-                            </div>
-                        </div>
-
-                        <button class="btn btn-broadcast" onclick="showConfirmation()">🚀 ประกาศแจ้งเตือนทันที</button>
+                        <button class="btn btn-warning" style="width: 100%;" onclick="broadcastMaintenance()">🚀 ประกาศแจ้งเตือนทันที (Global)</button>
                     </div>
                 </div>
             </div>
-        </div>
-
-        <!-- System Heartbeat Note -->
-        <div style="text-align: center; margin-top: 24px; color: var(--neutral-300); font-size: 11px; letter-spacing: 1px;">
-            SYSTEM NODE: TH-BKK-01 | AUTO-RECOVERY ENABLED | LAST BEAT: 2 SEC AGO
-        </div>
+        </section>
     </main>
 
-    <!-- Double Confirmation Modal (Added Gap) -->
-    <div class="modal-overlay" id="confirmModal">
+    <!-- Shared Modal: Confirmation -->
+    <div id="confirm-modal" class="modal-overlay">
         <div class="modal-content">
-            <div style="font-size: 40px; margin-bottom: 16px;">⚠️</div>
-            <h2 style="margin-bottom: 12px;">ยืนยันการประกาศ Global Maintenance?</h2>
-            <p style="font-size: 14px; color: var(--neutral-600); line-height: 1.5; margin-bottom: 20px;">การกดประกาศนี้จะส่งผลกระทบต่อ <b>ผู้ใช้ทุกคน (Global)</b> ในระบบทันที โปรดตรวจสอบข้อความให้ถูกต้องก่อนกดยืนยัน</p>
+            <div style="font-size: 48px; margin-bottom: 16px;">⚠️</div>
+            <h2 id="modal-title">ยืนยันการดำเนินการ</h2>
+            <p id="modal-body" style="color: var(--neutral-600); margin: 16px 0; line-height: 1.5;"></p>
             
-            <div style="text-align: left; margin-bottom: 20px;">
-                <label style="font-size: 13px; font-weight: 600; color: var(--neutral-600); margin-bottom: 8px; display: block;">ระบุเหตุผลการประกาศ (Reason for Audit Log):</label>
-                <textarea id="maintenanceReason" placeholder="เช่น ปรับปรุงเซิร์ฟเวอร์ประจำเดือน, แก้ไขบั๊กด่วน..." style="height: 80px;"></textarea>
+            <div id="reason-field" style="display: none; text-align: left; margin-top: 16px;">
+                <label for="action-reason" style="font-size: 13px; font-weight: 600; color: var(--neutral-600);">ระบุเหตุผล (Reason for Audit Log):</label>
+                <textarea id="action-reason" placeholder="โปรดระบุเหตุผลในการดำเนินการ..." style="width: 100%; height: 80px; padding: 10px; border-radius: 8px; border: 1px solid var(--neutral-300); margin-top: 8px; font-size: 13px; resize: none;"></textarea>
             </div>
 
-            <div class="modal-btns">
-                <button class="btn btn-cancel" onclick="hideConfirmation()">ยกเลิก</button>
-                <button class="btn btn-confirm" onclick="confirmBroadcast()">ใช่, ยืนยันการประกาศ</button>
+            <div style="display: flex; gap: 12px; margin-top: 24px;">
+                <button class="btn btn-outline" style="flex: 1;" onclick="closeModal()">ยกเลิก</button>
+                <button id="modal-confirm-btn" class="btn btn-primary" style="flex: 1;">ยืนยัน</button>
             </div>
         </div>
     </div>
 
     <script>
-        // Broadcaster Preview Sync
-        const textarea = document.getElementById('broadcastMsg');
-        const previewText = document.getElementById('previewText');
-        const bannerPreview = document.getElementById('bannerPreview');
-        const urgentCheckbox = document.getElementById('urgent');
+        function hideBanner() {
+            document.getElementById('global-maintenance-banner').style.display = 'none';
+            document.getElementById('app-body').classList.remove('has-banner');
+        }
 
-        textarea.addEventListener('input', (e) => {
-            previewText.innerText = e.target.value || 'กรุณาพิมพ์ข้อความประกาศ...';
-        });
-
-        urgentCheckbox.addEventListener('change', (e) => {
-            if (e.target.checked) {
-                bannerPreview.className = 'banner-preview urgent';
-            } else {
-                bannerPreview.className = 'banner-preview normal';
-            }
-        });
-
-        // Confirmation Modal Logic
-        function showConfirmation() {
-            if (!textarea.value.trim()) {
-                alert('กรุณาใส่ข้อความประกาศก่อน');
+        function broadcastMaintenance() {
+            const msg = document.getElementById('broadcast-msg-input').value;
+            const urgent = document.getElementById('urgent-check').checked;
+            
+            if (!msg) {
+                alert('กรุณาใส่ข้อความประกาศ');
                 return;
             }
-            document.getElementById('confirmModal').style.display = 'flex';
+
+            openConfirmModal(
+                'ยืนยันการประกาศ Global Maintenance?',
+                'การกดประกาศนี้จะส่งผลกระทบต่อผู้ใช้ทุกคนในระบบทันที และจะแสดงแถบประกาศในทุกหน้าของ Admin Portal',
+                () => {
+                    const banner = document.getElementById('global-maintenance-banner');
+                    const bannerText = document.getElementById('banner-text');
+                    bannerText.innerText = msg;
+                    banner.className = 'global-banner ' + (urgent ? 'urgent' : 'normal');
+                    banner.style.display = 'flex';
+                    document.getElementById('app-body').classList.add('has-banner');
+                    alert('ประกาศสำเร็จ!');
+                },
+                true
+            );
         }
 
-        function hideConfirmation() {
-            document.getElementById('confirmModal').style.display = 'none';
+        let onConfirmCallback = null;
+        function openConfirmModal(title, body, onConfirm, showReason = false) {
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById('modal-body').innerText = body;
+            document.getElementById('reason-field').style.display = showReason ? 'block' : 'none';
+            onConfirmCallback = onConfirm;
+            document.getElementById('confirm-modal').style.display = 'flex';
         }
 
-        function confirmBroadcast() {
-            alert('🚀 ประกาศสำเร็จ! ระบบกำลังส่งแจ้งเตือนไปยังผู้ใช้ทุกคน');
-            hideConfirmation();
-            textarea.value = '';
-            previewText.innerText = 'กรุณาพิมพ์ข้อความประกาศ...';
+        function closeModal() {
+            document.getElementById('confirm-modal').style.display = 'none';
         }
 
-        // Generate Mock Uptime Chart
-        const chart = document.getElementById('uptimeChart');
-        if (chart) {
+        document.getElementById('modal-confirm-btn').onclick = () => {
+            if (onConfirmCallback) onConfirmCallback();
+            closeModal();
+        };
+
+        // Initialize charts and status
+        function initCharts() {
+            const chart = document.getElementById('uptime-chart-bars');
+            if (!chart) return;
             for (let i = 0; i < 48; i++) {
                 const bar = document.createElement('div');
                 bar.className = 'uptime-bar';
-                
-                // Randomize some issues for visual variety
-                const random = Math.random();
-                let height = 80 + Math.random() * 20;
-                
-                if (random > 0.95) {
-                    bar.classList.add('down');
-                    height = 20;
-                } else if (random > 0.85) {
-                    bar.classList.add('warning');
-                    height = 60;
-                }
-                
-                bar.style.height = height + '%';
+                const rand = Math.random();
+                if (rand > 0.95) bar.classList.add('down');
+                else if (rand > 0.85) bar.classList.add('warn');
+                bar.style.height = (80 + Math.random() * 20) + '%';
                 chart.appendChild(bar);
             }
         }
-    </script>
 
+        const services = [
+            { name: 'CareDee Main API', status: 'green', msg: 'Healthy' },
+            { name: 'Payment Gateway', status: 'yellow', msg: 'Latency High' },
+            { name: 'Notification Service', status: 'green', msg: 'Online' }
+        ];
+
+        function initCloudStatus() {
+            const list = document.getElementById('service-health-list');
+            if (!list) return;
+            services.forEach(s => {
+                const item = document.createElement('div');
+                item.className = 'service-item';
+                item.style.padding = '12px';
+                item.style.background = 'var(--neutral-100)';
+                item.style.borderRadius = '12px';
+                item.style.marginBottom = '8px';
+                item.style.display = 'flex';
+                item.style.justifyContent = 'space-between';
+                item.style.alignItems = 'center';
+                item.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <span style="width: 10px; height: 10px; border-radius: 50%; background: var(--${s.status === 'green' ? 'success' : 'warning'});"></span>
+                        <div style="display:flex; flex-direction:column;">
+                            <span style="font-weight: 600;">${s.name}</span>
+                        </div>
+                    </div>
+                    <span style="font-size: 12px; font-weight: 700; color: var(--${s.status === 'green' ? 'success' : 'warning'});">${s.msg}</span>
+                `;
+                list.appendChild(item);
+            });
+        }
+
+        initCharts();
+        initCloudStatus();
+    </script>
 </body>
 </html>
