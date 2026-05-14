@@ -40,7 +40,7 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--font-main); }
-        body { background: var(--neutral-100); color: var(--neutral-900); display: flex; min-height: 100vh; }
+        body { background: var(--neutral-100); color: var(--neutral-900); display: flex; min-height: 100vh; overflow-x: hidden; }
 
         /* --- Sidebar --- */
         .sidebar {
@@ -66,13 +66,16 @@
             font-weight: 500;
             transition: 0.2s;
             font-size: 15px;
+            cursor: pointer;
             position: relative;
         }
         .menu-link:hover, .menu-link.active { background: var(--primary-100); color: var(--primary-600); border-right: 4px solid var(--primary-600); }
         .menu-link i { margin-right: 12px; width: 24px; text-align: center; font-style: normal; }
+        .nav-badge { position: absolute; right: 20px; background: var(--error); color: white; font-size: 10px; padding: 2px 6px; border-radius: 10px; font-weight: 700; }
 
         /* --- Main Layout --- */
-        .main { margin-left: var(--sidebar-width); flex: 1; padding: 32px; }
+        .main { margin-left: var(--sidebar-width); flex: 1; padding: 32px; width: calc(100% - var(--sidebar-width)); }
+        
         header {
             display: flex;
             justify-content: space-between;
@@ -84,6 +87,7 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.03);
         }
         .user-status { display: flex; align-items: center; gap: 12px; }
+        .mfa-tag { background: var(--success); color: white; font-size: 11px; padding: 4px 12px; border-radius: 20px; font-weight: 600; }
 
         /* --- Components --- */
         .card { background: var(--white); border-radius: 16px; padding: 28px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); margin-bottom: 32px; position: relative; }
@@ -91,16 +95,16 @@
         .card-title { font-size: 18px; font-weight: 700; color: var(--neutral-900); }
         .card-subtitle { font-size: 13px; color: var(--neutral-600); margin-top: 4px; }
 
+        .form-group { margin-bottom: 16px; }
+        .form-label { font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px; }
+        .form-control { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid var(--neutral-300); outline: none; font-size: 14px; }
+
         .btn { padding: 10px 20px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; font-size: 13px; transition: 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
         .btn-primary { background: var(--primary-600); color: white; }
         .btn-ghost { background: transparent; color: var(--primary-600); border: 1px solid var(--primary-600); }
 
         .badge { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; white-space: nowrap; display: inline-block; }
         .bg-success { background: #E6F9F0; color: var(--success); }
-
-        .form-group { margin-bottom: 16px; }
-        .form-label { font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px; }
-        .form-control { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid var(--neutral-300); outline: none; font-size: 14px; }
 
         .upload-zone { border: 2px dashed var(--neutral-300); padding: 48px; text-align: center; border-radius: 16px; cursor: pointer; background: var(--neutral-100); transition: 0.3s; }
         .upload-zone:hover { border-color: var(--primary-600); background: var(--primary-100); }
@@ -110,6 +114,7 @@
 </head>
 <body>
 
+    <!-- Sidebar -->
     <aside class="sidebar">
         <div class="sidebar-brand">
             <div class="logo-box">CD</div>
@@ -121,43 +126,54 @@
             <a href="1_training_import_v2.html" class="menu-link"><i>📥</i> นำเข้าข้อมูลการอบรม</a>
             <a href="2_training_cert_manage_v2.html" class="menu-link"><i>🏅</i> จัดการใบรับรอง</a>
             <a href="3_training_market_intelligence_v2.html" class="menu-link"><i>📈</i> สถิติตลาดแรงงาน</a>
-            <a href="4_training_verification_standard_v2.html" class="menu-link"><i>🛡️</i> มาตรฐานการตรวจสอบ</a>
-            <a href="#" class="menu-link active"><i>🏢</i> โปรไฟล์สถาบัน & KYC</a>
-            <a href="gap.md" class="menu-link" style="color: var(--secondary-500);"><i>⚠️</i> Gap Analysis</a>
+            <a href="4_training_verification_standard_v2.html" class="menu-link"><i>🛡️</i> การตรวจสอบ & เกณฑ์ <span class="nav-badge">12</span></a>
+            <a href="5_training_profile_v2.html" class="menu-link active"><i>🏢</i> โปรไฟล์สถาบัน & KYC</a>
         </nav>
+        <div style="padding: 24px; border-top: 1px solid var(--neutral-100);">
+            <a onclick="logout()" class="menu-link" style="color: var(--error); padding: 0;"><i>🚪</i> ออกจากระบบ</a>
+        </div>
     </aside>
 
+    <!-- Main Content -->
     <main class="main">
         <header>
             <div class="page-title">
-                <h1 style="font-size: 20px; font-weight: 700;">โปรไฟล์สถาบัน & KYC (Institute Profile)</h1>
+                <h1 style="font-size: 20px; font-weight: 700;">โปรไฟล์สถาบัน & KYC</h1>
                 <p style="font-size: 13px; color: var(--neutral-600);">จัดการข้อมูลสถาบันและเอกสารยืนยันตัวตนสำหรับ Admin</p>
+            </div>
+            <div class="user-status">
+                <span class="mfa-tag">MFA : ยืนยันตัวตนแล้ว</span>
+                <div style="width: 44px; height: 44px; background: var(--primary-100); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--primary-600); font-weight: 700;">SM</div>
             </div>
         </header>
 
         <div class="grid-layout">
             <div class="card">
                 <div class="card-header">
-                    <h2 class="card-title">ข้อมูลสถาบัน</h2>
+                    <h2 class="card-title">ข้อมูลสถาบัน (Institute Profile)</h2>
                 </div>
                 <div class="form-group">
                     <label class="form-label">ชื่อสถาบัน (ภาษาไทย)</label>
                     <input type="text" class="form-control" value="สถาบันการพยาบาลไทย">
                 </div>
                 <div class="form-group">
+                    <label class="form-label">ชื่อสถาบัน (ภาษาอังกฤษ)</label>
+                    <input type="text" class="form-control" value="Thai Nursing Institute">
+                </div>
+                <div class="form-group">
                     <label class="form-label">ที่อยู่ติดต่อ</label>
                     <textarea class="form-control" style="height: 80px;">เลขที่ 123 ถ.สุขุมวิท แขวงคลองเตย เขตคลองเตย กทม. 10110</textarea>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">เบอร์โทรศัพท์กลาง</label>
+                    <label class="form-label">เบอร์โทรศัพท์กลาง (สำหรับแสดงบนโปรไฟล์ผู้ดูแล)</label>
                     <input type="text" class="form-control" value="02-XXX-XXXX">
                 </div>
-                <button class="btn btn-primary" style="width: 100%;">บันทึกข้อมูลสถาบัน</button>
+                <button class="btn btn-primary" style="width: 100%;" onclick="alert('Saved!')">บันทึกข้อมูลสถาบัน</button>
             </div>
 
             <div class="card">
                 <div class="card-header">
-                    <h2 class="card-title">เอกสาร KYC</h2>
+                    <h2 class="card-title">เอกสารยืนยันตัวตน (KYC Documents)</h2>
                     <span class="badge bg-success">Verified</span>
                 </div>
                 <p class="card-subtitle" style="margin-bottom: 20px;">อัปโหลดเอกสารเพื่อรักษาสถานะสถาบันที่ผ่านการรับรอง</p>
@@ -166,7 +182,7 @@
                     <div style="display: flex; justify-content: space-between; align-items: center;">
                         <div>
                             <p style="font-weight: 700; font-size: 14px;">ใบอนุญาตจัดตั้งสถาบัน</p>
-                            <p style="font-size: 11px; color: var(--neutral-600);">license_2026.pdf | 10/01/2026</p>
+                            <p style="font-size: 11px; color: var(--neutral-600);">license_2026.pdf | อัปโหลดเมื่อ 10/01/2026</p>
                         </div>
                         <button class="btn btn-ghost btn-sm">ดูไฟล์</button>
                     </div>
@@ -180,9 +196,17 @@
         </div>
 
         <footer style="font-size: 11px; text-align: center; color: var(--neutral-600); padding: 24px; border-top: 1px solid var(--neutral-100); margin-top: 20px;">
-            © 2026 CareDee Academy
+            ระบบทำการบันทึก Audit Log ทุกการเปลี่ยนแปลงข้อมูลตามมาตรฐาน PDPA | © 2026 CareDee Academy
         </footer>
     </main>
 
+    <script>
+        function logout() {
+            if(confirm('คุณต้องการออกจากระบบใช่หรือไม่?')) {
+                alert('ออกจากระบบเรียบร้อย');
+                location.href = '0_training_dashboard_v2.html';
+            }
+        }
+    </script>
 </body>
 </html>

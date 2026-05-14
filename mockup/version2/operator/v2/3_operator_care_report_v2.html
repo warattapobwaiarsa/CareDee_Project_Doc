@@ -64,12 +64,14 @@
             color: rgba(255,255,255,0.7);
             transition: 0.3s;
             font-size: 15px;
+            cursor: pointer;
         }
         .menu-item:hover, .menu-item.active { background: rgba(255,255,255,0.1); color: var(--white); border-left: 4px solid var(--secondary-500); }
         .menu-item i { margin-right: 15px; width: 24px; text-align: center; font-style: normal; }
 
         /* Main Content */
         .main { margin-left: var(--sidebar-width); flex: 1; padding: 32px; }
+        
         header { 
             display: flex; 
             justify-content: space-between; 
@@ -80,86 +82,58 @@
             border-radius: 16px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.03);
         }
-
-        /* Metrics Grid */
-        .metrics-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 32px; }
-        .metric-card { background: white; padding: 20px; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); border-left: 4px solid var(--primary-600); }
-        .metric-label { font-size: 13px; color: var(--neutral-600); margin-bottom: 4px; }
-        .metric-value { font-size: 24px; font-weight: 700; color: var(--neutral-900); }
-
-        /* Report Layout */
-        .layout-grid { display: grid; grid-template-columns: 1fr 350px; gap: 32px; }
-        
-        .card { background: white; border-radius: 16px; padding: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); margin-bottom: 32px; }
-        .card-title { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .card-title h3 { font-size: 18px; font-weight: 600; }
-
-        /* Report Item */
-        .report-item {
-            border: 1px solid var(--neutral-100);
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
-            transition: 0.3s;
-        }
-        .report-item:hover { border-color: var(--primary-600); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
-        .report-header { display: flex; justify-content: space-between; margin-bottom: 16px; align-items: flex-start; }
-        .user-info { display: flex; gap: 12px; align-items: center; }
-        .avatar { width: 40px; height: 40px; border-radius: 50%; background: #eee; display: flex; align-items: center; justify-content: center; font-weight: 600; color: var(--neutral-600); }
-        
-        .report-status { display: flex; gap: 8px; }
-        .badge { padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; text-transform: uppercase; }
-        .badge-success { background: rgba(40, 199, 111, 0.12); color: var(--success); }
-        .badge-warning { background: var(--secondary-100); color: var(--secondary-500); }
-        .badge-info { background: rgba(0, 207, 232, 0.12); color: var(--info); }
-        .badge-error { background: rgba(234, 84, 85, 0.12); color: var(--error); }
-
-        .report-content { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .activity-list { list-style: none; }
-        .activity-item { font-size: 13px; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
-        .activity-item.done { color: var(--success); }
-        .activity-item.done::before { content: '✓'; font-weight: bold; }
-        .activity-item.pending { color: var(--neutral-600); }
-        .activity-item.pending::before { content: '○'; }
-
-        .media-gallery { display: flex; gap: 8px; margin-top: 12px; }
-        .media-box { width: 80px; height: 80px; border-radius: 8px; background: #f0f0f0; background-size: cover; cursor: pointer; }
-
-        /* Timeline (Right Side) */
-        .timeline { position: relative; padding-left: 24px; margin-top: 20px; }
-        .timeline::before { content: ''; position: absolute; left: 7px; top: 0; bottom: 0; width: 2px; background: var(--neutral-100); }
-        .timeline-event { position: relative; margin-bottom: 24px; }
-        .timeline-dot { position: absolute; left: -21px; top: 4px; width: 12px; height: 12px; border-radius: 50%; background: var(--neutral-300); border: 2px solid white; }
-        .timeline-dot.active { background: var(--primary-600); }
-        .timeline-dot.alert { background: var(--error); }
-        .timeline-time { font-size: 11px; color: var(--neutral-600); font-weight: 600; }
-        .timeline-desc { font-size: 13px; margin-top: 4px; }
-
-        /* AI Insight Box */
-        .ai-insight { background: linear-gradient(135deg, #007A8C 0%, #00CFE8 100%); color: white; border-radius: 12px; padding: 16px; margin-bottom: 24px; }
-        .ai-header { display: flex; gap: 8px; align-items: center; font-size: 14px; font-weight: 600; margin-bottom: 8px; }
-
-        /* Button */
-        .btn { padding: 8px 16px; border-radius: 8px; border: none; cursor: pointer; font-size: 13px; font-weight: 600; transition: 0.2s; }
-        .btn-outline { background: white; color: var(--primary-600); border: 1px solid var(--primary-600); }
-        .btn-outline:hover { background: var(--primary-100); }
-
-        .geotag-verify { font-size: 11px; display: flex; align-items: center; gap: 4px; margin-top: 4px; }
-        .geotag-verify.ok { color: var(--success); }
-        .geotag-verify.fail { color: var(--error); }
-
-        /* Sync Indicator */
+        .header-left { display: flex; align-items: center; gap: 24px; }
         .sync-indicator { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--success); font-weight: 600; padding: 6px 12px; background: rgba(40, 199, 111, 0.1); border-radius: 20px; }
         .sync-dot { width: 8px; height: 8px; background: var(--success); border-radius: 50%; animation: pulse 2s infinite; }
+
         @keyframes pulse {
             0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(40, 199, 111, 0.7); }
             70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(40, 199, 111, 0); }
             100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(40, 199, 111, 0); }
         }
-        
-        /* Utilization Mini Bar */
+
+        .user-profile { display: flex; align-items: center; gap: 16px; }
+
+        /* Metrics */
+        .metrics-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 32px; }
+        .metric-card { 
+            background: var(--white); 
+            padding: 24px; 
+            border-radius: 16px; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            border-left: 4px solid var(--primary-600);
+        }
+        .metric-label { font-size: 14px; color: var(--neutral-600); margin-bottom: 8px; font-weight: 500; }
+        .metric-value { font-size: 26px; font-weight: 700; color: var(--neutral-900); }
         .utilization-mini { height: 6px; background: var(--neutral-100); border-radius: 3px; margin-top: 10px; overflow: hidden; }
         .utilization-mini-fill { height: 100%; background: var(--secondary-500); border-radius: 3px; }
+
+        /* Report Layout */
+        .layout-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 32px; }
+        .card { background: white; border-radius: 16px; padding: 28px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); margin-bottom: 32px; }
+        .card-title { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; border-bottom: 1px solid var(--neutral-100); padding-bottom: 12px; }
+        .card-title h3 { font-size: 18px; color: var(--neutral-900); font-weight: 600; }
+
+        /* Report Item */
+        .report-item { border: 1px solid var(--neutral-100); border-radius: 12px; padding: 20px; margin-bottom: 20px; transition: 0.3s; }
+        .report-item:hover { border-color: var(--primary-600); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .user-info { display: flex; gap: 12px; align-items: center; }
+        .avatar { width: 40px; height: 40px; border-radius: 50%; background: #eee; display: flex; align-items: center; justify-content: center; font-weight: 600; color: var(--neutral-600); }
+        
+        .status-badge { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; white-space: nowrap; }
+        .bg-error { background: rgba(234, 84, 85, 0.12); color: var(--error); }
+
+        .geotag-verify { font-size: 11px; display: flex; align-items: center; gap: 4px; margin-top: 4px; }
+        .geotag-verify.fail { color: var(--error); }
+
+        /* AI Insight Box */
+        .ai-insight { background: var(--primary-600); color: white; border-radius: 12px; padding: 16px; margin-bottom: 24px; }
+
+        /* Buttons */
+        .btn { padding: 10px 18px; border-radius: 8px; border: none; cursor: pointer; font-size: 13px; font-weight: 600; transition: 0.2s; text-decoration: none; display: inline-block; text-align: center; }
+        .btn-primary { background: var(--primary-600); color: white; }
+        .btn-outline { border: 1px solid var(--primary-600); background: white; color: var(--primary-600); }
+        .btn-sm { padding: 6px 12px; font-size: 12px; }
 
         /* Accessibility Mode */
         body.accessibility-mode { font-size: 1.15em; }
@@ -192,14 +166,6 @@
             font-size: 12px;
         }
 
-        /* Highlight Critical Reports */
-        .report-item.critical {
-            border-left: 6px solid var(--error);
-            background: rgba(234, 84, 85, 0.05);
-            animation: highlight-pulse 2s infinite;
-        }
-        @keyframes highlight-pulse { 0% { box-shadow: 0 0 0 0 rgba(234, 84, 85, 0.2); } 70% { box-shadow: 0 0 0 10px rgba(234, 84, 85, 0); } 100% { box-shadow: 0 0 0 0 rgba(234, 84, 85, 0); } }
-
     </style>
 </head>
 <body>
@@ -210,6 +176,7 @@
         <button class="btn-close" onclick="document.getElementById('critical-alert').style.display='none'">Dismiss</button>
     </div>
 
+    <!-- Sidebar -->
     <nav class="sidebar">
         <div class="sidebar-header">
             <div class="logo-box">CD</div>
@@ -217,33 +184,31 @@
             <span style="font-size: 11px; color: rgba(255,255,255,0.5); text-transform: uppercase;">Service Operator Portal</span>
         </div>
         <div class="sidebar-menu">
-            <a href="operator_mockup2.html" class="menu-item"><i>🏠</i> หน้าหลัก Dashboard</a>
-            <a href="1_operator_caregiver_management.html" class="menu-item"><i>👥</i> จัดการทีมผู้ดูแล (Team)</a>
-            <a href="2_operator_schedule_booking.html" class="menu-item"><i>📅</i> ตารางงาน & การจอง</a>
-            <a href="#" class="menu-item active"><i>📋</i> ติดตามรายงานหน้างาน</a>
-            <a href="#" class="menu-item"><i>⚠️</i> ข้อร้องเรียน & อุทธรณ์</a>
-            <a href="#" class="menu-item"><i>📊</i> รายงาน & รายได้</a>
+            <a href="0_operator_dashboard_v2.html" class="menu-item"><i>🏠</i> หน้าหลัก Dashboard</a>
+            <a href="1_operator_caregiver_management_v2.html" class="menu-item"><i>👥</i> จัดการทีมผู้ดูแล (Team)</a>
+            <a href="2_operator_schedule_booking_v2.html" class="menu-item"><i>📅</i> ตารางงาน & การจอง</a>
+            <a href="3_operator_care_report_v2.html" class="menu-item active"><i>📋</i> ติดตามรายงานหน้างาน</a>
+            <a href="4_operator_dispute_resolution_v2.html" class="menu-item"><i>⚠️</i> ข้อร้องเรียน & อุทธรณ์</a>
+            <a href="5_operator_analytics_report_v2.html" class="menu-item"><i>📊</i> รายงาน & รายได้</a>
         </div>
         <div style="padding: 24px; border-top: 1px solid rgba(255,255,255,0.1);">
             <a href="#" class="menu-item" style="padding: 0;"><i>🚪</i> ออกจากระบบ</a>
         </div>
     </nav>
 
+    <!-- Main Content -->
     <main class="main">
         <header>
-            <div style="display: flex; align-items: center; gap: 24px;">
+            <div class="header-left">
                 <div>
-                    <h1 style="font-size: 20px; font-weight: 700;">ติดตามรายงานหน้างาน (Care Report Tracking)</h1>
-                    <p style="font-size: 13px; color: var(--neutral-600);">ตรวจสอบคุณภาพการให้บริการและรายงานสุขภาพจากหน้างานแบบ Real-time</p>
+                    <h1 style="font-size: 20px; font-weight: 700;">ติดตามรายงานหน้างาน (Care Report)</h1>
+                    <p style="font-size: 13px; color: var(--neutral-600);">ตรวจสอบคุณภาพการให้บริการ Real-time</p>
                 </div>
-                <div class="sync-indicator">
-                    <span class="sync-dot"></span>
-                    Live Syncing
-                </div>
+                <div class="sync-indicator"><span class="sync-dot"></span>Live Syncing</div>
             </div>
             <div class="user-profile">
-                <button class="btn btn-outline btn-sm" onclick="toggleAccessibility()" style="margin-right: 12px; font-size: 11px;">[A] Accessibility</button>
-                <div style="text-align: right; margin-right: 16px;">
+                <button class="btn btn-outline btn-sm" onclick="toggleAccessibility()" style="margin-right: 12px;">[A] Accessibility</button>
+                <div style="text-align: right;">
                     <p style="font-weight: 600; font-size: 14px;">Michael Jackson</p>
                     <p style="font-size: 12px; color: var(--neutral-600);">Operator Manager</p>
                 </div>
@@ -251,201 +216,78 @@
             </div>
         </header>
 
-    <script>
-        // Sync Indicator Pulse Simulation (Mock)
-        const syncDot = document.querySelector('.sync-dot');
-        setInterval(() => {
-            const isOnline = Math.random() > 0.05;
-            if(syncDot) syncDot.style.background = isOnline ? 'var(--success)' : 'var(--error)';
-        }, 3000);
+        <div class="metrics-grid" style="grid-template-columns: repeat(5, 1fr);">
+            <div class="metric-card"><div class="metric-label">รายงานวันนี้</div><div class="metric-value">28</div></div>
+            <div class="metric-card" style="border-left-color: var(--warning);"><div class="metric-label">Flagged</div><div class="metric-value">3</div></div>
+            <div class="metric-card" style="border-left-color: var(--success);"><div class="metric-label">On-time Check-in</div><div class="metric-value">94%</div></div>
+            <div class="metric-card" style="border-left-color: var(--secondary-500);">
+                <div class="metric-label">Utilization Rate</div><div class="metric-value">82%</div>
+                <div class="utilization-mini"><div class="utilization-mini-fill" style="width: 82%;"></div></div>
+            </div>
+            <div class="metric-card" style="border-left-color: var(--info);"><div class="metric-label">พึงพอใจเฉลี่ย</div><div class="metric-value">4.85</div></div>
+        </div>
 
-        // Accessibility Toggle
+        <div class="layout-grid">
+            <div class="card">
+                <div class="card-title"><h3>รายการบันทึกล่าสุด (Live Feed)</h3></div>
+                <div class="report-item" style="border-left: 4px solid var(--error);">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+                        <div class="user-info">
+                            <div class="avatar">VW</div>
+                            <div>
+                                <p style="font-weight: 600;">วิภาวี (#BK-7755)</p>
+                                <p style="font-size: 12px; color: var(--neutral-600);">ลูกค้า: คุณมานพ | บางนา</p>
+                                <div class="geotag-verify fail">⚠️ เช็กอินนอกพิกัด (800 ม.)</div>
+                            </div>
+                        </div>
+                        <span class="status-badge bg-error">ผิดปกติ</span>
+                    </div>
+                    <div style="background: rgba(234, 84, 85, 0.05); padding: 12px; border-radius: 8px; font-size: 13px;">
+                        "ผู้ป่วยวิงเวียนศีรษะ วัดความดันได้ 155/95 mmHg กำลังติดตามอาการอย่างใกล้ชิด"
+                    </div>
+                    <div style="margin-top: 16px; text-align: right;">
+                        <button class="btn btn-primary btn-sm" style="background: var(--error);">แจ้งประสานงานด่วน</button>
+                        <button class="btn btn-outline btn-sm">โทรหาผู้ดูแล</button>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div class="ai-insight">
+                    <h4 style="font-size: 14px; margin-bottom: 8px;">✨ AI Quality Insights</h4>
+                    <p style="font-size: 12px; opacity: 0.9; line-height: 1.6;">พบความเสี่ยงด้านสุขภาพ 1 ราย (#BK-7755) แนะนำให้ติดตามอาการของคุณมานพในช่วงบ่ายวันนี้</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-title"><h3>สรุปเหตุการณ์วันนี้</h3></div>
+                    <div style="font-size: 13px; line-height: 2;">
+                        <div style="color: var(--error);">• 11:15 น.: #BK-7755 ความดันโลหิตสูง</div>
+                        <div style="color: var(--success);">• 10:30 น.: #BK-7721 ส่งบันทึกเรียบร้อย</div>
+                        <div style="color: var(--neutral-600);">• 09:00 น.: ผู้ดูแล 12 ท่านเข้างานตรงจุด</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <footer class="footer-note"><p>🔒 ข้อมูลรายงานทั้งหมดถูกบันทึกในระบบ Audit Log 3 ปี</p></footer>
+    </main>
+
+    <script>
         function toggleAccessibility() {
             document.body.classList.toggle('accessibility-mode');
             const isModeOn = document.body.classList.contains('accessibility-mode');
             alert(isModeOn ? 'Accessibility Mode: ON (High Contrast & Larger Text)' : 'Accessibility Mode: OFF');
         }
 
-        // Mock Critical Alert (Show after 3 seconds)
+        setInterval(() => {
+            document.querySelectorAll('.sync-dot').forEach(dot => {
+                const isOnline = Math.random() > 0.05;
+                dot.style.background = isOnline ? 'var(--success)' : 'var(--error)';
+            });
+        }, 5000);
+
         setTimeout(() => {
             const alertBar = document.getElementById('critical-alert');
             if (alertBar) alertBar.style.display = 'flex';
         }, 3000);
     </script>
-
-        <div class="metrics-grid" style="grid-template-columns: repeat(5, 1fr);">
-            <div class="metric-card">
-                <div class="metric-label">รายงานส่งแล้ววันนี้</div>
-                <div class="metric-value">28 ฉบับ</div>
-            </div>
-            <div class="metric-card" style="border-left-color: var(--warning);">
-                <div class="metric-label">รอการตรวจสอบ (Flagged)</div>
-                <div class="metric-value">3 รายการ</div>
-            </div>
-            <div class="metric-card" style="border-left-color: var(--success);">
-                <div class="metric-label">Check-in ตรงเวลา</div>
-                <div class="metric-value">94%</div>
-            </div>
-            <div class="metric-card" style="border-left-color: var(--secondary-500);">
-                <div class="metric-label">Utilization Rate (Live)</div>
-                <div class="metric-value">82%</div>
-                <div class="utilization-mini">
-                    <div class="utilization-mini-fill" style="width: 82%;"></div>
-                </div>
-            </div>
-            <div class="metric-card" style="border-left-color: var(--info);">
-                <div class="metric-label">พึงพอใจเฉลี่ย</div>
-                <div class="metric-value">4.85</div>
-            </div>
-        </div>
-
-        <div class="layout-grid">
-            <!-- Left Side: Report Feed -->
-            <div>
-                <div class="card">
-                    <div class="card-title">
-                        <h3>รายการบันทึกล่าสุด (Live Feed)</h3>
-                        <div style="display: flex; gap: 8px;">
-                            <input type="text" placeholder="ค้นหาชื่อ/รหัสการจอง..." style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 13px;">
-                            <button class="btn btn-outline">กรองข้อมูล</button>
-                        </div>
-                    </div>
-
-                    <!-- Report Item 1 -->
-                    <div class="report-item">
-                        <div class="report-header">
-                            <div class="user-info">
-                                <div class="avatar">RW</div>
-                                <div>
-                                    <p style="font-weight: 600; font-size: 14px;">น.ส. รวีวรรณ ผ่องใส (#BK-7721)</p>
-                                    <p style="font-size: 12px; color: var(--neutral-600);">ลูกค้า: คุณสมหญิง | คอนโด IDEO</p>
-                                    <div class="geotag-verify ok">📍 เช็กอินตรงพิกัด (ห่าง 15 เมตร)</div>
-                                </div>
-                            </div>
-                            <div class="report-status">
-                                <span class="badge badge-success">ปกติ</span>
-                                <span class="badge badge-info">10:30 น.</span>
-                            </div>
-                        </div>
-                        <div class="report-content">
-                            <div>
-                                <p style="font-size: 13px; font-weight: 600; margin-bottom: 8px;">กิจกรรมที่ดำเนินการ:</p>
-                                <ul class="activity-list">
-                                    <li class="activity-item done">วัดสัญญาณชีพ (เช้า)</li>
-                                    <li class="activity-item done">เตรียมอาหารเช้าและยา</li>
-                                    <li class="activity-item done">ทำความสะอาดร่างกาย</li>
-                                    <li class="activity-item pending">ทำกายภาพบำบัดเบื้องต้น (รอดำเนินการ 14:00)</li>
-                                </ul>
-                            </div>
-                            <div>
-                                <p style="font-size: 13px; font-weight: 600; margin-bottom: 8px;">สัญญาณชีพล่าสุด:</p>
-                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 12px;">
-                                    <div style="background: var(--neutral-100); padding: 8px; border-radius: 4px;">BP: 120/80 mmHg</div>
-                                    <div style="background: var(--neutral-100); padding: 8px; border-radius: 4px;">HR: 72 bpm</div>
-                                    <div style="background: var(--neutral-100); padding: 8px; border-radius: 4px;">Temp: 36.5 °C</div>
-                                    <div style="background: var(--neutral-100); padding: 8px; border-radius: 4px;">O2: 98%</div>
-                                </div>
-                                <div class="media-gallery">
-                                    <div class="media-box" style="background-image: url('https://via.placeholder.com/80?text=Food');"></div>
-                                    <div class="media-box" style="background-image: url('https://via.placeholder.com/80?text=Meds');"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--neutral-100); display: flex; justify-content: flex-end; gap: 8px;">
-                            <button class="btn btn-outline btn-sm">ส่งข้อความหาผู้ดูแล</button>
-                            <button class="btn btn-outline btn-sm">ดูบันทึกฉบับเต็ม</button>
-                        </div>
-                    </div>
-
-                    <!-- Report Item 2 (Alert) -->
-                    <div class="report-item" style="border-left: 4px solid var(--error);">
-                        <div class="report-header">
-                            <div class="user-info">
-                                <div class="avatar">VW</div>
-                                <div>
-                                    <p style="font-weight: 600; font-size: 14px;">น.ส. วิภาวี รักเรียน (#BK-7755)</p>
-                                    <p style="font-size: 12px; color: var(--neutral-600);">ลูกค้า: คุณมานพ | หมู่บ้านแสนสิริ</p>
-                                    <div class="geotag-verify fail">⚠️ เช็กอินนอกพิกัด (ห่าง 800 เมตร)</div>
-                                </div>
-                            </div>
-                            <div class="report-status">
-                                <span class="badge badge-error">ผิดปกติ</span>
-                                <span class="badge badge-info">11:15 น.</span>
-                            </div>
-                        </div>
-                        <div class="report-content">
-                            <div style="grid-column: span 2;">
-                                <p style="font-size: 13px; font-weight: 600; color: var(--error); margin-bottom: 8px;">บันทึกเหตุการณ์ด่วน:</p>
-                                <p style="font-size: 13px; color: var(--neutral-900); background: rgba(234, 84, 85, 0.05); padding: 12px; border-radius: 8px;">
-                                    "ผู้ป่วยมีอาการวิงเวียนศีรษะ วัดความดันได้ 155/95 mmHg สูงกว่าปกติ ได้แจ้งญาติเบื้องต้นและให้พักผ่อน กำลังติดตามอาการอย่างใกล้ชิด"
-                                </p>
-                            </div>
-                        </div>
-                        <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--neutral-100); display: flex; justify-content: flex-end; gap: 8px;">
-                            <button class="btn btn-primary btn-sm" style="background: var(--error);">แจ้งประสานงานด่วน</button>
-                            <button class="btn btn-outline btn-sm">โทรหาผู้ดูแล</button>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-
-            <!-- Right Side: Analytics & Timeline -->
-            <div>
-                <!-- AI Insights -->
-                <div class="ai-insight">
-                    <div class="ai-header">
-                        <span>✨ AI Quality Insights</span>
-                    </div>
-                    <p style="font-size: 12px; line-height: 1.6; opacity: 0.9;">
-                        ภาพรวมวันนี้: ผู้ดูแล 95% บันทึกรายงานตรงตามกำหนด พบความเสี่ยงด้านสุขภาพ 1 ราย (#BK-7755) แนะนำให้ Operator ติดตามอาการของคุณมานพในช่วงบ่ายวันนี้
-                    </p>
-                </div>
-
-                <!-- Daily Timeline Summary -->
-                <div class="card">
-                    <div class="card-title">
-                        <h3>สรุปเหตุการณ์วันนี้</h3>
-                    </div>
-                    <div class="timeline">
-                        <div class="timeline-event">
-                            <div class="timeline-dot active"></div>
-                            <div class="timeline-time">11:15 น.</div>
-                            <div class="timeline-desc"><strong>🚨 Incident:</strong> #BK-7755 ความดันโลหิตสูงผิดปกติ</div>
-                        </div>
-                        <div class="timeline-event">
-                            <div class="timeline-dot"></div>
-                            <div class="timeline-time">10:30 น.</div>
-                            <div class="timeline-desc"><strong>✅ Report:</strong> #BK-7721 ส่งบันทึกช่วงเช้าเรียบร้อย</div>
-                        </div>
-                        <div class="timeline-event">
-                            <div class="timeline-dot"></div>
-                            <div class="timeline-time">09:00 น.</div>
-                            <div class="timeline-desc"><strong>📍 Check-in:</strong> ผู้ดูแล 12 ท่านเข้างานตรงจุด</div>
-                        </div>
-                        <div class="timeline-event">
-                            <div class="timeline-dot alert"></div>
-                            <div class="timeline-time">08:15 น.</div>
-                            <div class="timeline-desc"><strong>⚠️ Late:</strong> #BK-7780 เข้างานสาย 15 นาที</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Quality Shortcuts -->
-                <div class="card">
-                    <div class="card-title">
-                        <h3>Quick Actions</h3>
-                    </div>
-                    <button class="btn btn-outline" style="width: 100%; margin-bottom: 12px; text-align: left;">📢 ประกาศแจ้งเตือนทีม (Broadcast)</button>
-                    <button class="btn btn-outline" style="width: 100%; text-align: left;">📄 ส่งออกรายงาน Audit วันนี้</button>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <footer class="footer-note">
-        <p>🔒 ข้อมูลรายงานทั้งหมดถูกบันทึกในระบบ Audit Log และจะถูกเก็บรักษาไว้เป็นเวลา 3 ปี ตามนโยบายการคุ้มครองข้อมูลส่วนบุคคลและมาตรฐานการให้บริการ</p>
-    </footer>
-
 </body>
 </html>

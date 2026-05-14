@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Finance & Revenue Management - CareDee Admin</title>
+    <title>CareDee Admin - Finance & Revenue</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -28,14 +28,9 @@
             --neutral-600: #6E6B7B;
             --neutral-900: #1E1E1E;
             
-            /* Interactive */
-            --pressed: #006675;
-            
-            /* Sidebar Specific */
+            /* Layout */
             --sidebar-bg: #004D58; 
             --sidebar-width: 260px;
-
-            /* Typography */
             --font-main: 'IBM Plex Sans Thai', 'Inter', sans-serif;
         }
 
@@ -53,6 +48,25 @@
             min-height: 100vh;
         }
 
+        /* Global Maintenance Banner */
+        .global-banner {
+            position: fixed;
+            top: 0;
+            left: var(--sidebar-width);
+            right: 0;
+            padding: 12px 32px;
+            z-index: 1100;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            font-weight: 600;
+            font-size: 14px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .global-banner.urgent { background: var(--error); color: white; }
+        .global-banner.normal { background: var(--secondary-500); color: white; }
+
         /* Sidebar Styles */
         .sidebar {
             width: var(--sidebar-width);
@@ -62,7 +76,6 @@
             height: 100%;
             display: flex;
             flex-direction: column;
-            transition: all 0.3s;
             z-index: 1000;
         }
 
@@ -100,6 +113,10 @@
             color: rgba(255, 255, 255, 0.7);
             text-decoration: none;
             font-size: 15px;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
         }
 
         .menu-item:hover, .menu-item.active {
@@ -120,7 +137,10 @@
             margin-left: var(--sidebar-width);
             flex: 1;
             padding: 32px;
+            padding-top: 60px;
+            transition: padding-top 0.3s;
         }
+        body.has-banner .main-content { padding-top: 100px; }
 
         header {
             background: white;
@@ -133,637 +153,211 @@
             margin-bottom: 32px;
         }
 
-        .search-bar input {
-            padding: 12px 20px;
-            border-radius: 12px;
-            border: 1px solid var(--neutral-300);
-            width: 360px;
-            font-size: 14px;
-            outline: none;
-            transition: border-color 0.2s;
-            color: var(--neutral-900);
+        /* View Section Handling */
+        .view-section {
+            display: none;
+        }
+        .view-section.active {
+            display: block;
         }
 
-        .search-bar input:focus {
-            border-color: var(--primary-600);
-        }
+        /* Common Components */
+        .card { background: white; padding: 24px; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); margin-bottom: 24px; }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--neutral-100); padding-bottom: 12px; }
+        h2 { font-size: 18px; font-weight: 700; }
+        
+        .dashboard-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-bottom: 32px; }
+        .metric-card { background: white; padding: 24px; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); border-left: 4px solid var(--primary-600); }
+        .metric-title { font-size: 14px; color: var(--neutral-600); margin-bottom: 12px; }
+        .metric-value { font-size: 28px; font-weight: 700; }
 
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
+        .btn { padding: 10px 18px; border-radius: 8px; border: none; cursor: pointer; font-size: 13px; font-weight: 600; transition: 0.2s; }
+        .btn-primary { background: var(--primary-600); color: white; }
+        .btn-success { background: var(--success); color: white; }
+        .btn-error { background: var(--error); color: white; }
+        .btn-outline { border: 1px solid var(--neutral-300); background: transparent; color: var(--neutral-600); }
 
-        .badge-2fa {
-            background: var(--success);
-            color: white;
-            font-size: 10px;
-            padding: 2px 10px;
-            border-radius: 12px;
-            font-weight: 600;
-        }
-
-        /* Dashboard Grid */
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 24px;
-            margin-bottom: 32px;
-        }
-
-        .metric-card {
-            background: white;
-            padding: 24px;
-            border-radius: 16px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-            border-left: 4px solid var(--primary-600);
-        }
-
-        .metric-title {
-            font-size: 14px;
-            color: var(--neutral-600);
-            margin-bottom: 12px;
-            font-weight: 500;
-        }
-
-        .metric-value {
-            font-size: 28px;
-            font-weight: 700;
-            color: var(--neutral-900);
-        }
-
-        .metric-sub {
-            font-size: 12px;
-            margin-top: 8px;
-            font-weight: 500;
-        }
-
-        /* Sections */
-        .section-container {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 32px;
-        }
-
-        .card {
-            background: white;
-            padding: 28px;
-            border-radius: 16px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-            margin-bottom: 32px;
-        }
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
-            border-bottom: 1px solid var(--neutral-100);
-            padding-bottom: 12px;
-        }
-
-        h2 {
-            font-size: 18px;
-            color: var(--neutral-900);
-            font-weight: 700;
-        }
-
-        /* Table Styles */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th {
-            text-align: left;
-            padding: 14px;
-            background: var(--neutral-100);
-            color: var(--neutral-600);
-            font-weight: 600;
-            font-size: 13px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        td {
-            padding: 16px 14px;
-            border-bottom: 1px solid var(--neutral-100);
-            font-size: 14px;
-        }
-
-        .status-pill {
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; padding: 14px; background: var(--neutral-100); font-size: 13px; color: var(--neutral-600); }
+        td { padding: 16px 14px; border-bottom: 1px solid var(--neutral-100); font-size: 14px; }
+        
+        .status-pill { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
         .status-success { background: rgba(40, 199, 111, 0.12); color: var(--success); }
         .status-pending { background: var(--secondary-100); color: var(--secondary-500); }
-        .status-failed { background: rgba(234, 84, 85, 0.12); color: var(--error); }
-        .status-payout { background: var(--primary-100); color: var(--primary-600); }
+        .status-error { background: rgba(234, 84, 85, 0.12); color: var(--error); }
 
-        /* Action Buttons */
-        .btn {
-            padding: 10px 18px;
-            border-radius: 8px;
-            border: none;
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: 600;
-            transition: all 0.2s;
-            text-decoration: none;
-            display: inline-block;
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); display: none; justify-content: center; align-items: center; z-index: 2000;
         }
-
-        .btn-view { background: var(--primary-100); color: var(--primary-600); }
-        .btn-view:hover { background: var(--primary-600); color: white; }
-        
-        .btn-approve { background: var(--success); color: white; }
-        .btn-approve:hover { filter: brightness(92%); }
-
-        .btn-outline { border: 1px solid var(--neutral-300); background: transparent; color: var(--neutral-600); }
-        .btn-outline:hover { background: var(--neutral-100); }
-
-        /* Bulk Actions & Finance Specifics */
-        .bulk-actions {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 16px;
-            padding: 12px 16px;
-            background: var(--primary-100);
-            border-radius: 8px;
-            border-left: 4px solid var(--primary-600);
-            display: none; /* Hidden until items are selected */
-        }
-
-        .checkbox-col {
-            width: 40px;
-            text-align: center;
-        }
-
-        input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            cursor: pointer;
-        }
-
-        .tax-tag {
-            font-size: 10px;
-            color: var(--error);
-            font-weight: 600;
-            display: block;
-        }
-
-        .booking-link {
-            font-size: 11px;
-            color: var(--primary-600);
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            margin-top: 4px;
-        }
-        .booking-link:hover { text-decoration: underline; }
-
-        /* Confirmation Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 2000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.5);
-            align-items: center;
-            justify-content: center;
-        }
-
         .modal-content {
-            background-color: white;
-            padding: 32px;
-            border-radius: 16px;
-            width: 100%;
-            max-width: 450px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            background: white; padding: 32px; border-radius: 20px; width: 500px; max-width: 90%;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2); text-align: center;
         }
 
-        .payout-security {
-            border: 2px solid var(--warning);
-            padding: 20px;
-            border-radius: 12px;
-            background: #fffcf5;
-            margin-bottom: 24px;
-        }
-
-        /* Settings Styles */
-        .setting-group {
-            margin-bottom: 20px;
-        }
-        .setting-group label {
-            display: block;
-            font-size: 13px;
-            color: var(--neutral-600);
-            margin-bottom: 8px;
-            font-weight: 500;
-        }
-        .setting-group input {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid var(--neutral-300);
-            border-radius: 8px;
-            font-size: 14px;
-        }
-
-        /* Audit Log Float */
-        .audit-info {
-            position: fixed;
-            bottom: 32px;
-            right: 32px;
-            background: var(--neutral-900);
-            color: white;
-            padding: 14px 28px;
-            border-radius: 40px;
-            font-size: 12px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            z-index: 1001;
-        }
-
-        .dot {
-            width: 10px;
-            height: 10px;
-            background: var(--success);
-            border-radius: 50%;
-            display: inline-block;
-            box-shadow: 0 0 10px var(--success);
-        }
     </style>
 </head>
-<body>
+<body id="app-body">
 
     <!-- Sidebar -->
     <nav class="sidebar">
         <div class="sidebar-header">
             <div class="logo-box">CD</div>
             <h3 style="font-weight: 700; font-size: 20px;">CareDee Admin</h3>
-            <p style="font-size: 11px; color: rgba(255,255,255,0.5); margin-top: 4px; text-transform: uppercase;">System Control Panel</p>
+            <p style="font-size: 11px; color: rgba(255,255,255,0.5); text-transform: uppercase;">System Control Panel</p>
         </div>
         <div class="sidebar-menu">
-            <a href="admin_mockup2.html" class="menu-item"><i>📊</i> Dashboard</a>
-            <a href="admin_user_provider.html" class="menu-item"><i>👤</i> บัญชีผู้ดูแล/ผู้ให้บริการ</a>
-            <a href="#" class="menu-item active"><i>💰</i> จัดการการเงิน & รายได้</a>
-            <a href="#" class="menu-item"><i>✨</i> คุณภาพรีวิว & อุทธรณ์</a>
-            <a href="#" class="menu-item"><i>📈</i> รายงานระบบ</a>
-            <a href="#" class="menu-item"><i>🛡️</i> นโยบาย & PDPA</a>
-            <a href="#" class="menu-item"><i>🖥️</i> เฝ้าระวังระบบคลาวด์</a>
+            <a href="0_admin_dashboard_v2.html" class="menu-item"><i>📊</i> Dashboard</a>
+            <a href="1_admin_user_provider_v2.html" class="menu-item"><i>👤</i> ผู้ดูแล/ผู้ให้บริการ</a>
+            <a href="2_admin_finance_revenue_v2.html" class="menu-item active"><i>💰</i> จัดการการเงิน</a>
+            <a href="3_admin_review_quality_v2.html" class="menu-item"><i>✨</i> คุณภาพรีวิว & อุทธรณ์</a>
+            <a href="4_admin_system_report_v2.html" class="menu-item"><i>📈</i> รายงานระบบ</a>
+            <a href="5_admin_pdpa_v2.html" class="menu-item"><i>🛡️</i> นโยบาย & PDPA</a>
+            <a href="6_admin_cloud_v2.html" class="menu-item"><i>🖥️</i> เฝ้าระวังระบบคลาวด์</a>
         </div>
         <div class="sidebar-footer" style="padding: 24px; border-top: 1px solid rgba(255,255,255,0.1);">
             <a href="#" class="menu-item" style="padding: 0;"><i>🚪</i> ออกจากระบบ</a>
         </div>
     </nav>
 
+    <!-- Global Banner -->
+    <div id="global-maintenance-banner" class="global-banner">
+        <span id="banner-icon">📢</span>
+        <span id="banner-text">ระบบจะปิดปรับปรุงเวลา 02:00 - 04:00 น.</span>
+        <button onclick="hideBanner()" style="background: none; border: none; color: white; cursor: pointer; font-size: 18px; margin-left: auto;">&times;</button>
+    </div>
+
     <!-- Main Content -->
     <main class="main-content">
-        <!-- Header -->
+        <!-- Shared Header -->
         <header>
-            <div class="search-bar">
-                <input type="text" placeholder="ค้นหารายการชำระเงิน, Transaction ID หรือชื่อผู้รับเงิน...">
-            </div>
-            <div class="user-info">
-                <div style="text-align: right;">
-                    <p style="font-weight: 700; font-size: 14px;">Michael jackson</p>
-                    <p style="font-size: 12px; color: var(--neutral-600);">Platform Operator <span class="badge-2fa">MFA ACTIVE</span></p>
+            <div style="display: flex; gap: 16px; align-items: center;">
+                <div class="search-bar">
+                    <input type="text" placeholder="ค้นหารายการชำระเงิน, Transaction ID หรือชื่อผู้รับเงิน..." style="padding: 10px 20px; border-radius: 12px; border: 1px solid var(--neutral-300); width: 400px;">
                 </div>
-                <div style="width: 48px; height: 48px; background: var(--primary-100); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--primary-600); font-weight: 700;">VW</div>
+            </div>
+            <div class="user-info" style="display: flex; align-items: center; gap: 16px;">
+                <div style="text-align: right;">
+                    <p style="font-weight: 700; font-size: 14px;">Michael Jackson</p>
+                    <p style="font-size: 12px; color: var(--neutral-600);">Platform Operator</p>
+                </div>
+                <div style="width: 44px; height: 44px; background: var(--primary-100); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: var(--primary-600); font-weight: 700;">MJ</div>
             </div>
         </header>
 
-        <!-- Revenue Summary -->
-        <div class="dashboard-grid">
-            <div class="metric-card">
-                <div class="metric-title">ยอดจองรวม (Gross)</div>
-                <div class="metric-value">฿ 1,240,500</div>
-                <p class="metric-sub" style="color: var(--success);">↑ 15% จากเดือนที่แล้ว</p>
-            </div>
-            <div class="metric-card" style="border-left-color: var(--info);">
-                <div class="metric-title">รายได้แพลตฟอร์ม (Revenue)</div>
-                <div class="metric-value">฿ 124,050</div>
-                <p class="metric-sub" style="color: var(--neutral-600);">Commission สะสม (10%)</p>
-            </div>
-            <div class="metric-card" style="border-left-color: var(--warning);">
-                <div class="metric-title">ยอดรอโอน (Pending Payout)</div>
-                <div class="metric-value">฿ 45,200</div>
-                <p class="metric-sub" style="color: var(--secondary-500);">6 รายการรอดำเนินการ</p>
-            </div>
-            <div class="metric-card" style="border-left-color: var(--success);">
-                <div class="metric-title">โอนสำเร็จแล้ว (Paid)</div>
-                <div class="metric-value">฿ 1,071,250</div>
-                <p class="metric-sub" style="color: var(--success);">หักค่าคอมฯ และค่าธรรมเนียมแล้ว</p>
-            </div>
-        </div>
-
-        <!-- Finance Operations -->
-        <div class="section-container">
-            <!-- Left Side: Transaction & Payout -->
-            <div class="operation-lists">
-                <!-- Payout Verification & Transaction Status -->
-                <div class="card">
-                    <div class="card-header">
-                        <div style="display: flex; flex-direction: column; gap: 4px;">
-                            <h2>รายการชำระเงินและการโอน (Payout & Transactions)</h2>
-                            <div style="display: flex; align-items: center; gap: 8px; margin-top: 8px;">
-                                <span style="font-size: 13px; color: var(--neutral-600); font-weight: 600;">กรองตาม Operator:</span>
-                                <select class="btn-outline" style="padding: 4px 12px; border-radius: 6px; font-size: 12px;">
-                                    <option value="all">ทั้งหมด (ทุกสังกัด)</option>
-                                    <option value="en">EN Enterprise</option>
-                                    <option value="th_care">Thai Care Group</option>
-                                    <option value="baancare">BaanCare Co., Ltd.</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div style="display: flex; gap: 8px;">
-                            <button class="btn btn-view">Export CSV</button>
-                        </div>
-                    </div>
-
-                    <!-- Bulk Action Bar -->
-                    <div id="bulk-bar-payout" class="bulk-actions">
-                        <span style="font-size: 14px; font-weight: 600; color: var(--primary-600);">เลือกแล้ว <span id="selected-count-payout">0</span> รายการ:</span>
-                        <button class="btn btn-approve" onclick="openPayoutModal(true)">ยืนยันโอนกลุ่มที่เลือก</button>
-                        <button class="btn btn-outline" style="background: white;" onclick="bulkAction('hold')">ระงับการโอนชั่วคราว</button>
-                    </div>
-
-                    <table>
-                        <thead>
-                            <tr>
-                                <th class="checkbox-col"><input type="checkbox" onclick="toggleSelectAll('payout', this)"></th>
-                                <th>ID / วันที่ / Booking</th>
-                                <th>ผู้รับเงิน (Provider)</th>
-                                <th>ยอดจอง (Gross)</th>
-                                <th>สุทธิ (Net 90%)</th>
-                                <th>Gateway Status</th>
-                                <th>Payout</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="checkbox-col"><input type="checkbox" class="check-payout" onclick="updateBulkBar('payout')"></td>
-                                <td>
-                                    <div style="font-weight: 700; color: var(--primary-600);">#BK-9902</div>
-                                    <div style="font-size: 11px; color: var(--neutral-600);">12 พ.ค. 26 14:30</div>
-                                    <a href="#" class="booking-link"><i>🔍</i> รายละเอียดการจอง</a>
-                                </td>
-                                <td>
-                                    <div style="font-weight: 600;">รวีวรรณ ใจดี</div>
-                                    <div style="font-size: 11px; color: var(--neutral-600);">K-Bank xxxx-4567</div>
-                                    <div style="font-size: 10px; color: var(--primary-600);">สังกัด: EN Enterprise</div>
-                                </td>
-                                <td>฿ 2,500</td>
-                                <td style="font-weight: 700;">
-                                    ฿ 2,250
-                                    <span class="tax-tag">WHT 3% (-฿67.50)</span>
-                                </td>
-                                <td><a href="#" class="status-pill status-success" style="text-decoration: none;">Success 🔗</a></td>
-                                <td><span class="status-pill status-payout">โอนแล้ว</span></td>
-                            </tr>
-                            <tr>
-                                <td class="checkbox-col"><input type="checkbox" class="check-payout" onclick="updateBulkBar('payout')"></td>
-                                <td>
-                                    <div style="font-weight: 700; color: var(--primary-600);">#BK-9915</div>
-                                    <div style="font-size: 11px; color: var(--neutral-600);">12 พ.ค. 26 16:15</div>
-                                    <a href="#" class="booking-link"><i>🔍</i> รายละเอียดการจอง</a>
-                                </td>
-                                <td>
-                                    <div style="font-weight: 600;">สมชาย บริบาล</div>
-                                    <div style="font-size: 11px; color: var(--neutral-600);">SCB xxxx-8890</div>
-                                    <div style="font-size: 10px; color: var(--primary-600);">สังกัด: Independent</div>
-                                </td>
-                                <td>฿ 1,800</td>
-                                <td style="font-weight: 700;">
-                                    ฿ 1,620
-                                    <span class="tax-tag">WHT 3% (-฿48.60)</span>
-                                </td>
-                                <td><a href="#" class="status-pill status-success" style="text-decoration: none;">Success 🔗</a></td>
-                                <td><button class="btn btn-approve" style="padding: 4px 12px; font-size: 11px;" onclick="openPayoutModal(false, 'สมชาย บริบาล', '1,620')">ยืนยันโอน</button></td>
-                            </tr>
-                            <tr>
-                                <td class="checkbox-col"><input type="checkbox" class="check-payout" onclick="updateBulkBar('payout')"></td>
-                                <td>
-                                    <div style="font-weight: 700; color: var(--primary-600);">#BK-9920</div>
-                                    <div style="font-size: 11px; color: var(--neutral-600);">12 พ.ค. 26 17:00</div>
-                                    <a href="#" class="booking-link"><i>🔍</i> รายละเอียดการจอง</a>
-                                </td>
-                                <td>
-                                    <div style="font-weight: 600;">บจก. แคร์ดีพลัส</div>
-                                    <div style="font-size: 11px; color: var(--neutral-600);">BBL xxxx-1122</div>
-                                    <div style="font-size: 10px; color: var(--primary-600);">สังกัด: BaanCare</div>
-                                </td>
-                                <td>฿ 5,000</td>
-                                <td style="font-weight: 700;">
-                                    ฿ 4,500
-                                    <span class="tax-tag">WHT 3% (-฿135.00)</span>
-                                </td>
-                                <td><span class="status-pill status-pending">Pending</span></td>
-                                <td><span style="color: var(--neutral-300); font-size: 11px;">รอชำระเงิน</span></td>
-                            </tr>
-                        </tbody>
-                    </table>
+        <!-- VIEW: FINANCE -->
+        <section id="view-finance" class="view-section active">
+            <div class="dashboard-grid">
+                <div class="metric-card">
+                    <div class="metric-title">ยอด Gross รวม</div>
+                    <div class="metric-value">฿ 1.24M</div>
                 </div>
-
-                <!-- Refund Management -->
-                <div class="card">
-                    <div class="card-header">
-                        <h2>จัดการคืนเงิน (Refund Management)</h2>
-                        <span style="font-size: 12px; color: var(--error); font-weight: 700;">เคสอุทธรณ์/ยกเลิก</span>
-                    </div>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>ID รายการ</th>
-                                <th>เหตุผลการยกเลิก</th>
-                                <th>ยอดคืนลูกค้า</th>
-                                <th>สถานะ</th>
-                                <th>จัดการ</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td style="font-weight: 700; color: var(--primary-600);">#BK-9880</td>
-                                <td>ผู้ให้บริการไม่มาตามนัด (No-show)</td>
-                                <td style="color: var(--error); font-weight: 700;">฿ 1,500</td>
-                                <td><span class="status-pill status-pending">รออนุมัติ</span></td>
-                                <td><button class="btn btn-approve">อนุมัติคืนเงิน</button></td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: 700; color: var(--primary-600);">#BK-9875</td>
-                                <td>ยกเลิกตามเงื่อนไข (ล่วงหน้า 24 ชม.)</td>
-                                <td style="color: var(--error); font-weight: 700;">฿ 800</td>
-                                <td><span class="status-pill status-success">คืนเงินสำเร็จ</span></td>
-                                <td><button class="btn btn-view">รายละเอียด</button></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="metric-card" style="border-left-color: var(--info);">
+                    <div class="metric-title">Commission (10%)</div>
+                    <div class="metric-value">฿ 124,050</div>
+                </div>
+                <div class="metric-card" style="border-left-color: var(--warning);">
+                    <div class="metric-title">ยอดรอโอน (Pending)</div>
+                    <div class="metric-value">฿ 45,200</div>
+                </div>
+                <div class="metric-card" style="border-left-color: var(--success);">
+                    <div class="metric-title">โอนสำเร็จแล้ว</div>
+                    <div class="metric-value">฿ 1.07M</div>
                 </div>
             </div>
-
-            <!-- Right Side: Global Settings -->
-            <div class="side-widgets">
-                <!-- Parameter Settings -->
-                <div class="card">
-                    <h2 style="margin-bottom: 24px;">ตั้งค่าค่าธรรมเนียม (Global Settings)</h2>
-                    <div class="setting-group">
-                        <label>Commission Rate (%)</label>
-                        <input type="number" value="10" placeholder="ระบุเปอร์เซ็นต์...">
-                    </div>
-                    <div class="setting-group">
-                        <label>ค่าธรรมเนียมการโอน (Fixed ฿)</label>
-                        <input type="number" value="15" placeholder="ระบุบาท...">
-                    </div>
-                    <div class="setting-group">
-                        <label>ยอดถอนขั้นต่ำ (฿)</label>
-                        <input type="number" value="500" placeholder="ระบุบาท...">
-                    </div>
-                    <button class="btn btn-approve" style="width: 100%; padding: 14px;">บันทึกการตั้งค่า</button>
-                    <p style="font-size: 11px; color: var(--neutral-600); margin-top: 12px; text-align: center;">
-                        * การเปลี่ยนแปลงจะมีผลกับรายการจองใหม่เท่านั้น
-                    </p>
-                </div>
-
-                <!-- Quick Reports -->
-                <div class="card">
-                    <h2 style="margin-bottom: 24px;">รายงานการเงิน</h2>
-                    <button class="btn btn-view" style="width: 100%; margin-bottom: 12px; padding: 14px; text-align: left;">📅 รายงานภาษี (Monthly)</button>
-                    <button class="btn btn-view" style="width: 100%; margin-bottom: 12px; padding: 14px; text-align: left;">🏦 สรุปยอดโอนธนาคาร (Batch)</button>
-                    <button class="btn btn-view" style="width: 100%; background: var(--secondary-500); color: white; padding: 14px; text-align: left;">📉 วิเคราะห์แนวโน้มรายได้</button>
-                </div>
+            <div class="card">
+                <div class="card-header"><h2>รายการรอโอนเงิน (Payout Queue)</h2></div>
+                <table>
+                    <thead>
+                        <tr><th>ID จอง</th><th>ผู้รับเงิน</th><th>ยอดสุทธิ</th><th>สถานะ Gateway</th><th>จัดการ</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div style="display: flex; flex-direction: column;">
+                                    <span style="font-weight: 700; color: var(--primary-600);">#BK-9915</span>
+                                    <button class="btn btn-outline" style="font-size: 10px; padding: 2px 6px; margin-top: 4px;" onclick="openPayoutDetail('#BK-9915')">🔍 Breakdown</button>
+                                </div>
+                            </td>
+                            <td>สมชาย บริบาล</td><td>฿ 1,620</td>
+                            <td><span class="status-pill status-success">Success</span></td>
+                            <td><button class="btn btn-success" style="padding: 4px 12px;" onclick="openConfirmModal('ยืนยันการโอนเงิน', 'ระบบจะส่งคำสั่งโอนเงินไปยังธนาคารปลายทางทันที โดยระบุเหตุผลการอนุมัติใน Log', () => alert('โอนเงินสำเร็จ!'), true)">โอนเงิน</button></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
-        </div>
-
-        <!-- Audit Log Float -->
-        <div class="audit-info">
-            <span class="dot"></span>
-            Finance Audit Logging Active (Secured Transaction Monitoring)
-        </div>
+        </section>
     </main>
 
-    <!-- Payout Confirmation Modal -->
-    <div id="payoutModal" class="modal">
+    <!-- Shared Modal: Confirmation -->
+    <div id="confirm-modal" class="modal-overlay">
         <div class="modal-content">
-            <h2 style="margin-bottom: 12px;">ยืนยันการโอนเงิน (Payout Confirmation)</h2>
-            <p id="payoutDetail" style="font-size: 14px; color: var(--neutral-600); margin-bottom: 20px;"></p>
+            <div style="font-size: 48px; margin-bottom: 16px;">⚠️</div>
+            <h2 id="modal-title">ยืนยันการดำเนินการ</h2>
+            <p id="modal-body" style="color: var(--neutral-600); margin: 16px 0; line-height: 1.5;"></p>
             
-            <div class="payout-security">
-                <p style="font-weight: 700; color: var(--secondary-500); margin-bottom: 12px;">🛡️ Security Verification Required</p>
-                <div class="setting-group">
-                    <label>กรุณาใส่รหัส PIN หรือรหัสผ่าน Admin</label>
-                    <input type="password" id="adminPin" placeholder="Enter PIN..." style="text-align: center; letter-spacing: 8px; font-size: 20px; margin-bottom: 16px;">
-                </div>
-                <div class="setting-group" style="margin-bottom: 0;">
-                    <label>ระบุเหตุผลการอนุมัติ (Audit Log - Reason Code)</label>
-                    <select class="btn-outline" style="width: 100%; padding: 10px; border-radius: 8px; margin-bottom: 12px;">
-                        <option value="R1">รอบการโอนปกติ (Standard Cycle)</option>
-                        <option value="R2">กรณีเร่งด่วน (Urgent Request)</option>
-                        <option value="R3">แก้ไขรายการย้อนหลัง (Adjustment)</option>
-                    </select>
-                    <input type="text" id="payoutReason" placeholder="ระบุรายละเอียดเพิ่มเติม..." style="width: 100%; padding: 10px; border: 1px solid var(--neutral-300); border-radius: 8px;">
-                </div>
+            <div id="reason-field" style="display: none; text-align: left; margin-top: 16px;">
+                <label for="action-reason" style="font-size: 13px; font-weight: 600; color: var(--neutral-600);">ระบุเหตุผล (Reason for Audit Log):</label>
+                <textarea id="action-reason" placeholder="โปรดระบุเหตุผลในการดำเนินการ..." style="width: 100%; height: 80px; padding: 10px; border-radius: 8px; border: 1px solid var(--neutral-300); margin-top: 8px; font-size: 13px; resize: none;"></textarea>
             </div>
 
-            <div style="display: flex; gap: 12px;">
-                <button class="btn btn-outline" style="flex: 1;" onclick="closePayoutModal()">ยกเลิก</button>
-                <button class="btn btn-approve" style="flex: 2; padding: 14px;" onclick="confirmPayout()">ยืนยันการโอนเงินเข้าระบบธนาคาร</button>
+            <div style="display: flex; gap: 12px; margin-top: 24px;">
+                <button class="btn btn-outline" style="flex: 1;" onclick="closeModal()">ยกเลิก</button>
+                <button id="modal-confirm-btn" class="btn btn-primary" style="flex: 1;">ยืนยัน</button>
             </div>
-            <p style="font-size: 11px; color: var(--neutral-300); text-align: center; margin-top: 16px;">
-                การดำเนินการนี้จะถูกบันทึกใน Audit Log (PF-FIN-001)
-            </p>
+        </div>
+    </div>
+
+    <!-- Payout Detail Modal -->
+    <div id="payout-modal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 600px; text-align: left;">
+            <h2>Transaction Breakdown (#BK-9915)</h2>
+            <div style="background: var(--neutral-100); padding: 16px; border-radius: 12px; margin-top: 16px;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                    <span>ยอดจอง (Gross Service Fee):</span>
+                    <b>฿ 1,800.00</b>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                    <span>Commission (10%):</span>
+                    <b style="color: var(--error);">- ฿ 180.00</b>
+                </div>
+                <div style="display: flex; justify-content: space-between; border-top: 1px solid var(--neutral-300); padding-top: 8px; font-weight: 700;">
+                    <span>ยอดสุทธิรอโอน (Net Payout):</span>
+                    <span style="color: var(--success);">฿ 1,620.00</span>
+                </div>
+            </div>
+            <button class="btn btn-outline" style="width: 100%; margin-top: 24px;" onclick="document.getElementById('payout-modal').style.display='none'">ปิด</button>
         </div>
     </div>
 
     <script>
-        // Bulk Actions Logic
-        function toggleSelectAll(type, master) {
-            const checkboxes = document.querySelectorAll(`.check-${type}`);
-            checkboxes.forEach(cb => cb.checked = master.checked);
-            updateBulkBar(type);
+        function hideBanner() {
+            document.getElementById('global-maintenance-banner').style.display = 'none';
+            document.getElementById('app-body').classList.remove('has-banner');
         }
 
-        function updateBulkBar(type) {
-            const checkboxes = document.querySelectorAll(`.check-${type}:checked`);
-            const bar = document.getElementById(`bulk-bar-${type}`);
-            const countSpan = document.getElementById(`selected-count-${type}`);
-            
-            if (checkboxes.length > 0) {
-                bar.style.display = 'flex';
-                countSpan.textContent = checkboxes.length;
-            } else {
-                bar.style.display = 'none';
-            }
+        function openPayoutDetail(id) {
+            document.getElementById('payout-modal').style.display = 'flex';
         }
 
-        function bulkAction(action) {
-            alert(`ดำเนินการ [${action}] สำหรับรายการที่เลือกเรียบร้อยแล้ว (Simulated)`);
+        let onConfirmCallback = null;
+        function openConfirmModal(title, body, onConfirm, showReason = false) {
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById('modal-body').innerText = body;
+            document.getElementById('reason-field').style.display = showReason ? 'block' : 'none';
+            onConfirmCallback = onConfirm;
+            document.getElementById('confirm-modal').style.display = 'flex';
         }
 
-        // Payout Modal Logic
-        let currentPayoutData = null;
-
-        function openPayoutModal(isBulk, name, amount) {
-            const modal = document.getElementById('payoutModal');
-            const detail = document.getElementById('payoutDetail');
-            document.getElementById('adminPin').value = '';
-
-            if (isBulk) {
-                const count = document.querySelectorAll('.check-payout:checked').length;
-                detail.innerHTML = `คุณกำลังจะอนุมัติการโอนเงินแบบกลุ่มจำนวน <b>${count} รายการ</b><br>ระบบจะทำการประมวลผล Batch Payout ไปยังธนาคารพันธมิตร`;
-            } else {
-                detail.innerHTML = `คุณกำลังจะโอนเงินให้: <b>${name}</b><br>ยอดเงินสุทธิ: <b>฿ ${amount}</b> (หัก WHT แล้ว)`;
-            }
-
-            modal.style.display = 'flex';
-            currentPayoutData = { isBulk, name, amount };
+        function closeModal() {
+            document.getElementById('confirm-modal').style.display = 'none';
         }
 
-        function closePayoutModal() {
-            document.getElementById('payoutModal').style.display = 'none';
-        }
-
-        function confirmPayout() {
-            const pin = document.getElementById('adminPin').value;
-            if (!pin) {
-                alert('กรุณาใส่รหัส PIN เพื่อยืนยัน');
-                return;
-            }
-
-            // Simulated processing
-            const btn = event.target;
-            btn.textContent = 'กำลังประมวลผล...';
-            btn.disabled = true;
-
-            setTimeout(() => {
-                alert('ส่งคำสั่งโอนเงินสำเร็จ! รายการจะถูกปรับสถานะเป็น "โอนแล้ว" เมื่อธนาคารตอบรับ');
-                closePayoutModal();
-                btn.textContent = 'ยืนยันการโอนเงินเข้าระบบธนาคาร';
-                btn.disabled = false;
-            }, 1500);
-        }
-
-        // Close modal when clicking outside
-        window.onclick = function(event) {
-            const modal = document.getElementById('payoutModal');
-            if (event.target == modal) {
-                closePayoutModal();
-            }
-        }
-
-        // Simulation of finance data refresh
-        setInterval(() => {
-            console.log("Refreshing revenue data and payout statuses...");
-        }, 60000);
+        document.getElementById('modal-confirm-btn').onclick = () => {
+            if (onConfirmCallback) onConfirmCallback();
+            closeModal();
+        };
     </script>
 </body>
 </html>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>นำเข้าข้อมูลการอบรม V2 - CareDee Academy</title>
+    <title>นำเข้าข้อมูลการอบรม - CareDee Academy</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -40,7 +40,7 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--font-main); }
-        body { background: var(--neutral-100); color: var(--neutral-900); display: flex; min-height: 100vh; }
+        body { background: var(--neutral-100); color: var(--neutral-900); display: flex; min-height: 100vh; overflow-x: hidden; }
 
         /* --- Sidebar --- */
         .sidebar {
@@ -66,13 +66,16 @@
             font-weight: 500;
             transition: 0.2s;
             font-size: 15px;
+            cursor: pointer;
             position: relative;
         }
         .menu-link:hover, .menu-link.active { background: var(--primary-100); color: var(--primary-600); border-right: 4px solid var(--primary-600); }
         .menu-link i { margin-right: 12px; width: 24px; text-align: center; font-style: normal; }
+        .nav-badge { position: absolute; right: 20px; background: var(--error); color: white; font-size: 10px; padding: 2px 6px; border-radius: 10px; font-weight: 700; }
 
         /* --- Main Layout --- */
-        .main { margin-left: var(--sidebar-width); flex: 1; padding: 32px; }
+        .main { margin-left: var(--sidebar-width); flex: 1; padding: 32px; width: calc(100% - var(--sidebar-width)); }
+        
         header {
             display: flex;
             justify-content: space-between;
@@ -87,56 +90,56 @@
         .mfa-tag { background: var(--success); color: white; font-size: 11px; padding: 4px 12px; border-radius: 20px; font-weight: 600; }
 
         /* --- Components --- */
-        .card { background: var(--white); border-radius: 16px; padding: 28px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); margin-bottom: 32px; }
+        .card { background: var(--white); border-radius: 16px; padding: 28px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); margin-bottom: 32px; position: relative; }
         .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; border-bottom: 1px solid var(--neutral-100); padding-bottom: 12px; }
         .card-title { font-size: 18px; font-weight: 700; color: var(--neutral-900); }
-
-        .badge { padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; white-space: nowrap; }
-        .bg-matched { background: var(--primary-100); color: var(--primary-600); }
-        .bg-unmatched { background: var(--secondary-100); color: var(--secondary-500); }
-        .bg-error { background: #FFF5F5; color: var(--error); }
-        .bg-pending { background: var(--neutral-100); color: var(--neutral-600); }
+        .card-subtitle { font-size: 13px; color: var(--neutral-600); margin-top: 4px; }
 
         .btn { padding: 10px 20px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; font-size: 13px; transition: 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
         .btn-primary { background: var(--primary-600); color: white; }
         .btn-primary:hover { background: var(--pressed); }
         .btn-secondary { background: var(--neutral-200); color: var(--neutral-600); }
-        .btn-outline-danger { background: var(--white); border: 1px solid var(--error); color: var(--error); }
-        .btn-invite { background: var(--secondary-500); color: white; }
-        .btn-invite:hover { background: #E67E22; }
         .btn-sm { padding: 6px 12px; font-size: 12px; }
         .btn-ghost { background: transparent; color: var(--primary-600); border: 1px solid var(--primary-600); }
+        .btn-ghost:hover { background: var(--primary-100); }
 
-        /* --- Import Specific --- */
-        .import-grid { display: grid; grid-template-columns: 1fr 350px; gap: 24px; margin-bottom: 32px; }
+        .badge { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; white-space: nowrap; display: inline-block; }
+        .bg-matched { background: var(--primary-100); color: var(--primary-600); }
+        .bg-unmatched { background: var(--secondary-100); color: var(--secondary-500); }
+        .bg-error { background: #FFF5F5; color: var(--error); }
+
+        .data-table { width: 100%; border-collapse: collapse; }
+        .data-table th { text-align: left; padding: 14px; font-size: 12px; background: var(--neutral-100); color: var(--neutral-600); font-weight: 700; text-transform: uppercase; }
+        .data-table td { padding: 16px 14px; border-bottom: 1px solid var(--neutral-100); font-size: 14px; vertical-align: middle; }
+
+        /* Import Wizard Specific */
+        .wizard-step { display: none; }
+        .wizard-step.active { display: block; }
         .upload-zone { border: 2px dashed var(--neutral-300); padding: 48px; text-align: center; border-radius: 16px; cursor: pointer; background: var(--neutral-100); transition: 0.3s; }
         .upload-zone:hover { border-color: var(--primary-600); background: var(--primary-100); }
-        
-        .validation-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
-        .stat-box { padding: 16px; border-radius: 12px; border: 1px solid var(--neutral-200); }
-        .stat-label { font-size: 12px; color: var(--neutral-600); margin-bottom: 4px; font-weight: 500; }
-        .stat-value { font-size: 20px; font-weight: 700; }
+        .progress-container { margin: 24px 0; }
+        .progress-bar-bg { height: 12px; background: var(--neutral-200); border-radius: 6px; overflow: hidden; }
+        .progress-bar-fill { height: 100%; background: var(--primary-600); width: 0%; transition: width 0.3s ease; }
 
-        .table-container { overflow-x: auto; margin-top: 16px; }
-        .data-table { width: 100%; border-collapse: collapse; }
-        .data-table th { text-align: left; padding: 14px; font-size: 13px; background: var(--neutral-100); color: var(--neutral-600); font-weight: 600; }
-        .data-table td { padding: 14px; border-bottom: 1px solid var(--neutral-100); font-size: 14px; vertical-align: middle; }
+        .tab-container { display: flex; gap: 24px; border-bottom: 1px solid var(--neutral-200); margin-bottom: 24px; }
+        .tab-item { padding: 12px 0; font-size: 15px; font-weight: 600; color: var(--neutral-600); cursor: pointer; position: relative; }
+        .tab-item.active { color: var(--primary-600); }
+        .tab-item.active::after { content: ''; position: absolute; bottom: -1px; left: 0; width: 100%; height: 2px; background: var(--primary-600); }
 
-        .row-error { background: #FFFBFB; }
-        .text-error { color: var(--error); font-weight: 600; }
-
-        /* Modal */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 1000; }
-        .modal-content { background: white; padding: 32px; border-radius: 16px; width: 500px; max-width: 90%; }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--neutral-100); padding-bottom: 12px; }
-        
         .form-group { margin-bottom: 16px; }
         .form-label { font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px; }
-        .form-control { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--neutral-300); outline: none; }
+        .form-control { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid var(--neutral-300); outline: none; font-size: 14px; }
+
+        /* Modals */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 1000; }
+        .modal-content { background: white; padding: 32px; border-radius: 16px; width: 500px; max-width: 90%; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--neutral-100); padding-bottom: 12px; }
+        .modal-footer { display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--neutral-100); }
     </style>
 </head>
 <body>
 
+    <!-- Sidebar -->
     <aside class="sidebar">
         <div class="sidebar-brand">
             <div class="logo-box">CD</div>
@@ -148,15 +151,15 @@
             <a href="1_training_import_v2.html" class="menu-link active"><i>📥</i> นำเข้าข้อมูลการอบรม</a>
             <a href="2_training_cert_manage_v2.html" class="menu-link"><i>🏅</i> จัดการใบรับรอง</a>
             <a href="3_training_market_intelligence_v2.html" class="menu-link"><i>📈</i> สถิติตลาดแรงงาน</a>
-            <a href="4_training_verification_standard_v2.html" class="menu-link"><i>🛡️</i> มาตรฐานการตรวจสอบ</a>
-            <a href="#" class="menu-link"><i>🏢</i> โปรไฟล์สถาบัน & KYC</a>
-            <a href="gap.md" class="menu-link" style="color: var(--secondary-500);"><i>⚠️</i> Gap Analysis</a>
+            <a href="4_training_verification_standard_v2.html" class="menu-link"><i>🛡️</i> การตรวจสอบ & เกณฑ์ <span class="nav-badge">12</span></a>
+            <a href="5_training_profile_v2.html" class="menu-link"><i>🏢</i> โปรไฟล์สถาบัน & KYC</a>
         </nav>
         <div style="padding: 24px; border-top: 1px solid var(--neutral-100);">
-            <a href="#" class="menu-link" style="color: var(--error); padding: 0;"><i>🚪</i> ออกจากระบบ</a>
+            <a onclick="logout()" class="menu-link" style="color: var(--error); padding: 0;"><i>🚪</i> ออกจากระบบ</a>
         </div>
     </aside>
 
+    <!-- Main Content -->
     <main class="main">
         <header>
             <div class="page-title">
@@ -169,217 +172,331 @@
             </div>
         </header>
 
-        <!-- Step 1 & 2: Upload & Stats -->
-        <div class="import-grid">
+        <div style="display: grid; grid-template-columns: 1fr 350px; gap: 32px; margin-bottom: 32px;">
             <div class="card" style="margin-bottom: 0;">
                 <div class="card-header">
                     <h2 class="card-title">ขั้นตอนที่ 1: อัปโหลดและตรวจสอบ</h2>
                 </div>
-                <div class="upload-zone" id="uploadZone" onclick="alert('File Dialog Opened...')">
-                    <div style="font-size: 40px; margin-bottom: 12px;">📁</div>
-                    <p style="font-weight: 700; font-size: 16px; color: var(--primary-600);">อัปโหลดไฟล์รายชื่อผู้ผ่านการอบรม</p>
-                    <p style="font-size: 12px; color: var(--neutral-600); margin-top: 4px;">ไฟล์ปัจจุบัน: <span id="fileName">training_result_batch_A.xlsx</span></p>
+                
+                <div id="step-upload" class="wizard-step active">
+                    <!-- Tab System for Import -->
+                    <div class="tab-container">
+                        <div class="tab-item active" onclick="switchImportTab('file', this)">อัปโหลดไฟล์ (File Upload)</div>
+                        <div class="tab-item" onclick="switchImportTab('manual', this)">กรอกข้อมูล (Manual Entry)</div>
+                    </div>
+
+                    <!-- Tab Content: File Upload -->
+                    <div id="import-tab-file">
+                        <div class="upload-zone" onclick="startImportProcess()">
+                            <div style="font-size: 40px; margin-bottom: 12px;">📁</div>
+                            <p style="font-weight: 700; font-size: 16px; color: var(--primary-600);">คลิกเพื่ออัปโหลดไฟล์รายชื่อผู้ผ่านการอบรม</p>
+                            <p style="font-size: 12px; color: var(--neutral-600); margin-top: 4px;">รองรับไฟล์ CSV, XLSX, JSON (สูงสุด 10MB)</p>
+                        </div>
+                    </div>
+
+                    <!-- Tab Content: Manual Entry -->
+                    <div id="import-tab-manual" style="display: none;">
+                        <div style="background: var(--neutral-100); padding: 20px; border-radius: 12px; margin-bottom: 20px;">
+                            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 12px; align-items: flex-end;">
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <label class="form-label">รหัสประจำตัวประชาชน</label>
+                                    <input type="text" class="form-control" id="manual-id" placeholder="X-XXXX-XXXXX-XX-X">
+                                </div>
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <label class="form-label">ชื่อ-นามสกุล</label>
+                                    <input type="text" class="form-control" id="manual-name" placeholder="ชื่อ นามสกุล">
+                                </div>
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <label class="form-label">รหัสใบรับรอง</label>
+                                    <input type="text" class="form-control" id="manual-cert" placeholder="CERT-XXXX-XXX">
+                                </div>
+                                <button class="btn btn-primary" onclick="addManualRow()">เพิ่ม</button>
+                            </div>
+                        </div>
+                        
+                        <div style="max-height: 250px; overflow-y: auto; border: 1px solid var(--neutral-200); border-radius: 12px;">
+                            <table class="data-table">
+                                <thead style="position: sticky; top: 0; z-index: 1;">
+                                    <tr>
+                                        <th>รหัส ปชช.</th>
+                                        <th>ชื่อ-นามสกุล</th>
+                                        <th>รหัสใบรับรอง</th>
+                                        <th style="width: 50px;"></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="manual-rows-body">
+                                    <tr id="manual-empty-row">
+                                        <td colspan="4" style="text-align: center; color: var(--neutral-600); padding: 32px;">ยังไม่มีข้อมูลที่กรอก</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div style="margin-top: 24px; text-align: right;">
+                            <button class="btn btn-primary" onclick="startImportProcess()" id="btn-manual-proceed" disabled>ดำเนินการต่อ (0 รายการ)</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step Processing -->
+                <div id="step-processing" class="wizard-step">
+                    <div style="text-align: center; padding: 20px 0;">
+                        <h3 style="margin-bottom: 8px; font-size: 18px;">กำลังประมวลผลข้อมูล...</h3>
+                        <div class="progress-container" style="max-width: 400px; margin: 32px auto;">
+                            <div class="progress-bar-bg">
+                                <div id="importProgressBar" class="progress-bar-fill"></div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; font-size: 13px; margin-top: 8px; color: var(--neutral-600);">
+                                <span>data_export_v2.xlsx</span>
+                                <span id="importProgressPercent">0%</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
+
             <div class="card" style="margin-bottom: 0;">
                 <div class="card-header">
                     <h2 class="card-title">สรุปการตรวจสอบ</h2>
                 </div>
-                <div class="validation-stats">
-                    <div class="stat-box" style="background: var(--primary-100);">
-                        <div class="stat-label">ทั้งหมด</div>
-                        <div class="stat-value">50</div>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px;">
+                    <div style="padding: 12px; border-radius: 8px; background: var(--neutral-100); text-align: center;">
+                        <div style="font-size: 11px; color: var(--neutral-600);">ทั้งหมด</div>
+                        <div style="font-size: 18px; font-weight: 700;">50</div>
                     </div>
-                    <div class="stat-box" style="background: #E6F9F0;">
-                        <div class="stat-label">ถูกต้อง</div>
-                        <div class="stat-value" style="color: var(--success);">42</div>
+                    <div style="padding: 12px; border-radius: 8px; background: #E6F9F0; text-align: center;">
+                        <div style="font-size: 11px; color: var(--neutral-600);">ถูกต้อง</div>
+                        <div style="font-size: 18px; font-weight: 700; color: var(--success);">42</div>
                     </div>
-                    <div class="stat-box" style="background: #FFF5F5;">
-                        <div class="stat-label">ต้องแก้ไข</div>
-                        <div class="stat-value" style="color: var(--error);">8</div>
+                    <div style="padding: 12px; border-radius: 8px; background: #FFF5F5; text-align: center;">
+                        <div style="font-size: 11px; color: var(--neutral-600);">ต้องแก้ไข</div>
+                        <div style="font-size: 18px; font-weight: 700; color: var(--error);">8</div>
                     </div>
                 </div>
-                <div style="font-size: 12px; color: var(--neutral-600);">
-                    * ระบบตรวจพบรายชื่อที่ยังไม่มีบัญชีใน CareDee 2 รายการ
-                </div>
+                <p style="font-size: 11px; color: var(--neutral-600);">* พบ 2 รายชื่อที่ยังไม่มีบัญชี และ 1 รายชื่อที่ข้อมูลไม่สมบูรณ์</p>
             </div>
         </div>
 
-        <!-- Step 3: Preview & Resolution -->
-        <div class="card">
+        <!-- Mapping & Conflict Step -->
+        <div id="step-mapping" class="card" style="display: none;">
             <div class="card-header">
                 <div>
-                    <h2 class="card-title">ขั้นตอนที่ 2: พรีวิวและจัดการข้อมูล (Conflict Resolution)</h2>
-                    <p style="font-size: 13px; color: var(--neutral-600); margin-top: 4px;">ตรวจสอบสถานะการจับคู่บัญชีและแก้ไขข้อผิดพลาดรายบรรทัด</p>
+                    <h2 class="card-title">ขั้นตอนที่ 2: ตรวจสอบข้อมูล (Preview & Conflict Resolution)</h2>
+                    <p class="card-subtitle">แก้ไขข้อมูลรายบรรทัด หรือจับคู่บัญชีด้วยตนเองก่อนบันทึก</p>
                 </div>
                 <div style="display: flex; gap: 12px;">
-                    <button class="btn btn-outline-danger" onclick="rollbackImport()">ยกเลิกการนำเข้าทั้งหมด</button>
-                    <button class="btn btn-primary" onclick="confirmImport()">ยืนยันบันทึก 50 รายการ</button>
+                    <button class="btn btn-secondary" onclick="resetImport()">ยกเลิก</button>
+                    <button class="btn btn-primary" onclick="confirmImport()">ยืนยันนำเข้าทั้งหมด</button>
                 </div>
             </div>
-
-            <div class="table-container">
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>รหัสประจำตัวประชาชน</th>
-                            <th>ชื่อ-นามสกุล</th>
-                            <th>รหัสใบรับรอง</th>
-                            <th>สถานะในระบบ</th>
-                            <th style="text-align: right;">การจัดการ</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Case 1: Perfectly Matched -->
-                        <tr>
-                            <td>1</td>
-                            <td style="font-family: monospace;">1-1002-XXXXX-XX-X</td>
-                            <td style="font-weight: 500;">น.ส. กัญญาวีร์ สีใส</td>
-                            <td style="font-weight: 600; color: var(--primary-600);">CERT-2026-001</td>
-                            <td><span class="badge bg-matched">Matched</span></td>
-                            <td style="text-align: right;">
-                                <button class="btn btn-ghost btn-sm" onclick="editRow(1)">แก้ไข</button>
-                            </td>
-                        </tr>
-
-                        <!-- Case 2: Data Error (Inline Correction Needed) -->
-                        <tr class="row-error">
-                            <td>12</td>
-                            <td style="font-family: monospace;" class="text-error">12345 (Invalid)</td>
-                            <td style="font-weight: 500;">นาย สมเกียรติ พากเพียร</td>
-                            <td style="font-weight: 600; color: var(--primary-600);">CERT-2026-012</td>
-                            <td><span class="badge bg-error">Error: ID Format</span></td>
-                            <td style="text-align: right;">
-                                <button class="btn btn-primary btn-sm" onclick="editRow(12)">แก้ไขข้อมูลทันที</button>
-                            </td>
-                        </tr>
-
-                        <!-- Case 3: Not Found / Unmatched (Needs Invite or Manual Match) -->
-                        <tr>
-                            <td>25</td>
-                            <td style="font-family: monospace;">3-6602-XXXXX-XX-X</td>
-                            <td style="font-weight: 500;">นาย สมชาย สายลม</td>
-                            <td style="font-weight: 600; color: var(--primary-600);">CERT-2026-025</td>
-                            <td><span class="badge bg-unmatched">Not Found in System</span></td>
-                            <td style="text-align: right; display: flex; justify-content: flex-end; gap: 8px;">
-                                <button class="btn btn-invite btn-sm" onclick="sendInvite('สมชาย')">ส่งคำเชิญ</button>
-                                <button class="btn btn-ghost btn-sm" onclick="openManualMatch()">Manual Match</button>
-                                <button class="btn btn-ghost btn-sm" onclick="editRow(25)">แก้ไข</button>
-                            </td>
-                        </tr>
-
-                        <!-- Case 4: Matched but Name differs slightly (Manual Match recommended) -->
-                        <tr>
-                            <td>42</td>
-                            <td style="font-family: monospace;">5-1234-XXXXX-XX-X</td>
-                            <td style="font-weight: 500;">น.ส. รัตนา ใจดี</td>
-                            <td style="font-weight: 600; color: var(--primary-600);">CERT-2026-042</td>
-                            <td><span class="badge bg-unmatched">Unmatched (Name Conflict)</span></td>
-                            <td style="text-align: right; display: flex; justify-content: flex-end; gap: 8px;">
-                                <button class="btn btn-ghost btn-sm" style="color: var(--secondary-500); border-color: var(--secondary-500);" onclick="openManualMatch()">Manual Match</button>
-                                <button class="btn btn-ghost btn-sm" onclick="editRow(42)">แก้ไข</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>รหัสประจำตัวประชาชน</th>
+                        <th>ชื่อ-นามสกุล</th>
+                        <th>รหัสใบรับรอง</th>
+                        <th>สถานะในระบบ</th>
+                        <th>การจัดการ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td style="font-family: monospace;">1-1002-XXXXX-XX-X</td>
+                        <td style="font-weight: 500;">น.ส. กัญญาวีร์ สีใส</td>
+                        <td style="font-weight: 600; color: var(--primary-600);">CERT-2026-001</td>
+                        <td><span class="badge bg-matched">Matched</span></td>
+                        <td><button class="btn btn-ghost btn-sm" onclick="openEditRowModal('น.ส. กัญญาวีร์ สีใส', '1-1002-XXXXX-XX-X')">แก้ไข</button></td>
+                    </tr>
+                    <tr style="background: #FFFBFB;">
+                        <td>12</td>
+                        <td style="color: var(--error); font-family: monospace;">12345 (Invalid)</td>
+                        <td style="font-weight: 500;">นาย สมเกียรติ พากเพียร</td>
+                        <td>CERT-2026-012</td>
+                        <td><span class="badge bg-error">ID Format Error</span></td>
+                        <td><button class="btn btn-primary btn-sm" onclick="openEditRowModal('นาย สมเกียรติ พากเพียร', '12345')">แก้ไขทันที (Inline)</button></td>
+                    </tr>
+                    <tr>
+                        <td>25</td>
+                        <td style="font-family: monospace;">3-6602-XXXXX-XX-X</td>
+                        <td style="font-weight: 500;">นาย สมชาย สายลม</td>
+                        <td>CERT-2026-025</td>
+                        <td><span class="badge bg-unmatched">Not Found</span></td>
+                        <td>
+                            <div style="display: flex; gap: 4px;">
+                                <button class="btn btn-primary btn-sm" style="background: var(--secondary-500);" onclick="sendInvite('นาย สมชาย สายลม')">ส่งคำเชิญ (Invite)</button>
+                                <button class="btn btn-ghost btn-sm" onclick="openManualMatchModal('นาย สมชาย สายลม')">Manual Match</button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
+
+        <footer style="font-size: 11px; text-align: center; color: var(--neutral-600); padding: 24px; border-top: 1px solid var(--neutral-100); margin-top: 20px;">
+            ระบบทำการบันทึก Audit Log ทุกการเปลี่ยนแปลงข้อมูลตามมาตรฐาน PDPA | © 2026 CareDee Academy
+        </footer>
     </main>
 
-    <!-- Modal: Manual Match -->
+    <!-- Modals -->
     <div class="modal-overlay" id="manualMatchModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 style="font-size: 18px; font-weight: 700;">จับคู่บัญชีด้วยตนเอง (Manual Match)</h3>
+                <h3 style="font-size: 18px; font-weight: 700;">Manual Match (จับคู่ด้วยตนเอง)</h3>
                 <span style="cursor: pointer;" onclick="closeModal('manualMatchModal')">✕</span>
             </div>
-            <p style="font-size: 14px; color: var(--neutral-600); margin-bottom: 20px;">ข้อมูลในไฟล์: <strong>นาย สมชาย สายลม</strong> (3-6602-XXXXX-XX-X)</p>
-            
+            <p style="font-size: 13px; color: var(--neutral-600); margin-bottom: 20px;">ข้อมูลในไฟล์: <strong id="matchTargetName">...</strong></p>
             <div class="form-group">
                 <label class="form-label">ค้นหาบัญชีในระบบ CareDee</label>
-                <input type="text" class="form-control" placeholder="ระบุชื่อ หรือ เบอร์โทรศัพท์ เพื่อค้นหา...">
+                <input type="text" class="form-control" placeholder="ชื่อ-นามสกุล หรือ เบอร์โทรศัพท์...">
             </div>
-
-            <div style="background: var(--neutral-100); padding: 12px; border-radius: 8px;">
-                <p style="font-size: 12px; color: var(--neutral-600);">ผลลัพธ์ที่ใกล้เคียง:</p>
-                <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 8px; padding: 10px; background: white; border-radius: 6px; border: 1px solid var(--primary-100);">
+            <div style="background: var(--neutral-100); padding: 12px; border-radius: 12px; border: 1px solid var(--neutral-200);">
+                <p style="font-size: 11px; color: var(--neutral-600); margin-bottom: 8px;">ผลลัพธ์ที่แนะนำ:</p>
+                <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px; background: white; border-radius: 8px;">
                     <div>
-                        <p style="font-size: 14px; font-weight: 600;">นาย สมชาย สายชล</p>
-                        <p style="font-size: 11px; color: var(--neutral-600);">ID: CG-8890 | 081-XXX-XXXX</p>
+                        <p style="font-size: 13px; font-weight: 700;">นาย สมชาย สายชล</p>
+                        <p style="font-size: 11px; color: var(--neutral-600);">UID: CD-8890 | 081-XXX-XXXX</p>
                     </div>
-                    <button class="btn btn-primary btn-sm" onclick="alert('Matched!'); closeModal('manualMatchModal')">เลือกบัญชีนี้</button>
+                    <button class="btn btn-primary btn-sm" onclick="alert('Matched!'); closeModal('manualMatchModal')">เลือก</button>
                 </div>
             </div>
-
-            <div style="margin-top: 24px; display: flex; justify-content: flex-end; gap: 12px;">
+            <div class="modal-footer">
                 <button class="btn btn-secondary" onclick="closeModal('manualMatchModal')">ยกเลิก</button>
             </div>
         </div>
     </div>
 
-    <!-- Modal: Edit Row -->
     <div class="modal-overlay" id="editRowModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 style="font-size: 18px; font-weight: 700;">แก้ไขข้อมูลรายบรรทัด (Inline Edit)</h3>
+                <h3 style="font-size: 18px; font-weight: 700;">แก้ไขข้อมูล (Inline Correction)</h3>
                 <span style="cursor: pointer;" onclick="closeModal('editRowModal')">✕</span>
             </div>
             <div class="form-group">
-                <label class="form-label">เลขประจำตัวประชาชน</label>
-                <input type="text" class="form-control" id="editId" value="12345">
-            </div>
-            <div class="form-group">
                 <label class="form-label">ชื่อ-นามสกุล</label>
-                <input type="text" class="form-control" id="editName" value="นาย สมเกียรติ พากเพียร">
+                <input type="text" class="form-control" id="editNameField">
             </div>
             <div class="form-group">
-                <label class="form-label">รหัสใบรับรอง</label>
-                <input type="text" class="form-control" value="CERT-2026-012">
+                <label class="form-label">รหัสประจำตัวประชาชน</label>
+                <input type="text" class="form-control" id="editIdField">
             </div>
-            <div style="margin-top: 24px; display: flex; justify-content: flex-end; gap: 12px;">
+            <div class="modal-footer">
                 <button class="btn btn-secondary" onclick="closeModal('editRowModal')">ยกเลิก</button>
-                <button class="btn btn-primary" onclick="saveEdit()">บันทึกการแก้ไข</button>
+                <button class="btn btn-primary" onclick="alert('Saved!'); closeModal('editRowModal')">บันทึก</button>
             </div>
         </div>
     </div>
 
     <script>
-        function openManualMatch() {
-            document.getElementById('manualMatchModal').style.display = 'flex';
+        function switchImportTab(tabId, element) {
+            const tabs = element.parentElement.querySelectorAll('.tab-item');
+            tabs.forEach(t => t.classList.remove('active'));
+            element.classList.add('active');
+            document.getElementById('import-tab-file').style.display = (tabId === 'file' ? 'block' : 'none');
+            document.getElementById('import-tab-manual').style.display = (tabId === 'manual' ? 'block' : 'none');
         }
 
-        function editRow(id) {
-            document.getElementById('editRowModal').style.display = 'flex';
+        let manualRows = [];
+        function addManualRow() {
+            const idInput = document.getElementById('manual-id');
+            const nameInput = document.getElementById('manual-name');
+            const certInput = document.getElementById('manual-cert');
+            if (!idInput.value || !nameInput.value || !certInput.value) {
+                alert('กรุณากรอกข้อมูลให้ครบถ้วน');
+                return;
+            }
+            const newRow = { id: idInput.value, name: nameInput.value, cert: certInput.value, timestamp: Date.now() };
+            manualRows.push(newRow);
+            renderManualRows();
+            idInput.value = ''; nameInput.value = ''; certInput.value = ''; idInput.focus();
         }
 
-        function closeModal(modalId) {
-            document.getElementById(modalId).style.display = 'none';
+        function removeManualRow(timestamp) {
+            manualRows = manualRows.filter(r => r.timestamp !== timestamp);
+            renderManualRows();
+        }
+
+        function renderManualRows() {
+            const body = document.getElementById('manual-rows-body');
+            const btnProceed = document.getElementById('btn-manual-proceed');
+            if (manualRows.length === 0) {
+                body.innerHTML = `<tr id="manual-empty-row"><td colspan="4" style="text-align: center; color: var(--neutral-600); padding: 32px;">ยังไม่มีข้อมูลที่กรอก</td></tr>`;
+                btnProceed.disabled = true;
+                btnProceed.innerText = 'ดำเนินการต่อ (0 รายการ)';
+                return;
+            }
+            btnProceed.disabled = false;
+            btnProceed.innerText = `ดำเนินการต่อ (${manualRows.length} รายการ)`;
+            body.innerHTML = manualRows.map(row => `
+                <tr>
+                    <td style="font-family: monospace;">${row.id}</td>
+                    <td style="font-weight: 500;">${row.name}</td>
+                    <td style="font-weight: 600; color: var(--primary-600);">${row.cert}</td>
+                    <td><button class="btn btn-outline-danger btn-sm" onclick="removeManualRow(${row.timestamp})">ลบ</button></td>
+                </tr>
+            `).join('');
+        }
+
+        function startImportProcess() {
+            document.getElementById('step-upload').classList.remove('active');
+            document.getElementById('step-processing').classList.add('active');
+            let progress = 0;
+            const bar = document.getElementById('importProgressBar');
+            const text = document.getElementById('importProgressPercent');
+            const interval = setInterval(() => {
+                progress += Math.random() * 20;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        document.getElementById('step-processing').classList.remove('active');
+                        document.getElementById('step-mapping').style.display = 'block';
+                    }, 500);
+                }
+                bar.style.width = progress + '%';
+                text.innerText = Math.round(progress) + '%';
+            }, 300);
+        }
+
+        function resetImport() {
+            document.getElementById('step-mapping').style.display = 'none';
+            document.getElementById('step-processing').classList.remove('active');
+            document.getElementById('step-upload').classList.add('active');
+            document.getElementById('importProgressBar').style.width = '0%';
+            document.getElementById('importProgressPercent').innerText = '0%';
+        }
+
+        function confirmImport() {
+            alert('นำเข้าข้อมูลสำเร็จ! เชื่อมโยงบัญชีแล้ว 42 รายการ และส่งคำเชิญ 2 รายการ');
+            location.href = '0_training_dashboard_v2.html';
         }
 
         function sendInvite(name) {
             alert('ส่งคำเชิญสมัครสมาชิกไปยัง ' + name + ' เรียบร้อยแล้ว (SMS/Email)');
         }
 
-        function rollbackImport() {
-            if(confirm('คุณแน่ใจหรือไม่ว่าต้องการยกเลิกการนำเข้าข้อมูลชุดนี้ทั้งหมด?')) {
-                alert('ยกเลิกการนำเข้าแล้ว ข้อมูลในพรีวิวจะถูกล้างออก');
-                location.reload();
-            }
+        function openManualMatchModal(name) {
+            document.getElementById('matchTargetName').innerText = name;
+            document.getElementById('manualMatchModal').style.display = 'flex';
         }
 
-        function saveEdit() {
-            alert('บันทึกการแก้ไขข้อมูลเรียบร้อยแล้ว');
-            closeModal('editRowModal');
+        function openEditRowModal(name, id) {
+            document.getElementById('editNameField').value = name;
+            document.getElementById('editIdField').value = id;
+            document.getElementById('editRowModal').style.display = 'flex';
         }
 
-        function confirmImport() {
-            if(confirm('ยืนยันการนำเข้าข้อมูล 50 รายการเข้าสู่ฐานข้อมูล CareDee?')) {
-                alert('นำเข้าข้อมูลสำเร็จ! ระบบจะทำการออก Digital Badge ให้กับผู้ที่มีบัญชีแล้วทันที');
-                location.href='0_training_dashboard_v2.html';
+        function closeModal(id) {
+            document.getElementById(id).style.display = 'none';
+        }
+
+        function logout() {
+            if(confirm('คุณต้องการออกจากระบบใช่หรือไม่?')) {
+                alert('ออกจากระบบเรียบร้อย');
+                location.href = '0_training_dashboard_v2.html';
             }
         }
     </script>
-
 </body>
 </html>

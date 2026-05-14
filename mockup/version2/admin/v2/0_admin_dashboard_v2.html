@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CareDee Admin Dashboard - Platform Operator</title>
+    <title>CareDee Admin Dashboard - Platform Control Center</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -28,125 +28,12 @@
             --neutral-600: #6E6B7B;
             --neutral-900: #1E1E1E;
             
-            /* Interactive */
-            --pressed: #006675;
-            
-            /* Sidebar Specific */
+            /* Layout */
             --sidebar-bg: #004D58; 
             --sidebar-width: 260px;
-
-            /* Multi-operator Filter */
-            .header-controls {
-                display: flex;
-                align-items: center;
-                gap: 16px;
-            }
-
-            .filter-select {
-                padding: 10px 16px;
-                border-radius: 12px;
-                border: 1px solid var(--neutral-300);
-                background: white;
-                font-size: 14px;
-                color: var(--neutral-600);
-                outline: none;
-                cursor: pointer;
-            }
-
-            /* Maintenance Broadcaster */
-            .maintenance-broadcaster {
-                background: var(--secondary-100);
-                border: 1px dashed var(--secondary-500);
-                padding: 16px;
-                border-radius: 16px;
-                margin-bottom: 32px;
-                display: flex;
-                align-items: center;
-                gap: 16px;
-            }
-
-            .broadcaster-input {
-                flex: 1;
-                padding: 10px 16px;
-                border-radius: 8px;
-                border: 1px solid var(--neutral-300);
-                font-size: 13px;
-            }
-
-            /* Modal Styles */
-            .modal-overlay {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0,0,0,0.5);
-                display: none;
-                justify-content: center;
-                align-items: center;
-                z-index: 2000;
-            }
-
-            .modal-content {
-                background: white;
-                padding: 32px;
-                border-radius: 20px;
-                width: 500px;
-                max-width: 90%;
-                box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-            }
-
-            .evidence-viewer {
-                width: 800px;
-                max-height: 80vh;
-                overflow-y: auto;
-            }
-
-            .evidence-grid {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 16px;
-                margin-top: 20px;
-            }
-
-            .evidence-item {
-                border: 1px solid var(--neutral-100);
-                border-radius: 12px;
-                padding: 12px;
-                text-align: center;
-            }
-
-            .evidence-placeholder {
-                width: 100%;
-                height: 150px;
-                background: var(--neutral-100);
-                border-radius: 8px;
-                margin-bottom: 8px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                color: var(--neutral-300);
-            }
-
-            .pdpa-indicator {
-                font-size: 11px;
-                color: var(--neutral-600);
-                margin-top: 4px;
-                display: flex;
-                align-items: center;
-                gap: 4px;
-            }
-
-            .pdpa-dot {
-                width: 6px;
-                height: 6px;
-                background: var(--success);
-                border-radius: 50%;
-            }
-
-            /* Typography */
             --font-main: 'IBM Plex Sans Thai', 'Inter', sans-serif;
-            }
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
@@ -161,6 +48,25 @@
             min-height: 100vh;
         }
 
+        /* Global Maintenance Banner */
+        .global-banner {
+            position: fixed;
+            top: 0;
+            left: var(--sidebar-width);
+            right: 0;
+            padding: 12px 32px;
+            z-index: 1100;
+            display: none; /* Initially hidden */
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            font-weight: 600;
+            font-size: 14px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .global-banner.urgent { background: var(--error); color: white; }
+        .global-banner.normal { background: var(--secondary-500); color: white; }
+
         /* Sidebar Styles */
         .sidebar {
             width: var(--sidebar-width);
@@ -170,12 +76,11 @@
             height: 100%;
             display: flex;
             flex-direction: column;
-            transition: all 0.3s;
             z-index: 1000;
         }
 
         .sidebar-header {
-            padding: 24px 20px;
+            padding: 32px 20px;
             text-align: center;
             border-bottom: 1px solid rgba(255,255,255,0.1);
         }
@@ -208,6 +113,10 @@
             color: rgba(255, 255, 255, 0.7);
             text-decoration: none;
             font-size: 15px;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
         }
 
         .menu-item:hover, .menu-item.active {
@@ -227,12 +136,15 @@
         .main-content {
             margin-left: var(--sidebar-width);
             flex: 1;
-            padding: 24px;
+            padding: 32px;
+            padding-top: 60px; /* Space for banner */
+            transition: padding-top 0.3s;
         }
+        body.has-banner .main-content { padding-top: 100px; }
 
         header {
             background: white;
-            padding: 16px 24px;
+            padding: 16px 32px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -241,474 +153,233 @@
             margin-bottom: 32px;
         }
 
-        .search-bar input {
-            padding: 12px 20px;
-            border-radius: 12px;
-            border: 1px solid var(--neutral-300);
-            width: 360px;
-            font-size: 14px;
-            outline: none;
-            transition: border-color 0.2s;
-            color: var(--neutral-900);
+        /* View Section Handling */
+        .view-section {
+            display: none;
+        }
+        .view-section.active {
+            display: block;
         }
 
-        .search-bar input:focus {
-            border-color: var(--primary-600);
-        }
-
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .badge-2fa {
-            background: var(--success);
-            color: white;
-            font-size: 10px;
-            padding: 2px 10px;
-            border-radius: 12px;
-            font-weight: 600;
-        }
-
-        /* Dashboard Grid */
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 24px;
-            margin-bottom: 32px;
-        }
-
-        .metric-card {
-            background: white;
-            padding: 20px;
-            border-radius: 16px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-            border-left: 4px solid var(--primary-600);
-        }
-
-        .metric-title {
-            font-size: 14px;
-            color: var(--neutral-600);
-            margin-bottom: 12px;
-            font-weight: 500;
-        }
-
-        .metric-value {
-            font-size: 28px;
-            font-weight: 700;
-            color: var(--neutral-900);
-        }
-
-        .metric-sub {
-            font-size: 12px;
-            margin-top: 8px;
-            font-weight: 500;
-        }
-
-        /* Sections */
-        .section-container {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 32px;
-        }
-
-        .card {
-            background: white;
-            padding: 20px;
-            border-radius: 16px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-            margin-bottom: 32px;
-        }
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
-            border-bottom: 1px solid var(--neutral-100);
-            padding-bottom: 12px;
-        }
-
-        h2 {
-            font-size: 18px;
-            color: var(--neutral-900);
-            font-weight: 700;
-        }
-
-        /* Table Styles */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th {
-            text-align: left;
-            padding: 14px;
-            background: var(--neutral-100);
-            color: var(--neutral-600);
-            font-weight: 600;
-            font-size: 13px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        td {
-            padding: 12px 14px;
-            border-bottom: 1px solid var(--neutral-100);
-            font-size: 14px;
-        }
-
-        .status-pill {
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        .status-pending { background: var(--secondary-100); color: var(--secondary-500); }
-        .status-approved { background: rgba(40, 199, 111, 0.12); color: var(--success); }
-        .status-urgent { background: rgba(234, 84, 85, 0.12); color: var(--error); }
-
-        /* Action Buttons */
-        .btn {
-            padding: 10px 18px;
-            border-radius: 8px;
-            border: none;
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: 600;
-            transition: all 0.2s;
-        }
-
-        .btn-view { background: var(--primary-100); color: var(--primary-600); }
-        .btn-view:hover { background: var(--primary-600); color: white; }
+        /* Common Components */
+        .card { background: white; padding: 24px; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); margin-bottom: 24px; }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--neutral-100); padding-bottom: 12px; }
+        h2 { font-size: 18px; font-weight: 700; }
         
-        .btn-approve { background: var(--success); color: white; }
-        .btn-approve:hover { filter: brightness(92%); }
+        .dashboard-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-bottom: 32px; }
+        .metric-card { background: white; padding: 24px; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); border-left: 4px solid var(--primary-600); }
+        .metric-title { font-size: 14px; color: var(--neutral-600); margin-bottom: 12px; }
+        .metric-value { font-size: 28px; font-weight: 700; }
 
-        /* System Health Widget */
-        .system-health {
-            text-align: center;
+        .btn { padding: 10px 18px; border-radius: 8px; border: none; cursor: pointer; font-size: 13px; font-weight: 600; transition: 0.2s; }
+        .btn-primary { background: var(--primary-600); color: white; }
+        .btn-success { background: var(--success); color: white; }
+        .btn-error { background: var(--error); color: white; }
+        .btn-warning { background: var(--warning); color: white; }
+        .btn-outline { border: 1px solid var(--neutral-300); background: transparent; color: var(--neutral-600); }
+
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; padding: 14px; background: var(--neutral-100); font-size: 13px; color: var(--neutral-600); }
+        td { padding: 16px 14px; border-bottom: 1px solid var(--neutral-100); font-size: 14px; }
+        
+        .status-pill { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+        .status-success { background: rgba(40, 199, 111, 0.12); color: var(--success); }
+        .status-pending { background: var(--secondary-100); color: var(--secondary-500); }
+        .status-error { background: rgba(234, 84, 85, 0.12); color: var(--error); }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); display: none; justify-content: center; align-items: center; z-index: 2000;
+        }
+        .modal-content {
+            background: white; padding: 32px; border-radius: 20px; width: 500px; max-width: 90%;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2); text-align: center;
         }
 
-        .health-circle {
-            width: 140px;
-            height: 140px;
-            border: 12px solid var(--neutral-100);
-            border-top: 12px solid var(--success);
-            border-radius: 50%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            margin: 0 auto 24px;
-        }
+        /* Specific Page Styles */
+        /* Review Masking */
+        .masked-text { filter: blur(4px); cursor: pointer; transition: filter 0.2s; }
+        .masked-text.revealed { filter: blur(0); }
+        
+        /* Heatmap Pulse */
+        @keyframes pulse { 0% { transform: scale(0.95); opacity: 0.7; } 50% { transform: scale(1.1); opacity: 0.4; } 100% { transform: scale(0.95); opacity: 0.7; } }
+        .heatmap-dot { position: absolute; background: rgba(234, 84, 85, 0.4); width: 60px; height: 60px; border-radius: 50%; filter: blur(15px); animation: pulse 2s infinite; }
 
-        .elastic-status {
-            font-size: 12px;
-            color: var(--primary-600);
-            margin-top: 16px;
-            padding: 10px;
-            background: var(--primary-100);
-            border-radius: 10px;
-            font-weight: 500;
-        }
+        /* Uptime Chart */
+        .uptime-chart { height: 60px; display: flex; align-items: flex-end; gap: 2px; }
+        .uptime-bar { flex: 1; background: var(--success); border-radius: 2px; }
+        .uptime-bar.down { background: var(--error); height: 20% !important; }
+        .uptime-bar.warn { background: var(--warning); height: 50% !important; }
 
-        /* Audit Log Float */
-        .audit-info {
-            position: fixed;
-            bottom: 32px;
-            right: 32px;
-            background: var(--neutral-900);
-            color: white;
-            padding: 14px 28px;
-            border-radius: 40px;
-            font-size: 12px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            z-index: 1001;
-        }
-
-        .dot {
-            width: 10px;
-            height: 10px;
-            background: var(--success);
-            border-radius: 50%;
-            display: inline-block;
-            box-shadow: 0 0 10px var(--success);
-        }
     </style>
 </head>
-<body>
+<body id="app-body">
 
     <!-- Sidebar -->
     <nav class="sidebar">
         <div class="sidebar-header">
             <div class="logo-box">CD</div>
             <h3 style="font-weight: 700; font-size: 20px;">CareDee Admin</h3>
-            <p style="font-size: 11px; color: rgba(255,255,255,0.5); margin-top: 4px; text-transform: uppercase;">System Control Panel</p>
+            <p style="font-size: 11px; color: rgba(255,255,255,0.5); text-transform: uppercase;">System Control Panel</p>
         </div>
         <div class="sidebar-menu">
-            <a href="#" class="menu-item active"><i>📊</i> Dashboard</a>
-            <a href="#" class="menu-item"><i>👤</i> บัญชีผู้ดูแล/ผู้ให้บริการ</a>
-            <a href="#" class="menu-item"><i>💰</i> จัดการการเงิน & รายได้</a>
-            <a href="#" class="menu-item"><i>✨</i> คุณภาพรีวิว & อุทธรณ์</a>
-            <a href="#" class="menu-item"><i>📈</i> รายงานระบบ</a>
-            <a href="#" class="menu-item"><i>🛡️</i> นโยบาย & PDPA</a>
-            <a href="#" class="menu-item"><i>🖥️</i> เฝ้าระวังระบบคลาวด์</a>
+            <a href="0_admin_dashboard_v2.html" class="menu-item active"><i>📊</i> Dashboard</a>
+            <a href="1_admin_user_provider_v2.html" class="menu-item"><i>👤</i> ผู้ดูแล/ผู้ให้บริการ</a>
+            <a href="2_admin_finance_revenue_v2.html" class="menu-item"><i>💰</i> จัดการการเงิน</a>
+            <a href="3_admin_review_quality_v2.html" class="menu-item"><i>✨</i> คุณภาพรีวิว & อุทธรณ์</a>
+            <a href="4_admin_system_report_v2.html" class="menu-item"><i>📈</i> รายงานระบบ</a>
+            <a href="5_admin_pdpa_v2.html" class="menu-item"><i>🛡️</i> นโยบาย & PDPA</a>
+            <a href="6_admin_cloud_v2.html" class="menu-item"><i>🖥️</i> เฝ้าระวังระบบคลาวด์</a>
         </div>
         <div class="sidebar-footer" style="padding: 24px; border-top: 1px solid rgba(255,255,255,0.1);">
             <a href="#" class="menu-item" style="padding: 0;"><i>🚪</i> ออกจากระบบ</a>
         </div>
     </nav>
 
+    <!-- Global Banner -->
+    <div id="global-maintenance-banner" class="global-banner">
+        <span id="banner-icon">📢</span>
+        <span id="banner-text">ระบบจะปิดปรับปรุงเวลา 02:00 - 04:00 น.</span>
+        <button onclick="hideBanner()" style="background: none; border: none; color: white; cursor: pointer; font-size: 18px; margin-left: auto;">&times;</button>
+    </div>
+
     <!-- Main Content -->
     <main class="main-content">
-        <!-- Header -->
+        <!-- Shared Header -->
         <header>
-            <div class="header-controls">
+            <div style="display: flex; gap: 16px; align-items: center;">
                 <div class="search-bar">
-                    <input type="text" placeholder="ค้นหาข้อมูล, หมายเลขจอง หรือ ชื่อผู้ใช้งาน...">
+                    <input type="text" placeholder="ค้นหาข้อมูลในระบบ..." style="padding: 10px 20px; border-radius: 12px; border: 1px solid var(--neutral-300); width: 300px;">
                 </div>
-                <select class="filter-select">
-                    <option value="">-- เลือกหน่วยงาน (Multi-operator) --</option>
-                    <option value="1">บริษัท บริบาลไทย จำกัด</option>
-                    <option value="2">ศูนย์ดูแลผู้สูงอายุ มีสุข</option>
-                    <option value="3">โรงพยาบาลรักษ์คุณ</option>
+                <select id="operator-filter" class="btn-outline" style="padding: 8px 12px; border-radius: 8px;">
+                    <option value="all">-- ทุกหน่วยงาน (Global View) --</option>
+                    <option value="en">บริษัท บริบาลไทย จำกัด</option>
+                    <option value="mk">ศูนย์ดูแลมีสุข</option>
                 </select>
             </div>
-            <div class="user-info">
+            <div class="user-info" style="display: flex; align-items: center; gap: 16px;">
                 <div style="text-align: right;">
-                    <p style="font-weight: 700; font-size: 14px;">Michael jackson</p>
-                    <p style="font-size: 12px; color: var(--neutral-600);">Platform Operator <span class="badge-2fa">MFA ACTIVE</span></p>
-                    <div class="pdpa-indicator">
-                        <span class="pdpa-dot"></span>
-                        <a href="#" style="color: var(--neutral-600); text-decoration: none;">PDPA Consent: 12/05/2026 14:20</a>
-                    </div>
+                    <p style="font-weight: 700; font-size: 14px;">Michael Jackson</p>
+                    <p style="font-size: 12px; color: var(--neutral-600);">Platform Operator</p>
                 </div>
-                <div style="width: 48px; height: 48px; background: var(--primary-100); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--primary-600); font-weight: 700;">VW</div>
+                <div style="width: 44px; height: 44px; background: var(--primary-100); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: var(--primary-600); font-weight: 700;">MJ</div>
             </div>
         </header>
 
-        <!-- Maintenance Broadcaster -->
-        <div class="maintenance-broadcaster">
-            <div style="font-size: 20px;">📢</div>
-            <div style="flex: 1;">
-                <p style="font-size: 14px; font-weight: 600; color: var(--neutral-900); margin-bottom: 4px;">ประกาศปิดปรับปรุงระบบล่วงหน้า</p>
-                <input type="text" class="broadcaster-input" placeholder="พิมพ์ข้อความแจ้งปิดปรับปรุงระบบ เพื่อสื่อสารกับผู้ใช้งานทุกกลุ่มที่นี่...">
+        <!-- VIEW: DASHBOARD -->
+        <section id="view-dashboard" class="view-section active">
+            <div class="dashboard-grid">
+                <div class="metric-card">
+                    <div class="metric-title">รายการจองวันนี้</div>
+                    <div class="metric-value">42 รายการ</div>
+                    <p style="font-size: 12px; color: var(--success); margin-top: 8px;">↑ 12% จากเมื่อวาน</p>
+                </div>
+                <div class="metric-card" style="border-left-color: var(--info);">
+                    <div class="metric-title">รายได้รวม (เดือนนี้)</div>
+                    <div class="metric-value">฿ 154,200</div>
+                    <p style="font-size: 12px; color: var(--neutral-600); margin-top: 8px;">อัปเดตล่าสุด: 2 นาทีที่แล้ว</p>
+                </div>
+                <div class="metric-card" style="border-left-color: var(--warning);">
+                    <div class="metric-title">รออนุมัติ (Pending)</div>
+                    <div class="metric-value" id="dash-pending-count">12</div>
+                    <p style="font-size: 12px; color: var(--error); margin-top: 8px;">ต้องการการตรวจสอบด่วน</p>
+                </div>
+                <div class="metric-card" style="border-left-color: var(--success);">
+                    <div class="metric-title">System Uptime</div>
+                    <div class="metric-value">99.98%</div>
+                    <p style="font-size: 12px; color: var(--success); margin-top: 8px;">สถานะปกติ</p>
+                </div>
             </div>
-            <button class="btn btn-approve" style="padding: 10px 24px;">ประกาศทันที</button>
-        </div>
 
-        <!-- Metric Summary -->
-        <div class="dashboard-grid">
-            <div class="metric-card">
-                <div class="metric-title">รายการจองวันนี้</div>
-                <div class="metric-value">42 รายการ</div>
-                <p class="metric-sub" style="color: var(--success);">↑ 12% จากเมื่อวาน</p>
-            </div>
-            <div class="metric-card" style="border-left-color: var(--info);">
-                <div class="metric-title">รายได้รวม (เดือนนี้)</div>
-                <div class="metric-value">฿ 154,200</div>
-                <p class="metric-sub" style="color: var(--neutral-600);">หักค่าคอมมิชชันแล้ว</p>
-            </div>
-            <div class="metric-card" style="border-left-color: var(--secondary-500);">
-                <div class="metric-title">คะแนนเฉลี่ยแพลตฟอร์ม</div>
-                <div class="metric-value">4.8 / 5.0</div>
-                <p class="metric-sub" style="color: var(--secondary-500);">รอการตัดสินอุทธรณ์ 3 เคส</p>
-            </div>
-            <div class="metric-card" style="border-left-color: var(--success);">
-                <div class="metric-title">System Availability</div>
-                <div class="metric-value">99.98%</div>
-                <p class="metric-sub" style="color: var(--success);">สถานะปกติ</p>
-            </div>
-        </div>
-
-        <!-- Operations Section -->
-        <div class="section-container">
-            <!-- Left Side: Lists -->
-            <div class="operation-lists">
-                <!-- Account Verification -->
+            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px;">
                 <div class="card">
                     <div class="card-header">
-                        <h2>รายการรออนุมัติ (Caregiver/Operator)</h2>
-                        <a href="#" style="font-size: 13px; color: var(--primary-600); font-weight: 700; text-decoration: none;">ดูทั้งหมด</a>
+                        <h2>รายการรออนุมัติล่าสุด</h2>
+                        <a href="1_admin_user_provider_v2.html" class="btn btn-outline">ดูทั้งหมด</a>
                     </div>
-                    <table>
+                    <table id="dash-approval-table">
                         <thead>
-                            <tr>
-                                <th>ชื่อ-นามสกุล</th>
-                                <th>ประเภท</th>
-                                <th>ใบรับรอง (TI)</th>
-                                <th>สถานะ</th>
-                                <th>จัดการ</th>
-                            </tr>
+                            <tr><th>ชื่อ-นามสกุล</th><th>ประเภท</th><th>สถานะ</th><th>จัดการ</th></tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td style="font-weight: 600;">สมชาย ใจดี</td>
-                                <td>Caregiver</td>
-                                <td><span style="color: var(--success); font-weight: 600;">✓ Verified</span></td>
-                                <td><span class="status-pill status-pending">รอดำเนินการ</span></td>
-                                <td style="display: flex; gap: 8px;">
-                                    <button class="btn btn-approve">อนุมัติ</button>
-                                    <button class="btn btn-view" onclick="openEvidenceModal('สมชาย ใจดี', 'Caregiver')">ตรวจ</button>
-                                </td>
+                            <tr id="row-user-dash-1">
+                                <td>สมชาย ใจดี</td><td>Caregiver</td><td><span class="status-pill status-pending">รอตรวจ</span></td>
+                                <td><button class="btn btn-success" style="padding: 4px 12px;" onclick="approveUser('row-user-dash-1')">อนุมัติ</button></td>
                             </tr>
-                            <tr>
-                                <td style="font-weight: 600;">บริษัท บริบาลไทย จำกัด</td>
-                                <td>Operator</td>
-                                <td><span style="color: var(--neutral-600);">รอเชื่อมโยง</span></td>
-                                <td><span class="status-pill status-pending">รอดำเนินการ</span></td>
-                                <td>
-                                    <button class="btn btn-view" onclick="openEvidenceModal('บริษัท บริบาลไทย จำกัด', 'Operator')">ตรวจเอกสาร</button>
-                                </td>
+                            <tr id="row-user-dash-2">
+                                <td>บริบาลไทย จำกัด</td><td>Operator</td><td><span class="status-pill status-pending">รอเอกสาร</span></td>
+                                <td><button class="btn btn-outline" style="padding: 4px 12px;">ตรวจ</button></td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-
-                <!-- Recent Disputes -->
                 <div class="card">
-                    <div class="card-header">
-                        <h2>รายการอุทธรณ์รีวิว (Appeal Requests)</h2>
-                        <span style="font-size: 12px; color: var(--error); font-weight: 700;">SLA: ตรวจสอบภายใน 3 วัน</span>
+                    <div class="card-header"><h2>สถานะทรัพยากร</h2></div>
+                    <div style="text-align: center; padding: 20px;">
+                        <div style="width: 120px; height: 120px; border: 10px solid var(--neutral-100); border-top-color: var(--success); border-radius: 50%; margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 700;">45%</div>
+                        <p style="font-weight: 600;">CPU Load Normal</p>
                     </div>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>ID รายการ</th>
-                                <th>ผู้ยื่นคำร้อง</th>
-                                <th>วันที่ยื่น</th>
-                                <th>เหลือเวลา</th>
-                                <th>จัดการ</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td style="font-weight: 700; color: var(--primary-600);">#BK-9902</td>
-                                <td>รวีวรรณ (Caregiver)</td>
-                                <td>11 พ.ค. 2026</td>
-                                <td><span style="color: var(--error); font-weight: 700;">1 วัน</span></td>
-                                <td><button class="btn btn-view" onclick="alert('แสดงรายละเอียดการอุทธรณ์')">ตัดสินผล</button></td>
-                            </tr>
-                        </tbody>
-                    </table>
                 </div>
             </div>
-
-            <!-- Right Side -->
-            <div class="side-widgets">
-                <!-- System Monitor -->
-                <div class="card system-health">
-                    <h2 style="margin-bottom: 24px;">สถานะทรัพยากรระบบ</h2>
-                    <div class="health-circle">
-                        <span style="font-size: 32px; font-weight: 700;">45%</span>
-                        <span style="font-size: 11px; color: var(--neutral-600); text-transform: uppercase;">CPU Load</span>
-                    </div>
-                    <p style="font-size: 14px; margin-bottom: 8px; font-weight: 600;">Memory Usage: 3.2 / 8 GB</p>
-                    <div class="elastic-status">
-                        <b>Elastic Scaling:</b> สแตนด์บาย (Threshold: 70%)
-                    </div>
-                </div>
-
-                <!-- Quick Reports -->
-                <div class="card">
-                    <h2 style="margin-bottom: 24px;">สร้างรายงานด่วน</h2>
-                    <button class="btn btn-view" style="width: 100%; margin-bottom: 12px; padding: 14px; text-align: left;">📊 สรุปรายได้ (CSV)</button>
-                    <button class="btn btn-view" style="width: 100%; margin-bottom: 12px; padding: 14px; text-align: left;">📋 สถิติทักษะตลาด (XLSX)</button>
-                    <button class="btn btn-view" style="width: 100%; background: var(--secondary-500); color: white; padding: 14px; text-align: left;" onclick="openConfirmationModal('ตั้งค่าคอมมิชชัน', 'การเปลี่ยนแปลงค่าคอมมิชชันจะมีผลกับผู้ให้บริการทุกคนในระบบทันที')">⚙️ ตั้งค่าคอมมิชชัน</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Audit Log Float -->
-        <div class="audit-info">
-            <span class="dot"></span>
-            Audit Log Recording Enabled (Data retention: 3 Years)
-        </div>
+        </section>
     </main>
 
-    <!-- Modal: Evidence Viewer -->
-    <div id="evidenceModal" class="modal-overlay">
-        <div class="modal-content evidence-viewer">
-            <h2 id="evidenceTitle">ตรวจสอบเอกสารประกอบ</h2>
-            <p id="evidenceSubtitle" style="color: var(--neutral-600); margin-bottom: 20px; font-size: 14px;"></p>
-            
-            <div class="evidence-grid">
-                <div class="evidence-item">
-                    <div class="evidence-placeholder">📄 บัตรประชาชน / หนังสือรับรอง</div>
-                    <p style="font-size: 12px; font-weight: 600;">หลักฐานตัวตน</p>
-                </div>
-                <div class="evidence-item">
-                    <div class="evidence-placeholder">🎓 ใบรับรองการฝึกอบรม (TI)</div>
-                    <p style="font-size: 12px; font-weight: 600;">วุฒิการศึกษา/ใบประกาศ</p>
-                </div>
-                <div class="evidence-item">
-                    <div class="evidence-placeholder">🏠 สำเนาทะเบียนบ้าน</div>
-                    <p style="font-size: 12px; font-weight: 600;">หลักฐานที่อยู่</p>
-                </div>
-                <div class="evidence-item">
-                    <div class="evidence-placeholder">🏥 ใบรับรองแพทย์</div>
-                    <p style="font-size: 12px; font-weight: 600;">สุขภาพเบื้องต้น</p>
-                </div>
-            </div>
-
-            <div style="margin-top: 32px; display: flex; justify-content: flex-end; gap: 12px;">
-                <button class="btn btn-view" onclick="closeModal('evidenceModal')">ปิดหน้าต่าง</button>
-                <button class="btn btn-approve">อนุมัติข้อมูลทั้งหมด</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal: Double Confirmation -->
-    <div id="confirmModal" class="modal-overlay">
+    <!-- Shared Modal: Confirmation -->
+    <div id="confirm-modal" class="modal-overlay">
         <div class="modal-content">
-            <div style="text-align: center; margin-bottom: 24px;">
-                <div style="font-size: 48px; margin-bottom: 16px;">⚠️</div>
-                <h2 id="confirmTitle">ยืนยันการดำเนินการ</h2>
-                <p id="confirmMessage" style="color: var(--neutral-600); margin-top: 12px; font-size: 14px;"></p>
-            </div>
+            <div style="font-size: 48px; margin-bottom: 16px;">⚠️</div>
+            <h2 id="modal-title">ยืนยันการดำเนินการ</h2>
+            <p id="modal-body" style="color: var(--neutral-600); margin: 16px 0; line-height: 1.5;"></p>
             
-            <div style="background: var(--neutral-100); padding: 16px; border-radius: 12px; margin-bottom: 24px;">
-                <p style="font-size: 12px; color: var(--error); font-weight: 700; margin-bottom: 8px;">ต้องมีการยืนยันตัวตนซ้ำ (Double Confirmation)</p>
-                <input type="password" placeholder="กรุณาใส่รหัสผ่านแอดมินเพื่อยืนยัน" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--neutral-300); margin-bottom: 12px;">
-                <p style="font-size: 12px; color: var(--neutral-600); font-weight: 600; margin-bottom: 8px;">ระบุเหตุผลในการดำเนินการ (Reason for Action):</p>
-                <textarea placeholder="ระบุเหตุผลเพื่อบันทึกใน Audit Log..." style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--neutral-300); height: 80px; resize: none;"></textarea>
+            <!-- Reason Field -->
+            <div id="reason-field" style="display: none; text-align: left; margin-top: 16px;">
+                <label for="action-reason" style="font-size: 13px; font-weight: 600; color: var(--neutral-600);">ระบุเหตุผล (Reason for Audit Log):</label>
+                <textarea id="action-reason" placeholder="โปรดระบุเหตุผลในการดำเนินการ..." style="width: 100%; height: 80px; padding: 10px; border-radius: 8px; border: 1px solid var(--neutral-300); margin-top: 8px; font-size: 13px; resize: none;"></textarea>
             </div>
 
-            <div style="display: flex; gap: 12px;">
-                <button class="btn btn-view" style="flex: 1;" onclick="closeModal('confirmModal')">ยกเลิก</button>
-                <button class="btn btn-approve" style="flex: 1; background: var(--error);" onclick="alert('ดำเนินการสำเร็จ'); closeModal('confirmModal')">ยืนยันการดำเนินการ</button>
+            <div style="display: flex; gap: 12px; margin-top: 24px;">
+                <button class="btn btn-outline" style="flex: 1;" onclick="closeModal()">ยกเลิก</button>
+                <button id="modal-confirm-btn" class="btn btn-primary" style="flex: 1;">ยืนยัน</button>
             </div>
         </div>
     </div>
 
     <script>
-        // Modal Control Functions
-        function openEvidenceModal(name, type) {
-            document.getElementById('evidenceTitle').innerText = 'ตรวจสอบเอกสาร: ' + name;
-            document.getElementById('evidenceSubtitle').innerText = 'ประเภทผู้ใช้งาน: ' + type + ' | สถานะใบรับรอง: Verified จาก Training Institute';
-            document.getElementById('evidenceModal').style.display = 'flex';
+        function hideBanner() {
+            document.getElementById('global-maintenance-banner').style.display = 'none';
+            document.getElementById('app-body').classList.remove('has-banner');
         }
 
-        function openConfirmationModal(action, message) {
-            document.getElementById('confirmTitle').innerText = 'ยืนยัน: ' + action;
-            document.getElementById('confirmMessage').innerText = message;
-            document.getElementById('confirmModal').style.display = 'flex';
+        function approveUser(rowId) {
+            const row = document.getElementById(rowId);
+            row.style.opacity = '0.5';
+            row.style.pointerEvents = 'none';
+            setTimeout(() => {
+                row.remove();
+                let count = parseInt(document.getElementById('dash-pending-count').innerText);
+                document.getElementById('dash-pending-count').innerText = count - 1;
+                alert('อนุมัติเรียบร้อยแล้ว');
+            }, 500);
         }
 
-        function closeModal(modalId) {
-            document.getElementById(modalId).style.display = 'none';
+        let onConfirmCallback = null;
+        function openConfirmModal(title, body, onConfirm, showReason = false) {
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById('modal-body').innerText = body;
+            document.getElementById('reason-field').style.display = showReason ? 'block' : 'none';
+            onConfirmCallback = onConfirm;
+            document.getElementById('confirm-modal').style.display = 'flex';
         }
 
-        // Simulate real-time metric update as per SRS (Refresh every 60s)
-        setInterval(() => {
-            console.log("Refreshing metrics from PF-OP-001...");
-        }, 60000);
+        function closeModal() {
+            document.getElementById('confirm-modal').style.display = 'none';
+        }
+
+        document.getElementById('modal-confirm-btn').onclick = () => {
+            if (onConfirmCallback) onConfirmCallback();
+            closeModal();
+        };
     </script>
 </body>
 </html>

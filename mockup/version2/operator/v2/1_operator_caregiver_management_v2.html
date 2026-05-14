@@ -64,12 +64,14 @@
             color: rgba(255,255,255,0.7);
             transition: 0.3s;
             font-size: 15px;
+            cursor: pointer;
         }
         .menu-item:hover, .menu-item.active { background: rgba(255,255,255,0.1); color: var(--white); border-left: 4px solid var(--secondary-500); }
         .menu-item i { margin-right: 15px; width: 24px; text-align: center; font-style: normal; }
 
         /* Main Content */
         .main { margin-left: var(--sidebar-width); flex: 1; padding: 32px; }
+        
         header { 
             display: flex; 
             justify-content: space-between; 
@@ -80,9 +82,11 @@
             border-radius: 16px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.03);
         }
-        .header-left { display: flex; align-items: center; gap: 20px; }
+        .header-left { display: flex; align-items: center; gap: 24px; }
         .sync-indicator { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--success); font-weight: 600; padding: 6px 12px; background: rgba(40, 199, 111, 0.1); border-radius: 20px; }
         .sync-dot { width: 8px; height: 8px; background: var(--success); border-radius: 50%; animation: pulse 2s infinite; }
+        .sync-group { display: flex; flex-direction: column; gap: 4px; }
+        .sync-time { font-size: 10px; color: var(--neutral-600); padding-left: 4px; }
 
         @keyframes pulse {
             0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(40, 199, 111, 0.7); }
@@ -107,7 +111,7 @@
         .utilization-mini { height: 6px; background: var(--neutral-100); border-radius: 3px; margin-top: 10px; overflow: hidden; }
         .utilization-mini-fill { height: 100%; background: var(--secondary-500); border-radius: 3px; }
 
-        /* Layout Sections */
+        /* Cards & Tables */
         .card { 
             background: var(--white); 
             border-radius: 16px; 
@@ -118,123 +122,39 @@
         .card-title { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; border-bottom: 1px solid var(--neutral-100); padding-bottom: 12px; }
         .card-title h3 { font-size: 18px; color: var(--neutral-900); font-weight: 600; }
         
-        /* Table */
         table { width: 100%; border-collapse: collapse; }
         th { text-align: left; padding: 14px; font-size: 13px; color: var(--neutral-600); background: var(--neutral-100); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
         td { padding: 16px 14px; font-size: 14px; border-bottom: 1px solid var(--neutral-100); }
         
-        .status-badge { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
-        .bg-available { background: rgba(40, 199, 111, 0.12); color: var(--success); }
-        .bg-busy { background: rgba(255, 159, 67, 0.12); color: var(--secondary-500); }
-        .bg-leave { background: rgba(110, 107, 123, 0.12); color: var(--neutral-600); }
-        .bg-pending { background: var(--primary-100); color: var(--primary-600); }
+        .status-badge { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; white-space: nowrap; }
+        .bg-pending { background: var(--secondary-100); color: var(--secondary-500); }
+        .bg-active, .bg-available { background: rgba(40, 199, 111, 0.12); color: var(--success); }
+        .bg-busy { background: rgba(234, 84, 85, 0.12); color: var(--error); }
+        .bg-info { background: rgba(0, 207, 232, 0.12); color: var(--info); }
 
-        /* Performance Badges */
-        .perf-badge { 
-            display: inline-flex; 
-            align-items: center; 
-            gap: 4px; 
-            padding: 2px 8px; 
-            border-radius: 4px; 
-            font-size: 11px; 
-            font-weight: 700; 
-            text-transform: uppercase;
-        }
-        .badge-elite { background: #FFF9C4; color: #FBC02D; border: 1px solid #FBC02D; }
-        .badge-adv { background: #E1F5FE; color: #0288D1; border: 1px solid #0288D1; }
-        .badge-std { background: #F5F5F5; color: #616161; border: 1px solid #9E9E9E; }
+        /* Buttons */
+        .btn { padding: 10px 18px; border-radius: 8px; border: none; cursor: pointer; font-size: 13px; font-weight: 600; transition: 0.2s; text-decoration: none; display: inline-block; text-align: center; }
+        .btn-primary { background: var(--primary-600); color: white; }
+        .btn-primary:hover { background: var(--pressed); }
+        .btn-outline { border: 1px solid var(--primary-600); background: white; color: var(--primary-600); }
+        .btn-outline:hover { background: var(--primary-100); }
+        .btn-sm { padding: 6px 12px; font-size: 12px; }
 
-        /* Document Icons */
-        .doc-icon { 
-            display: inline-block; 
-            width: 28px; 
-            height: 28px; 
-            line-height: 28px; 
-            text-align: center; 
-            background: var(--neutral-100); 
-            border-radius: 6px; 
-            margin-right: 4px; 
-            font-size: 14px;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .doc-icon:hover { background: var(--primary-100); color: var(--primary-600); }
-        .doc-verified { color: var(--success); }
-
-        /* Onboarding Progress Tracker */
+        /* Onboarding Tracker */
         .onboarding-tracker { display: flex; align-items: center; gap: 4px; }
         .step { width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--neutral-300); background: var(--white); }
         .step.done { background: var(--success); border-color: var(--success); }
         .step.current { border-color: var(--primary-600); animation: pulse-step 1.5s infinite; }
-        @keyframes pulse-step { 0% { box-shadow: 0 0 0 0 rgba(0, 122, 140, 0.4); } 70% { box-shadow: 0 0 0 6px rgba(0, 122, 140, 0); } 100% { box-shadow: 0 0 0 0 rgba(0, 122, 140, 0); } }
         .step-line { flex: 1; height: 2px; background: var(--neutral-300); min-width: 10px; }
         .step-line.done { background: var(--success); }
-
-        /* Matching Slider */
-        .matching-config { display: flex; gap: 32px; align-items: flex-start; }
-        .slider-control { flex: 1; }
-        .matching-slider-group { margin-bottom: 20px; }
-        .slider-header { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 13px; font-weight: 500; }
-        input[type="range"] { width: 100%; height: 6px; background: var(--neutral-100); border-radius: 5px; outline: none; appearance: none; }
-        input[type="range"]::-webkit-slider-thumb { appearance: none; width: 18px; height: 18px; background: var(--primary-600); border-radius: 50%; cursor: pointer; border: 2px solid var(--white); box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-
-        /* Actions */
-        .btn { 
-            padding: 8px 16px; 
-            border-radius: 8px; 
-            border: none; 
-            cursor: pointer; 
-            font-size: 13px; 
-            font-weight: 600; 
-            transition: 0.2s;
-            text-decoration: none;
-            display: inline-block;
-        }
-        .btn-primary { background: var(--primary-600); color: white; }
-        .btn-primary:hover { background: var(--pressed); }
-        .btn-outline { background: var(--white); color: var(--primary-600); border: 1px solid var(--primary-600); }
-        .btn-outline:hover { background: var(--primary-100); }
-        .btn-sm { padding: 6px 12px; font-size: 12px; }
-
-        /* Skill Tags */
-        .skill-tag {
-            display: inline-block;
-            background: #eee;
-            padding: 2px 6px;
-            border-radius: 4px;
-            margin-right: 4px;
-            margin-top: 2px;
-            font-size: 10px;
-        }
-
-        /* Filter Bar */
-        .filter-bar {
-            display: flex;
-            gap: 16px;
-            margin-bottom: 24px;
-            align-items: center;
-        }
-        .search-input {
-            flex: 1;
-            padding: 10px 16px;
-            border-radius: 8px;
-            border: 1px solid var(--neutral-300);
-            font-size: 14px;
-        }
-        .filter-select {
-            padding: 10px 16px;
-            border-radius: 8px;
-            border: 1px solid var(--neutral-300);
-            background: white;
-            font-size: 14px;
-        }
+        @keyframes pulse-step { 0% { box-shadow: 0 0 0 0 rgba(0, 122, 140, 0.4); } 70% { box-shadow: 0 0 0 6px rgba(0, 122, 140, 0); } 100% { box-shadow: 0 0 0 0 rgba(0, 122, 140, 0); } }
 
         /* Accessibility Mode */
         body.accessibility-mode { font-size: 1.15em; }
         body.accessibility-mode .sidebar { width: 320px; }
         body.accessibility-mode .main { margin-left: 320px; }
         body.accessibility-mode * { contrast: 1.2; }
-        
+
         /* Critical Alert Header */
         .critical-alert-bar {
             background: var(--error);
@@ -259,6 +179,12 @@
             cursor: pointer;
             font-size: 12px;
         }
+
+        /* Performance Badge */
+        .perf-badge { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
+        .badge-elite { background: #FFF9C4; color: #FBC02D; border: 1px solid #FBC02D; }
+        .badge-adv { background: #E1F5FE; color: #0288D1; border: 1px solid #0288D1; }
+
     </style>
 </head>
 <body>
@@ -269,6 +195,7 @@
         <button class="btn-close" onclick="document.getElementById('critical-alert').style.display='none'">Dismiss</button>
     </div>
 
+    <!-- Sidebar -->
     <nav class="sidebar">
         <div class="sidebar-header">
             <div class="logo-box">CD</div>
@@ -277,17 +204,18 @@
         </div>
         <div class="sidebar-menu">
             <a href="0_operator_dashboard_v2.html" class="menu-item"><i>🏠</i> หน้าหลัก Dashboard</a>
-            <a href="#" class="menu-item active"><i>👥</i> จัดการทีมผู้ดูแล (Team)</a>
-            <a href="#" class="menu-item"><i>📅</i> ตารางงาน & การจอง</a>
-            <a href="#" class="menu-item"><i>📋</i> ติดตามรายงานหน้างาน</a>
-            <a href="#" class="menu-item"><i>⚠️</i> ข้อร้องเรียน & อุทธรณ์</a>
-            <a href="#" class="menu-item"><i>📊</i> รายงาน & รายได้</a>
+            <a href="1_operator_caregiver_management_v2.html" class="menu-item active"><i>👥</i> จัดการทีมผู้ดูแล (Team)</a>
+            <a href="2_operator_schedule_booking_v2.html" class="menu-item"><i>📅</i> ตารางงาน & การจอง</a>
+            <a href="3_operator_care_report_v2.html" class="menu-item"><i>📋</i> ติดตามรายงานหน้างาน</a>
+            <a href="4_operator_dispute_resolution_v2.html" class="menu-item"><i>⚠️</i> ข้อร้องเรียน & อุทธรณ์</a>
+            <a href="5_operator_analytics_report_v2.html" class="menu-item"><i>📊</i> รายงาน & รายได้</a>
         </div>
         <div style="padding: 24px; border-top: 1px solid rgba(255,255,255,0.1);">
             <a href="#" class="menu-item" style="padding: 0;"><i>🚪</i> ออกจากระบบ</a>
         </div>
     </nav>
 
+    <!-- Main Content -->
     <main class="main">
         <header>
             <div class="header-left">
@@ -301,7 +229,7 @@
                 </div>
             </div>
             <div class="user-profile">
-                <button class="btn btn-outline btn-sm" onclick="toggleAccessibility()" style="margin-right: 12px; font-size: 11px;">[A] Accessibility</button>
+                <button class="btn btn-outline btn-sm" onclick="toggleAccessibility()" style="margin-right: 12px;">[A] Accessibility</button>
                 <div style="text-align: right;">
                     <p style="font-weight: 600; font-size: 14px;">Michael Jackson <span class="badge-mfa">2FA VERIFIED</span></p>
                     <p style="font-size: 12px; color: var(--neutral-600);">หัวหน้าฝ่ายปฏิบัติการ</p>
@@ -310,58 +238,32 @@
             </div>
         </header>
 
-        <!-- Metrics with Utilization Analytics -->
         <div class="metrics-grid">
-            <div class="metric-card">
-                <div class="metric-label">ทีมผู้ดูแลทั้งหมด</div>
-                <div class="metric-value">48 คน</div>
-            </div>
-            <div class="metric-card" style="border-left-color: var(--success);">
-                <div class="metric-label">พร้อมรับงาน (Available)</div>
-                <div class="metric-value">12 คน</div>
-                <div style="font-size: 11px; color: var(--neutral-600); margin-top: 4px;">25% ของทีมทั้งหมด</div>
-            </div>
+            <div class="metric-card"><div class="metric-label">ทีมผู้ดูแลทั้งหมด</div><div class="metric-value">48 คน</div></div>
+            <div class="metric-card" style="border-left-color: var(--success);"><div class="metric-label">พร้อมรับงาน (Available)</div><div class="metric-value">12 คน</div></div>
             <div class="metric-card" style="border-left-color: var(--secondary-500);">
                 <div class="metric-label">Utilization Rate (Team Workload)</div>
                 <div class="metric-value">75.0%</div>
-                <div class="utilization-mini">
-                    <div class="utilization-mini-fill" style="width: 75%;"></div>
-                </div>
-                <div style="font-size: 11px; color: var(--secondary-500); font-weight: 600; margin-top: 4px;">ใกล้ขีดจำกัด (ควรรับเพิ่ม)</div>
+                <div class="utilization-mini"><div class="utilization-mini-fill" style="width: 75%;"></div></div>
             </div>
-            <div class="metric-card" style="border-left-color: var(--info);">
-                <div class="metric-label">Onboarding (TI Request)</div>
-                <div class="metric-value">4 รายการ</div>
-                <div style="font-size: 11px; color: var(--info); font-weight: 600; margin-top: 4px;">คาดว่าจะพร้อมใน 3-5 วัน</div>
-            </div>
+            <div class="metric-card" style="border-left-color: var(--info);"><div class="metric-label">Onboarding (TI Request)</div><div class="metric-value">4 รายการ</div></div>
         </div>
 
-        <!-- Matching Engine Configuration (Weighting Control) -->
         <div class="card">
-            <div class="card-title">
-                <h3>⚙️ Matching Engine Configuration (ลำดับการแนะนำ)</h3>
-                <span style="font-size: 11px; background: var(--primary-100); color: var(--primary-600); padding: 4px 8px; border-radius: 4px;">Auto-Match Logic</span>
-            </div>
-            <div class="matching-config">
-                <div class="slider-control">
-                    <div class="matching-slider-group">
-                        <div class="slider-header">
-                            <span>ความใกล้เคียงระยะทาง (Proximity Weight)</span>
-                            <b id="distVal" style="color: var(--primary-600);">60%</b>
-                        </div>
-                        <input type="range" id="distRange" min="0" max="100" value="60" oninput="document.getElementById('distVal').innerText = this.value + '%'">
+            <div class="card-title"><h3>⚙️ Matching Engine Configuration</h3></div>
+            <div style="display: flex; gap: 32px;">
+                <div style="flex: 1;">
+                    <div style="margin-bottom: 20px;">
+                        <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 8px;"><span>ความใกล้เคียงระยะทาง (Proximity Weight)</span><b>60%</b></div>
+                        <input type="range" style="width: 100%" value="60">
                     </div>
-                    <div class="matching-slider-group">
-                        <div class="slider-header">
-                            <span>คุณภาพรีวิวและดาว (Rating Weight)</span>
-                            <b id="rateVal" style="color: var(--primary-600);">40%</b>
-                        </div>
-                        <input type="range" id="rateRange" min="0" max="100" value="40" oninput="document.getElementById('rateVal').innerText = this.value + '%'">
+                    <div style="margin-bottom: 20px;">
+                        <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 8px;"><span>คุณภาพรีวิวและดาว (Rating Weight)</span><b>40%</b></div>
+                        <input type="range" style="width: 100%" value="40">
                     </div>
                 </div>
                 <div style="width: 300px; padding: 16px; background: var(--neutral-100); border-radius: 12px; font-size: 13px; color: var(--neutral-600);">
-                    <p style="margin-bottom: 8px;"><b>💡 คำแนะนำทางธุรกิจ:</b></p>
-                    <p>ปัจจุบันระบบเน้นที่ "ระยะทาง" เพื่อลดเวลาการเดินทางและเพิ่มความรวดเร็วในการบริการ (SLA) หากต้องการเน้นความพึงพอใจลูกค้าในระยะยาว ให้ปรับเพิ่มค่าน้ำหนัก Rating</p>
+                    <p>ปัจจุบันเน้นระยะทางเพื่อลดเวลาเดินทาง (SLA)</p>
                     <button class="btn btn-primary btn-sm" style="width: 100%; margin-top: 12px;">บันทึกการตั้งค่า</button>
                 </div>
             </div>
@@ -369,96 +271,31 @@
 
         <div class="card">
             <div class="card-title">
-                <h3>📥 คำขอยืนยันผู้ดูแลใหม่ (Onboarding Progress Tracker)</h3>
-                <div style="display: flex; gap: 8px;">
-                    <button class="btn btn-outline btn-sm" onclick="alert('กำลังดึงข้อมูลชุดใหม่จากสถาบันฝึกอบรม (TI Inbound)...')">🔄 Check TI Inbound</button>
-                    <span class="status-badge bg-pending">4 Pending TI</span>
-                </div>
+                <h3>📥 คำขอยืนยันผู้ดูแลใหม่ (Onboarding Tracker)</h3>
+                <button class="btn btn-outline btn-sm" onclick="alert('กำลังดึงข้อมูลชุดใหม่จากสถาบันฝึกอบรม (TI Inbound)...')">🔄 Check TI Inbound</button>
             </div>
-            <p style="font-size: 13px; color: var(--neutral-600); margin-bottom: 16px;">ติดตามสถานะผู้สมัครจากสถาบันฝึกอบรม (Training Institute) ก่อนรับเข้าทีม</p>
             <table>
-                <thead>
-                    <tr>
-                        <th>ชื่อ-นามสกุล / สถาบัน</th>
-                        <th>คะแนน GPA</th>
-                        <th>Onboarding Progress (TI Steps)</th>
-                        <th>สถานะปัจจุบัน</th>
-                        <th>การจัดการ</th>
-                    </tr>
-                </thead>
+                <thead><tr><th>ชื่อ-นามสกุล / สถาบัน</th><th>Onboarding Progress</th><th>สถานะปัจจุบัน</th><th>การจัดการ</th></tr></thead>
                 <tbody>
                     <tr>
-                        <td style="font-weight: 600;">
-                            น.ส. อารีรัตน์ สุขใจ
-                            <div style="font-size: 11px; color: var(--neutral-600); font-weight: 400;">BKK Nursing Academy <span class="badge-mfa" style="background: var(--info); font-size: 8px;">⭐ Elite Grade</span></div>
-                        </td>
-                        <td style="color: var(--success); font-weight: 700;">3.85</td>
-                        <td>
-                            <div class="onboarding-tracker">
-                                <div class="step done" title="ตรวจสอบเอกสาร"></div>
-                                <div class="step-line done"></div>
-                                <div class="step done" title="ผ่านการอบรม"></div>
-                                <div class="step-line done"></div>
-                                <div class="step current" title="สอบวัดผล"></div>
-                                <div class="step-line"></div>
-                                <div class="step" title="อนุมัติโดย Operator"></div>
-                            </div>
-                        </td>
+                        <td>น.ส. อารีรัตน์ สุขใจ<div style="font-size: 11px; color: var(--neutral-600);">BKK Nursing Academy <span class="badge-mfa" style="background: var(--info);">⭐ Elite Grade</span></div></td>
+                        <td><div class="onboarding-tracker"><div class="step done"></div><div class="step-line done"></div><div class="step done"></div><div class="step-line done"></div><div class="step current"></div><div class="step-line"></div><div class="step"></div></div></td>
                         <td><span class="status-badge bg-pending">รอผลสอบ Final</span></td>
                         <td style="display: flex; gap: 8px;">
-                            <button class="btn btn-outline btn-sm" onclick="alert('เปิดโหมด Verify Side-by-Side:\n[ซ้าย]: เอกสารที่อัปโหลด\n[ขวา]: ข้อมูลยืนยันจาก BKK Nursing Academy\n\nสถานะ: ข้อมูลตรงกัน 100%')">👁️ Verify</button>
-                            <button class="btn btn-primary btn-sm" disabled title="ต้องผ่านผลสอบ Final ก่อน">ยืนยันรับ</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="font-weight: 600;">
-                            นาย สมชาย สายชล
-                            <div style="font-size: 11px; color: var(--neutral-600); font-weight: 400;">Elderly Care Center</div>
-                        </td>
-                        <td style="color: var(--success); font-weight: 700;">3.70</td>
-                        <td>
-                            <div class="onboarding-tracker">
-                                <div class="step done"></div>
-                                <div class="step-line done"></div>
-                                <div class="step done"></div>
-                                <div class="step-line done"></div>
-                                <div class="step done"></div>
-                                <div class="step-line done"></div>
-                                <div class="step current"></div>
-                            </div>
-                        </td>
-                        <td><span class="status-badge bg-available">✓ พร้อมอนุมัติ</span></td>
-                        <td>
-                            <button class="btn btn-primary btn-sm">ยืนยันรับเข้าทีม</button>
+                            <button class="btn btn-outline btn-sm" onclick="alert('เปิดโหมด Verify Side-by-Side:\n[ซ้าย]: เอกสารที่อัปโหลด\n[ขวา]: ข้อมูลยืนยันจาก BKK Nursing Academy\n\nสถานะ: ข้อมูลตรงกัน 100%')">👁️ Verify Documents</button>
+                            <button class="btn btn-primary btn-sm" disabled>ยืนยันเข้าทีม</button>
                         </td>
                     </tr>
                 </tbody>
             </table>
         </div>
 
-        <!-- Caregiver List -->
+        <!-- Team Directory (Restored with SPA style) -->
         <div class="card">
             <div class="card-title">
                 <h3>👥 รายชื่อทีมผู้ดูแล (Team Directory)</h3>
                 <button class="btn btn-outline btn-sm">+ เพิ่มผู้ดูแล (Manual)</button>
             </div>
-
-            <div class="filter-bar">
-                <input type="text" class="search-input" placeholder="ค้นหาชื่อ, ทักษะ, หรือรหัสพนักงาน...">
-                <select class="filter-select">
-                    <option>สถานะทั้งหมด</option>
-                    <option>ว่าง (Available)</option>
-                    <option>ติดงาน (Busy)</option>
-                    <option>ลาพัก (On Leave)</option>
-                </select>
-                <select class="filter-select">
-                    <option>ระดับทั้งหมด</option>
-                    <option>Elite</option>
-                    <option>Advanced</option>
-                    <option>Standard</option>
-                </select>
-            </div>
-
             <table>
                 <thead>
                     <tr>
@@ -466,7 +303,6 @@
                         <th>สถานะ</th>
                         <th>Workload</th>
                         <th>Passport (TI)</th>
-                        <th>คลังเอกสาร</th>
                         <th>การจัดการ</th>
                     </tr>
                 </thead>
@@ -475,70 +311,36 @@
                         <td>
                             <div style="display: flex; align-items: center; gap: 12px;">
                                 <div style="width: 40px; height: 40px; border-radius: 50%; background: #ddd; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700;">VW</div>
-                                <div>
-                                    <div style="font-weight: 600;">น.ส. วิภาวี รักเรียน</div>
-                                    <div class="perf-badge badge-elite">⭐ Elite</div>
-                                </div>
+                                <div><div style="font-weight: 600;">น.ส. วิภาวี รักเรียน</div><div class="perf-badge badge-elite">⭐ Elite</div></div>
                             </div>
                         </td>
                         <td><span class="status-badge bg-available">ว่าง (Available)</span></td>
-                        <td>
-                            <div style="font-size: 12px; color: var(--success); font-weight: 600;">0% (พร้อมรับ)</div>
-                        </td>
-                        <td>
-                            <div style="font-size: 11px;">GPA 3.90 | <span class="skill-tag">ติดเตียง</span></div>
-                        </td>
-                        <td>
-                            <span class="doc-icon doc-verified" title="ใบรับรองวิชาชีพ">📜</span>
-                            <span class="doc-icon doc-verified" title="ประวัติอาชญากรรม">⚖️</span>
-                            <span class="doc-icon doc-verified" title="ผลตรวจสุขภาพ">🏥</span>
-                        </td>
-                        <td>
-                            <button class="btn btn-outline btn-sm">โปรไฟล์</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div style="display: flex; align-items: center; gap: 12px;">
-                                <div style="width: 40px; height: 40px; border-radius: 50%; background: #ddd; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700;">RW</div>
-                                <div>
-                                    <div style="font-weight: 600;">น.ส. รวีวรรณ ผ่องใส</div>
-                                    <div class="perf-badge badge-adv">⭐ Advanced</div>
-                                </div>
-                            </div>
-                        </td>
-                        <td><span class="status-badge bg-busy">ติดงาน (#BK-7721)</span></td>
-                        <td>
-                            <div style="font-size: 12px; color: var(--error); font-weight: 600;">95% (งานแน่น)</div>
-                        </td>
-                        <td>
-                            <div style="font-size: 11px;">GPA 3.65 | <span class="skill-tag">ผู้สูงอายุ</span></div>
-                        </td>
-                        <td>
-                            <span class="doc-icon doc-verified" title="ใบรับรองวิชาชีพ">📜</span>
-                            <span class="doc-icon doc-verified" title="ประวัติอาชญากรรม">⚖️</span>
-                            <span class="doc-icon" title="ผลตรวจสุขภาพ (หมดอายุ)">⚠️</span>
-                        </td>
-                        <td>
-                            <button class="btn btn-outline btn-sm">โปรไฟล์</button>
-                        </td>
+                        <td style="color: var(--success); font-weight: 600;">0%</td>
+                        <td style="font-size: 11px;">GPA 3.90 | <span style="background:#eee; padding:2px 4px; border-radius:4px;">ติดเตียง</span></td>
+                        <td><button class="btn btn-outline btn-sm">โปรไฟล์</button></td>
                     </tr>
                 </tbody>
             </table>
         </div>
-
     </main>
 
     <script>
-        // Sync Indicator Pulse Simulation
-        const syncDot = document.querySelector('.sync-dot');
+        function toggleAccessibility() {
+            document.body.classList.toggle('accessibility-mode');
+            const isModeOn = document.body.classList.contains('accessibility-mode');
+            alert(isModeOn ? 'Accessibility Mode: ON (High Contrast & Larger Text)' : 'Accessibility Mode: OFF');
+        }
+
         setInterval(() => {
-            const isOnline = Math.random() > 0.05;
-            if(isOnline) {
-                syncDot.style.background = 'var(--success)';
-            } else {
-                syncDot.style.background = 'var(--error)';
-            }
+            document.querySelectorAll('.sync-dot').forEach(dot => {
+                const isOnline = Math.random() > 0.05;
+                dot.style.background = isOnline ? 'var(--success)' : 'var(--error)';
+            });
+        }, 5000);
+
+        setTimeout(() => {
+            const alertBar = document.getElementById('critical-alert');
+            if (alertBar) alertBar.style.display = 'flex';
         }, 3000);
     </script>
 </body>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>จัดการใบรับรอง V2 - CareDee Academy</title>
+    <title>จัดการใบรับรอง - CareDee Academy</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -24,6 +24,7 @@
             /* Neutral Colors */
             --white: #FFFFFF;
             --neutral-100: #F8F8F8;
+            --neutral-200: #F3F2F7;
             --neutral-300: #B9B9C3;
             --neutral-600: #6E6B7B;
             --neutral-900: #1E1E1E;
@@ -39,9 +40,9 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--font-main); }
-        body { background: var(--neutral-100); color: var(--neutral-900); display: flex; min-height: 100vh; }
+        body { background: var(--neutral-100); color: var(--neutral-900); display: flex; min-height: 100vh; overflow-x: hidden; }
 
-        /* Sidebar */
+        /* --- Sidebar --- */
         .sidebar {
             width: var(--sidebar-width);
             background: var(--white);
@@ -65,13 +66,16 @@
             font-weight: 500;
             transition: 0.2s;
             font-size: 15px;
+            cursor: pointer;
             position: relative;
         }
         .menu-link:hover, .menu-link.active { background: var(--primary-100); color: var(--primary-600); border-right: 4px solid var(--primary-600); }
         .menu-link i { margin-right: 12px; width: 24px; text-align: center; font-style: normal; }
+        .nav-badge { position: absolute; right: 20px; background: var(--error); color: white; font-size: 10px; padding: 2px 6px; border-radius: 10px; font-weight: 700; }
 
-        /* Main */
-        .main { margin-left: var(--sidebar-width); flex: 1; padding: 32px; }
+        /* --- Main Layout --- */
+        .main { margin-left: var(--sidebar-width); flex: 1; padding: 32px; width: calc(100% - var(--sidebar-width)); }
+        
         header {
             display: flex;
             justify-content: space-between;
@@ -83,120 +87,44 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.03);
         }
         .user-status { display: flex; align-items: center; gap: 12px; }
+        .mfa-tag { background: var(--success); color: white; font-size: 11px; padding: 4px 12px; border-radius: 20px; font-weight: 600; }
 
-        /* Filters */
-        .filter-bar {
-            display: flex;
-            gap: 16px;
-            margin-bottom: 24px;
-            flex-wrap: wrap;
-        }
-        .search-input {
-            flex: 1;
-            min-width: 300px;
-            padding: 12px 16px;
-            border-radius: 10px;
-            border: 1px solid var(--neutral-300);
-            outline: none;
-            font-size: 14px;
-        }
-        .filter-select {
-            padding: 12px 16px;
-            border-radius: 10px;
-            border: 1px solid var(--neutral-300);
-            background: var(--white);
-            font-size: 14px;
-            min-width: 150px;
-        }
+        /* --- Components --- */
+        .card { background: var(--white); border-radius: 16px; padding: 28px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); margin-bottom: 32px; position: relative; }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; border-bottom: 1px solid var(--neutral-100); padding-bottom: 12px; }
+        .card-title { font-size: 18px; font-weight: 700; color: var(--neutral-900); }
+
+        .form-control { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid var(--neutral-300); outline: none; font-size: 14px; }
+
+        .btn { padding: 10px 20px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; font-size: 13px; transition: 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn-primary { background: var(--primary-600); color: white; }
+        .btn-primary:hover { background: var(--pressed); }
+        .btn-sm { padding: 6px 12px; font-size: 12px; }
+        .btn-ghost { background: transparent; color: var(--primary-600); border: 1px solid var(--primary-600); }
+        .btn-ghost:hover { background: var(--primary-100); }
+
+        .badge { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; white-space: nowrap; display: inline-block; }
+        .bg-success { background: #E6F9F0; color: var(--success); }
+        .bg-unmatched { background: #FFF3E6; color: var(--warning); }
+        .bg-error { background: #FFF5F5; color: var(--error); }
+
+        .data-table { width: 100%; border-collapse: collapse; }
+        .data-table th { text-align: left; padding: 14px; font-size: 12px; background: var(--neutral-100); color: var(--neutral-600); font-weight: 700; text-transform: uppercase; }
+        .data-table td { padding: 16px 14px; border-bottom: 1px solid var(--neutral-100); font-size: 14px; vertical-align: middle; }
 
         /* Bulk Actions */
-        .bulk-actions {
-            background: var(--primary-600);
-            color: white;
-            padding: 12px 24px;
-            border-radius: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
-            animation: slideDown 0.3s ease-out;
-            display: none; /* Hidden by default */
-        }
-        @keyframes slideDown { from { transform: translateY(-10px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .bulk-actions { background: var(--primary-600); color: white; padding: 12px 24px; border-radius: 12px; display: none; justify-content: space-between; align-items: center; margin-bottom: 24px; }
 
-        /* Table */
-        .card { background: var(--white); border-radius: 16px; padding: 28px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
-        .table-container { overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; }
-        th { text-align: left; padding: 14px; font-size: 13px; background: var(--neutral-100); color: var(--neutral-600); font-weight: 600; text-transform: uppercase; }
-        td { padding: 16px 14px; border-bottom: 1px solid var(--neutral-100); font-size: 14px; }
-        
-        /* Status Badges */
-        .badge { padding: 6px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; display: inline-block; }
-        .badge-verified { background: #E6F9F0; color: var(--success); }
-        .badge-expired { background: #F8F8F8; color: var(--neutral-600); }
-        .badge-revoked { background: #FFF5F5; color: var(--error); }
-        .badge-warning { background: #FFF3E6; color: var(--warning); }
-        .badge-info { background: #E0F2F4; color: var(--primary-600); }
-        .badge-pending { background: #E0F2F4; color: var(--info); border: 1px dashed var(--info); }
-
-        /* Matching Status */
-        .match-status { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; }
-        .match-yes { color: var(--success); }
-        .match-no { color: var(--neutral-300); }
-
-        /* Buttons */
-        .btn { padding: 8px 16px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; font-size: 13px; transition: 0.2s; display: inline-flex; align-items: center; gap: 6px; }
-        .btn-primary { background: var(--primary-600); color: white; }
-        .btn-outline-danger { border: 1px solid var(--error); color: var(--error); background: transparent; }
-        .btn-outline-danger:hover { background: var(--error); color: white; }
-        .btn-ghost { background: transparent; color: var(--neutral-600); }
-        .btn-ghost:hover { background: var(--neutral-100); }
-
-        /* Modal */
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            display: none; /* Hidden by default */
-        }
-        .modal-card {
-            background: white;
-            width: 500px;
-            padding: 32px;
-            border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-        }
-        .modal-title { font-size: 20px; font-weight: 700; margin-bottom: 12px; color: var(--error); }
-        .modal-desc { font-size: 14px; color: var(--neutral-600); margin-bottom: 24px; }
-        .form-label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px; color: var(--neutral-900); }
-        .form-textarea {
-            width: 100%;
-            height: 100px;
-            padding: 12px;
-            border-radius: 10px;
-            border: 1px solid var(--neutral-300);
-            resize: none;
-            margin-bottom: 16px;
-            outline: none;
-        }
-        .file-upload {
-            border: 2px dashed var(--neutral-300);
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            margin-bottom: 24px;
-            cursor: pointer;
-        }
-        .file-upload:hover { border-color: var(--primary-600); background: var(--primary-100); }
+        /* Modals */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 1000; }
+        .modal-content { background: white; padding: 32px; border-radius: 16px; width: 500px; max-width: 90%; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--neutral-100); padding-bottom: 12px; }
+        .modal-footer { display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--neutral-100); }
     </style>
 </head>
 <body>
 
+    <!-- Sidebar -->
     <aside class="sidebar">
         <div class="sidebar-brand">
             <div class="logo-box">CD</div>
@@ -208,264 +136,128 @@
             <a href="1_training_import_v2.html" class="menu-link"><i>📥</i> นำเข้าข้อมูลการอบรม</a>
             <a href="2_training_cert_manage_v2.html" class="menu-link active"><i>🏅</i> จัดการใบรับรอง</a>
             <a href="3_training_market_intelligence_v2.html" class="menu-link"><i>📈</i> สถิติตลาดแรงงาน</a>
-            <a href="4_training_verification_standard_v2.html" class="menu-link"><i>🛡️</i> มาตรฐานการตรวจสอบ</a>
-            <a href="#" class="menu-link"><i>🏢</i> โปรไฟล์สถาบัน & KYC</a>
-            <a href="gap.md" class="menu-link" style="color: var(--secondary-500);"><i>⚠️</i> Gap Analysis</a>
+            <a href="4_training_verification_standard_v2.html" class="menu-link"><i>🛡️</i> การตรวจสอบ & เกณฑ์ <span class="nav-badge">12</span></a>
+            <a href="5_training_profile_v2.html" class="menu-link"><i>🏢</i> โปรไฟล์สถาบัน & KYC</a>
         </nav>
         <div style="padding: 24px; border-top: 1px solid var(--neutral-100);">
-            <a href="#" class="menu-link" style="color: var(--error); padding: 0;"><i>🚪</i> ออกจากระบบ</a>
+            <a onclick="logout()" class="menu-link" style="color: var(--error); padding: 0;"><i>🚪</i> ออกจากระบบ</a>
         </div>
     </aside>
 
+    <!-- Main Content -->
     <main class="main">
         <header>
             <div class="page-title">
-                <h1 style="font-size: 20px; font-weight: 700;">2. จัดการใบรับรอง (Certificate Management) <span style="font-size: 12px; background: var(--primary-100); color: var(--primary-600); padding: 2px 8px; border-radius: 4px; margin-left: 8px;">V2</span></h1>
+                <h1 style="font-size: 20px; font-weight: 700;">จัดการใบรับรอง (Certificate Management)</h1>
                 <p style="font-size: 13px; color: var(--neutral-600);">ฐานข้อมูลศิษย์เก่าและการควบคุมความถูกต้องของใบรับรอง</p>
             </div>
             <div class="user-status">
-                <div style="text-align: right; margin-right: 12px;">
-                    <p style="font-size: 14px; font-weight: 700;">สถาบันการพยาบาลไทย</p>
-                    <p style="font-size: 11px; color: var(--success);">สถานะ: สถาบันที่ผ่านการรับรอง</p>
-                </div>
+                <span class="mfa-tag">MFA : ยืนยันตัวตนแล้ว</span>
                 <div style="width: 44px; height: 44px; background: var(--primary-100); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--primary-600); font-weight: 700;">SM</div>
             </div>
         </header>
 
         <!-- Filters -->
-        <div class="filter-bar">
-            <input type="text" class="search-input" placeholder="ค้นหาด้วยชื่อ, รหัส ปชช., หรือเลขที่ใบรับรอง...">
-            <select class="filter-select">
+        <div class="filter-bar" style="display: flex; gap: 16px; margin-bottom: 24px;">
+            <input type="text" class="form-control" style="flex:1" placeholder="ค้นหาด้วยชื่อ, รหัส ปชช., หรือเลขที่ใบรับรอง...">
+            <select class="form-control" style="width: 200px;">
                 <option>เลือกหลักสูตร</option>
                 <option>ดูแลผู้สูงอายุเบื้องต้น</option>
-                <option>การปฐมพยาบาลระดับสูง</option>
+                <option>การปฐมพยาบาลพื้นฐาน</option>
             </select>
-            <select class="filter-select">
-                <option>ปีที่จบการศึกษา</option>
-                <option>2569</option>
-                <option>2568</option>
-            </select>
-            <select class="filter-select">
-                <option>สถานะ</option>
-                <option>Verified</option>
-                <option>Expiring Soon</option>
-                <option>Expired</option>
-                <option>Revoked</option>
-                <option>Pending Verification</option>
-            </select>
+            <button class="btn btn-primary">ค้นหา</button>
         </div>
 
-        <!-- Bulk Actions Tool Bar -->
-        <div class="bulk-actions" id="bulkActions">
+        <!-- Bulk Actions Bar -->
+        <div class="bulk-actions" id="certBulkActions">
             <div style="display: flex; align-items: center; gap: 16px;">
-                <div style="font-size: 14px; font-weight: 600;">เลือกแล้ว <span id="selectedCount">0</span> รายการ</div>
+                <div style="font-size: 14px; font-weight: 600;">เลือกแล้ว <span id="selectedCertCount">0</span> รายการ</div>
                 <div style="height: 20px; width: 1px; background: rgba(255,255,255,0.3);"></div>
-                <div style="display: flex; gap: 8px;">
-                    <button class="btn" style="background: rgba(255,255,255,0.2); color: white;" onclick="alert('Bulk Renewing...')"><i>🔄</i> ต่ออายุพร้อมกัน</button>
-                    <button class="btn" style="background: rgba(255,255,255,0.2); color: white;" onclick="alert('Bulk Revoking...')"><i>🚫</i> เพิกถอนพร้อมกัน</button>
-                </div>
+                <button class="btn btn-sm" style="background: rgba(255,255,255,0.2); color: white;"><i>🔄</i> ต่ออายุพร้อมกัน</button>
+                <button class="btn btn-sm" style="background: rgba(255,255,255,0.2); color: white;"><i>🚫</i> เพิกถอนพร้อมกัน</button>
             </div>
-            <div style="display: flex; gap: 12px;">
-                <button class="btn" style="background: white; color: var(--primary-600);"><i>🖨️</i> พิมพ์ใบรับรองดิจิทัล</button>
-            </div>
+            <button class="btn btn-sm" style="background: white; color: var(--primary-600);"><i>🖨️</i> พิมพ์ใบรับรองดิจิทัล</button>
         </div>
 
-        <!-- Master Directory Table -->
         <div class="card">
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th style="width: 40px;"><input type="checkbox" onchange="toggleBulk(this)"></th>
-                            <th>ชื่อ-นามสกุล</th>
-                            <th>บัญชี CareDee</th>
-                            <th>เลขที่ใบรับรอง</th>
-                            <th>หลักสูตร / รุ่น</th>
-                            <th>วันที่ออก / หมดอายุ</th>
-                            <th>สถานะ</th>
-                            <th style="text-align: right;">การจัดการ</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Case 1: Verified & Matched -->
-                        <tr>
-                            <td><input type="checkbox" class="row-check" onchange="updateCount()"></td>
-                            <td>
-                                <div style="font-weight: 600;">น.ส. กัญญาวีร์ สีใส</div>
-                                <div style="font-size: 12px; color: var(--neutral-600);">ID: 1-1002-XXXXX-XX-X</div>
-                            </td>
-                            <td>
-                                <div class="match-status match-yes"><i>🔗</i> Matched</div>
-                                <div style="font-size: 10px; color: var(--neutral-600);">UID: CD-8829</div>
-                            </td>
-                            <td style="font-family: monospace; font-weight: 700; color: var(--primary-600);">CERT-2026-001</td>
-                            <td>
-                                <div>ผู้ดูแลผู้สูงอายุ (รุ่น 24)</div>
-                                <div style="font-size: 11px; color: var(--neutral-600);">420 ชม.</div>
-                            </td>
-                            <td>
-                                <div>15 พ.ค. 2569</div>
-                                <div style="font-size: 11px; color: var(--neutral-600);">หมดอายุ: 15 พ.ค. 2571</div>
-                            </td>
-                            <td><span class="badge badge-verified">Verified</span></td>
-                            <td style="text-align: right;">
-                                <button class="btn btn-ghost" onclick="showRevokeModal('น.ส. กัญญาวีร์ สีใส')">เพิกถอน</button>
-                            </td>
-                        </tr>
-
-                        <!-- Case 2: Expiring Soon (Alert) -->
-                        <tr>
-                            <td><input type="checkbox" class="row-check" onchange="updateCount()"></td>
-                            <td>
-                                <div style="font-weight: 600;">นาย ธนพล รักงาน</div>
-                                <div style="font-size: 12px; color: var(--neutral-600);">ID: 3-4501-XXXXX-XX-X</div>
-                            </td>
-                            <td>
-                                <div class="match-status match-yes"><i>🔗</i> Matched</div>
-                            </td>
-                            <td style="font-family: monospace; font-weight: 700; color: var(--primary-600);">CERT-2026-002</td>
-                            <td>
-                                <div>ปฐมพยาบาล (รุ่น 12)</div>
-                                <div style="font-size: 11px; color: var(--neutral-600);">18 ชม.</div>
-                            </td>
-                            <td>
-                                <div style="color: var(--warning); font-weight: 600;">10 มิ.ย. 2569</div>
-                                <div style="font-size: 11px; color: var(--warning);">เหลือ 30 วัน</div>
-                            </td>
-                            <td><span class="badge badge-warning">Expiring Soon</span></td>
-                            <td style="text-align: right;">
-                                <button class="btn btn-primary btn-ghost" style="color: var(--primary-600);">ต่ออายุ</button>
-                                <button class="btn btn-ghost" onclick="showRevokeModal('นาย ธนพล รักงาน')">เพิกถอน</button>
-                            </td>
-                        </tr>
-
-                        <!-- Case 3: Pending Verification (Task from Operator) -->
-                        <tr style="background: rgba(0, 207, 232, 0.02);">
-                            <td><input type="checkbox" class="row-check" onchange="updateCount()"></td>
-                            <td>
-                                <div style="font-weight: 600;">น.ส. จันทรา ฟ้าใส</div>
-                                <div style="font-size: 12px; color: var(--neutral-600);">ID: 5-5521-XXXXX-XX-X</div>
-                            </td>
-                            <td>
-                                <div class="match-status match-no"><i>❓</i> Unmatched</div>
-                                <button class="btn btn-primary btn-sm" style="font-size: 9px; padding: 2px 6px;" onclick="alert('Sending Invite...')">Invite</button>
-                            </td>
-                            <td style="font-family: monospace; font-weight: 700; color: var(--neutral-600);">Pending...</td>
-                            <td>
-                                <div>ผู้ดูแลผู้สูงอายุ (รุ่น 23)</div>
-                                <div style="font-size: 11px; color: var(--neutral-600);">รอยืนยันวุฒิการศึกษา</div>
-                            </td>
-                            <td>
-                                <div style="font-size: 11px; color: var(--neutral-600);">-</div>
-                            </td>
-                            <td>
-                                <span class="badge badge-pending">Pending Verification</span>
-                                <div style="font-size: 10px; color: var(--info); margin-top: 4px;">Requested by Operator</div>
-                            </td>
-                            <td style="text-align: right;">
-                                <button class="btn btn-primary" style="background: var(--info);">ยืนยันความถูกต้อง</button>
-                            </td>
-                        </tr>
-
-                        <!-- Case 4: Expired -->
-                        <tr>
-                            <td><input type="checkbox" class="row-check" onchange="updateCount()"></td>
-                            <td>
-                                <div style="font-weight: 600;">น.ส. มาลี สวยงาม</div>
-                                <div style="font-size: 12px; color: var(--neutral-600);">ID: 3-6602-XXXXX-XX-X</div>
-                            </td>
-                            <td>
-                                <div class="match-status match-yes"><i>🔗</i> Matched</div>
-                            </td>
-                            <td style="font-family: monospace; font-weight: 700; color: var(--primary-600);">CERT-2025-882</td>
-                            <td>
-                                <div>ผู้ดูแลผู้สูงอายุ (รุ่น 22)</div>
-                                <div style="font-size: 11px; color: var(--neutral-600);">420 ชม.</div>
-                            </td>
-                            <td>
-                                <div>12 มี.ค. 2568</div>
-                                <div style="font-size: 11px; color: var(--error);">หมดอายุแล้ว</div>
-                            </td>
-                            <td><span class="badge badge-expired">Expired</span></td>
-                            <td style="text-align: right;">
-                                <button class="btn btn-primary btn-ghost" style="color: var(--primary-600);">ต่ออายุ</button>
-                            </td>
-                        </tr>
-
-                        <!-- Case 5: Revoked with Reason Link -->
-                        <tr>
-                            <td><input type="checkbox" class="row-check" onchange="updateCount()"></td>
-                            <td>
-                                <div style="font-weight: 600;">นาย สมเกียรติ พากเพียร</div>
-                                <div style="font-size: 12px; color: var(--neutral-600);">ID: 1-5503-XXXXX-XX-X</div>
-                            </td>
-                            <td>
-                                <div class="match-status match-no"><i>🚫</i> Unmatched</div>
-                            </td>
-                            <td style="font-family: monospace; font-weight: 700; color: var(--neutral-600);">CERT-2025-442</td>
-                            <td>
-                                <div>ผู้ดูแลผู้สูงอายุ (รุ่น 22)</div>
-                                <div style="font-size: 11px; color: var(--neutral-600);">420 ชม.</div>
-                            </td>
-                            <td>
-                                <div style="font-size: 11px; color: var(--neutral-600);">-</div>
-                            </td>
-                            <td>
-                                <span class="badge badge-revoked">Revoked</span>
-                                <div style="font-size: 10px; color: var(--error); margin-top: 4px; cursor: pointer; text-decoration: underline;" onclick="alert('Reason: ตรวจพบเอกสารเท็จ\nEvidence: evidence_scan_001.pdf\nRevoked by: Admin Somchai\nDate: 20 เม.ย. 69')">ดูเหตุผล / หลักฐาน</div>
-                            </td>
-                            <td style="text-align: right;">
-                                <div style="font-size: 11px; color: var(--neutral-600);">เพิกถอนเมื่อ 20 เม.ย. 69</div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th style="width: 40px;"><input type="checkbox" id="selectAllCerts" onchange="toggleSelectAllCerts()"></th>
+                        <th>ชื่อ-นามสกุล</th>
+                        <th>การเชื่อมโยง</th>
+                        <th>เลขที่ใบรับรอง</th>
+                        <th>สถานะ</th>
+                        <th style="text-align: right;">การจัดการ</th>
+                    </tr>
+                </thead>
+                <tbody id="certTableBody">
+                    <tr>
+                        <td><input type="checkbox" class="cert-checkbox" onchange="updateCertBulkUI()"></td>
+                        <td>
+                            <div style="font-weight: 600;">น.ส. กัญญาวีร์ สีใส</div>
+                            <div style="font-size: 12px; color: var(--neutral-600);">ID: 1-1002-XXXXX-XX-X</div>
+                        </td>
+                        <td><span style="color: var(--success); font-size: 12px; font-weight: 600;"><i>🔗</i> Matched</span></td>
+                        <td style="font-family: monospace; font-weight: 700; color: var(--primary-600);">CERT-2026-001</td>
+                        <td><span class="badge bg-success">Verified</span></td>
+                        <td style="text-align: right;">
+                            <button class="btn btn-ghost btn-sm" onclick="openRevokeModal('น.ส. กัญญาวีร์ สีใส')">เพิกถอน</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox" class="cert-checkbox" onchange="updateCertBulkUI()"></td>
+                        <td>
+                            <div style="font-weight: 600;">นาย ธนพล รักงาน</div>
+                            <div style="font-size: 12px; color: var(--neutral-600);">ID: 3-4501-XXXXX-XX-X</div>
+                        </td>
+                        <td><span style="color: var(--neutral-300); font-size: 12px;"><i>❓</i> Unmatched</span></td>
+                        <td style="font-family: monospace; font-weight: 700; color: var(--primary-600);">CERT-2026-002</td>
+                        <td><span class="badge bg-unmatched">Expiring Soon</span></td>
+                        <td style="text-align: right;">
+                            <button class="btn btn-ghost btn-sm">ต่ออายุ</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
 
-        <div style="font-size: 11px; text-align: center; color: var(--neutral-600); padding: 24px; border-top: 1px solid var(--neutral-100); margin-top: 20px;">
-            ฐานข้อมูลนี้เชื่อมต่อโดยตรงกับระบบยืนยันตัวตนของ CareDee Platform ทุกการเพิกถอนจะมีผลทันทีต่อสถานะผู้ดูแล
-        </div>
+        <footer style="font-size: 11px; text-align: center; color: var(--neutral-600); padding: 24px; border-top: 1px solid var(--neutral-100); margin-top: 20px;">
+            ระบบทำการบันทึก Audit Log ทุกการเปลี่ยนแปลงข้อมูลตามมาตรฐาน PDPA | © 2026 CareDee Academy
+        </footer>
     </main>
 
-    <!-- Enhanced Reason Modal -->
+    <!-- Modal: Revoke -->
     <div class="modal-overlay" id="revokeModal">
-        <div class="modal-card">
-            <h2 class="modal-title">ยืนยันการเพิกถอนใบรับรอง</h2>
-            <p class="modal-desc">คุณกำลังจะเพิกถอนใบรับรองของ <strong id="targetName">...</strong> ซึ่งจะทำให้ผู้ดูแลสูญเสียสิทธิ์ในการรับงานในระบบ CareDee ทันที</p>
-            
-            <div style="margin-bottom: 20px;">
-                <label class="form-label">ระบุเหตุผลในการเพิกถอน (Mandatory)</label>
-                <textarea class="form-textarea" placeholder="เช่น ตรวจพบเอกสารเท็จ, พ้นสภาพการเป็นนักเรียน, หรือเหตุผลด้านจริยธรรม..."></textarea>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 style="font-size: 18px; font-weight: 700; color: var(--error);">ยืนยันการเพิกถอนใบรับรอง</h3>
+                <span style="cursor: pointer;" onclick="closeModal('revokeModal')">✕</span>
             </div>
-
-            <div style="margin-bottom: 20px;">
-                <label class="form-label">แนบหลักฐานประกอบ (Evidence)</label>
-                <div class="file-upload" onclick="alert('เปิดหน้าต่างเลือกไฟล์...')">
-                    <p style="font-size: 13px; color: var(--neutral-600);">คลิกหรือลากไฟล์มาวางที่นี่เพื่ออัปโหลดหลักฐาน</p>
-                    <p style="font-size: 11px; color: var(--neutral-300);">รองรับไฟล์ PDF, JPG, PNG (ไม่เกิน 5MB)</p>
-                </div>
+            <p style="font-size: 14px; margin-bottom: 20px;">คุณกำลังจะเพิกถอนใบรับรองของ <strong id="revokeTargetName">...</strong></p>
+            <div class="form-group" style="margin-bottom: 16px;">
+                <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px;">ระบุเหตุผลในการเพิกถอน (Mandatory)</label>
+                <textarea class="form-control" style="height: 100px; resize: none;" placeholder="เช่น ตรวจพบเอกสารเท็จ, พ้นสภาพการเป็นนักเรียน..."></textarea>
             </div>
-            
-            <div style="display: flex; gap: 12px; justify-content: flex-end;">
-                <button class="btn btn-ghost" onclick="closeModal()">ยกเลิก</button>
-                <button class="btn btn-primary" style="background: var(--error);" onclick="confirmRevoke()">ยืนยันการเพิกถอน (บันทึก Audit Log)</button>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('revokeModal')">ยกเลิก</button>
+                <button class="btn btn-primary" style="background: var(--error);" onclick="confirmRevoke()">ยืนยันเพิกถอน (บันทึก Audit Log)</button>
             </div>
         </div>
     </div>
 
     <script>
-        function toggleBulk(master) {
-            const checks = document.querySelectorAll('.row-check');
+        function toggleSelectAllCerts() {
+            const master = document.getElementById('selectAllCerts');
+            const checks = document.querySelectorAll('.cert-checkbox');
             checks.forEach(c => c.checked = master.checked);
-            updateCount();
+            updateCertBulkUI();
         }
 
-        function updateCount() {
-            const checked = document.querySelectorAll('.row-check:checked');
-            const bar = document.getElementById('bulkActions');
-            const countSpan = document.getElementById('selectedCount');
-            
+        function updateCertBulkUI() {
+            const checked = document.querySelectorAll('.cert-checkbox:checked');
+            const bar = document.getElementById('certBulkActions');
+            const countSpan = document.getElementById('selectedCertCount');
             if (checked.length > 0) {
                 bar.style.display = 'flex';
                 countSpan.innerText = checked.length;
@@ -474,22 +266,26 @@
             }
         }
 
-        function showRevokeModal(name) {
-            document.getElementById('targetName').innerText = name;
+        function openRevokeModal(name) {
+            document.getElementById('revokeTargetName').innerText = name;
             document.getElementById('revokeModal').style.display = 'flex';
         }
 
-        function closeModal() {
-            document.getElementById('revokeModal').style.display = 'none';
+        function closeModal(id) {
+            document.getElementById(id).style.display = 'none';
         }
 
         function confirmRevoke() {
-            alert('บันทึกการเพิกถอนเรียบร้อยแล้ว ข้อมูลจะถูกบันทึกใน Audit Log พร้อมหลักฐานที่แนบ');
-            closeModal();
+            alert('เพิกถอนใบรับรองเรียบร้อยแล้ว และบันทึกใน Audit Log');
+            closeModal('revokeModal');
         }
 
-        // Initialize count
-        updateCount();
+        function logout() {
+            if(confirm('คุณต้องการออกจากระบบใช่หรือไม่?')) {
+                alert('ออกจากระบบเรียบร้อย');
+                location.href = '0_training_dashboard_v2.html';
+            }
+        }
     </script>
 </body>
 </html>

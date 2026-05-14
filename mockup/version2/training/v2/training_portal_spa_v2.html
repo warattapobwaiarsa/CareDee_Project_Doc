@@ -189,7 +189,6 @@
             <a onclick="switchPage('market', this)" class="menu-link"><i>📈</i> สถิติตลาดแรงงาน</a>
             <a onclick="switchPage('verification', this)" class="menu-link"><i>🛡️</i> การตรวจสอบ & เกณฑ์ <span class="nav-badge">12</span></a>
             <a onclick="switchPage('profile', this)" class="menu-link"><i>🏢</i> โปรไฟล์สถาบัน & KYC</a>
-            <a onclick="switchPage('gap', this)" class="menu-link" style="color: var(--secondary-500);"><i>⚠️</i> Gap Analysis</a>
         </nav>
         <div style="padding: 24px; border-top: 1px solid var(--neutral-100);">
             <button onclick="toggleEmptyState()" class="btn btn-secondary btn-sm" style="width: 100%; margin-bottom: 12px;">Toggle Empty State (Demo)</button>
@@ -356,10 +355,63 @@
                         <h2 class="card-title">ขั้นตอนที่ 1: อัปโหลดและตรวจสอบ</h2>
                     </div>
                     <div id="step-upload" class="wizard-step active">
-                        <div class="upload-zone" onclick="startImportProcess()">
-                            <div style="font-size: 40px; margin-bottom: 12px;">📁</div>
-                            <p style="font-weight: 700; font-size: 16px; color: var(--primary-600);">คลิกเพื่ออัปโหลดไฟล์รายชื่อผู้ผ่านการอบรม</p>
-                            <p style="font-size: 12px; color: var(--neutral-600); margin-top: 4px;">รองรับไฟล์ CSV, XLSX, JSON (สูงสุด 10MB)</p>
+                        <!-- Tab System for Import -->
+                        <div class="tab-container" style="margin-bottom: 20px;">
+                            <div class="tab-item active" onclick="switchImportTab('file', this)">อัปโหลดไฟล์ (File Upload)</div>
+                            <div class="tab-item" onclick="switchImportTab('manual', this)">กรอกข้อมูล (Manual Entry)</div>
+                        </div>
+
+                        <!-- Tab Content: File Upload -->
+                        <div id="import-tab-file">
+                            <div class="upload-zone" onclick="startImportProcess()">
+                                <div style="font-size: 40px; margin-bottom: 12px;">📁</div>
+                                <p style="font-weight: 700; font-size: 16px; color: var(--primary-600);">คลิกเพื่ออัปโหลดไฟล์รายชื่อผู้ผ่านการอบรม</p>
+                                <p style="font-size: 12px; color: var(--neutral-600); margin-top: 4px;">รองรับไฟล์ CSV, XLSX, JSON (สูงสุด 10MB)</p>
+                            </div>
+                        </div>
+
+                        <!-- Tab Content: Manual Entry -->
+                        <div id="import-tab-manual" style="display: none;">
+                            <div style="background: var(--neutral-100); padding: 20px; border-radius: 12px; margin-bottom: 20px;">
+                                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 12px; align-items: flex-end;">
+                                    <div class="form-group" style="margin-bottom: 0;">
+                                        <label class="form-label">รหัสประจำตัวประชาชน</label>
+                                        <input type="text" class="form-control" id="manual-id" placeholder="X-XXXX-XXXXX-XX-X">
+                                    </div>
+                                    <div class="form-group" style="margin-bottom: 0;">
+                                        <label class="form-label">ชื่อ-นามสกุล</label>
+                                        <input type="text" class="form-control" id="manual-name" placeholder="ชื่อ นามสกุล">
+                                    </div>
+                                    <div class="form-group" style="margin-bottom: 0;">
+                                        <label class="form-label">รหัสใบรับรอง</label>
+                                        <input type="text" class="form-control" id="manual-cert" placeholder="CERT-XXXX-XXX">
+                                    </div>
+                                    <button class="btn btn-primary" onclick="addManualRow()">เพิ่ม</button>
+                                </div>
+                            </div>
+                            
+                            <!-- Preview Manual Rows -->
+                            <div style="max-height: 250px; overflow-y: auto; border: 1px solid var(--neutral-200); border-radius: 12px;">
+                                <table class="data-table">
+                                    <thead style="position: sticky; top: 0; z-index: 1;">
+                                        <tr>
+                                            <th>รหัส ปชช.</th>
+                                            <th>ชื่อ-นามสกุล</th>
+                                            <th>รหัสใบรับรอง</th>
+                                            <th style="width: 50px;"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="manual-rows-body">
+                                        <tr id="manual-empty-row">
+                                            <td colspan="4" style="text-align: center; color: var(--neutral-600); padding: 32px;">ยังไม่มีข้อมูลที่กรอก</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div style="margin-top: 24px; text-align: right;">
+                                <button class="btn btn-primary" onclick="startImportProcess()" id="btn-manual-proceed" disabled>ดำเนินการต่อ (0 รายการ)</button>
+                            </div>
                         </div>
                     </div>
                     <!-- Step Processing -->
@@ -784,34 +836,7 @@
             </div>
         </div>
 
-        <!-- PAGE: GAP ANALYSIS -->
-        <div id="page-gap" class="page-content">
-            <div class="card" style="border-left: 4px solid var(--success);">
-                <div class="card-header">
-                    <h2 class="card-title">Gap Analysis & Implementation Roadmap (V2.1 - Completed)</h2>
-                </div>
-                <div style="font-size: 14px; line-height: 1.8; color: var(--neutral-900);">
-                    <h3 style="margin-top: 20px; font-size: 16px; color: var(--primary-600);">1. รายการที่ดำเนินการแล้ว (Fully Implemented)</h3>
-                    <ul style="margin-left: 24px; margin-top: 10px;">
-                        <li><b>Manual Match UI:</b> เพิ่มปุ่มและ Modal สำหรับจับคู่บัญชีด้วยตนเองในหน้า Import.</li>
-                        <li><b>Inline Edit:</b> เพิ่มฟังก์ชันแก้ไขข้อมูลรายบรรทัดในหน้า Preview ก่อนนำเข้า.</li>
-                        <li><b>Invite Trigger:</b> เพิ่มปุ่มส่ง SMS/Email เชิญชวนผู้ที่ยังไม่มีบัญชีในระบบ.</li>
-                        <li><b>Audit Log (Enhanced):</b> เพิ่ม IP Address, Metadata และรายละเอียดการดำเนินการตามมาตรฐาน PDPA.</li>
-                        <li><b>Bulk Actions:</b> เพิ่มปุ่ม Approve แบบกลุ่ม และ Bulk Actions ในหน้าจัดการใบรับรอง.</li>
-                        <li><b>Institute Profile & KYC:</b> เพิ่มหน้าสำหรับจัดการข้อมูลสถาบันและอัปโหลดเอกสาร.</li>
-                        <li><b>Empty State Designs:</b> เพิ่มหน้า Onboarding และสถานะ "ไม่มีข้อมูล" สำหรับสถาบันใหม่.</li>
-                        <li><b>Standard Guidelines Tab:</b> เพิ่มหน้าอ่านเกณฑ์นโยบายกลางในเมนูการตรวจสอบ.</li>
-                    </ul>
 
-                    <h3 style="margin-top: 24px; font-size: 16px; color: var(--info);">2. สิ่งที่ควรดำเนินการต่อ (Future Roadmap)</h3>
-                    <ul style="margin-left: 24px; margin-top: 10px;">
-                        <li><b>Backend API Integration:</b> เชื่อมต่อ Logic การส่ง Reject Reason กลับไปยัง Mobile App.</li>
-                        <li><b>Advanced Analytics:</b> เพิ่มกราฟเปรียบเทียบการผลิตบุคลากรกับความต้องการตลาดแบบ Real-time.</li>
-                        <li><b>Multi-Branch Support:</b> ระบบจัดการสถาบันที่มีหลายสาขาภายใต้ Account เดียว.</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
 
         <footer style="font-size: 11px; text-align: center; color: var(--neutral-600); padding: 24px; border-top: 1px solid var(--neutral-100); margin-top: 20px;">
             ระบบทำการบันทึก Audit Log ทุกการเปลี่ยนแปลงข้อมูลตามมาตรฐาน PDPA | © 2026 CareDee Academy
@@ -940,8 +965,7 @@
                 'certificates': 'จัดการใบรับรอง (Certificate Management)',
                 'market': 'สถิติตลาดแรงงาน (Market Intelligence)',
                 'verification': 'การตรวจสอบ & เกณฑ์มาตรฐาน',
-                'profile': 'โปรไฟล์สถาบัน & KYC',
-                'gap': 'Gap Analysis & Roadmap'
+                'profile': 'โปรไฟล์สถาบัน & KYC'
             };
             document.getElementById('headerTitle').innerText = titles[pageId];
         }
@@ -1064,8 +1088,76 @@
             alert('ปฏิเสธคำร้องขอเรียบร้อยแล้ว');
             closeModal('rejectModal');
         }
+
+        // --- Bulk Import: Manual Entry Logic ---
+        function switchImportTab(tabId, element) {
+            // Update Tab UI
+            const tabs = element.parentElement.querySelectorAll('.tab-item');
+            tabs.forEach(t => t.classList.remove('active'));
+            element.classList.add('active');
+
+            // Toggle Content
+            document.getElementById('import-tab-file').style.display = (tabId === 'file' ? 'block' : 'none');
+            document.getElementById('import-tab-manual').style.display = (tabId === 'manual' ? 'block' : 'none');
+        }
+
+        let manualRows = [];
+
+        function addManualRow() {
+            const idInput = document.getElementById('manual-id');
+            const nameInput = document.getElementById('manual-name');
+            const certInput = document.getElementById('manual-cert');
+
+            if (!idInput.value || !nameInput.value || !certInput.value) {
+                alert('กรุณากรอกข้อมูลให้ครบถ้วน');
+                return;
+            }
+
+            const newRow = {
+                id: idInput.value,
+                name: nameInput.value,
+                cert: certInput.value,
+                timestamp: Date.now()
+            };
+
+            manualRows.push(newRow);
+            renderManualRows();
+
+            // Clear inputs
+            idInput.value = '';
+            nameInput.value = '';
+            certInput.value = '';
+            idInput.focus();
+        }
+
+        function removeManualRow(timestamp) {
+            manualRows = manualRows.filter(r => r.timestamp !== timestamp);
+            renderManualRows();
+        }
+
+        function renderManualRows() {
+            const body = document.getElementById('manual-rows-body');
+            const btnProceed = document.getElementById('btn-manual-proceed');
+            
+            if (manualRows.length === 0) {
+                body.innerHTML = `<tr id="manual-empty-row"><td colspan="4" style="text-align: center; color: var(--neutral-600); padding: 32px;">ยังไม่มีข้อมูลที่กรอก</td></tr>`;
+                btnProceed.disabled = true;
+                btnProceed.innerText = 'ดำเนินการต่อ (0 รายการ)';
+                return;
+            }
+
+            btnProceed.disabled = false;
+            btnProceed.innerText = `ดำเนินการต่อ (${manualRows.length} รายการ)`;
+
+            body.innerHTML = manualRows.map(row => `
+                <tr>
+                    <td style="font-family: monospace;">${row.id}</td>
+                    <td style="font-weight: 500;">${row.name}</td>
+                    <td style="font-weight: 600; color: var(--primary-600);">${row.cert}</td>
+                    <td><button class="btn btn-outline-danger btn-sm" onclick="removeManualRow(${row.timestamp})">ลบ</button></td>
+                </tr>
+            `).join('');
+        }
     </script>
-</body>
-</html>
 </body>
 </html>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>สถิติตลาดแรงงาน V2 - CareDee Academy</title>
+    <title>สถิติตลาดแรงงาน - CareDee Academy</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -24,10 +24,13 @@
             /* Neutral Colors */
             --white: #FFFFFF;
             --neutral-100: #F8F8F8;
-            --neutral-200: #F0F0F0;
+            --neutral-200: #F3F2F7;
             --neutral-300: #B9B9C3;
             --neutral-600: #6E6B7B;
             --neutral-900: #1E1E1E;
+            
+            /* Interactive */
+            --pressed: #006675;
             
             /* Sidebar */
             --sidebar-width: 280px;
@@ -37,9 +40,9 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--font-main); }
-        body { background: var(--neutral-100); color: var(--neutral-900); display: flex; min-height: 100vh; }
+        body { background: var(--neutral-100); color: var(--neutral-900); display: flex; min-height: 100vh; overflow-x: hidden; }
 
-        /* Sidebar */
+        /* --- Sidebar --- */
         .sidebar {
             width: var(--sidebar-width);
             background: var(--white);
@@ -63,99 +66,49 @@
             font-weight: 500;
             transition: 0.2s;
             font-size: 15px;
+            cursor: pointer;
             position: relative;
         }
         .menu-link:hover, .menu-link.active { background: var(--primary-100); color: var(--primary-600); border-right: 4px solid var(--primary-600); }
         .menu-link i { margin-right: 12px; width: 24px; text-align: center; font-style: normal; }
+        .nav-badge { position: absolute; right: 20px; background: var(--error); color: white; font-size: 10px; padding: 2px 6px; border-radius: 10px; font-weight: 700; }
 
-        /* Main */
-        .main { margin-left: var(--sidebar-width); flex: 1; padding: 32px; }
+        /* --- Main Layout --- */
+        .main { margin-left: var(--sidebar-width); flex: 1; padding: 32px; width: calc(100% - var(--sidebar-width)); }
+        
         header {
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
+            align-items: center;
             margin-bottom: 32px;
             background: var(--white);
-            padding: 24px 28px;
+            padding: 16px 28px;
             border-radius: 16px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.03);
         }
-        .header-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 12px; }
-        .timestamp { font-size: 12px; color: var(--neutral-600); background: var(--neutral-100); padding: 4px 12px; border-radius: 20px; border: 1px solid var(--neutral-300); }
-        .btn-group { display: flex; gap: 10px; }
+        .user-status { display: flex; align-items: center; gap: 12px; }
+        .mfa-tag { background: var(--success); color: white; font-size: 11px; padding: 4px 12px; border-radius: 20px; font-weight: 600; }
 
-        /* Buttons */
-        .btn { padding: 10px 18px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 14px; transition: 0.2s; }
-        .btn-primary { background: var(--primary-600); color: var(--white); }
-        .btn-primary:hover { background: #006371; }
-        .btn-outline { background: var(--white); border: 1px solid var(--neutral-300); color: var(--neutral-600); }
-        .btn-outline:hover { background: var(--neutral-100); }
-
-        /* Stats Grid */
-        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 32px; }
-        .stat-card { 
-            background: var(--white); 
-            padding: 24px; 
-            border-radius: 16px; 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.03); 
-            border-left: 4px solid var(--primary-600);
-        }
-        .stat-label { font-size: 12px; color: var(--neutral-600); margin-bottom: 8px; font-weight: 600; text-transform: uppercase; }
-        .stat-value { font-size: 24px; font-weight: 700; color: var(--neutral-900); }
-        .stat-trend { font-size: 12px; margin-top: 4px; font-weight: 600; }
-        .trend-up { color: var(--success); }
-        .trend-down { color: var(--error); }
-
-        /* Grid Layout */
-        .grid-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-bottom: 32px; }
-        .card { background: var(--white); border-radius: 16px; padding: 28px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
+        /* --- Components --- */
+        .card { background: var(--white); border-radius: 16px; padding: 28px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); margin-bottom: 32px; position: relative; }
         .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; border-bottom: 1px solid var(--neutral-100); padding-bottom: 12px; }
         .card-title { font-size: 18px; font-weight: 700; color: var(--neutral-900); }
-        .card-subtitle { font-size: 12px; color: var(--neutral-600); }
 
-        /* Heatmap Mock */
-        .heatmap-container {
-            height: 400px;
-            background: #DCECF7;
-            border-radius: 12px;
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 1px solid var(--neutral-200);
-        }
-        .map-overlay {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at 45% 35%, rgba(234, 84, 85, 0.4) 0%, transparent 25%),
-                        radial-gradient(circle at 60% 60%, rgba(234, 84, 85, 0.5) 0%, transparent 30%),
-                        radial-gradient(circle at 75% 45%, rgba(234, 84, 85, 0.3) 0%, transparent 20%);
-        }
-        .map-label { position: absolute; font-size: 11px; font-weight: 700; color: #4A5568; pointer-events: none; }
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 32px; }
+        .stat-card { background: var(--white); padding: 24px; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); border-bottom: 4px solid var(--primary-600); }
+        .stat-label { font-size: 14px; color: var(--neutral-600); margin-bottom: 8px; font-weight: 500; }
+        .stat-value { font-size: 26px; font-weight: 700; color: var(--neutral-900); }
 
-        /* Correlation Table */
-        .corr-table { width: 100%; border-collapse: collapse; }
-        .corr-table th { text-align: left; font-size: 12px; color: var(--neutral-600); padding: 12px 8px; border-bottom: 1px solid var(--neutral-100); }
-        .corr-table td { padding: 16px 8px; border-bottom: 1px solid var(--neutral-100); font-size: 14px; }
-        .badge { padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; }
-        .badge-success { background: #D2F9E1; color: var(--success); }
-        .badge-warning { background: #FFF3E6; color: var(--warning); }
-        .badge-error { background: #FCEAEA; color: var(--error); }
+        .btn { padding: 10px 20px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; font-size: 13px; transition: 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn-primary { background: var(--primary-600); color: white; }
+        .btn-primary:hover { background: var(--pressed); }
 
-        /* Unmet Demand List */
-        .unmet-list { list-style: none; }
-        .unmet-item { display: flex; justify-content: space-between; align-items: center; padding: 14px; background: var(--neutral-100); border-radius: 10px; margin-bottom: 10px; border-left: 4px solid var(--secondary-500); }
-        .unmet-keyword { font-weight: 600; color: var(--neutral-900); }
-        .unmet-stats { font-size: 12px; color: var(--neutral-600); }
-        .unmet-action { color: var(--primary-600); font-size: 12px; font-weight: 700; text-decoration: none; }
-
-        /* Footer */
-        footer { margin-top: 40px; border-top: 1px solid var(--neutral-300); padding-top: 24px; text-align: center; color: var(--neutral-600); font-size: 12px; }
+        .grid-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-bottom: 32px; }
     </style>
 </head>
 <body>
 
+    <!-- Sidebar -->
     <aside class="sidebar">
         <div class="sidebar-brand">
             <div class="logo-box">CD</div>
@@ -167,200 +120,123 @@
             <a href="1_training_import_v2.html" class="menu-link"><i>📥</i> นำเข้าข้อมูลการอบรม</a>
             <a href="2_training_cert_manage_v2.html" class="menu-link"><i>🏅</i> จัดการใบรับรอง</a>
             <a href="3_training_market_intelligence_v2.html" class="menu-link active"><i>📈</i> สถิติตลาดแรงงาน</a>
-            <a href="4_training_verification_standard_v2.html" class="menu-link"><i>🛡️</i> มาตรฐานการตรวจสอบ</a>
-            <a href="#" class="menu-link"><i>🏢</i> โปรไฟล์สถาบัน & KYC</a>
-            <a href="gap.md" class="menu-link" style="color: var(--secondary-500);"><i>⚠️</i> Gap Analysis</a>
+            <a href="4_training_verification_standard_v2.html" class="menu-link"><i>🛡️</i> การตรวจสอบ & เกณฑ์ <span class="nav-badge">12</span></a>
+            <a href="5_training_profile_v2.html" class="menu-link"><i>🏢</i> โปรไฟล์สถาบัน & KYC</a>
         </nav>
         <div style="padding: 24px; border-top: 1px solid var(--neutral-100);">
-            <a href="#" class="menu-link" style="color: var(--error); padding: 0;"><i>🚪</i> ออกจากระบบ</a>
+            <a onclick="logout()" class="menu-link" style="color: var(--error); padding: 0;"><i>🚪</i> ออกจากระบบ</a>
         </div>
     </aside>
 
+    <!-- Main Content -->
     <main class="main">
         <header>
             <div class="page-title">
-                <h1 style="font-size: 24px; font-weight: 700; color: var(--primary-600);">3. สถิติตลาดแรงงาน (Market Intelligence)</h1>
-                <p style="font-size: 14px; color: var(--neutral-600); margin-top: 4px;">เจาะลึกความต้องการตลาดเพื่อการวางแผนหลักสูตรที่แม่นยำ</p>
+                <h1 style="font-size: 20px; font-weight: 700;">สถิติตลาดแรงงาน (Market Intelligence)</h1>
+                <p style="font-size: 13px; color: var(--neutral-600);">เจาะลึกความต้องการตลาดเพื่อการวางแผนหลักสูตรที่แม่นยำ</p>
             </div>
-            <div class="header-actions">
-                <div class="timestamp">🔄 อัปเดตล่าสุด: 14 พ.ค. 2569 | 08:00 (ทุก 24 ชม.)</div>
-                <div class="btn-group">
-                    <button class="btn btn-outline"><i>📅</i> 6 เดือนล่าสุด</button>
-                    <button class="btn btn-primary"><i>📤</i> ส่งออกรายงาน (PDF/Excel)</button>
-                </div>
+            <div class="user-status">
+                <span class="mfa-tag">MFA : ยืนยันตัวตนแล้ว</span>
+                <div style="width: 44px; height: 44px; background: var(--primary-100); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--primary-600); font-weight: 700;">SM</div>
             </div>
         </header>
 
-        <!-- Top Insights -->
-        <div style="margin-bottom: 20px;">
-            <p style="font-size: 12px; color: var(--neutral-600);">* ข้อมูลแบบรวม (Aggregated Data) ตามมาตรฐาน PDPA และความสดใหม่ของข้อมูล 24 ชม.</p>
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 24px;">
+            <div>
+                <p style="font-size: 12px; color: var(--neutral-600);">* ข้อมูลแบบรวม (Aggregated Data) เพื่อการวิเคราะห์ตลาด</p>
+            </div>
+            <div style="background: var(--neutral-100); padding: 4px 12px; border-radius: 20px; font-size: 11px; border: 1px solid var(--neutral-300);">
+                🔄 อัปเดตล่าสุด: 14 พ.ค. 2569 | 08:00 (อัปเดตทุก 24 ชม.)
+            </div>
         </div>
+        
         <div class="stats-grid">
             <div class="stat-card">
-                <div class="stat-label">ความต้องการแรงงาน (Demand)</div>
+                <div class="stat-label">ความต้องการแรงงาน</div>
                 <div class="stat-value">4,500 งาน/เดือน</div>
-                <div class="stat-trend trend-up">↑ 12% จากไตรมาสก่อน</div>
+                <div style="font-size: 12px; color: var(--success); font-weight: 600;">↑ 12% จากไตรมาสก่อน</div>
             </div>
-            <div class="stat-card" style="border-left-color: var(--secondary-500);">
+            <div class="stat-card" style="border-bottom-color: var(--error);">
                 <div class="stat-label">ทักษะที่ขาดแคลนวิกฤต</div>
                 <div class="stat-value">ดูแลผู้ป่วยติดเตียง</div>
-                <div class="stat-trend" style="color: var(--error);">Gap: ขาด 250 คน/เดือน</div>
+                <div style="font-size: 12px; color: var(--error); font-weight: 600;">Gap: ขาด 250 คน/เดือน</div>
             </div>
-            <div class="stat-card" style="border-left-color: var(--info);">
-                <div class="stat-label">คำค้นหาใหม่ที่พุ่งแรง</div>
-                <div class="stat-value">ดูแลผู้ป่วยประคับประคอง</div>
-                <div class="stat-trend trend-up">↑ 45% (Hot Trend)</div>
+            <div class="stat-card" style="border-bottom-color: var(--info);">
+                <div class="stat-label">คำค้นหาพุ่งแรง</div>
+                <div class="stat-value">ประคับประคอง</div>
+                <div style="font-size: 12px; color: var(--info); font-weight: 600;">↑ 45% (Hot Trend)</div>
             </div>
-            <div class="stat-card" style="border-left-color: var(--success);">
-                <div class="stat-label">อัตราการจองงาน (Match Rate)</div>
-                <div class="stat-value">82.5%</div>
-                <div class="stat-trend trend-up">↑ สูงกว่ามาตรฐาน 15%</div>
-            </div>
-        </div>
-
-        <div class="grid-layout">
-            <!-- Geographical Heatmap (Macro View) -->
-            <div class="card">
-                <div class="card-header">
-                    <div>
-                        <h2 class="card-title">แผนที่ความร้อนพื้นที่ขาดแคลน (Macro Heatmap)</h2>
-                        <p class="card-subtitle">แสดงพื้นที่ที่มีปริมาณงานสูงแต่จำนวนผู้ดูแลไม่เพียงพอ</p>
-                    </div>
-                </div>
-                <div class="heatmap-container">
-                    <!-- Fake Map Representation -->
-                    <svg width="350" height="300" viewBox="0 0 100 100" style="fill: #A0AEC0; stroke: white; stroke-width: 0.3;">
-                        <path d="M20,20 Q40,10 60,20 T90,40 Q80,70 60,90 T20,80 Q10,50 20,20 Z" />
-                        <path d="M50,30 Q70,40 80,60 T60,80 Q40,70 50,30 Z" style="fill: #718096;" />
-                    </svg>
-                    <div class="map-overlay"></div>
-                    
-                    <!-- Labels -->
-                    <div class="map-label" style="top: 30%; left: 35%;">นนทบุรี</div>
-                    <div class="map-label" style="top: 55%; left: 55%;">กทม. (ชั้นใน)</div>
-                    <div class="map-label" style="top: 65%; left: 70%;">บางนา/สมุทรปราการ</div>
-                    
-                    <div style="position: absolute; bottom: 15px; left: 15px; background: white; padding: 10px; border-radius: 8px; font-size: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-                        <div style="font-weight: 700; margin-bottom: 5px;">ระดับความขาดแคลน:</div>
-                        <div style="display: flex; align-items: center; gap: 5px;"><div style="width: 10px; height: 10px; background: rgba(234, 84, 85, 0.8); border-radius: 2px;"></div> วิกฤต (High Shortage)</div>
-                        <div style="display: flex; align-items: center; gap: 5px;"><div style="width: 10px; height: 10px; background: rgba(234, 84, 85, 0.4); border-radius: 2px;"></div> ปานกลาง (Moderate)</div>
-                    </div>
-                </div>
-                <div style="margin-top: 15px; font-size: 13px; color: var(--neutral-600); line-height: 1.5;">
-                    💡 <strong>วิเคราะห์ระดับมหภาค:</strong> พื้นที่ปริมณฑลฝั่งตะวันออก (บางนา-สมุทรปราการ) มี Demand เติบโตสูงสุด 30% แต่ Supply ในพื้นที่โตเพียง 5% แนะนำให้สถาบันพิจารณาเปิดศูนย์สอบหรือประชาสัมพันธ์หลักสูตรในโซนนี้
-                </div>
-            </div>
-
-            <!-- Course vs Demand Correlation -->
-            <div class="card">
-                <div class="card-header">
-                    <div>
-                        <h2 class="card-title">ความสอดคล้องของหลักสูตร (Course-Demand Fit)</h2>
-                        <p class="card-subtitle">เปรียบเทียบหลักสูตรที่คุณเปิดสอนกับความต้องการจริงในตลาด</p>
-                    </div>
-                </div>
-                <table class="corr-table">
-                    <thead>
-                        <tr>
-                            <th>ชื่อหลักสูตร (สถาบันคุณ)</th>
-                            <th>Market Demand</th>
-                            <th>สถานะ/โอกาส</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><b>การดูแลผู้สูงอายุเบื้องต้น (420 ชม.)</b></td>
-                            <td><div style="width: 100px; height: 8px; background: #EEE; border-radius: 4px;"><div style="width: 90%; height: 100%; background: var(--primary-600); border-radius: 4px;"></div></div></td>
-                            <td><span class="badge badge-success">Match (High)</span></td>
-                        </tr>
-                        <tr>
-                            <td><b>การดูแลผู้ป่วยติดเตียง Specialty</b></td>
-                            <td><div style="width: 100px; height: 8px; background: #EEE; border-radius: 4px;"><div style="width: 95%; height: 100%; background: var(--error); border-radius: 4px;"></div></div></td>
-                            <td><span class="badge badge-error">Under Supply</span></td>
-                        </tr>
-                        <tr>
-                            <td><b>เทคนิคการนวดแผนไทยเพื่อสุขภาพ</b></td>
-                            <td><div style="width: 100px; height: 8px; background: #EEE; border-radius: 4px;"><div style="width: 25%; height: 100%; background: var(--neutral-300); border-radius: 4px;"></div></div></td>
-                            <td><span class="badge badge-warning">Over Supply</span></td>
-                        </tr>
-                        <tr>
-                            <td><b>การปฐมพยาบาล CPR (Mini Course)</b></td>
-                            <td><div style="width: 100px; height: 8px; background: #EEE; border-radius: 4px;"><div style="width: 60%; height: 100%; background: var(--info); border-radius: 4px;"></div></div></td>
-                            <td><span class="badge badge-success">Stable</span></td>
-                        </tr>
-                    </tbody>
-                </table>
-                <div style="background: var(--primary-100); padding: 12px; border-radius: 8px; margin-top: 20px; font-size: 13px;">
-                    🎯 <strong>คำแนะนำ:</strong> หลักสูตร <i>"ดูแลผู้ป่วยติดเตียง"</i> มีความต้องการล้นตลาด (Under Supply) แนะนำให้เพิ่มรอบการอบรม หรือปรับราคาหลักสูตรให้พรีเมียมขึ้นได้
-                </div>
+            <div class="stat-card" style="border-bottom-color: var(--success);">
+                <div class="stat-label">Success Rate</div>
+                <div class="stat-value">85%</div>
+                <div style="font-size: 12px; color: var(--success); font-weight: 600;">↑ สูงกว่ามาตรฐาน</div>
             </div>
         </div>
 
         <div class="grid-layout">
-            <!-- Unmet Demand (Opportunity Search) -->
             <div class="card">
                 <div class="card-header">
-                    <div>
-                        <h2 class="card-title">โอกาสใหม่: คำค้นหาที่ "ไม่พบผู้ดูแล" (Unmet Demand)</h2>
-                        <p class="card-subtitle">ทักษะที่ลูกค้าต้องการแต่ระบบไม่มีผู้ดูแลรองรับ (โอกาสพัฒนาหลักสูตรใหม่)</p>
-                    </div>
+                    <h2 class="card-title">แผนที่ความร้อนพื้นที่ขาดแคลน (Heatmap)</h2>
                 </div>
-                <div class="unmet-list">
-                    <div class="unmet-item">
-                        <div>
-                            <div class="unmet-keyword">ดูแลผู้ป่วยพักฟื้นหลังผ่าตัดเปลี่ยนข้อเข่า</div>
-                            <div class="unmet-stats">ค้นหา 320 ครั้ง/เดือน | พบผู้ดูแล 0 คน</div>
-                        </div>
-                        <a href="#" class="unmet-action">ดูรายละเอียดแนวทางหลักสูตร →</a>
-                    </div>
-                    <div class="unmet-item" style="border-left-color: var(--info);">
-                        <div>
-                            <div class="unmet-keyword">ผู้ช่วยพยาบาลที่พูดภาษาญี่ปุ่นได้</div>
-                            <div class="unmet-stats">ค้นหา 150 ครั้ง/เดือน | พบผู้ดูแล 2 คน (ไม่ว่าง)</div>
-                        </div>
-                        <a href="#" class="unmet-action">ดูรายละเอียดแนวทางหลักสูตร →</a>
-                    </div>
-                    <div class="unmet-item" style="border-left-color: var(--primary-600);">
-                        <div>
-                            <div class="unmet-keyword">การดูแลผู้ป่วยที่ใช้เครื่องช่วยหายใจที่บ้าน</div>
-                            <div class="unmet-stats">ค้นหา 85 ครั้ง/เดือน | พบผู้ดูแล 0 คน</div>
-                        </div>
-                        <a href="#" class="unmet-action">ดูรายละเอียดแนวทางหลักสูตร →</a>
-                    </div>
+                <div style="height: 300px; background: #DCECF7; border-radius: 12px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;">
+                    <div style="position: absolute; width: 100%; height: 100%; background: radial-gradient(circle at 45% 35%, rgba(234, 84, 85, 0.4) 0%, transparent 25%), radial-gradient(circle at 60% 60%, rgba(234, 84, 85, 0.5) 0%, transparent 30%);"></div>
+                    <span style="font-weight: 700; color: #4A5568; z-index: 1;">Macro View: กรุงเทพและปริมณฑล</span>
                 </div>
             </div>
-
-            <!-- Employment Index -->
             <div class="card">
                 <div class="card-header">
-                    <h2 class="card-title">ดัชนีการจ้างงาน (Employment Success Rate)</h2>
+                    <h2 class="card-title">คำค้นหาที่ "ไม่พบผู้ดูแล" (Unmet Demand)</h2>
                 </div>
-                <div style="text-align: center; padding: 20px 0;">
-                    <div style="font-size: 48px; font-weight: 700; color: var(--success);">85%</div>
-                    <p style="font-size: 14px; color: var(--neutral-600);">ผู้เรียนจากสถาบันคุณได้รับการจ้างงานภายใน 30 วัน</p>
-                    
-                    <div style="margin-top: 30px; display: flex; justify-content: space-around; border-top: 1px solid var(--neutral-100); padding-top: 20px;">
-                        <div>
-                            <div style="font-size: 12px; color: var(--neutral-600);">รายได้เฉลี่ย/เดือน</div>
-                            <div style="font-size: 18px; font-weight: 700; color: var(--neutral-900);">22,500 ฿</div>
-                        </div>
-                        <div>
-                            <div style="font-size: 12px; color: var(--neutral-600);">คะแนนรีวิวเฉลี่ย</div>
-                            <div style="font-size: 18px; font-weight: 700; color: var(--neutral-900);">4.9 / 5.0</div>
-                        </div>
-                        <div>
-                            <div style="font-size: 12px; color: var(--neutral-600);">อัตราการจองซ้ำ</div>
-                            <div style="font-size: 18px; font-weight: 700; color: var(--neutral-900);">72%</div>
-                        </div>
+                <div style="padding: 12px; background: var(--neutral-100); border-radius: 10px; margin-bottom: 10px; border-left: 4px solid var(--secondary-500);">
+                    <div style="font-weight: 600;">ดูแลผู้ป่วยพักฟื้นหลังผ่าตัดเปลี่ยนข้อเข่า</div>
+                    <div style="font-size: 12px; color: var(--neutral-600);">ค้นหา 320 ครั้ง/เดือน | พบ 0 คน</div>
+                    <a href="#" style="font-size: 11px; color: var(--primary-600);">ดูแนวทางหลักสูตร →</a>
+                </div>
+                <div style="padding: 12px; background: var(--neutral-100); border-radius: 10px; border-left: 4px solid var(--info);">
+                    <div style="font-weight: 600;">ผู้ช่วยพยาบาลที่พูดภาษาญี่ปุ่นได้</div>
+                    <div style="font-size: 12px; color: var(--neutral-600);">ค้นหา 150 ครั้ง/เดือน | พบ 2 คน (ไม่ว่าง)</div>
+                    <a href="#" style="font-size: 11px; color: var(--primary-600);">ดูแนวทางหลักสูตร →</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">ดัชนีการจ้างงาน (Employment Success Rate)</h2>
+            </div>
+            <div style="text-align: center; padding: 20px 0;">
+                <div style="font-size: 48px; font-weight: 700; color: var(--success);">85%</div>
+                <p style="font-size: 14px; color: var(--neutral-600);">ผู้เรียนจากสถาบันคุณได้รับการจ้างงานภายใน 30 วัน</p>
+                
+                <div style="margin-top: 30px; display: flex; justify-content: space-around; border-top: 1px solid var(--neutral-100); padding-top: 20px;">
+                    <div>
+                        <div style="font-size: 12px; color: var(--neutral-600);">รายได้เฉลี่ย/เดือน</div>
+                        <div style="font-size: 18px; font-weight: 700; color: var(--neutral-900);">22,500 ฿</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 12px; color: var(--neutral-600);">คะแนนรีวิวเฉลี่ย</div>
+                        <div style="font-size: 18px; font-weight: 700; color: var(--neutral-900);">4.9 / 5.0</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 12px; color: var(--neutral-600);">อัตราการจองซ้ำ</div>
+                        <div style="font-size: 18px; font-weight: 700; color: var(--neutral-900);">72%</div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <footer>
-            * ข้อมูลสถิติคำนวณจากพฤติกรรมการใช้งานจริงบนแพลตฟอร์ม CareDee และความร่วมมือกับฐานข้อมูลกรมการจัดหางาน (Mock Data for Demo)
+        <footer style="font-size: 11px; text-align: center; color: var(--neutral-600); padding: 24px; border-top: 1px solid var(--neutral-100); margin-top: 20px;">
+            ระบบทำการบันทึก Audit Log ทุกการเปลี่ยนแปลงข้อมูลตามมาตรฐาน PDPA | © 2026 CareDee Academy
         </footer>
     </main>
 
+    <script>
+        function logout() {
+            if(confirm('คุณต้องการออกจากระบบใช่หรือไม่?')) {
+                alert('ออกจากระบบเรียบร้อย');
+                location.href = '0_training_dashboard_v2.html';
+            }
+        }
+    </script>
 </body>
 </html>
