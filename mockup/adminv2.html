@@ -45,53 +45,26 @@
                 
                 <!-- VIEW: DASHBOARD -->
                 <div id="view-dashboard" class="content-view active-view">
-                    <!-- Alert Banner -->
                     <div class="banner banner-error">
                         <i class="ti ti-alert-triangle"></i>
                         <div><b>แจ้งเตือนด่วน:</b> บริการส่งข้อความ (SMS Gateway) มีความหน่วงสูง (2.3 วินาที) - กำลังตรวจสอบระบบเชื่อมต่อสำรอง</div>
                     </div>
-
-                    <!-- Stats Grid -->
                     <div class="stat-grid">
                         <div class="stat-card">
                             <div class="stat-label">ยอดการจองสะสม (เดือนนี้)</div>
                             <div class="stat-value" style="color: var(--primary-600);">4,821 รายการ</div>
-                            <div class="text-xs" style="color: var(--success); margin-top: 4px;">▲ 12.4% จากเดือนที่แล้ว</div>
                         </div>
                         <div class="stat-card">
                             <div class="stat-label">ความเสถียรของระบบ (Uptime)</div>
                             <div class="stat-value" style="color: var(--success);">99.98%</div>
-                            <div class="text-xs" style="color: var(--neutral-600); margin-top: 4px;">30 วันล่าสุด</div>
                         </div>
                         <div class="stat-card">
                             <div class="stat-label">รออนุมัติ KYC</div>
                             <div class="stat-value" style="color: var(--warning);">12 ราย</div>
-                            <div class="text-xs" style="color: var(--error); margin-top: 4px;">เร่งด่วน 4 ราย</div>
                         </div>
                         <div class="stat-card">
                             <div class="stat-label">รายได้สุทธิ (GP 15%)</div>
                             <div class="stat-value" style="color: var(--primary-600);">฿1,282,400</div>
-                            <div class="text-xs" style="color: var(--neutral-600); margin-top: 4px;">พฤษภาคม 2569</div>
-                        </div>
-                    </div>
-
-                    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: var(--space-8);">
-                        <div class="card">
-                            <div class="flex-between mb-4">
-                                <div class="text-lg" style="font-weight: 600;">รายการเฝ้าระวังล่าสุด</div>
-                                <span class="badge badge-warning">ต้องการการตอบสนอง</span>
-                            </div>
-                            <div style="padding: var(--space-4); background-color: var(--neutral-100); border-radius: var(--radius-md);">
-                                <div class="text-sm"><b>เหตุการณ์:</b> อัตราความสำเร็จการชำระเงินลดลงในพื้นที่กรุงเทพฯ</div>
-                                <div class="text-xs" style="color: var(--neutral-600); margin-top: var(--space-1);">ตรวจสอบเบื้องต้นพบปัญหาที่ Gateway ธนาคารบางแห่ง</div>
-                            </div>
-                        </div>
-                        <div class="card">
-                            <div class="text-lg mb-4" style="font-weight: 600;">สรุปผลการดำเนินงาน</div>
-                            <div class="text-sm">เป้าหมายเดือนนี้สำเร็จแล้ว 85%</div>
-                            <div style="height: 8px; background-color: var(--neutral-100); border-radius: 4px; margin-top: var(--space-2); overflow: hidden;">
-                                <div style="width: 85%; height: 100%; background-color: var(--success);"></div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -101,17 +74,12 @@
                     <div class="card">
                         <div class="flex-between mb-4">
                             <div class="text-lg" style="font-weight: 600;">การจัดการบัญชีและสิทธิ์ (KYC)</div>
-                            <div style="display: flex; gap: var(--space-2);">
-                                <input type="text" placeholder="ค้นหาชื่อ/อีเมล..." style="padding: var(--space-2); border: 1px solid var(--neutral-300); border-radius: var(--radius-sm); font-size: 12px;">
-                                <button class="btn btn-primary" style="font-size: 12px;">ค้นหา</button>
-                            </div>
                         </div>
                         <table style="width: 100%; border-collapse: collapse;">
                             <thead>
                                 <tr style="text-align: left; border-bottom: 1px solid var(--neutral-300);">
                                     <th style="padding: var(--space-3) 0;">ผู้สมัคร</th>
                                     <th style="padding: var(--space-3) 0;">ประเภท</th>
-                                    <th style="padding: var(--space-3) 0;">สถานะเอกสาร</th>
                                     <th style="padding: var(--space-3) 0; text-align: right;">การดำเนินการ</th>
                                 </tr>
                             </thead>
@@ -119,14 +87,12 @@
                                 <tr style="border-bottom: 1px solid var(--neutral-100);">
                                     <td style="padding: var(--space-4) 0;">วิริยะ สมพงษ์</td>
                                     <td style="padding: var(--space-4) 0;"><span class="badge badge-warning">ผู้ประกอบการ</span></td>
-                                    <td style="padding: var(--space-4) 0;"><span class="text-sm">รอตรวจ ID 14 พ.ค.</span></td>
-                                    <td style="padding: var(--space-4) 0; text-align: right;"><button class="btn btn-primary" style="font-size: 12px;" onclick="checkKYC('วิริยะ สมพงษ์', '1-2345-67890')">ตรวจสอบ</button></td>
+                                    <td style="padding: var(--space-4) 0; text-align: right;"><button class="btn btn-primary" style="font-size: 12px;" onclick="openKYCModal('วิริยะ สมพงษ์', '1-2345-67890')">ตรวจสอบ</button></td>
                                 </tr>
                                 <tr style="border-bottom: 1px solid var(--neutral-100);">
                                     <td style="padding: var(--space-4) 0;">นฤมล ทองดี</td>
                                     <td style="padding: var(--space-4) 0;"><span class="badge badge-warning">ผู้ให้บริการอิสระ</span></td>
-                                    <td style="padding: var(--space-4) 0;"><span class="text-sm">รอตรวจใบเซอร์ 13 พ.ค.</span></td>
-                                    <td style="padding: var(--space-4) 0; text-align: right;"><button class="btn btn-primary" style="font-size: 12px;" onclick="checkKYC('นฤมล ทองดี', '3-9876-54321')">ตรวจสอบ</button></td>
+                                    <td style="padding: var(--space-4) 0; text-align: right;"><button class="btn btn-primary" style="font-size: 12px;" onclick="openKYCModal('นฤมล ทองดี', '3-9876-54321')">ตรวจสอบ</button></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -135,19 +101,15 @@
 
                 <!-- VIEW: FINANCE -->
                 <div id="view-finance" class="content-view">
-                    <div class="card mb-4">
+                    <div class="card">
                         <div class="flex-between mb-4">
-                            <div class="text-lg" style="font-weight: 600;">การเงินและรายการรอโอน (Payout Management)</div>
-                            <button class="btn btn-primary" onclick="confirmPayout()">ยืนยันการโอน Batch Payout</button>
+                            <div class="text-lg" style="font-weight: 600;">การเงินและรายการรอโอน</div>
+                            <button class="btn btn-primary" onclick="openModal('modal-payout')">ยืนยันการโอน Batch Payout</button>
                         </div>
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-6);">
                             <div style="padding: var(--space-4); background-color: var(--neutral-100); border-radius: var(--radius-md);">
-                                <div class="text-sm mb-2" style="color: var(--neutral-600);">ยอดธุรกรรมสุทธิสะสม</div>
+                                <div class="text-sm mb-2">ยอดธุรกรรมสะสม</div>
                                 <div class="text-lg" style="font-weight: 700;">฿8,549,330</div>
-                            </div>
-                            <div style="padding: var(--space-4); background-color: var(--primary-100); border-radius: var(--radius-md);">
-                                <div class="text-sm mb-2" style="color: var(--primary-600);">ส่วนแบ่งแพลตฟอร์มสะสม</div>
-                                <div class="text-lg" style="font-weight: 700; color: var(--primary-600);">฿1,282,400</div>
                             </div>
                         </div>
                     </div>
@@ -156,23 +118,13 @@
                 <!-- VIEW: REVIEWS -->
                 <div id="view-reviews" class="content-view">
                     <div class="card">
-                        <div class="flex-between mb-4">
-                            <div class="text-lg" style="font-weight: 600;">การรักษาคุณภาพรีวิวและการอุทธรณ์</div>
-                            <span class="badge badge-error">3 อุทธรณ์ใหม่</span>
-                        </div>
-                        <div style="display: flex; flex-direction: column; gap: var(--space-4);">
-                            <div style="padding: var(--space-3); border-bottom: 1px solid var(--neutral-100);">
-                                <div class="flex-between">
-                                    <div class="text-sm"><b>รีวิวโดย: คุณสมพร</b> (ผู้ใช้)</div>
-                                    <div class="badge badge-warning">Auto-masked</div>
-                                </div>
-                                <div class="text-sm" style="margin-top: var(--space-2); color: var(--neutral-600);">
-                                    "ผู้ดูแลบริการดีมาก แต่แอป <span style="background-color: #FDECEA; color: #EA5455; padding: 0 4px;">[หยาบคาย]</span> ใช้งานยาก..."
-                                </div>
-                                <div style="margin-top: var(--space-2); display: flex; gap: var(--space-2);">
-                                    <button class="btn btn-outline" style="font-size: 11px;" onclick="alert('กู้คืนข้อความรีวิวเรียบร้อยแล้ว')">กู้คืนข้อความ</button>
-                                    <button class="btn btn-primary" style="font-size: 11px;" onclick="alert('ยืนยันการเซนเซอร์ข้อความเรียบร้อย')">ยืนยันการเซนเซอร์</button>
-                                </div>
+                        <div class="text-lg mb-4" style="font-weight: 600;">คุณภาพรีวิวและการอุทธรณ์</div>
+                        <div style="padding: var(--space-3); border-bottom: 1px solid var(--neutral-100);">
+                            <div class="text-sm"><b>รีวิวโดย: คุณสมพร</b> (Auto-masked)</div>
+                            <div class="text-sm color-neutral-600" style="margin-top: 8px;">"บริการดี แต่แอป [หยาบคาย] ใช้งานยาก"</div>
+                            <div style="margin-top: 12px; display: flex; gap: 8px;">
+                                <button class="btn btn-outline" style="font-size: 11px;" onclick="showToast('กู้คืนข้อความเรียบร้อย')">กู้คืน</button>
+                                <button class="btn btn-primary" style="font-size: 11px;" onclick="showToast('ยืนยันการเซนเซอร์เรียบร้อย')">ยืนยัน</button>
                             </div>
                         </div>
                     </div>
@@ -182,24 +134,7 @@
                 <div id="view-reports" class="content-view">
                     <div class="card">
                         <div class="text-lg mb-4" style="font-weight: 600;">รายงานวิเคราะห์เชิงกลยุทธ์</div>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-6);">
-                            <div style="padding: var(--space-4); background-color: var(--neutral-100); border-radius: var(--radius-md); text-align: center;">
-                                <div style="display: flex; justify-content: center; gap: var(--space-2); align-items: baseline;">
-                                    <div style="width: 20px; height: 40px; background-color: var(--primary-600);"></div>
-                                    <div style="width: 20px; height: 60px; background-color: var(--primary-600);"></div>
-                                    <div style="width: 20px; height: 80px; background-color: var(--primary-600);"></div>
-                                    <div style="width: 20px; height: 100px; background-color: var(--secondary-500);"></div>
-                                </div>
-                                <div class="text-sm" style="margin-top: var(--space-4); font-weight: 600;">ความหนาแน่นความต้องการ: 85%</div>
-                                <div class="text-xs" style="color: var(--neutral-600);">เขบบึงกุ่ม (พุ่งสูงขึ้น 40%)</div>
-                            </div>
-                            <div style="padding: var(--space-4); background-color: var(--neutral-100); border-radius: var(--radius-md); text-align: center;">
-                                <div class="text-lg" style="font-weight: 700; color: var(--success);">+12.4%</div>
-                                <div class="text-sm" style="margin-top: var(--space-4); font-weight: 600;">อัตราการเติบโตรายเดือน</div>
-                                <div class="text-xs" style="color: var(--neutral-600);">เทียบกับ เมษายน 2569</div>
-                            </div>
-                        </div>
-                        <button class="btn btn-outline" style="width: 100%; margin-top: var(--space-6);" onclick="alert('กำลังเตรียมไฟล์รายงานกลยุทธ์ (PDF)...')">ดาวน์โหลดรายงานฉบับเต็ม</button>
+                        <button class="btn btn-outline" style="width: 100%;" onclick="showToast('กำลังส่งคำขอรายงาน...')">ดาวน์โหลดรายงาน (PDF)</button>
                     </div>
                 </div>
 
@@ -207,50 +142,15 @@
                 <div id="view-pdpa" class="content-view">
                     <div class="card">
                         <div class="text-lg mb-4" style="font-weight: 600;">นโยบายและความเป็นส่วนตัว (PDPA)</div>
-                        <div style="display: flex; flex-direction: column; gap: var(--space-4);">
-                            <div class="flex-between text-sm">
-                                <span>นโยบายความเป็นส่วนตัวปัจจุบัน</span>
-                                <span class="badge badge-success">เวอร์ชัน 3.2.1 (Active)</span>
-                            </div>
-                            <div class="flex-between text-sm">
-                                <span>ข้อตกลงการใช้งาน (Terms of Use)</span>
-                                <span class="badge badge-success">เวอร์ชัน 2.0.0 (Active)</span>
-                            </div>
-                            <hr style="border: 0; border-top: 1px solid var(--neutral-100);">
-                            <div class="flex-between text-sm">
-                                <span>คำร้องขอจัดการข้อมูลส่วนบุคคล (DSR)</span>
-                                <span class="badge badge-error">2 รายการค้าง</span>
-                            </div>
-                            <button class="btn btn-primary" style="width: 100%;" onclick="managePDPA()">จัดการคำร้องสิทธิ์ข้อมูล</button>
-                        </div>
+                        <button class="btn btn-primary" style="width: 100%;" onclick="openModal('modal-pdpa')">จัดการคำร้องขอลบข้อมูล</button>
                     </div>
                 </div>
 
                 <!-- VIEW: CLOUD -->
                 <div id="view-cloud" class="content-view">
                     <div class="card">
-                        <div class="text-lg mb-4" style="font-weight: 600;">สถานะโครงสร้างพื้นฐานคลาวด์</div>
-                        <div style="display: flex; flex-direction: column; gap: var(--space-4);">
-                            <div>
-                                <div class="flex-between text-sm mb-2">
-                                    <span>API Gateway ส่วนกลาง</span>
-                                    <span style="color: var(--success);">100% ปกติ</span>
-                                </div>
-                                <div style="height: 6px; background-color: var(--neutral-100); border-radius: 3px; overflow: hidden;">
-                                    <div style="width: 100%; height: 100%; background-color: var(--success);"></div>
-                                </div>
-                            </div>
-                            <div>
-                                <div class="flex-between text-sm mb-2">
-                                    <span>บริการ SMS และการแจ้งเตือน</span>
-                                    <span style="color: var(--error);">61% ล่าช้า</span>
-                                </div>
-                                <div style="height: 6px; background-color: var(--neutral-100); border-radius: 3px; overflow: hidden;">
-                                    <div style="width: 61%; height: 100%; background-color: var(--error);"></div>
-                                </div>
-                            </div>
-                            <button class="btn btn-outline" style="width: 100%; margin-top: var(--space-4);" onclick="viewLogs()">ตรวจสอบ Logs รายวินาที</button>
-                        </div>
+                        <div class="text-lg mb-4" style="font-weight: 600;">สถานะโครงสร้างพื้นฐาน</div>
+                        <button class="btn btn-outline" style="width: 100%;" onclick="openModal('modal-logs')">ตรวจสอบ Logs รายวินาที</button>
                     </div>
                 </div>
 
@@ -258,46 +158,135 @@
         </main>
     </div>
 
+    <!-- MODAL: KYC CHECK -->
+    <div class="modal-overlay" id="modal-kyc">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3>ตรวจสอบข้อมูล KYC</h3>
+                <span class="modal-close" onclick="closeModal('modal-kyc')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div style="display: flex; flex-direction: column; gap: 12px;">
+                    <div><label class="modal-label">ชื่อผู้สมัคร</label><div id="kyc-name" class="text-md" style="font-weight: 700;"></div></div>
+                    <div><label class="modal-label">เลขบัตรประชาชน</label><div id="kyc-id" class="text-md"></div></div>
+                    <div class="badge badge-success" style="padding: 8px;">ตรงกับฐานข้อมูลกรมการปกครอง 100%</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('modal-kyc')">ปฏิเสธ</button>
+                <button class="btn btn-primary" onclick="confirmKYC()">อนุมัติสิทธิ์การใช้งาน</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: PAYOUT PIN -->
+    <div class="modal-overlay" id="modal-payout">
+        <div class="modal-container" style="max-width: 400px;">
+            <div class="modal-header">
+                <h3>ยืนยันการโอนเงิน</h3>
+                <span class="modal-close" onclick="closeModal('modal-payout')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <label class="modal-label">ระบุรหัส PIN ผู้บริหาร <span>*</span></label>
+                <input type="password" class="modal-input" placeholder="6 หลัก" id="payout-pin">
+                <p class="text-xs color-neutral-600">การโอนเงิน Batch Payout จะถูกส่งไปยังธนาคารทันที</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" style="width: 100%;" onclick="submitPayout()">ยืนยันและโอนเงิน</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: PDPA REQUEST -->
+    <div class="modal-overlay" id="modal-pdpa">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3>จัดการคำร้องขอลบข้อมูล</h3>
+                <span class="modal-close" onclick="closeModal('modal-pdpa')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p class="text-sm mb-4">คำร้องจาก User #4521: "ต้องการลบข้อมูลเนื่องจากไม่ได้ใช้บริการแล้ว"</p>
+                <label class="modal-label">เหตุผลประกอบการตัดสินใจ <span>*</span></label>
+                <textarea class="modal-input" style="height: 100px;" placeholder="ระบุเหตุผลการอนุมัติหรือปฏิเสธ..." id="pdpa-reason"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="resolvePDPA('Reject')">ปฏิเสธ</button>
+                <button class="btn btn-primary" onclick="resolvePDPA('Approve')">อนุมัติการลบข้อมูล</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: CLOUD LOGS -->
+    <div class="modal-overlay" id="modal-logs">
+        <div class="modal-container" style="max-width: 700px;">
+            <div class="modal-header">
+                <h3>Cloud System Logs (Real-time)</h3>
+                <span class="modal-close" onclick="closeModal('modal-logs')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div style="background: #1e1e1e; color: #28C76F; padding: 16px; border-radius: 8px; font-family: monospace; font-size: 12px; height: 300px; overflow-y: auto; line-height: 1.6;">
+                    [14:32:01] ERROR SMS_GW timeout 2300ms<br>
+                    [14:32:05] RETRY attempt 1/3 failed<br>
+                    [14:32:09] RETRY attempt 2/3 failed<br>
+                    [14:32:13] ALERT threshold exceeded<br>
+                    [14:32:14] ESCALATE admin notified<br>
+                    [14:35:00] INFO Failover to Secondary Gateway initiated...<br>
+                    [14:35:02] SUCCESS Connection established with AWS-SG Region.<br>
+                    [14:36:10] INFO Monitoring latency... stable at 450ms.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('modal-logs')">ปิดหน้าต่าง</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast" style="display: none; position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: #1E1E1E; color: white; padding: 12px 24px; border-radius: var(--radius-full); font-size: 14px; z-index: 2000; box-shadow: 0 4px 12px rgba(0,0,0,0.3);"></div>
+
     <script>
         function switchView(viewId, element) {
             document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
             element.classList.add('active');
             document.querySelectorAll('.content-view').forEach(view => view.classList.remove('active-view'));
             document.getElementById('view-' + viewId).classList.add('active-view');
-            const titles = {
-                'dashboard': 'ศูนย์ควบคุมการปฏิบัติงานส่วนกลาง (Central Command)',
-                'users': 'จัดการผู้ใช้และผู้ดูแลระบบย่อย',
-                'finance': 'การเงินและส่วนแบ่งรายได้',
-                'reviews': 'คุณภาพรีวิวและการอุทธรณ์',
-                'reports': 'รายงานวิเคราะห์เชิงกลยุทธ์',
-                'pdpa': 'นโยบายความเป็นส่วนตัว (PDPA)',
-                'cloud': 'สถานะโครงสร้างพื้นฐานคลาวด์'
-            };
+            const titles = {'dashboard': 'ศูนย์ควบคุมการปฏิบัติงานส่วนกลาง', 'users': 'จัดการผู้ใช้และสิทธิ์', 'finance': 'การเงินและส่วนแบ่งรายได้', 'reviews': 'คุณภาพรีวิวและการอุทธรณ์', 'reports': 'รายงานวิเคราะห์เชิงกลยุทธ์', 'pdpa': 'นโยบายความเป็นส่วนตัว', 'cloud': 'สถานะโครงสร้างพื้นฐาน'};
             document.getElementById('page-title').innerText = titles[viewId] || 'ผู้ดูแลระบบ';
         }
 
-        function checkKYC(name, id) {
-            alert(`--- ข้อมูลการตรวจสอบ KYC ---\n\nชื่อ: ${name}\nเลขบัตรประชาชน: ${id}\nสถานะ: ตรงกับฐานข้อมูลกรมการปกครอง 100%\n\nกรุณากดอนุมัติในขั้นตอนถัดไป`);
+        function openModal(id) { document.getElementById(id).classList.add('active'); }
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+        function openKYCModal(name, id) {
+            document.getElementById('kyc-name').innerText = name;
+            document.getElementById('kyc-id').innerText = id;
+            openModal('modal-kyc');
         }
 
-        function confirmPayout() {
-            const pin = prompt("กรุณาระบุรหัส PIN ผู้บริหาร (Admin PIN) เพื่อยืนยันการโอนเงิน:");
-            if (pin) {
-                alert("ตรวจสอบ PIN ถูกต้อง...\nระบบกำลังส่งคำสั่ง Batch Payout ไปยังธนาคารธนชาต\nสถานะ: กำลังดำเนินการ (Processing)");
-            }
+        function confirmKYC() {
+            closeModal('modal-kyc');
+            showToast("อนุมัติ KYC ของคุณ " + document.getElementById('kyc-name').innerText + " สำเร็จ");
         }
 
-        function managePDPA() {
-            const action = prompt("คำร้องขอลบข้อมูล User #4521\nพิมพ์ 'A' เพื่ออนุมัติ หรือ 'R' เพื่อปฏิเสธ:");
-            if (action && action.toUpperCase() === 'A') {
-                alert("อนุมัติคำร้องเรียบร้อยแล้ว\nระบบจะทำลายข้อมูลส่วนบุคคลภายใน 24 ชม. ตามนโยบาย");
-            } else if (action && action.toUpperCase() === 'R') {
-                alert("ปฏิเสธคำร้อง\nกรุณาระบุเหตุผลในหน้าประวัติเพื่อแจ้งผู้ใช้งาน");
-            }
+        function submitPayout() {
+            if(!document.getElementById('payout-pin').value) { alert("กรุณาระบุ PIN"); return; }
+            closeModal('modal-payout');
+            showToast("ส่งคำสั่ง Batch Payout เรียบร้อยแล้ว");
+            document.getElementById('payout-pin').value = '';
         }
 
-        function viewLogs() {
-            alert("[14:32:01] ERROR SMS_GW timeout 2300ms\n[14:32:05] RETRY attempt 1/3 failed\n[14:32:09] RETRY attempt 2/3 failed\n[14:32:13] ALERT threshold exceeded\n[14:32:14] ESCALATE admin notified\n\nสถานะปัจจุบัน: ย้ายไปใช้ระบบสำรองอัตโนมัติแล้ว");
+        function resolvePDPA(action) {
+            if(!document.getElementById('pdpa-reason').value) { alert("กรุณาระบุเหตุผล"); return; }
+            closeModal('modal-pdpa');
+            showToast(action === 'Approve' ? "อนุมัติคำร้องและกำลังทำลายข้อมูล..." : "ปฏิเสธคำร้องขอลบข้อมูล");
+            document.getElementById('pdpa-reason').value = '';
+        }
+
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.innerText = msg;
+            t.style.display = 'block';
+            setTimeout(() => { t.style.display = 'none'; }, 3000);
         }
     </script>
 </body>
