@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareDee Operator Portal - ระบบจัดการทีมผู้ดูแล</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+    <link rel="stylesheet" href="css/design.css">
+    <style>
+        .sch-grid {
+            display: grid;
+            grid-template-columns: 80px repeat(5, 1fr);
+            gap: 2px;
+            background-color: var(--neutral-300);
+            border: 1px solid var(--neutral-300);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+        }
+        .sch-cell {
+            background-color: var(--white);
+            padding: var(--space-2);
+            font-size: 12px;
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        .sch-header {
+            background-color: var(--neutral-100);
+            font-weight: 600;
+            color: var(--neutral-600);
+        }
+        .sch-time {
+            background-color: var(--neutral-100);
+            color: var(--neutral-600);
+            justify-content: flex-end;
+            padding-right: var(--space-3);
+        }
+        .sch-booked {
+            background-color: var(--primary-100);
+            color: var(--primary-600);
+            font-weight: 500;
+        }
+        .sch-conflict {
+            background-color: #FDECEA;
+            color: var(--error);
+            font-weight: 600;
+            border: 1px solid var(--error);
+        }
+        
+        .bar-container {
+            flex: 1;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 4px;
+        }
+        .bar {
+            width: 100%;
+            border-radius: 4px 4px 0 0;
+            transition: height 0.3s;
+        }
+        .bar-label {
+            font-size: 10px;
+            color: var(--neutral-600);
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="layout-wrapper">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <div class="logo-icon">C</div>
+                <div class="logo-text">CareDee</div>
+            </div>
+            <nav>
+                <ul class="nav-menu">
+                    <li><a href="javascript:void(0)" class="nav-link active" onclick="switchView('dashboard', this)"><i class="ti ti-layout-dashboard"></i> แดชบอร์ดภาพรวมทีม</a></li>
+                    <li><a href="javascript:void(0)" class="nav-link" onclick="switchView('team', this)"><i class="ti ti-users"></i> การจัดการรายชื่อผู้ดูแล</a></li>
+                    <li><a href="javascript:void(0)" class="nav-link" onclick="switchView('schedule', this)"><i class="ti ti-calendar-event"></i> ตารางงานและการจอง</a></li>
+                    <li><a href="javascript:void(0)" class="nav-link" onclick="switchView('reports', this)"><i class="ti ti-report-medical"></i> รายงานการดูแลรายวัน</a></li>
+                    <li><a href="javascript:void(0)" class="nav-link" onclick="switchView('disputes', this)"><i class="ti ti-message-report"></i> ข้อพิพาทและการจัดการ</a></li>
+                    <li><a href="javascript:void(0)" class="nav-link" onclick="switchView('analytics', this)"><i class="ti ti-chart-pie"></i> วิเคราะห์รายได้และประสิทธิภาพ</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Nav -->
+            <header class="top-nav">
+                <div class="text-lg" style="font-weight: 700;" id="page-title">ศูนย์บริหารจัดการทีม (Operator Control Center)</div>
+                <div style="display: flex; align-items: center; gap: var(--space-4);">
+                    <div class="badge badge-success" style="display: flex; align-items: center; gap: 4px;">
+                        <span style="width: 8px; height: 8px; background-color: var(--success); border-radius: 50%;"></span>
+                        เชื่อมต่อข้อมูลสด (Live Sync)
+                    </div>
+                    <div style="width: 36px; height: 36px; background-color: var(--primary-100); color: var(--primary-600); border-radius: var(--radius-full); display: flex; align-items: center; justify-content: center; font-weight: 600;">ผด</div>
+                </div>
+            </header>
+
+            <!-- Content Body -->
+            <div class="content-body">
+                
+                <!-- VIEW: DASHBOARD -->
+                <div id="view-dashboard" class="content-view active-view">
+                    <!-- Stats Grid -->
+                    <div class="stat-grid">
+                        <div class="stat-card">
+                            <div class="stat-label">อัตราการใช้ทีม (Utilization)</div>
+                            <div class="stat-value" style="color: var(--primary-600);">78.5%</div>
+                            <div class="text-xs" style="color: var(--neutral-600); margin-top: 4px;">Active: 19/24 คน</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">รายได้รวม (เดือนนี้)</div>
+                            <div class="stat-value" style="color: var(--success);">฿182,400</div>
+                            <div class="text-xs" style="color: var(--neutral-600); margin-top: 4px;">เป้าหมาย: ฿200,000</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">งานค้างรอจัดสรร</div>
+                            <div class="stat-value" style="color: var(--warning);">3 งาน</div>
+                            <div class="text-xs" style="color: var(--error); margin-top: 4px;">ต้องการคนด่วนวันนี้</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">ความพึงพอใจลูกค้า</div>
+                            <div class="stat-value" style="color: var(--primary-600);">4.8 / 5.0</div>
+                            <div class="text-xs" style="color: var(--success); margin-top: 4px;">จาก 156 รีวิว</div>
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: var(--space-8);">
+                        <div class="card">
+                            <div class="flex-between mb-4">
+                                <div class="text-lg" style="font-weight: 600;">ผู้ดูแลใหม่รอการตรวจสอบ</div>
+                                <span class="badge badge-warning">4 รายการ</span>
+                            </div>
+                            <div style="display: flex; align-items: center; justify-content: space-between; padding: var(--space-3); border: 1px solid var(--neutral-100); border-radius: var(--radius-md);">
+                                <div style="display: flex; align-items: center; gap: var(--space-3);">
+                                    <div style="width: 40px; height: 40px; background-color: var(--primary-100); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; color: var(--primary-600); font-weight: 700;">กญ</div>
+                                    <div class="text-sm"><b>กัญญา ประยูรวงษ์</b><br><span class="text-xs color-neutral-600">Cert: TI-0042</span></div>
+                                </div>
+                                <button class="btn btn-primary" style="font-size: 11px;" onclick="alert('แสดงข้อมูลรายละเอียดใบรับรองจาก Training Institute...')">ตรวจสอบ</button>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="text-lg mb-4" style="font-weight: 600;">สรุปรายงานสุขภาพ</div>
+                            <div class="text-sm" style="color: var(--neutral-600);">ส่งรายงานประจำวันแล้ว 12/19 เคส</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VIEW: TEAM -->
+                <div id="view-team" class="content-view">
+                    <div class="card">
+                        <div class="flex-between mb-4">
+                            <div class="text-lg" style="font-weight: 600;">ทีมผู้ดูแลที่พร้อมรับงาน (Verified)</div>
+                            <button class="btn btn-primary" onclick="addNewCaregiver()">+ เพิ่มผู้ดูแลใหม่</button>
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: var(--space-3);">
+                            <div class="flex-between" style="padding: var(--space-2) 0; border-bottom: 1px solid var(--neutral-100);">
+                                <div style="display: flex; align-items: center; gap: var(--space-3);">
+                                    <div style="width: 32px; height: 32px; background-color: var(--primary-100); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--primary-600); font-size: 12px; font-weight: 700;">กญ</div>
+                                    <div>
+                                        <div class="text-sm" style="font-weight: 600;">กัญญา ประยูรวงษ์</div>
+                                        <div class="text-xs" style="color: var(--neutral-600);">เชี่ยวชาญ: กายภาพบำบัด</div>
+                                    </div>
+                                </div>
+                                <div class="badge badge-success">ว่าง</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VIEW: SCHEDULE -->
+                <div id="view-schedule" class="content-view">
+                    <div class="card">
+                        <div class="flex-between mb-4">
+                            <div class="text-lg" style="font-weight: 600;">ตารางงานรวมและระบบจอง</div>
+                            <span class="badge badge-error">2 จุดที่ซ้อนกัน</span>
+                        </div>
+                        <div class="sch-grid">
+                            <div class="sch-cell sch-header">เวลา</div>
+                            <div class="sch-cell sch-header">จ.</div>
+                            <div class="sch-cell sch-header">อ.</div>
+                            <div class="sch-cell sch-header">พ.</div>
+                            <div class="sch-cell sch-header">พฤ.</div>
+                            <div class="sch-cell sch-header">ศ.</div>
+                            
+                            <div class="sch-cell sch-time">08:00</div>
+                            <div class="sch-cell sch-booked">กัญญา</div>
+                            <div class="sch-cell sch-booked">กัญญา</div>
+                            <div class="sch-cell">ว่าง</div>
+                            <div class="sch-cell sch-booked">กัญญา</div>
+                            <div class="sch-cell">ว่าง</div>
+
+                            <div class="sch-cell sch-time">13:00</div>
+                            <div class="sch-cell">ว่าง</div>
+                            <div class="sch-cell sch-conflict">ซ้อน!</div>
+                            <div class="sch-cell sch-booked">ศิริพร</div>
+                            <div class="sch-cell sch-conflict">ซ้อน!</div>
+                            <div class="sch-cell sch-booked">ศิริพร</div>
+                        </div>
+                        <button class="btn btn-primary" style="width: 100%; margin-top: var(--space-4);" onclick="alert('ระบบกำลังประมวลผลหาผู้ดูแลสำรองที่เหมาะสมที่สุด...\n\nเสร็จสิ้น: ปรับตารางงานให้คุณศิริพรเรียบร้อยแล้ว')">ใช้ระบบมอบหมายงานใหม่อัจฉริยะ (Smart Re-assign)</button>
+                    </div>
+                </div>
+
+                <!-- VIEW: REPORTS -->
+                <div id="view-reports" class="content-view">
+                    <div class="card">
+                        <div class="flex-between mb-4">
+                            <div class="text-lg" style="font-weight: 600;">รายงานการปฏิบัติงานประจำวัน</div>
+                            <button class="btn btn-outline" style="font-size: 12px;" onclick="alert('ส่งรายงานความคืบหน้าให้ญาติผู้ป่วยทาง LINE/SMS เรียบร้อย')">ส่งรายงานให้ญาติ</button>
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: var(--space-4);">
+                            <div style="padding: var(--space-3); background-color: var(--neutral-100); border-radius: var(--radius-md);">
+                                <div class="text-sm"><b>เคส: คุณตาบุญมี</b> (โดย ศิริพร)</div>
+                                <div class="text-xs" style="color: var(--neutral-600); margin-top: var(--space-1);">บันทึกเมื่อ 10:30: เช็ดตัว พลิกตัว และให้ยาเรียบร้อย</div>
+                                <div style="margin-top: var(--space-2); display: flex; gap: var(--space-2);">
+                                    <span class="badge badge-success">Vitals ปกติ</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VIEW: DISPUTES -->
+                <div id="view-disputes" class="content-view">
+                    <div class="card">
+                        <div class="text-lg mb-4" style="font-weight: 600;">การร้องเรียนและแก้ไขข้อพิพาท</div>
+                        <div style="padding: var(--space-3); border: 1px solid var(--neutral-100); border-radius: var(--radius-md);">
+                            <div class="text-sm"><b>เคส #421:</b> ลูกค้าร้องเรียนเรื่องเวลาเริ่มงาน</div>
+                            <div class="text-xs" style="color: var(--neutral-600); margin-top: var(--space-1);">สถานะ: รอกองกลางตรวจสอบหลักฐานแชท</div>
+                            <button class="btn btn-primary" style="width: 100%; margin-top: var(--space-3); font-size: 11px;" onclick="alert('เปิดห้องสนทนาระหว่าง Operator, Admin และผู้ดูแล...')">เปิดห้องสนทนาสามฝ่าย</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VIEW: ANALYTICS -->
+                <div id="view-analytics" class="content-view">
+                    <div class="card">
+                        <div class="text-lg mb-4" style="font-weight: 600;">ประสิทธิภาพรายได้และทีม (รายสัปดาห์)</div>
+                        <div style="height: 200px; background-color: var(--neutral-100); border-radius: var(--radius-md); display: flex; align-items: flex-end; padding: var(--space-6); gap: 12px;">
+                            <div class="bar-container">
+                                <div class="bar-label">฿32k</div>
+                                <div style="height: 40%; background-color: var(--primary-100);" class="bar"></div>
+                                <div class="text-xs">สัปดาห์ 1</div>
+                            </div>
+                            <div class="bar-container">
+                                <div class="bar-label">฿41k</div>
+                                <div style="height: 60%; background-color: var(--primary-100);" class="bar"></div>
+                                <div class="text-xs">สัปดาห์ 2</div>
+                            </div>
+                            <div class="bar-container">
+                                <div class="bar-label">฿38k</div>
+                                <div style="height: 50%; background-color: var(--primary-100);" class="bar"></div>
+                                <div class="text-xs">สัปดาห์ 3</div>
+                            </div>
+                            <div class="bar-container">
+                                <div class="bar-label">฿52k</div>
+                                <div style="height: 85%; background-color: var(--primary-600);" class="bar"></div>
+                                <div class="text-xs">สัปดาห์ 4</div>
+                            </div>
+                            <div class="bar-container">
+                                <div class="bar-label">฿55k</div>
+                                <div style="height: 90%; background-color: var(--primary-600);" class="bar"></div>
+                                <div class="text-xs">สัปดาห์ 5</div>
+                            </div>
+                        </div>
+                        <div class="text-sm" style="color: var(--success); margin-top: var(--space-4); text-align: center; font-weight: 600;">
+                            เฉลี่ยรายได้เพิ่มขึ้น: +15.4% (เปรียบเทียบจากเดือนที่แล้ว)
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function switchView(viewId, element) {
+            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+            element.classList.add('active');
+            document.querySelectorAll('.content-view').forEach(view => view.classList.remove('active-view'));
+            document.getElementById('view-' + viewId).classList.add('active-view');
+            const titles = {
+                'dashboard': 'ศูนย์บริหารจัดการทีม (Operator Control Center)',
+                'team': 'การจัดการรายชื่อผู้ดูแล',
+                'schedule': 'ตารางงานและการจอง',
+                'reports': 'รายงานการดูแลรายวัน',
+                'disputes': 'ข้อพิพาทและการจัดการ',
+                'analytics': 'วิเคราะห์รายได้และประสิทธิภาพ'
+            };
+            document.getElementById('page-title').innerText = titles[viewId] || 'ผู้ให้บริการ';
+        }
+
+        function addNewCaregiver() {
+            alert("--- ขั้นตอนการเพิ่มผู้ดูแลใหม่ ---\n\nกรุณาเตรียมข้อมูลดังนี้:\n1. ชื่อ-นามสกุล (ภาษาไทย)\n2. หมายเลขบัตรประชาชน\n3. รหัสใบรับรองจากสถาบัน (TI-ID)\n4. รูปถ่ายหน้าตรงพื้นหลังขาว\n\n*ระบบจะทำการตรวจสอบข้อมูลกับสถาบันอัตโนมัติ*");
+        }
+    </script>
+</body>
+</html>

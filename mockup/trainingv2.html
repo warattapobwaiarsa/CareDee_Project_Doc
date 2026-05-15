@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareDee Training Institute Portal - ระบบสถาบันฝึกอบรม</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+    <link rel="stylesheet" href="css/design.css">
+    <style>
+        .wizard-steps {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--space-8);
+        }
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--space-2);
+            flex: 1;
+            position: relative;
+        }
+        .step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            top: 16px;
+            left: 50%;
+            width: 100%;
+            height: 2px;
+            background-color: var(--neutral-300);
+            z-index: 1;
+        }
+        .step.done:not(:last-child)::after {
+            background-color: var(--success);
+        }
+        .step-circle {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: var(--white);
+            border: 2px solid var(--neutral-300);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            z-index: 2;
+            color: var(--neutral-600);
+        }
+        .step.active .step-circle {
+            border-color: var(--primary-600);
+            color: var(--primary-600);
+            background-color: var(--primary-100);
+        }
+        .step.done .step-circle {
+            background-color: var(--success);
+            border-color: var(--success);
+            color: var(--white);
+        }
+        .step-label {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--neutral-600);
+            text-align: center;
+        }
+        .step.active .step-label {
+            color: var(--primary-600);
+            font-weight: 600;
+        }
+
+        .heatmap {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--space-2);
+        }
+        .heat-cell {
+            padding: var(--space-3);
+            border-radius: var(--radius-md);
+            text-align: center;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .import-mode-btn {
+            padding: var(--space-2) var(--space-4);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--neutral-300);
+            background-color: var(--white);
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--neutral-600);
+        }
+        .import-mode-btn.active {
+            background-color: var(--primary-600);
+            color: var(--white);
+            border-color: var(--primary-600);
+        }
+
+        .manual-form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-4);
+        }
+        .input-field {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .input-field label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--neutral-600);
+        }
+        .input-field input {
+            padding: var(--space-2);
+            border: 1px solid var(--neutral-300);
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+    <div class="layout-wrapper">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <div class="logo-icon">C</div>
+                <div class="logo-text">CareDee</div>
+            </div>
+            <nav>
+                <ul class="nav-menu">
+                    <li><a href="javascript:void(0)" class="nav-link active" onclick="switchView('dashboard', this)"><i class="ti ti-layout-dashboard"></i> แดชบอร์ดภาพรวมสถาบัน</a></li>
+                    <li><a href="javascript:void(0)" class="nav-link" onclick="switchView('import', this)"><i class="ti ti-file-import"></i> นำเข้าข้อมูลผู้ผ่านการอบรม</a></li>
+                    <li><a href="javascript:void(0)" class="nav-link" onclick="switchView('certs', this)"><i class="ti ti-certificate"></i> ระบบจัดการใบรับรองดิจิทัล</a></li>
+                    <li><a href="javascript:void(0)" class="nav-link" onclick="switchView('market', this)"><i class="ti ti-chart-dots"></i> ข้อมูลสถิติและความต้องการตลาด</a></li>
+                    <li><a href="javascript:void(0)" class="nav-link" onclick="switchView('verify', this)"><i class="ti ti-checkbox"></i> การตรวจสอบมาตรฐาน (Verification)</a></li>
+                    <li><a href="javascript:void(0)" class="nav-link" onclick="switchView('profile', this)"><i class="ti ti-building"></i> ข้อมูลสถาบันและเอกสารทางกฎหมาย</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Nav -->
+            <header class="top-nav">
+                <div class="text-lg" style="font-weight: 700;" id="page-title">ระบบบริหารจัดการสถาบันฝึกอบรม (TI Portal)</div>
+                <div style="display: flex; align-items: center; gap: var(--space-4);">
+                    <div style="text-align: right;">
+                        <div class="text-sm" style="font-weight: 600;">สถาบันไทยแคร์ อินเตอร์เนชั่นแนล</div>
+                        <div class="text-xs" style="color: var(--neutral-600);">รหัสรับรอง: TI-BNK-0042</div>
+                    </div>
+                    <div style="width: 36px; height: 36px; background-color: var(--primary-100); color: var(--primary-600); border-radius: var(--radius-full); display: flex; align-items: center; justify-content: center; font-weight: 600;">สท</div>
+                </div>
+            </header>
+
+            <!-- Content Body -->
+            <div class="content-body">
+                
+                <!-- VIEW: DASHBOARD -->
+                <div id="view-dashboard" class="content-view active-view">
+                    <div class="stat-grid">
+                        <div class="stat-card">
+                            <div class="stat-label">ผู้อบรมสะสมทั้งหมด</div>
+                            <div class="stat-value" style="color: var(--primary-600);">1,284 คน</div>
+                            <div class="text-xs" style="color: var(--success); margin-top: 4px;">▲ 15% จากปีที่แล้ว</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">ใบรับรองที่ยังมีผล (Active)</div>
+                            <div class="stat-value" style="color: var(--success);">892 ใบ</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">หลักสูตรที่เปิดสอน</div>
+                            <div class="stat-value" style="color: var(--primary-600);">8 หลักสูตร</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">สถานะการรับรองสถาบัน</div>
+                            <div class="stat-value" style="color: var(--success);">ดีเยี่ยม</div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="text-lg mb-4" style="font-weight: 600;">กิจกรรมล่าสุด</div>
+                        <div class="text-sm" style="color: var(--neutral-600);">นำเข้าข้อมูลผู้จบหลักสูตร "การดูแลผู้สูงอายุระยะยาว" จำนวน 25 ราย เมื่อ 2 ชั่วโมงที่แล้ว</div>
+                    </div>
+                </div>
+
+                <!-- VIEW: IMPORT -->
+                <div id="view-import" class="content-view">
+                    <div class="card mb-4">
+                        <div class="text-lg mb-4" style="font-weight: 600;">การนำเข้าข้อมูลผู้จบหลักสูตร (Batch Import)</div>
+                        
+                        <div style="display: flex; gap: var(--space-4); margin-bottom: var(--space-6);">
+                            <button class="import-mode-btn active" id="btn-mode-file" onclick="setImportMode('file')">อัปโหลดไฟล์ (CSV/Excel)</button>
+                            <button class="import-mode-btn" id="btn-mode-manual" onclick="setImportMode('manual')">กรอกข้อมูลรายบุคคล</button>
+                        </div>
+
+                        <!-- Mode: File Upload -->
+                        <div id="import-file-section" style="padding: var(--space-10); border: 2px dashed var(--neutral-300); border-radius: var(--radius-lg); text-align: center; background-color: var(--neutral-100); margin-bottom: var(--space-6);">
+                            <i class="ti ti-cloud-upload" style="font-size: 48px; color: var(--neutral-600);"></i>
+                            <div class="text-md" style="margin-top: var(--space-4); font-weight: 600;">ลากไฟล์มาวาง หรือ คลิกเพื่อเลือกไฟล์</div>
+                            <div class="text-xs" style="color: var(--neutral-600); margin-top: var(--space-1);">รองรับไฟล์ .csv, .xls, .xlsx (ขนาดไม่เกิน 10MB)</div>
+                            <button class="btn btn-primary" style="margin-top: var(--space-4);" onclick="alert('จำลองการอัปโหลดไฟล์...\nตรวจสอบโครงสร้างข้อมูลสำเร็จ (125 รายการ)')">เลือกไฟล์จากเครื่อง</button>
+                        </div>
+
+                        <!-- Mode: Manual Entry -->
+                        <div id="import-manual-section" style="display: none; padding: var(--space-6); background-color: var(--neutral-100); border-radius: var(--radius-lg); margin-bottom: var(--space-6);">
+                            <div class="manual-form-grid">
+                                <div class="input-field"><label>ชื่อ-นามสกุล</label><input type="text" placeholder="เช่น นายสมชาย ใจดี" id="manual-name"></div>
+                                <div class="input-field"><label>เลขบัตรประชาชน</label><input type="text" placeholder="X-XXXX-XXXXX-XX-X" id="manual-id"></div>
+                                <div class="input-field">
+                                    <label>หลักสูตร</label>
+                                    <select style="padding: var(--space-2); border: 1px solid var(--neutral-300); border-radius: var(--radius-sm); font-size: 13px;" id="manual-course">
+                                        <option>ผู้ดูแลผู้สูงอายุขั้นพื้นฐาน</option>
+                                        <option>การปฐมพยาบาลเบื้องต้น</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary" style="margin-top: var(--space-6);" onclick="addManualRow()">+ เพิ่มรายชื่อลงตาราง</button>
+                        </div>
+
+                        <div class="wizard-steps">
+                            <div class="step done"><div class="step-circle"><i class="ti ti-check"></i></div><div class="step-label">อัปโหลด/กรอก</div></div>
+                            <div class="step active"><div class="step-circle">2</div><div class="step-label">ตรวจสอบข้อมูล</div></div>
+                            <div class="step"><div class="step-circle">3</div><div class="step-label">ออกใบรับรอง</div></div>
+                        </div>
+
+                        <div style="background-color: var(--neutral-100); padding: var(--space-4); border-radius: var(--radius-md);">
+                            <table style="width: 100%; font-size: 13px;" id="import-table">
+                                <thead>
+                                    <tr style="text-align: left; border-bottom: 1px solid var(--neutral-300);">
+                                        <th style="padding: var(--space-2);">ชื่อ-นามสกุล</th>
+                                        <th style="padding: var(--space-2);">เลขที่บัตรประชาชน</th>
+                                        <th style="padding: var(--space-2);">หลักสูตร</th>
+                                        <th style="padding: var(--space-2);">สถานะ</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td style="padding: var(--space-2);">สมชาย มั่นใจ</td>
+                                        <td style="padding: var(--space-2);">1-1002-XXXXX-XX-X</td>
+                                        <td style="padding: var(--space-2);">ผู้ดูแลผู้สูงอายุ...</td>
+                                        <td style="padding: var(--space-2);"><span class="badge badge-success">ถูกต้อง</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VIEW: CERTS -->
+                <div id="view-certs" class="content-view">
+                    <div class="card">
+                        <div class="flex-between mb-4">
+                            <div class="text-lg" style="font-weight: 600;">รายการใบรับรองดิจิทัล</div>
+                            <button class="btn btn-primary" onclick="alert('เปิดฟอร์มออกใบรับรองรายบุคคล...')">ออกใบรับรองใหม่</button>
+                        </div>
+                        <table style="width: 100%; font-size: 13px;">
+                            <thead>
+                                <tr style="text-align: left; border-bottom: 1px solid var(--neutral-300);">
+                                    <th style="padding: var(--space-2);">เลขที่</th>
+                                    <th style="padding: var(--space-2);">ชื่อผู้ถือ</th>
+                                    <th style="padding: var(--space-2);">วันหมดอายุ</th>
+                                    <th style="padding: var(--space-2);">ดำเนินการ</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="padding: var(--space-2);">CERT-2026-0012</td>
+                                    <td style="padding: var(--space-2);">สมชาย มั่นใจ</td>
+                                    <td style="padding: var(--space-2);">15/05/2571</td>
+                                    <td style="padding: var(--space-2);"><button class="btn btn-outline" style="font-size: 11px;" onclick="alert('แสดงตัวอย่างวุฒิบัตรดิจิทัล...')">ดู/พิมพ์</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- VIEW: MARKET -->
+                <div id="view-market" class="content-view">
+                    <div class="card">
+                        <div class="text-lg mb-4" style="font-weight: 600;">ความต้องการตลาดแรงงานรายพื้นที่</div>
+                        <div class="heatmap">
+                            <div class="heat-cell" style="background-color: #FDECEA; color: #7A1C1C;">บึงกุ่ม</div>
+                            <div class="heat-cell" style="background-color: #FDECEA; color: #7A1C1C;">ลาดกระบัง</div>
+                            <div class="heat-cell" style="background-color: var(--secondary-100); color: #B06B00;">บางแค</div>
+                            <div class="heat-cell" style="background-color: var(--secondary-100); color: #B06B00;">ดอนเมือง</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VIEW: VERIFY -->
+                <div id="view-verify" class="content-view">
+                    <div class="card">
+                        <div class="text-lg mb-4" style="font-weight: 600;">คิวตรวจสอบมาตรฐาน (Verification)</div>
+                        <div style="padding: var(--space-3); border-bottom: 1px solid var(--neutral-100);">
+                            <div class="flex-between">
+                                <div class="text-sm"><b>คำขอจาก: แคร์ พลัส โอเปอเรเตอร์</b></div>
+                                <div class="badge badge-error">รอตรวจสอบ</div>
+                            </div>
+                            <div class="text-xs" style="margin-top: var(--space-1); color: var(--neutral-600);">ตรวจสอบความถูกต้องใบรับรอง #CERT-2569-0019</div>
+                            <div style="margin-top: var(--space-3); display: flex; gap: var(--space-2);">
+                                <button class="btn btn-primary" style="font-size: 11px;" onclick="alert('ยืนยันความถูกต้องเรียบร้อย\nสถานะผู้ดูแลจะเปลี่ยนเป็น Verified ทันที')">ยืนยันข้อมูล</button>
+                                <button class="btn btn-outline" style="font-size: 11px;" onclick="prompt('กรุณาระบุเหตุผลการปฏิเสธ:')">ปฏิเสธ</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VIEW: PROFILE -->
+                <div id="view-profile" class="content-view">
+                    <div class="card">
+                        <div class="text-lg mb-4" style="font-weight: 600;">ข้อมูลสถาบันและเอกสารทางกฎหมาย</div>
+                        <div style="display: flex; flex-direction: column; gap: var(--space-3);">
+                            <div class="flex-between text-sm">
+                                <span>ใบอนุญาตจัดตั้งสถาบัน</span>
+                                <span class="badge badge-success">ตรวจสอบแล้ว</span>
+                            </div>
+                            <div class="flex-between text-sm">
+                                <span>มาตรฐาน ISO 9001:2015</span>
+                                <span class="badge badge-success">มีผลใช้งาน</span>
+                            </div>
+                            <button class="btn btn-outline" style="width: 100%; margin-top: var(--space-2);" onclick="alert('กรุณาอัปโหลดเอกสารที่แก้ไขใหม่ (PDF)')">อัปเดตเอกสาร</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function switchView(viewId, element) {
+            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+            element.classList.add('active');
+            document.querySelectorAll('.content-view').forEach(view => view.classList.remove('active-view'));
+            document.getElementById('view-' + viewId).classList.add('active-view');
+            const titles = {
+                'dashboard': 'ระบบบริหารจัดการสถาบันฝึกอบรม (TI Portal)',
+                'import': 'นำเข้าข้อมูลผู้ผ่านการอบรม',
+                'certs': 'ระบบจัดการใบรับรองดิจิทัล',
+                'market': 'ข้อมูลสถิติและความต้องการตลาด',
+                'verify': 'การตรวจสอบมาตรฐาน (Verification)',
+                'profile': 'ข้อมูลสถาบันและเอกสารทางกฎหมาย'
+            };
+            document.getElementById('page-title').innerText = titles[viewId] || 'สถาบันฝึกอบรม';
+        }
+
+        function setImportMode(mode) {
+            document.getElementById('btn-mode-file').classList.toggle('active', mode === 'file');
+            document.getElementById('btn-mode-manual').classList.toggle('active', mode === 'manual');
+            document.getElementById('import-file-section').style.display = mode === 'file' ? 'block' : 'none';
+            document.getElementById('import-manual-section').style.display = mode === 'manual' ? 'block' : 'none';
+        }
+
+        function addManualRow() {
+            const name = document.getElementById('manual-name').value;
+            const id = document.getElementById('manual-id').value;
+            const course = document.getElementById('manual-course').value;
+            
+            if(!name || !id) {
+                alert("กรุณากรอกข้อมูลให้ครบถ้วน");
+                return;
+            }
+
+            const table = document.getElementById('import-table').getElementsByTagName('tbody')[0];
+            const newRow = table.insertRow();
+            newRow.innerHTML = `
+                <td style="padding: var(--space-2);">${name}</td>
+                <td style="padding: var(--space-2);">${id}</td>
+                <td style="padding: var(--space-2);">${course}</td>
+                <td style="padding: var(--space-2);"><span class="badge badge-success">ถูกต้อง</span></td>
+            `;
+
+            // Reset inputs
+            document.getElementById('manual-name').value = '';
+            document.getElementById('manual-id').value = '';
+            alert("เพิ่มรายชื่อเรียบร้อย");
+        }
+    </script>
+</body>
+</html>

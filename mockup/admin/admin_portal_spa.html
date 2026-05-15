@@ -381,7 +381,7 @@
                     <h2>จัดการบัญชีผู้ดูแลและผู้ให้บริการ</h2>
                     <div style="display: flex; gap: 8px;">
                         <button class="btn btn-outline">ส่งออกข้อมูล</button>
-                        <button class="btn btn-primary">+ เพิ่มผู้ใช้</button>
+                        <button class="btn btn-primary" onclick="openAddUserModal()">+ เพิ่มผู้ใช้</button>
                     </div>
                 </div>
 
@@ -993,6 +993,45 @@
 
     </main>
 
+    <!-- Add User Modal -->
+    <div id="add-user-modal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 500px; text-align: left;">
+            <h2 style="margin-bottom: 20px;">เพิ่มผู้ใช้งานใหม่</h2>
+            <div style="display: flex; flex-direction: column; gap: 16px;">
+                <div>
+                    <label style="font-size: 13px; font-weight: 600; color: var(--neutral-600);">ชื่อ-นามสกุล:</label>
+                    <input type="text" id="new-user-name" placeholder="ระบุชื่อจริง-นามสกุล" class="btn-outline" style="width: 100%; padding: 10px; margin-top: 4px; border-radius: 8px;">
+                </div>
+                <div>
+                    <label style="font-size: 13px; font-weight: 600; color: var(--neutral-600);">ประเภทผู้ใช้:</label>
+                    <select id="new-user-type" class="btn-outline" style="width: 100%; padding: 10px; margin-top: 4px; border-radius: 8px;">
+                        <option value="ผู้ดูแล">ผู้ดูแล (Caregiver)</option>
+                        <option value="ผู้ให้บริการ">ผู้ให้บริการ (Operator)</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="font-size: 13px; font-weight: 600; color: var(--neutral-600);">สังกัด / หน่วยงาน:</label>
+                    <select id="new-user-agency" class="btn-outline" style="width: 100%; padding: 10px; margin-top: 4px; border-radius: 8px;">
+                        <option value="อิสระ">อิสระ (Freelance)</option>
+                        <option value="en">บริษัท บริบาลไทย จำกัด (EN)</option>
+                        <option value="mk">ศูนย์ดูแลมีสุข (MS)</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="font-size: 13px; font-weight: 600; color: var(--neutral-600);">สถานะใบรับรอง:</label>
+                    <select id="new-user-cert" class="btn-outline" style="width: 100%; padding: 10px; margin-top: 4px; border-radius: 8px;">
+                        <option value="verified">ยืนยันแล้ว</option>
+                        <option value="pending">รอตรวจสอบ</option>
+                    </select>
+                </div>
+            </div>
+            <div style="display: flex; gap: 12px; margin-top: 32px;">
+                <button class="btn btn-outline" style="flex: 1;" onclick="closeAddUserModal()">ยกเลิก</button>
+                <button class="btn btn-primary" style="flex: 1;" onclick="saveNewUser()">บันทึกข้อมูล</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Shared Modal: Confirmation -->
     <div id="confirm-modal" class="modal-overlay">
         <div class="modal-content">
@@ -1417,6 +1456,70 @@
 
         // --- Event Listeners ---
         document.querySelector('.search-bar input').addEventListener('input', (e) => handleSearch(e.target.value));
+
+        // --- Add User Modal Logic ---
+        function openAddUserModal() {
+            document.getElementById('add-user-modal').style.display = 'flex';
+        }
+
+        function closeAddUserModal() {
+            document.getElementById('add-user-modal').style.display = 'none';
+            // Clear fields
+            document.getElementById('new-user-name').value = '';
+            document.getElementById('new-user-type').value = 'ผู้ดูแล';
+            document.getElementById('new-user-agency').value = 'อิสระ';
+            document.getElementById('new-user-cert').value = 'verified';
+        }
+
+        function saveNewUser() {
+            const name = document.getElementById('new-user-name').value;
+            const type = document.getElementById('new-user-type').value;
+            const agency = document.getElementById('new-user-agency').value;
+            const cert = document.getElementById('new-user-cert').value;
+
+            if (!name) {
+                alert('กรุณาระบุชื่อ-นามสกุล');
+                return;
+            }
+
+            // Create new row
+            const tableBody = document.getElementById('user-table-body');
+            const rowId = 'user-row-new-' + Date.now();
+            const newRow = document.createElement('tr');
+            newRow.id = rowId;
+            
+            const certText = cert === 'verified' ? '<span style="color: var(--success);">✓ ยืนยันแล้ว</span>' : '<span style="color: var(--warning);">⚠ รอตรวจสอบ</span>';
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('th-TH') + ' ' + now.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' });
+
+            newRow.innerHTML = `
+                <td><input type="checkbox" class="user-check" onchange="updateUserBulk()"></td>
+                <td>${name}</td>
+                <td>${type}</td>
+                <td>${agency}</td>
+                <td>${certText}</td>
+                <td style="font-size: 11px; color: var(--neutral-600);">${dateStr}</td>
+                <td><span class="status-pill status-success">ปกติ</span></td>
+                <td>
+                    <div style="display: flex; gap: 4px;">
+                        <button class="btn btn-outline" style="padding: 4px 8px;" onclick="openEvidenceModal('${name}')">📄 ตรวจ</button>
+                        <button class="btn btn-error" style="padding: 4px 12px;" onclick="deleteRow(this)">ลบ</button>
+                    </div>
+                </td>
+            `;
+
+            tableBody.insertBefore(newRow, tableBody.firstChild);
+            
+            // Effect
+            newRow.style.background = 'var(--primary-100)';
+            setTimeout(() => {
+                newRow.style.transition = 'background 1s';
+                newRow.style.background = 'transparent';
+            }, 1000);
+
+            alert('เพิ่มผู้ใช้สำเร็จ!');
+            closeAddUserModal();
+        }
 
         initCharts();
         initCloudStatus();
