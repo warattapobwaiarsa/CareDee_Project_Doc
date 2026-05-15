@@ -1,12 +1,18 @@
-# รายละเอียดฟีเจอร์และฟังก์ชันการใช้งานของ CareDee Portals
+# รายละเอียดฟีเจอร์และฟังก์ชันการใช้งานของ CareDee Portals (Interactive SPA Prototypes)
 
-เอกสารฉบับนี้สรุปรายละเอียดการออกแบบและฟังก์ชันการใช้งานของระบบ CareDee ทั้ง 3 ส่วน (Admin, Operator, Training) ตามที่ปรากฏในไฟล์ Mockup SPA โดยแบ่งตามหน้าที่และการเข้าถึงข้อมูล
+เอกสารฉบับนี้สรุปรายละเอียดการออกแบบและฟังก์ชันการใช้งานของระบบ CareDee ทั้ง 3 ส่วน (Admin, Operator, Training) ตามที่ปรากฏในไฟล์ Mockup SPA เวอร์ชันล่าสุด ซึ่งได้รับการพัฒนาให้เป็น **Interactive Prototype** ที่สามารถกดใช้งานได้จริงตาม Business Logic และ User Flow
 
 ---
 
 ## 1. CareDee Admin Portal (Platform Control Center)
 **ไฟล์:** `mockup/admin/admin_portal_spa.html`  
 **กลุ่มเป้าหมาย:** ผู้ดูแลระบบระดับสูงสุด (Platform Admin)
+
+### ฟังก์ชัน Interactive ที่ใช้งานได้:
+- **Functional Search & Filtering:** ค้นหาข้อมูลในตารางและกรองตามหน่วยงาน (Agency Filter) ได้แบบ Real-time
+- **Action Simulations:** ปุ่ม "อนุมัติ", "ระงับสิทธิ์", และ "ลบ" ทำงานพร้อม Animation และการอัปเดตสถานะจำลอง
+- **Interactive Dashboards:** ลิงก์จาก Dashboard ไปยังส่วนจัดการผู้ใช้ และระบบจำลอง Uptime Chart
+- **Maintenance Simulation:** ระบบประกาศ Global Banner แจ้งปิดปรับปรุงระบบที่แสดงผลทุกหน้า
 
 ### รายละเอียดหน้าจอ (View Sections):
 1.  **หน้าหลัก (Dashboard):**
@@ -18,7 +24,6 @@
     - ตารางรายชื่อที่แสดงสถานะการยืนยันใบรับรอง (Verified) และประวัติการยอมรับ PDPA (Consent Date)
         - *ตัวอย่าง:* การแยกประเภท "Independent Caregiver" vs "Agency Staff", การแสดงผล "✓ Verified" สีเขียวสำหรับผู้ที่มีวุฒิบัตรตรงตามเกณฑ์
     - **Bulk Actions:** แถบจัดการข้อมูลจำนวนมาก (Batch Approval) เมื่อเลือกหลายรายการ
-        - *ตัวอย่าง:* การเลือก Caregiver 10 คนเพื่อกด "อนุมัติพร้อมกัน" หลังตรวจสอบเอกสารเบื้องต้นแล้ว
     - **Evidence Modal:** ป๊อปอัพตรวจสอบเอกสารหลักฐานแบบละเอียด
 3.  **จัดการการเงิน (Finance):**
     - สรุปยอด Gross, Commission (10%), ยอดรอโอน และยอดโอนสำเร็จ
@@ -26,23 +31,17 @@
         - *ตัวอย่าง:* เคส #BK-9915 ยอด Gross ฿ 1,800 หัก Commission ฿ 180 คงเหลือยอดโอนสุทธิ ฿ 1,620
 4.  **คุณภาพรีวิว & อุทธรณ์ (Reviews):**
     - **Auto-Moderation:** ระบบเบลอคำหยาบ (Masking) ในรีวิวอัตโนมัติ (คลิกเพื่อดูต้นฉบับ)
-        - *ตัวอย่าง:* ข้อความ "บริการแย่มาก ทำงานไม่ [คำหยาบ] เลย" ระบบจะเบลอคำที่อยู่ใน Blacklist ทันที
     - **Evidence Viewer:** ดูหลักฐานประกอบการอุทธรณ์ เช่น แชท หรือรูปถ่าย เพื่อตัดสินเคส
-        - *ตัวอย่าง:* ผู้ดูแลอุทธรณ์ว่า "ลูกค้าให้ 1 ดาวเพราะเข้างานสาย แต่จริงๆ แล้ว GPS แอปมีปัญหา" พร้อมแนบรูปถ่ายหน้าบ้านลูกค้าเป็นหลักฐาน
 5.  **รายงานระบบ (Reports):**
     - **Interactive Heatmap:** แสดงพื้นที่ที่มีความต้องการสูง (Demand vs Supply) แบบ Visual
         - *ตัวอย่าง:* สีแดงเข้มในโซน "บางนา-สมุทรปราการ" บ่งบอกว่ามีคนค้นหาบริการสูงแต่คนดูแลในพื้นที่ไม่เพียงพอ
     - **Custom Range Filter:** เลือกช่วงวันที่เพื่อกรองข้อมูลรายงานและส่งออก (Monthly/Audit)
 6.  **นโยบาย & PDPA (Privacy & Consent):**
     - **Policy Broadcast:** หน้าต่างจัดการการประกาศเปลี่ยนนโยบายและส่ง Re-consent ให้ผู้ใช้
-        - *ตัวอย่าง:* การประกาศ "Privacy Policy v2.4" เพื่อเพิ่มการจัดเก็บข้อมูลพิกัด GPS สำหรับความปลอดภัย
     - **Access Log:** บันทึกประวัติการเข้าถึงข้อมูลส่วนบุคคล (Audit Trail) ตามกฎหมาย
-        - *ตัวอย่าง:* "Admin Michael เข้าถึงข้อมูลเบอร์โทรศัพท์ #U-5501 (เหตุผล: ประสานงานเคสฉุกเฉิน)"
 7.  **เฝ้าระวังระบบคลาวด์ (Cloud Monitoring):**
     - **Service Health:** ตรวจสอบสถานะ API, Payment Gateway และ Uptime History (24 ชม.)
-        - *ตัวอย่าง:* "CareDee Main API: Healthy (99.9%)", "Payment Gateway: Latency High (เหลือง)"
-    - **Maintenance Broadcaster:** ส่งประกาศ Global Banner แจ้งปิดปรับปรุงระบบไปยังผู้ใช้ทุกคน
-        - *ตัวอย่าง:* ข้อความแจ้งเตือนสีแดง "ระบบจะปิดปรับปรุงเวลา 02:00 - 04:00 น. คืนนี้" แสดงผลทุก Portal ทันที
+    - **Incident Link:** จำลองการดูรายละเอียดข้อผิดพลาดทางเทคนิค (Technical Alert Detail)
 
 ---
 
@@ -50,28 +49,31 @@
 **ไฟล์:** `mockup/operator/operator_portal_spa.html`  
 **กลุ่มเป้าหมาย:** หัวหน้าศูนย์บริการ / เอเจนซี่ (Operator)
 
+### ฟังก์ชัน Interactive ที่ใช้งานได้:
+- **Onboarding Tracker:** ระบบจำลองการ "Verify Side-by-Side" ร่วมกับสถาบันฝึกอบรม พร้อมอัปเดต Step Progress
+- **Smart Scheduling Resolution:** ฟังก์ชัน "Smart Re-assign" เพื่อจำลองการแก้ปัญหาตารางงานซ้อน (Conflict) โดยอัตโนมัติ
+- **Report Escalation:** ระบบจำลองการส่งแจ้งเตือนด่วน (Medical Escalation) จากหน้างาน
+- **Live Sync Simulation:** ตัวบ่งชี้สถานะ Online/Offline และการอัปเดตเวลา Last Sync
+
 ### รายละเอียดหน้าจอ (Pages):
 1.  **หน้าหลัก (Dashboard):**
     - **Team Summary:** สรุปงานในมือ, Utilization Rate และคะแนนรีวิวเฉลี่ยของทีม
-    - **System Sync:** ตัวบ่งชี้การเชื่อมต่อข้อมูลแบบ Real-time (Online/Offline Status)
     - **Quick Actions:** รายการงานด่วน เช่น ตารางซ้อน หรือเคสอุทธรณ์ที่ใกล้หมดเวลา SLA
 2.  **จัดการทีมผู้ดูแล (Team Management):**
-    - **Matching Engine Config:** ปรับแต่งค่าน้ำหนักการจับคู่งาน (เช่น เน้นระยะทางใกล้เป็นหลัก)
-    - **Onboarding Tracker:** ติดตามขั้นตอนการรับคนใหม่เข้าสังกัด (Verified side-by-side กับ TI)
+    - **Matching Engine Config:** ปรับแต่งค่าน้ำหนักการจับคู่งาน (Distance vs Skill) พร้อมบันทึกค่าจำลอง
+    - **TI Inbound Check:** ปุ่มดึงข้อมูลชุดใหม่จากสถาบันฝึกอบรมพร้อม Loading Simulation
 3.  **ตารางงาน & การจอง (Schedule Control):**
     - **Master Timeline:** กราฟแสดงคิวงานของผู้ดูแลทุกคนในศูนย์ (Timeline Grid)
-    - **Smart Re-assign:** ฟังก์ชันย้ายงานให้อัตโนมัติเมื่อเกิด Conflict หรือคนเดิมลาป่วย
-    - **Scheduling Audit Log:** บันทึกประวัติการแก้ไขตารางงาน
+    - **Scheduling Audit Log:** บันทึกประวัติการแก้ไขตารางงานที่อัปเดตตามการกระทำของผู้ใช้
 4.  **ติดตามรายงานหน้างาน (Care Reports):**
     - **Live Feed:** รายงานสุขภาพและกิจกรรมที่ผู้ดูแลบันทึกเข้ามา (Activity List)
-    - **Geofence Monitoring:** ตรวจสอบการเช็กอินนอกพิกัดสถานที่ทำงาน (Failure Alert)
-    - **AI Insights:** ระบบวิเคราะห์ความเสี่ยงด้านสุขภาพจากข้อมูลรายงาน
+    - **Geofence Alerts:** การแจ้งเตือนกรณีเช็กอินนอกพิกัดสถานที่ทำงาน
 5.  **ข้อร้องเรียน & อุทธรณ์ (Disputes & Resolution):**
-    - **SLA Countdown:** แถบแจ้งเตือนเวลาที่เหลือในการจัดการเคส (3 วัน)
-    - **Evidence Box:** แสดงข้อมูลแชทและพิกัด GPS เพื่อใช้ยื่นอุทธรณ์ต่อ Admin แพลตฟอร์ม
+    - **SLA Alerts:** แจ้งเตือนเวลาที่เหลือในการจัดการเคส (3 วัน) และการ Lock เคสที่หมดอายุ
+    - **Resolution Flow:** กระบวนการยอมรับคำอุทธรณ์และส่งเรื่องต่อให้ Admin แพลตฟอร์ม
 6.  **รายงาน & รายได้ (Analytics):**
     - **Settlement Logic:** ตารางสรุปยอดโอนคืน (Gross - 15% GP = Net)
-    - **Audit Log Viewer:** ดูประวัติการทำงานย้อนหลัง 3 ปี เพื่อการตรวจสอบภายใน
+    - **Export Tools:** ระบบจำลองการสร้างไฟล์รายงานสรุปผล PDF และ Excel
 
 ---
 
@@ -79,35 +81,38 @@
 **ไฟล์:** `mockup/training/training_portal_spa.html`  
 **กลุ่มเป้าหมาย:** เจ้าหน้าที่สถาบันฝึกอบรม (Training Institute)
 
+### ฟังก์ชัน Interactive ที่ใช้งานได้:
+- **Advanced Import Wizard:** กระบวนการนำเข้าข้อมูล 3 ขั้นตอน (Upload -> Processing -> Mapping) พร้อม Progress Bar
+- **Dual Input Method:** สลับโหมดการนำเข้าระหว่างการอัปโหลดไฟล์ (XLSX/CSV) และการกรอกข้อมูลเอง (Manual Entry)
+- **Certificate Lifecycle:** ระบบจัดการใบรับรอง (ต่ออายุ/เพิกถอน) พร้อม Modal ระบุเหตุผลและบันทึก Audit Log
+- **Market Intelligence Links:** ลิงก์ดูแนวทางหลักสูตรที่ให้ข้อมูลวิเคราะห์ตลาดตาม Demand จริง
+
 ### รายละเอียดหน้าจอ (Pages):
 1.  **ภาพรวมสถาบัน (Dashboard):**
     - **Connectivity Stats:** จำนวนผู้อบรมที่เชื่อมโยงบัญชีกับ CareDee แล้ว vs รอสมัคร
     - **Course-Demand Fit:** กราฟวิเคราะห์ความต้องการตลาดเทียบกับหลักสูตรที่เปิดสอน
-    - **Institute Status:** แสดงสถานะการ Verified และ KYC ของสถาบัน
 2.  **นำเข้าข้อมูล (Import Wizard):**
-    - **Dual Input:** รองรับทั้งการอัปโหลดไฟล์ (CSV/XLSX) และการกรอกข้อมูลด้วยตนเอง (Manual Entry)
-    - **Conflict Resolution:** หน้าจอ Preview เพื่อแก้ไขข้อมูลที่ผิดพลาด (Inline Edit) ก่อนบันทึก
-    - **Bulk Invite:** ส่งคำเชิญสมัครสมาชิกให้ผู้ที่จบการศึกษาแต่ยังไม่มีบัญชี CareDee
+    - **Conflict Resolution:** หน้าจอ Preview เพื่อแก้ไขข้อมูลที่ผิดพลาด (Inline Edit) หรือจับคู่บัญชีด้วยตนเอง (Manual Match)
+    - **Bulk Invite:** ระบบจำลองการส่ง SMS/Email คำเชิญให้ผู้ที่จบการศึกษา
 3.  **จัดการใบรับรอง (Certificate Management):**
-    - **Lifecycle Control:** ระบบต่ออายุ (Renew) และเพิกถอน (Revoke) ใบรับรองพร้อมบันทึกเหตุผล
-    - **Digital Printing:** ฟังก์ชันพิมพ์ใบรับรองดิจิทัลสำหรับผู้อบรม
+    - **Bulk UI:** การเลือกหลายรายการเพื่อพิมพ์ใบรับรองดิจิทัลหรือดำเนินการอื่นๆ พร้อมกัน
+    - **Digital Preview:** จำลองการเปิดดูไฟล์วุฒิบัตรต้นฉบับ
 4.  **สถิติตลาดแรงงาน (Market Intelligence):**
-    - **Unmet Demand:** วิเคราะห์คำค้นหาของลูกค้าที่ไม่พบผู้ให้บริการ (Market Gap)
-    - **Heatmap:** แผนที่แสดงพื้นที่ขาดแคลนแรงงานตามประเภททักษะ
+    - **Unmet Demand:** วิเคราะห์คำค้นหาที่ "ไม่พบผู้ดูแล" เพื่อช่วยสถาบันวางแผนเปิดหลักสูตรใหม่
+    - **Heatmap:** แผนที่แสดงพื้นที่ขาดแคลนแรงงานแบ่งตามโซน (เช่น กรุงเทพฯ ปริมณฑล)
 5.  **การตรวจสอบ & เกณฑ์ (Verification):**
-    - **Verification Queue:** รับคำขอตรวจสอบวุฒิการศึกษาจากผู้สมัครอิสระ
-    - **Global Policy:** แสดงเกณฑ์มาตรฐานการพิจารณาเอกสารที่ Admin กำหนด (Read Only)
-    - **PDPA Audit Log:** บันทึกประวัติการตรวจสอบทุกรายการพร้อม IP และ Metadata
+    - **Verification Queue:** รับคำขอตรวจสอบวุฒิการศึกษาจากผู้สมัครอิสระ พร้อมปุ่ม Confirm/Reject
+    - **Audit Log (PDPA):** บันทึกประวัติการตรวจสอบทุกรายการพร้อม IP Address และ Metadata จำลอง
 6.  **โปรไฟล์สถาบัน & KYC:**
-    - จัดการข้อมูลติดต่อและอัปโหลดเอกสารนิติบุคคล/ใบอนุญาต เพื่อยืนยันตัวตนสถาบัน
+    - ระบบจัดการข้อมูลติดต่อและอัปโหลดเอกสารยืนยันตัวตนสถาบันพร้อมปุ่มดูไฟล์จำลอง
 
 ---
 
 ## สรุปรายการ Gaps Analysis (สิ่งที่เติมเต็มจากเอกสาร SRS v1.2)
 ในการพัฒนา Mockup นี้ ได้มีการเติมฟีเจอร์ที่ขาดหายไปเพื่อให้ตรงตามข้อกำหนดทางธุรกิจ ดังนี้:
-1. **Gap 1 (Evidence Viewer):** ส่วนแสดงหลักฐานสำหรับตัดสินเคสอุทธรณ์
+1. **Gap 1 (Evidence Viewer):** ส่วนแสดงหลักฐานสำหรับตัดสินเคสอุทธรณ์ (ใน Admin & Operator)
 2. **Gap 2 (Custom Date Range):** การเลือกช่วงวันที่ในหน้ารายงาน
-3. **Gap 3 (Bulk Actions):** การจัดการข้อมูลจำนวนมาก (Batch Approval)
-4. **Gap 4 (Payout Breakdown):** การแจงรายละเอียดเงินโอนเพื่อความโปร่งใส
-5. **Gap 5 (Policy Preview/Broadcast):** การควบคุมนโยบาย PDPA
+3. **Gap 3 (Bulk Actions):** การจัดการข้อมูลจำนวนมาก (Batch Approval/Action) ในทุก Portal
+4. **Gap 4 (Payout Breakdown):** การแจงรายละเอียดเงินโอนเพื่อความโปร่งใส (Net Payout Logic)
+5. **Gap 5 (Policy Preview/Broadcast):** การควบคุมและประกาศนโยบาย PDPA
 6. **Gap 6 (Technical Incident Link):** การเชื่อมโยงบันทึกข้อผิดพลาดทางเทคนิคในหน้า Cloud

@@ -422,7 +422,7 @@
         <div class="card">
             <div class="card-title">
                 <h3>📥 คำขอยืนยันผู้ดูแลใหม่ (Onboarding Tracker)</h3>
-                <button class="btn btn-outline btn-sm" onclick="alert('กำลังดึงข้อมูลชุดใหม่จากสถาบันฝึกอบรม (TI Inbound)...')">🔄 Check TI Inbound</button>
+                <button class="btn btn-outline btn-sm" id="btn-ti-check" onclick="checkTIInbound()">🔄 Check TI Inbound</button>
             </div>
             <p style="font-size: 13px; color: var(--neutral-600); margin-bottom: 16px;">กด 'Verify' เพื่อตรวจสอบเอกสารคู่กับข้อมูลจาก TI สถาบันฝึกอบรม</p>
             <table>
@@ -635,39 +635,130 @@
         </div>
         
         <div class="export-grid">
-            <div class="export-card"><span>📊</span><div style="font-weight: 600;">สรุปงานรายวัน</div></div>
-            <div class="export-card"><span>💰</span><div style="font-weight: 600;">รายงานรายได้</div></div>
+            <div class="export-card" onclick="alert('กำลังสร้างไฟล์: Daily_Summary_20260515.pdf\nกรุณารอสักครู่...')"><span>📊</span><div style="font-weight: 600;">สรุปงานรายวัน</div></div>
+            <div class="export-card" onclick="alert('กำลังส่งออกไฟล์: Revenue_Report_May_2026.xlsx\nไปยังอีเมล: michael.j@en-enterprise.com')"><span>💰</span><div style="font-weight: 600;">รายงานรายได้</div></div>
             <div class="export-card" onclick="alert('กำลังเข้าสู่ระบบ Audit Log Viewer (เก็บข้อมูลย้อนหลัง 3 ปี ตามนโยบาย PDPA)...')"><span>📜</span><div style="font-weight: 600;">Audit Log Viewer</div></div>
         </div>
     </main>
 
     <script>
-        // Navigation Logic
+        // --- Navigation Logic ---
         function showPage(pageId) {
-            // Hide all pages
-            document.querySelectorAll('.main').forEach(page => {
-                page.classList.remove('active');
-            });
-            // Show target page
+            document.querySelectorAll('.main').forEach(page => page.classList.remove('active'));
             const targetPage = document.getElementById('page-' + pageId);
-            if (targetPage) {
-                targetPage.classList.add('active');
-            }
+            if (targetPage) targetPage.classList.add('active');
 
-            // Update sidebar menu items
-            document.querySelectorAll('.menu-item').forEach(item => {
-                item.classList.remove('active');
-            });
+            document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active'));
             const activeNav = document.getElementById('nav-' + pageId);
-            if (activeNav) {
-                activeNav.classList.add('active');
-            }
+            if (activeNav) activeNav.classList.add('active');
 
-            // Scroll to top
             window.scrollTo(0, 0);
         }
 
-        // Dispute Resolution Logic
+        function logout() {
+            if (confirm('คุณต้องการออกจากระบบใช่หรือไม่?')) {
+                document.body.innerHTML = `
+                    <div style="height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--sidebar-bg); color: white;">
+                        <div class="logo-box" style="width: 80px; height: 80px; font-size: 40px;">CD</div>
+                        <h1 style="margin-top: 20px;">CareDee Operator</h1>
+                        <p style="opacity: 0.7;">คุณได้ออกจากระบบเรียบร้อยแล้ว</p>
+                        <button class="btn btn-primary" style="margin-top: 32px;" onclick="location.reload()">เข้าสู่ระบบอีกครั้ง</button>
+                    </div>
+                `;
+            }
+        }
+
+        // --- Team Management Logic ---
+        function checkTIInbound() {
+            const btn = document.getElementById('btn-ti-check');
+            const originalText = btn.innerText;
+            btn.innerText = '🔄 กำลังดึงข้อมูล...';
+            btn.disabled = true;
+            
+            setTimeout(() => {
+                alert('ดึงข้อมูลชุดใหม่จากสถาบันฝึกอบรม (TI Inbound) สำเร็จ!\n- พบผู้ดูแลใหม่: 3 ราย\n- อัปเดตใบรับรอง: 5 ราย');
+                btn.innerText = originalText;
+                btn.disabled = false;
+            }, 1500);
+        }
+
+        function saveMatchingConfig() {
+            const range = document.querySelector('input[type="range"]');
+            alert('บันทึกการตั้งค่า Matching Engine เรียบร้อยแล้ว\n- น้ำหนักระยะทาง: ' + range.value + '%');
+        }
+
+        function verifyOnboarding() {
+            const btn = event.target;
+            const row = btn.closest('tr');
+            const tracker = row.querySelector('.onboarding-tracker');
+            const steps = tracker.querySelectorAll('.step');
+            const lines = tracker.querySelectorAll('.step-line');
+            const status = row.querySelector('.status-badge');
+            
+            // Simulation of next step
+            steps[4].className = 'step done';
+            lines[4].className = 'step-line done';
+            steps[5].className = 'step current';
+            
+            status.innerText = 'ผ่านการตรวจสอบเอกสาร';
+            status.className = 'status-badge bg-active';
+            
+            btn.innerText = '✓ Verified';
+            btn.disabled = true;
+            row.querySelector('.btn-primary').disabled = false;
+            
+            alert('ยืนยันความถูกต้องของเอกสารเรียบร้อย (Verified against TI Inbound)');
+        }
+
+        function approveToTeam(btn) {
+            const row = btn.closest('tr');
+            row.style.opacity = '0.5';
+            row.style.pointerEvents = 'none';
+            setTimeout(() => {
+                row.remove();
+                alert('รับผู้ดูแลเข้าสังกัดเรียบร้อย ข้อมูลจะปรากฏในรายชื่อทีม');
+            }, 500);
+        }
+
+        // --- Schedule Logic ---
+        function resolveConflict(bookingId) {
+            const bar = document.querySelector('.booking-bar.conflict');
+            const status = document.querySelector('.status-badge.bg-error');
+            const row = bar.closest('.timeline-row');
+            
+            alert('ระบบกำลังจัดสรรงานแทน...\nสแกนหาผู้ดูแลที่ว่างที่สุดในรัศมี 5 กม.\nพบ: นายสมชาย (Expertise: Standard)');
+            
+            bar.className = 'booking-bar';
+            bar.innerText = '#BK-7750 (สมชาย)';
+            bar.style.background = 'var(--primary-100)';
+            bar.style.borderLeftColor = 'var(--primary-600)';
+            bar.style.color = 'var(--primary-600)';
+            
+            if (status) {
+                status.innerText = '✓ ย้ายงานแล้ว';
+                status.className = 'status-badge bg-success';
+            }
+            
+            document.querySelector('.alert-error').style.display = 'none';
+        }
+
+        // --- Care Report Logic ---
+        function escalateReport() {
+            const btn = event.target;
+            const item = btn.closest('.report-item');
+            btn.innerText = 'กำลังประสานงาน...';
+            btn.className = 'btn btn-outline btn-sm';
+            btn.disabled = true;
+            
+            setTimeout(() => {
+                alert('ส่งแจ้งเตือนไปยังฝ่ายพยาบาลและญาติเรียบร้อย\nสถานะเคส: Escalated to Medical Team');
+                item.style.borderLeftColor = 'var(--warning)';
+                item.querySelector('.status-badge').innerText = 'กำลังประสานงาน';
+                item.querySelector('.status-badge').className = 'status-badge bg-pending';
+            }, 1000);
+        }
+
+        // --- Dispute Resolution Logic ---
         function resolveDispute(caseId) {
             const statusBadge = document.getElementById('status-' + caseId);
             const actionBtn = event.target;
@@ -684,7 +775,14 @@
                 actionBtn.style.cursor = 'not-allowed';
             }
 
-            alert('ดำเนินการอนุมัติและส่งเรื่องให้ System Admin เรียบร้อยแล้ว\nรีวิวนี้จะถูกระงับการแสดงผลชั่วคราวจนกว่า Admin จะยืนยันการลบ');
+            alert('ดำเนินการอนุมัติและส่งเรื่องให้ System Admin เรียบร้อยแล้ว\nรีวิวนี้จะถูกระงับการแสดงผลชั่วคราจนกว่า Admin จะยืนยันการลบ');
+        }
+
+        // --- Utilities ---
+        function toggleAccessibility() {
+            document.body.classList.toggle('accessibility-mode');
+            const isModeOn = document.body.classList.contains('accessibility-mode');
+            alert(isModeOn ? 'Accessibility Mode: ON (High Contrast & Larger Text)' : 'Accessibility Mode: OFF');
         }
 
         // Sync Indicator Pulse Simulation
@@ -695,18 +793,13 @@
             });
         }, 5000);
 
-        // Accessibility Toggle
-        function toggleAccessibility() {
-            document.body.classList.toggle('accessibility-mode');
-            const isModeOn = document.body.classList.contains('accessibility-mode');
-            alert(isModeOn ? 'Accessibility Mode: ON (High Contrast & Larger Text)' : 'Accessibility Mode: OFF');
-        }
-
-        // Mock Critical Alert (Show after 3 seconds)
-        setTimeout(() => {
-            const alertBar = document.getElementById('critical-alert');
-            if (alertBar) alertBar.style.display = 'flex';
-        }, 3000);
+        // Update range display
+        document.addEventListener('input', (e) => {
+            if (e.target.type === 'range') {
+                const val = e.target.parentElement.querySelector('b');
+                if (val) val.innerText = e.target.value + '%';
+            }
+        });
     </script>
 </body>
 </html>

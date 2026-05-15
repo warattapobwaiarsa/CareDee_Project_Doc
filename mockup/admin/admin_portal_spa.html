@@ -304,7 +304,7 @@
                             </tr>
                             <tr id="row-user-dash-2">
                                 <td>บริบาลไทย จำกัด</td><td>Operator</td><td><span class="status-pill status-pending">รอเอกสาร</span></td>
-                                <td><button class="btn btn-outline" style="padding: 4px 12px;">ตรวจ</button></td>
+                                <td><button class="btn btn-outline" style="padding: 4px 12px;" onclick="switchView('view-users')">ตรวจ</button></td>
                             </tr>
                         </tbody>
                     </table>
@@ -692,14 +692,51 @@
             
             document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
             const btnId = 'btn-' + viewId.replace('view-', '');
-            document.getElementById(btnId).classList.add('active');
+            if (document.getElementById(btnId)) {
+                document.getElementById(btnId).classList.add('active');
+            }
             
             currentView = viewId;
         }
 
         // --- Global Actions ---
         function applyGlobalFilter(operator) {
-            alert('กำลังคัดกรองข้อมูลของหน่วยงาน: ' + operator);
+            const rows = document.querySelectorAll('tbody tr');
+            rows.forEach(row => {
+                if (operator === 'all') {
+                    row.style.display = '';
+                    return;
+                }
+                const text = row.innerText.toLowerCase();
+                const opMap = { 'en': 'en enterprise', 'mk': 'มีสุข' };
+                if (text.includes(opMap[operator])) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+            console.log('Filtering by agency:', operator);
+        }
+
+        function handleSearch(query) {
+            const q = query.toLowerCase();
+            const rows = document.querySelectorAll('.view-section.active tbody tr');
+            rows.forEach(row => {
+                row.style.display = row.innerText.toLowerCase().includes(q) ? '' : 'none';
+            });
+        }
+
+        function logout() {
+            if (confirm('คุณต้องการออกจากระบบใช่หรือไม่?')) {
+                document.body.innerHTML = `
+                    <div style="height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--sidebar-bg); color: white;">
+                        <div class="logo-box" style="width: 80px; height: 80px; font-size: 40px;">CD</div>
+                        <h1 style="margin-top: 20px;">CareDee Admin</h1>
+                        <p style="opacity: 0.7;">คุณได้ออกจากระบบเรียบร้อยแล้ว</p>
+                        <button class="btn btn-primary" style="margin-top: 32px;" onclick="location.reload()">เข้าสู่ระบบอีกครั้ง</button>
+                    </div>
+                `;
+            }
         }
 
         function broadcastMaintenance() {
@@ -735,22 +772,30 @@
         // --- List Management ---
         function approveUser(rowId) {
             const row = document.getElementById(rowId);
-            row.style.opacity = '0.5';
-            row.style.pointerEvents = 'none';
+            row.style.transition = 'all 0.5s';
+            row.style.opacity = '0';
+            row.style.transform = 'translateX(20px)';
             setTimeout(() => {
                 row.remove();
                 pendingCount--;
-                document.getElementById('dash-pending-count').innerText = pendingCount;
+                const counter = document.getElementById('dash-pending-count');
+                if (counter) counter.innerText = pendingCount;
                 alert('อนุมัติเรียบร้อยแล้ว');
             }, 500);
         }
 
-        function rejectUser(rowId) {
-            if(confirm('ยืนยันการระงับบัญชีนี้?')) {
-                const row = document.getElementById(rowId);
-                row.remove();
-                alert('ระงับบัญชีเรียบร้อย');
+        function deleteRow(btn) {
+            if (confirm('ยืนยันการลบรายการนี้?')) {
+                btn.closest('tr').remove();
             }
+        }
+
+        function restoreReview(btn) {
+            const row = btn.closest('tr');
+            const pill = row.querySelector('.status-pill');
+            pill.className = 'status-pill status-success';
+            pill.innerText = 'Restored';
+            alert('กู้คืนรีวิวเรียบร้อย');
         }
 
         function suspendUser(statusId) {
@@ -824,6 +869,7 @@
         function initCharts() {
             const chart = document.getElementById('uptime-chart-bars');
             if (!chart) return;
+            chart.innerHTML = '';
             for (let i = 0; i < 48; i++) {
                 const bar = document.createElement('div');
                 bar.className = 'uptime-bar';
@@ -844,6 +890,7 @@
         function initCloudStatus() {
             const list = document.getElementById('service-health-list');
             if (!list) return;
+            list.innerHTML = '';
             services.forEach(s => {
                 const item = document.createElement('div');
                 item.className = 'service-item';
@@ -859,7 +906,7 @@
                         <span style="width: 10px; height: 10px; border-radius: 50%; background: var(--${s.status === 'green' ? 'success' : 'warning'});"></span>
                         <div style="display:flex; flex-direction:column;">
                             <span style="font-weight: 600;">${s.name}</span>
-                            <a href="#" style="font-size: 10px; color: var(--primary-600);" onclick="alert('Incident Log Details (Gap 6)')">View Technical Incident (Gap 6)</a>
+                            <a href="#" style="font-size: 10px; color: var(--primary-600);" onclick="alert('Incident Log: Latency spiked to 2.5s at 10:15 AM')">View Technical Incident (Gap 6)</a>
                         </div>
                     </div>
                     <span style="font-size: 12px; font-weight: 700; color: var(--${s.status === 'green' ? 'success' : 'warning'});">${s.msg}</span>
@@ -867,6 +914,9 @@
                 list.appendChild(item);
             });
         }
+
+        // --- Event Listeners ---
+        document.querySelector('.search-bar input').addEventListener('input', (e) => handleSearch(e.target.value));
 
         initCharts();
         initCloudStatus();

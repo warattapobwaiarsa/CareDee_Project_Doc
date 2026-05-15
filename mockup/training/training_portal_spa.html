@@ -628,12 +628,12 @@
                     <div style="padding: 12px; background: var(--neutral-100); border-radius: 10px; margin-bottom: 10px; border-left: 4px solid var(--secondary-500);">
                         <div style="font-weight: 600;">ดูแลผู้ป่วยพักฟื้นหลังผ่าตัดเปลี่ยนข้อเข่า</div>
                         <div style="font-size: 12px; color: var(--neutral-600);">ค้นหา 320 ครั้ง/เดือน | พบ 0 คน</div>
-                        <a href="#" style="font-size: 11px; color: var(--primary-600);">ดูแนวทางหลักสูตร →</a>
+                        <a href="#" style="font-size: 11px; color: var(--primary-600);" onclick="alert('ระบบแนะนำให้เปิดหลักสูตร: Specialty Orthopedic Care (40 ชม.)\nมีผู้รอรับบริการในโซน: พระราม 2, ราชพฤกษ์')">ดูแนวทางหลักสูตร →</a>
                     </div>
                     <div style="padding: 12px; background: var(--neutral-100); border-radius: 10px; border-left: 4px solid var(--info);">
                         <div style="font-weight: 600;">ผู้ช่วยพยาบาลที่พูดภาษาญี่ปุ่นได้</div>
                         <div style="font-size: 12px; color: var(--neutral-600);">ค้นหา 150 ครั้ง/เดือน | พบ 2 คน (ไม่ว่าง)</div>
-                        <a href="#" style="font-size: 11px; color: var(--primary-600);">ดูแนวทางหลักสูตร →</a>
+                        <a href="#" style="font-size: 11px; color: var(--primary-600);" onclick="alert('แนวทาง: หลักสูตรภาษาญี่ปุ่นเพื่อการบริบาล (ระดับพื้นฐาน N5)\nกลุ่มเป้าหมาย: ผู้ดูแลเดิมที่ต้องการอัปเกรดฐานเงินเดือน')">ดูแนวทางหลักสูตร →</a>
                     </div>
                 </div>
             </div>
@@ -824,11 +824,11 @@
                                 <p style="font-weight: 700; font-size: 14px;">ใบอนุญาตจัดตั้งสถาบัน</p>
                                 <p style="font-size: 11px; color: var(--neutral-600);">license_2026.pdf | อัปโหลดเมื่อ 10/01/2026</p>
                             </div>
-                            <button class="btn btn-ghost btn-sm">ดูไฟล์</button>
+                            <button class="btn btn-ghost btn-sm" onclick="alert('กำลังเปิดไฟล์: license_2026.pdf\n- สถานะ: Verified โดย Admin\n- วันที่หมดอายุ: 10/01/2031')">ดูไฟล์</button>
                         </div>
                     </div>
 
-                    <div class="upload-zone" style="padding: 24px;">
+                    <div class="upload-zone" style="padding: 24px;" onclick="alert('เลือกไฟล์จากคอมพิวเตอร์ของคุณ\n(รองรับ PDF, JPG, PNG ไม่เกิน 5MB)')">
                         <p style="font-size: 13px; font-weight: 700;">+ อัปโหลดเอกสารใหม่ / อัปเดต</p>
                         <p style="font-size: 11px; color: var(--neutral-600);">รองรับ PDF, JPG, PNG ไม่เกิน 5MB</p>
                     </div>
@@ -949,6 +949,7 @@
             
             // Show target page
             const target = document.getElementById('page-' + pageId);
+            if (!target) return;
             
             // Check Empty State Logic
             const isEmpty = document.body.classList.contains('is-empty');
@@ -986,8 +987,14 @@
 
         function logout() {
             if(confirm('คุณต้องการออกจากระบบใช่หรือไม่?')) {
-                alert('ออกจากระบบเรียบร้อย');
-                switchPage('dashboard', document.querySelector('.menu-link'));
+                document.body.innerHTML = `
+                    <div style="height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--white); color: var(--primary-600);">
+                        <div class="logo-box" style="width: 80px; height: 80px; font-size: 40px; background: var(--primary-600); color: white;">CD</div>
+                        <h1 style="margin-top: 20px;">CareDee Academy</h1>
+                        <p style="color: var(--neutral-600);">คุณได้ออกจากระบบเรียบร้อยแล้ว</p>
+                        <button class="btn btn-primary" style="margin-top: 32px;" onclick="location.reload()">เข้าสู่ระบบอีกครั้ง</button>
+                    </div>
+                `;
             }
         }
 
@@ -1029,8 +1036,22 @@
             switchPage('dashboard', document.querySelector('.menu-link'));
         }
 
-        function sendInvite(name) {
+        function sendInvite(name, btn) {
             alert('ส่งคำเชิญสมัครสมาชิกไปยัง ' + name + ' เรียบร้อยแล้ว (SMS/Email)');
+            const row = btn.closest('tr');
+            const badge = row.querySelector('.badge');
+            badge.innerText = 'Invite Sent';
+            badge.className = 'badge bg-pending';
+            btn.disabled = true;
+            btn.innerText = '✓ Sent';
+        }
+
+        function handleMappingUpdate() {
+            const name = document.getElementById('editNameField').value;
+            const id = document.getElementById('editIdField').value;
+            // Simplified update simulation
+            alert(`อัปเดตข้อมูลของ ${name} เรียบร้อยแล้ว`);
+            closeModal('editRowModal');
         }
 
         // --- Certificate Management Logic ---
@@ -1051,6 +1072,27 @@
                 countSpan.innerText = checked.length;
             } else {
                 bar.style.display = 'none';
+            }
+        }
+
+        function searchCerts(query) {
+            const q = query.toLowerCase();
+            const rows = document.querySelectorAll('#certTableBody tr');
+            rows.forEach(row => {
+                row.style.display = row.innerText.toLowerCase().includes(q) ? '' : 'none';
+            });
+        }
+
+        // --- Verification Logic ---
+        function bulkApproveVerifications() {
+            const checked = document.querySelectorAll('#ver-tab-queue input[type="checkbox"]:checked');
+            if (checked.length === 0) return alert('กรุณาเลือกรายการที่ต้องการอนุมัติ');
+            
+            if (confirm(`ยืนยันการอนุมัติใบรับรองจำนวน ${checked.length} รายการ?`)) {
+                checked.forEach(c => {
+                    if (c.closest('tr')) c.closest('tr').remove();
+                });
+                alert('ดำเนินการอนุมัติเรียบร้อย');
             }
         }
 
@@ -1080,6 +1122,8 @@
         }
 
         function confirmRevoke() {
+            const reason = document.querySelector('#revokeModal textarea').value;
+            if (!reason) return alert('กรุณาระบุเหตุผลในการเพิกถอน');
             alert('เพิกถอนใบรับรองเรียบร้อยแล้ว และบันทึกใน Audit Log');
             closeModal('revokeModal');
         }
@@ -1091,12 +1135,9 @@
 
         // --- Bulk Import: Manual Entry Logic ---
         function switchImportTab(tabId, element) {
-            // Update Tab UI
             const tabs = element.parentElement.querySelectorAll('.tab-item');
             tabs.forEach(t => t.classList.remove('active'));
             element.classList.add('active');
-
-            // Toggle Content
             document.getElementById('import-tab-file').style.display = (tabId === 'file' ? 'block' : 'none');
             document.getElementById('import-tab-manual').style.display = (tabId === 'manual' ? 'block' : 'none');
         }
@@ -1123,7 +1164,6 @@
             manualRows.push(newRow);
             renderManualRows();
 
-            // Clear inputs
             idInput.value = '';
             nameInput.value = '';
             certInput.value = '';
@@ -1158,6 +1198,10 @@
                 </tr>
             `).join('');
         }
+
+        // --- Event Listeners ---
+        document.querySelector('#page-certificates .filter-bar input').addEventListener('input', (e) => searchCerts(e.target.value));
+
     </script>
 </body>
 </html>
