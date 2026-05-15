@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Admin Portal – User & Role Management</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'DM Sans',sans-serif;background:#F1F5F9;display:flex;min-height:100vh;}
+  ::-webkit-scrollbar{width:6px;}
+  ::-webkit-scrollbar-track{background:transparent;}
+  ::-webkit-scrollbar-thumb{background:#CBD5E1;border-radius:99px;}
+
+  /* Sidebar */
+  aside{width:240px;background:#0F172A;color:#E2E8F0;display:flex;flex-direction:column;padding:0 0 24px;flex-shrink:0;}
+  .sidebar-header{padding:24px 20px 20px;border-bottom:1px solid rgba(255,255,255,.08);}
+  .sidebar-logo{display:flex;align-items:center;gap:10px;}
+  .logo-icon{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,#6366F1,#818CF8);display:flex;align-items:center;justify-content:center;}
+  .logo-text{font-weight:700;font-size:16px;color:#F8FAFC;}
+  nav{padding:16px 12px;flex:1;}
+  .nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;cursor:pointer;margin-bottom:2px;color:#94A3B8;font-size:14px;font-weight:400;transition:background .15s,color .15s;}
+  .nav-item:hover{background:rgba(255,255,255,.05);}
+  .nav-item.active{background:rgba(99,102,241,.25);color:#A5B4FC;font-weight:600;}
+  .sidebar-footer{padding:0 12px;}
+
+  /* Main */
+  main{flex:1;overflow:auto;}
+  .topbar{background:#fff;border-bottom:1px solid #E2E8F0;padding:0 32px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;}
+  .topbar-user{display:flex;align-items:center;gap:10px;}
+  .avatar{width:34px;height:34px;border-radius:50%;background:#E2E8F0;display:flex;align-items:center;justify-content:center;}
+  .topbar-name{font-weight:600;font-size:14px;color:#1E293B;}
+  .content{padding:32px;}
+  h1{font-size:26px;font-weight:700;color:#0F172A;margin-bottom:4px;}
+  .subtitle{color:#64748B;font-size:14px;margin-bottom:32px;}
+
+  /* Cards */
+  .cards{display:flex;gap:16px;margin-bottom:28px;flex-wrap:wrap;}
+  .card{background:#fff;border:1.5px solid #E2E8F0;border-radius:12px;padding:16px 20px;min-width:160px;flex:1 1 160px;display:flex;align-items:center;gap:12px;box-shadow:0 1px 4px rgba(0,0,0,.04);}
+  .card-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;}
+  .card-count{font-size:22px;font-weight:700;color:#0F172A;line-height:1;}
+  .card-label{font-size:12px;color:#64748B;margin-top:2px;text-transform:capitalize;}
+
+  /* Panel */
+  .panel{background:#fff;border-radius:14px;border:1.5px solid #E2E8F0;margin-bottom:28px;overflow:hidden;box-shadow:0 1px 6px rgba(0,0,0,.04);}
+  .panel-header{padding:20px 24px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #F1F5F9;}
+  .panel-title{font-size:16px;font-weight:700;color:#0F172A;}
+  .panel-toolbar{padding:16px 24px;display:flex;gap:12px;flex-wrap:wrap;border-bottom:1px solid #F1F5F9;}
+  .search-wrap{position:relative;flex:1;min-width:200px;}
+  .search-wrap svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#94A3B8;}
+  input[type=text],input[type=email],select{font-family:'DM Sans',sans-serif;font-size:14px;color:#1E293B;outline:none;}
+  .search-input{width:100%;padding:9px 14px 9px 36px;border-radius:8px;border:1.5px solid #E2E8F0;transition:border-color .15s;}
+  .search-input:focus{border-color:#6366F1;}
+  .filter-select{padding:9px 14px;border-radius:8px;border:1.5px solid #E2E8F0;background:#fff;cursor:pointer;}
+
+  /* Table */
+  table{width:100%;border-collapse:collapse;}
+  .user-table{table-layout:fixed;}
+  th{padding:11px 20px;text-align:left;font-size:12px;font-weight:700;color:#64748B;letter-spacing:.04em;border-bottom:1px solid #F1F5F9;background:#F8FAFC;}
+  td{padding:14px 20px;font-size:14px;border-bottom:1px solid #F1F5F9;color:#334155;transition:background .1s;}
+  tr:hover td{background:#F8FAFC;}
+  .user-table th,
+  .user-table td{padding:13px 16px;}
+  .user-table td{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .sort-indicator{display:inline-block;width:16px;text-align:center;}
+  .mono{font-family:'DM Mono',monospace;font-weight:600;color:#1E293B;}
+  .num{color:#94A3B8;}
+  .strong{font-weight:600;color:#0F172A;}
+  .muted{color:#94A3B8;font-size:12px;}
+  .email{font-size:13px;color:#64748B;}
+
+  /* Badge */
+  .badge{border-radius:6px;padding:2px 10px;font-size:12px;font-weight:600;white-space:nowrap;border:1px solid;}
+  .badge-admin{background:#EEF2FF;color:#4338CA;border-color:#C7D2FE;}
+  .badge-operator{background:#ECFDF5;color:#065F46;border-color:#A7F3D0;}
+  .badge-training{background:#FFF7ED;color:#9A3412;border-color:#FDBA74;}
+  .badge-active{background:#ECFDF5;color:#065F46;border-color:#A7F3D0;}
+  .badge-inactive{background:#F1F5F9;color:#64748B;border-color:#CBD5E1;}
+  .badge-custom{background:#F8FAFC;color:#475569;border-color:#E2E8F0;}
+
+  /* Buttons */
+  .btn{padding:9px 20px;border-radius:8px;font-weight:600;font-size:14px;cursor:pointer;font-family:'DM Sans',sans-serif;display:inline-flex;align-items:center;gap:6px;border:none;transition:opacity .15s,transform .1s;}
+  .btn:hover{opacity:.85;}
+  .btn:active{transform:scale(.97);}
+  .btn-primary{background:#4F46E5;color:#fff;}
+  .btn-ghost{background:#F8FAFC;color:#475569;border:1.5px solid #E2E8F0;}
+  .btn-danger{background:#FEF2F2;color:#DC2626;border:1.5px solid #FECACA;}
+  .btn-icon{padding:6px 10px;border-radius:7px;border:1.5px solid #FECACA;background:#FEF2F2;color:#DC2626;cursor:pointer;display:flex;align-items:center;transition:opacity .15s;}
+  .btn-icon:hover{opacity:.75;}
+
+  /* Pagination */
+  .pagination{padding:14px 24px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid #F1F5F9;}
+  .page-info{font-size:13px;color:#64748B;}
+  .page-btns{display:flex;gap:6px;}
+  .page-btn{width:32px;height:32px;border-radius:7px;border:1.5px solid #E2E8F0;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;font-family:'DM Sans',sans-serif;color:#475569;transition:all .15s;}
+  .page-btn:disabled{opacity:.4;cursor:not-allowed;}
+  .page-btn.active{border-color:#6366F1;background:#EEF2FF;color:#4F46E5;}
+
+  /* Modal */
+  .overlay{position:fixed;inset:0;background:rgba(15,23,42,.45);z-index:1000;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(2px);}
+  .modal{background:#fff;border-radius:16px;width:440px;max-width:95vw;box-shadow:0 24px 64px rgba(0,0,0,.18);padding:32px;animation:modalIn .18s cubic-bezier(.4,0,.2,1);}
+  @keyframes modalIn{from{opacity:0;transform:translateY(-12px) scale(.97);}to{opacity:1;transform:none;}}
+  .modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;}
+  .modal-title{font-size:18px;font-weight:700;color:#0F172A;}
+  .modal-close{background:none;border:none;cursor:pointer;color:#94A3B8;font-size:22px;line-height:1;padding:4px;border-radius:6px;}
+  .modal-close:hover{color:#475569;}
+  .modal-desc{font-size:13px;color:#64748B;margin-bottom:20px;}
+  .form-group{margin-bottom:16px;}
+  label{display:block;margin-bottom:6px;font-size:13px;font-weight:600;color:#475569;}
+  .form-input,.form-select{width:100%;padding:10px 14px;border-radius:8px;border:1.5px solid #E2E8F0;font-size:14px;font-family:'DM Sans',sans-serif;color:#1E293B;transition:border-color .15s;}
+  .form-input:focus,.form-select:focus{border-color:#6366F1;outline:none;}
+  .form-select{background:#fff;cursor:pointer;}
+  .form-error{color:#DC2626;font-size:13px;margin:-8px 0 12px;}
+  .modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:8px;}
+  .modal-actions.center{justify-content:center;}
+  .delete-icon-wrap{width:56px;height:56px;border-radius:50%;background:#FEF2F2;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;}
+  .delete-title{font-size:18px;font-weight:700;color:#0F172A;margin-bottom:8px;}
+  .delete-desc{font-size:14px;color:#64748B;margin-bottom:4px;}
+  .delete-warn{font-size:13px;color:#94A3B8;}
+  .role-name-cell{display:flex;align-items:center;gap:9px;}
+  .empty{padding:40px;text-align:center;color:#94A3B8;font-size:14px;}
+  .hidden{display:none;}
+</style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<aside>
+  <div class="sidebar-header">
+    <div class="sidebar-logo">
+      <div class="logo-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      </div>
+      <span class="logo-text">Admin Portal</span>
+    </div>
+  </div>
+  <nav>
+    <div class="nav-item">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      Dashboard
+    </div>
+    <div class="nav-item active">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      User &amp; Role Management
+    </div>
+    <div class="nav-item">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
+      Audit Logs
+    </div>
+    <div class="nav-item">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M18.36 18.36l1.41 1.41M4.93 4.93l1.41 1.41M5.64 18.36l-1.41 1.41M20 12h2M2 12h2M12 20v2M12 2v2"/></svg>
+      Settings
+    </div>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="nav-item">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+      Logout
+    </div>
+  </div>
+</aside>
+
+<!-- Main -->
+<main>
+  <!-- Topbar -->
+  <div class="topbar">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    <div class="topbar-user">
+      <div class="avatar">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </div>
+      <span class="topbar-name">Admin</span>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2"><polyline points="6,9 12,15 18,9"/></svg>
+    </div>
+  </div>
+
+  <div class="content">
+    <h1>User &amp; Role Management</h1>
+    <p class="subtitle">Manage roles and users in the system.</p>
+
+    <!-- Summary Cards -->
+    <div class="cards" id="summaryCards"></div>
+
+    <!-- Role Management Panel -->
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-title">Role Management</span>
+  
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>#</th><th>Role Name</th><th>Description</th><th>Users</th>
+          </tr>
+        </thead>
+        <tbody id="roleTableBody"></tbody>
+      </table>
+    </div>
+
+    <!-- User Management Panel -->
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-title">User Management</span>
+        <button class="btn btn-primary" onclick="openAddUser()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add User
+        </button>
+      </div>
+      <div class="panel-toolbar">
+        <div class="search-wrap">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input class="search-input" type="text" id="searchInput" placeholder="Search users..." oninput="onSearch()"/>
+        </div>
+        <select class="filter-select" id="filterRole" onchange="onFilter()">
+          <option value="all">All Roles</option>
+        </select>
+      </div>
+      <table class="user-table">
+        <thead>
+          <tr>
+            <th style="width: 5%;">#</th><th onclick="handleSort('username')" style="cursor:pointer; width: 17%;">Username<span id="sortIndicator-username" class="sort-indicator"></span></th><th onclick="handleSort('fullName')" style="cursor:pointer; width: 20%;">Full Name<span id="sortIndicator-fullName" class="sort-indicator"></span></th><th onclick="handleSort('role')" style="cursor:pointer; width: 20%;">Role<span id="sortIndicator-role" class="sort-indicator"></span></th><th onclick="handleSort('email')" style="cursor:pointer; width: 20%;">Email<span id="sortIndicator-email" class="sort-indicator"></span></th><th style="width: 10%;">Status</th><th style="width: 8%;">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="userTableBody"></tbody>
+      </table>
+      <div class="pagination">
+        <span class="page-info" id="pageInfo"></span>
+        <div class="page-btns" id="pageBtns"></div>
+      </div>
+    </div>
+  </div>
+</main>
+
+
+<!-- Add User Modal -->
+<div class="overlay hidden" id="addUserModal" onclick="closeModal('addUserModal')">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <span class="modal-title">Add New User</span>
+      <button class="modal-close" onclick="closeModal('addUserModal')">×</button>
+    </div>
+    <div class="form-group"><label>Username</label><input class="form-input" type="text" id="newUsername" placeholder="e.g. john_doe"/></div>
+    <div class="form-group"><label>Full Name</label><input class="form-input" type="text" id="newFullName" placeholder="e.g. John Doe"/></div>
+    <div class="form-group"><label>Email</label><input class="form-input" type="email" id="newEmail" placeholder="e.g. john@example.com"/></div>
+    <div class="form-group"><label>Role</label><select class="form-select" id="newUserRole"></select></div>
+    <div class="form-group"><label>Status</label>
+      <select class="form-select" id="newUserStatus">
+        <option value="Active">Active</option>
+        <option value="Inactive">Inactive</option>
+      </select>
+    </div>
+    <p class="form-error hidden" id="addUserError"></p>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('addUserModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="handleAddUser()">Add User</button>
+    </div>
+  </div>
+</div>
+
+<!-- Delete User Modal -->
+<div class="overlay hidden" id="deleteUserModal" onclick="closeModal('deleteUserModal')">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <span class="modal-title">Delete User</span>
+      <button class="modal-close" onclick="closeModal('deleteUserModal')">×</button>
+    </div>
+    <div style="text-align:center;padding:8px 0 24px;">
+      <div class="delete-icon-wrap">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2"><polyline points="3,6 5,6 21,6"/><path d="M19,6l-1,14H6L5,6"/><path d="M10,11v6M14,11v6"/><path d="M9,6V4h6v2"/></svg>
+      </div>
+      <p class="delete-title" id="deleteUserTitle"></p>
+      <p class="delete-desc" id="deleteUserDesc"></p>
+      <p class="delete-warn">This action cannot be undone.</p>
+    </div>
+    <div class="modal-actions center">
+      <button class="btn btn-ghost" onclick="closeModal('deleteUserModal')">Cancel</button>
+      <button class="btn btn-danger" onclick="confirmDeleteUser()">Delete User</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const ROLE_COLORS = {
+  admin:             {bg:"#EEF2FF",text:"#4338CA",border:"#C7D2FE",icon:"#4F46E5"},
+  operator:          {bg:"#ECFDF5",text:"#065F46",border:"#A7F3D0",icon:"#059669"},
+  "training institute":{bg:"#FFF7ED",text:"#9A3412",border:"#FDBA74",icon:"#EA580C"},
+};
+const ROLE_DESCRIPTIONS = {
+  admin:"System administrator with full access.",
+  operator:"Operator who can manage and operate the system.",
+  "training institute":"Training institute user.",
+};
+const ROLE_ICON_SVG = {
+  admin:`<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`,
+  operator:`<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>`,
+  "training institute":`<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>`,
+};
+const DEFAULT_ICON = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>`;
+const TRASH_ICON = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3,6 5,6 21,6"/><path d="M19,6l-1,14H6L5,6"/><path d="M10,11v6M14,11v6"/><path d="M9,6V4h6v2"/></svg>`;
+
+let roles = [
+  {id:1,name:"admin"},
+  {id:2,name:"operator"},
+  {id:3,name:"training institute"},
+];
+let users = [
+  {id:1,username:"admin01",fullName:"System Administrator",role:"admin",email:"admin01@example.com",status:"Active"},
+  {id:2,username:"operator01",fullName:"Operator One",role:"operator",email:"operator01@example.com",status:"Active"},
+  {id:3,username:"operator02",fullName:"Operator Two",role:"operator",email:"operator02@example.com",status:"Active"},
+  {id:4,username:"institute01",fullName:"Training Institute A",role:"training institute",email:"institute01@example.com",status:"Active"},
+];
+let nextUserId=5, nextRoleId=4;
+let currentPage=1;
+const PAGE_SIZE=5;
+let search="", filterRole="all";
+let sortColumn="username", sortDirection="asc";
+let pendingDeleteRole=null, pendingDeleteUser=null;
+
+function roleCounts(){
+  const c={};
+  roles.forEach(r=>c[r.name]=0);
+  users.forEach(u=>{if(c[u.role]!==undefined)c[u.role]++;});
+  return c;
+}
+
+function badgeHtml(role){
+  const c=ROLE_COLORS[role]||{bg:"#F8FAFC",text:"#475569",border:"#E2E8F0"};
+  return `<span class="badge" style="background:${c.bg};color:${c.text};border-color:${c.border};">${role}</span>`;
+}
+
+function statusBadge(s){
+  const cls=s==="Active"?"badge-active":"badge-inactive";
+  return `<span class="badge ${cls}">${s}</span>`;
+}
+
+function renderCards(){
+  const counts=roleCounts();
+  const el=document.getElementById("summaryCards");
+  el.innerHTML=roles.map(r=>{
+    const c=ROLE_COLORS[r.name]||{bg:"#F8FAFC",icon:"#64748B"};
+    const icon=ROLE_ICON_SVG[r.name]||DEFAULT_ICON;
+    return `<div class="card">
+      <div class="card-icon" style="background:${c.bg};color:${c.icon};">${icon}</div>
+      <div><div class="card-count">${counts[r.name]??0}</div><div class="card-label">${r.name}</div></div>
+    </div>`;
+  }).join("");
+}
+
+function renderRoleTable(){
+  const counts=roleCounts();
+  const tbody=document.getElementById("roleTableBody");
+  if(roles.length===0){
+    tbody.innerHTML=`<tr><td colspan="5" class="empty">No roles found. Add a role to get started.</td></tr>`;
+    return;
+  }
+  tbody.innerHTML=roles.map((role,i)=>{
+    const c=ROLE_COLORS[role.name]||{icon:"#64748B"};
+    const icon=ROLE_ICON_SVG[role.name]||DEFAULT_ICON;
+    const desc=ROLE_DESCRIPTIONS[role.name]||`${role.name} role.`;
+    return `<tr>
+      <td class="num">${i+1}</td>
+      <td><div class="role-name-cell"><span style="color:${c.icon};">${icon}</span><span style="font-weight:600;font-size:14px;color:#1E293B;text-transform:capitalize;">${role.name}</span></div></td>
+      <td style="color:#64748B;">${desc}</td>
+      <td><span class="strong">${counts[role.name]??0}</span><span class="muted"> users</span></td>
+    </tr>`;
+  }).join("");
+}
+
+function getFilteredUsers(){
+  return users.filter(u=>{
+    const s=search.toLowerCase();
+    const matchSearch=!s||u.username.toLowerCase().includes(s)||u.fullName.toLowerCase().includes(s)||u.email.toLowerCase().includes(s);
+    const matchRole=filterRole==="all"||u.role===filterRole;
+    return matchSearch&&matchRole;
+  });
+}
+
+function sortUsers(userArray){
+  const sorted=[...userArray];
+  sorted.sort((a,b)=>{
+    let valA=a[sortColumn];
+    let valB=b[sortColumn];
+    if(typeof valA==="string")valA=valA.toLowerCase();
+    if(typeof valB==="string")valB=valB.toLowerCase();
+    if(valA<valB)return sortDirection==="asc"?-1:1;
+    if(valA>valB)return sortDirection==="asc"?1:-1;
+    return 0;
+  });
+  return sorted;
+}
+
+function handleSort(column){
+  if(sortColumn===column){
+    sortDirection=sortDirection==="asc"?"desc":"asc";
+  }else{
+    sortColumn=column;
+    sortDirection="asc";
+  }
+  currentPage=1;
+  renderUserTable();
+}
+
+function updateSortIndicators(){
+  const cols=["username","fullName","role","email"];
+  cols.forEach(col=>{
+    const el=document.getElementById(`sortIndicator-${col}`);
+    if(col===sortColumn){
+      el.textContent=sortDirection==="asc"?" ▲":" ▼";
+    }else{
+      el.textContent="";
+    }
+  });
+}
+
+function renderUserTable(){
+  const filtered=sortUsers(getFilteredUsers());
+  const total=filtered.length;
+  const totalPages=Math.max(1,Math.ceil(total/PAGE_SIZE));
+  if(currentPage>totalPages)currentPage=totalPages;
+  const paged=filtered.slice((currentPage-1)*PAGE_SIZE,currentPage*PAGE_SIZE);
+
+  const tbody=document.getElementById("userTableBody");
+  if(paged.length===0){
+    tbody.innerHTML=`<tr><td colspan="7" class="empty">No users found.</td></tr>`;
+  } else {
+    tbody.innerHTML=paged.map((u,i)=>`<tr>
+      <td class="num">${(currentPage-1)*PAGE_SIZE+i+1}</td>
+      <td class="mono">${u.username}</td>
+      <td>${u.fullName}</td>
+      <td>${badgeHtml(u.role)}</td>
+      <td class="email">${u.email}</td>
+      <td>${statusBadge(u.status)}</td>
+      <td><button class="btn-icon" onclick="openDeleteUser(${u.id})">${TRASH_ICON}</button></td>
+    </tr>`).join("");
+  }
+
+  const from=total===0?0:(currentPage-1)*PAGE_SIZE+1;
+  const to=Math.min(currentPage*PAGE_SIZE,total);
+  document.getElementById("pageInfo").textContent=`Showing ${from} to ${to} of ${total} users`;
+
+  // Pagination buttons
+  const pageBtns=document.getElementById("pageBtns");
+  let html=`<button class="page-btn" onclick="goPage(${currentPage-1})" ${currentPage===1?"disabled":""}>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#475569" stroke-width="2"><polyline points="15,18 9,12 15,6"/></svg>
+  </button>`;
+  for(let p=1;p<=totalPages;p++){
+    html+=`<button class="page-btn${p===currentPage?" active":""}" onclick="goPage(${p})">${p}</button>`;
+  }
+  html+=`<button class="page-btn" onclick="goPage(${currentPage+1})" ${currentPage===totalPages?"disabled":""}>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#475569" stroke-width="2"><polyline points="9,18 15,12 9,6"/></svg>
+  </button>`;
+  pageBtns.innerHTML=html;
+  updateSortIndicators();
+}
+
+function renderFilterSelect(){
+  const sel=document.getElementById("filterRole");
+  sel.innerHTML=`<option value="all">All Roles</option>`+roles.map(r=>`<option value="${r.name}"${filterRole===r.name?" selected":""}>${r.name}</option>`).join("");
+}
+
+function renderUserRoleSelect(){
+  const sel=document.getElementById("newUserRole");
+  sel.innerHTML=roles.map(r=>`<option value="${r.name}">${r.name}</option>`).join("");
+}
+
+function render(){
+  renderCards();
+  renderRoleTable();
+  renderFilterSelect();
+  renderUserTable();
+}
+
+function goPage(p){
+  const filtered=getFilteredUsers();
+  const totalPages=Math.max(1,Math.ceil(filtered.length/PAGE_SIZE));
+  currentPage=Math.max(1,Math.min(totalPages,p));
+  renderUserTable();
+}
+
+function onSearch(){
+  search=document.getElementById("searchInput").value;
+  currentPage=1;
+  renderUserTable();
+}
+
+function onFilter(){
+  filterRole=document.getElementById("filterRole").value;
+  currentPage=1;
+  renderUserTable();
+}
+
+function openModal(id){document.getElementById(id).classList.remove("hidden");}
+function closeModal(id){document.getElementById(id).classList.add("hidden");}
+
+function showError(id,msg){
+  const el=document.getElementById(id);
+  el.textContent=msg;
+  el.classList.remove("hidden");
+}
+function hideError(id){document.getElementById(id).classList.add("hidden");}
+
+function openAddRole(){
+  document.getElementById("newRoleName").value="";
+  hideError("addRoleError");
+  openModal("addRoleModal");
+}
+
+function handleAddRole(){
+  const name=document.getElementById("newRoleName").value.trim().toLowerCase();
+  if(!name){showError("addRoleError","Role name is required.");return;}
+  if(roles.find(r=>r.name===name)){showError("addRoleError","Role already exists.");return;}
+  roles.push({id:nextRoleId++,name});
+  closeModal("addRoleModal");
+  render();
+}
+
+function openDeleteRole(id){
+  const role=roles.find(r=>r.id===id);
+  if(!role)return;
+  pendingDeleteRole=role;
+  const counts=roleCounts();
+  document.getElementById("deleteRoleTitle").textContent=`Delete "${role.name}"?`;
+  document.getElementById("deleteRoleDesc").innerHTML=`This will also remove all <strong>${counts[role.name]??0} user(s)</strong> with this role.`;
+  openModal("deleteRoleModal");
+}
+
+function confirmDeleteRole(){
+  if(!pendingDeleteRole)return;
+  roles=roles.filter(r=>r.id!==pendingDeleteRole.id);
+  users=users.filter(u=>u.role!==pendingDeleteRole.name);
+  pendingDeleteRole=null;
+  closeModal("deleteRoleModal");
+  render();
+}
+
+function openAddUser(){
+  document.getElementById("newUsername").value="";
+  document.getElementById("newFullName").value="";
+  document.getElementById("newEmail").value="";
+  document.getElementById("newUserStatus").value="Active";
+  hideError("addUserError");
+  renderUserRoleSelect();
+  openModal("addUserModal");
+}
+
+function handleAddUser(){
+  const username=document.getElementById("newUsername").value.trim();
+  const fullName=document.getElementById("newFullName").value.trim();
+  const email=document.getElementById("newEmail").value.trim();
+  const role=document.getElementById("newUserRole").value;
+  const status=document.getElementById("newUserStatus").value;
+  if(!username||!fullName||!role||!email){showError("addUserError","All fields are required.");return;}
+  if(users.find(u=>u.username===username)){showError("addUserError","Username already exists.");return;}
+  users.push({id:nextUserId++,username,fullName,role,email,status});
+  closeModal("addUserModal");
+  render();
+}
+
+function openDeleteUser(id){
+  const user=users.find(u=>u.id===id);
+  if(!user)return;
+  pendingDeleteUser=user;
+  document.getElementById("deleteUserTitle").textContent=`Delete "${user.username}"?`;
+  document.getElementById("deleteUserDesc").textContent=`${user.fullName} · ${user.email}`;
+  openModal("deleteUserModal");
+}
+
+function confirmDeleteUser(){
+  if(!pendingDeleteUser)return;
+  users=users.filter(u=>u.id!==pendingDeleteUser.id);
+  pendingDeleteUser=null;
+  closeModal("deleteUserModal");
+  render();
+}
+
+// Keyboard: close modal on Escape
+document.addEventListener("keydown",e=>{
+  if(e.key==="Escape"){
+    ["addRoleModal","addUserModal","deleteRoleModal","deleteUserModal"].forEach(closeModal);
+  }
+});
+
+render();
+</script>
+</body>
+</html>

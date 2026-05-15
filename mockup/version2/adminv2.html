@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareDee Admin Portal - ระบบจัดการหลังบ้าน</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+    <link rel="stylesheet" href="css/design.css">
+</head>
+<body>
+    <div class="layout-wrapper">
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <div class="logo-icon">C</div>
+                <div class="logo-text">CareDee</div>
+            </div>
+            <nav>
+                <ul class="nav-menu">
+                    <li><a href="javascript:void(0)" class="nav-link active" onclick="switchView('dashboard', this)"><i class="ti ti-layout-dashboard"></i> แดชบอร์ด</a></li>
+                    <li><a href="javascript:void(0)" class="nav-link" onclick="switchView('users', this)"><i class="ti ti-user-check"></i> จัดการผู้ใช้และสิทธิ์</a></li>
+                    <li><a href="javascript:void(0)" class="nav-link" onclick="switchView('finance', this)"><i class="ti ti-coin"></i> การเงินและรายได้</a></li>
+                    <li><a href="javascript:void(0)" class="nav-link" onclick="switchView('reviews', this)"><i class="ti ti-star"></i> คุณภาพรีวิวและอุทธรณ์</a></li>
+                    <li><a href="javascript:void(0)" class="nav-link" onclick="switchView('reports', this)"><i class="ti ti-chart-bar"></i> รายงานวิเคราะห์</a></li>
+                    <li><a href="javascript:void(0)" class="nav-link" onclick="switchView('pdpa', this)"><i class="ti ti-lock"></i> นโยบาย PDPA</a></li>
+                    <li><a href="javascript:void(0)" class="nav-link" onclick="switchView('cloud', this)"><i class="ti ti-cloud"></i> เฝ้าระวังระบบคลาวด์</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="top-nav">
+                <div class="text-lg" style="font-weight: 700;" id="page-title">ศูนย์ควบคุมการปฏิบัติงานส่วนกลาง (Central Command)</div>
+                <div style="display: flex; align-items: center; gap: var(--space-4);">
+                    <div class="badge badge-success">ระบบออนไลน์ 100%</div>
+                    <i class="ti ti-bell" style="font-size: 24px; color: var(--neutral-600); cursor: pointer;"></i>
+                    <div style="width: 36px; height: 36px; background-color: var(--primary-100); color: var(--primary-600); border-radius: var(--radius-full); display: flex; align-items: center; justify-content: center; font-weight: 600;">ผู้</div>
+                </div>
+            </header>
+
+            <div class="content-body">
+                
+                <!-- VIEW: DASHBOARD -->
+                <div id="view-dashboard" class="content-view active-view">
+                    <div class="banner banner-error">
+                        <i class="ti ti-alert-triangle"></i>
+                        <div><b>แจ้งเตือน:</b> SMS Gateway (Region: SG-1) ล่าช้า 2.3s — กำลังประมวลผลผ่าน Backup Gateway</div>
+                    </div>
+                    <div class="stat-grid">
+                        <div class="stat-card">
+                            <div class="stat-label">ยอดการจองเดือนนี้</div>
+                            <div class="stat-value" style="color: var(--primary-600);">4,821 รายการ</div>
+                            <div class="text-xs color-success" style="margin-top: 4px;">▲ 12.4% จากเมษายน</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">System Uptime (30 วัน)</div>
+                            <div class="stat-value" style="color: var(--success);">99.98%</div>
+                            <div class="text-xs color-neutral-600" style="margin-top: 4px;">SLA Target: 99.9%</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">คิว KYC ค้างอนุมัติ</div>
+                            <div class="stat-value" style="color: var(--warning);">12 ราย</div>
+                            <div class="text-xs color-error" style="margin-top: 4px;">เร่งด่วน (เกิน 24 ชม.): 4</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">รายได้สุทธิ (GP 15%)</div>
+                            <div class="stat-value" style="color: var(--primary-600);">฿1,282,400</div>
+                            <div class="text-xs color-neutral-600" style="margin-top: 4px;">ตัดรอบทุกวันจันทร์</div>
+                        </div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px;">
+                        <div class="card">
+                            <div class="text-lg mb-4" style="font-weight: 600;">สรุปความเคลื่อนไหววันนี้</div>
+                            <div class="text-sm color-neutral-600">
+                                - ผู้ใช้ใหม่สมัครเข้าสู่ระบบ: +45 ราย<br>
+                                - รายการอุทธรณ์รีวิวรอตัดสิน: 3 เคส<br>
+                                - ธุรกรรม Payout สำเร็จ: 12 รายการ (฿420,000)
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="text-lg mb-4" style="font-weight: 600;">Maintenance Broadcaster</div>
+                            <button class="btn btn-primary" style="width: 100%;" onclick="showToast('เปิดระบบประกาศข้อความด่วน...')">ประกาศแบนเนอร์ด่วน</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VIEW: USERS -->
+                <div id="view-users" class="content-view">
+                    <div class="card">
+                        <div class="flex-between mb-6">
+                            <div class="text-lg" style="font-weight: 600;">การจัดการบัญชีและตรวจสอบตัวตน (KYC)</div>
+                            <div class="badge badge-warning">รออนุมัติ 12 ราย</div>
+                        </div>
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <thead>
+                                <tr style="text-align: left; border-bottom: 2px solid var(--neutral-100); color: var(--neutral-600);">
+                                    <th style="padding: 12px 0;">ชื่อผู้สมัคร</th>
+                                    <th style="padding: 12px 0;">ประเภทบัญชี</th>
+                                    <th style="padding: 12px 0;">สถานะเอกสาร</th>
+                                    <th style="padding: 12px 0; text-align: right;">การจัดการ</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="border-bottom: 1px solid var(--neutral-100);">
+                                    <td style="padding: 16px 0;"><b>วิริยะ สมพงษ์</b><br><span class="text-xs color-neutral-600">ID: CD-OPT-0012</span></td>
+                                    <td style="padding: 16px 0;"><span class="badge badge-warning">Operator</span></td>
+                                    <td style="padding: 16px 0;"><span class="text-sm">รอตรวจ ID 14 พ.ค. (22 ชม.)</span></td>
+                                    <td style="padding: 16px 0; text-align: right;"><button class="btn btn-primary" onclick="openKYCModal('วิริยะ สมพงษ์', '1-2345-67890-XX-X')">ตรวจสอบ</button></td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid var(--neutral-100);">
+                                    <td style="padding: 16px 0;"><b>นฤมล ทองดี</b><br><span class="text-xs color-neutral-600">ID: CD-PRV-4421</span></td>
+                                    <td style="padding: 16px 0;"><span class="badge badge-warning">Independent Provider</span></td>
+                                    <td style="padding: 16px 0;"><span class="text-sm">รอตรวจใบเซอร์ 13 พ.ค. (48 ชม.)</span></td>
+                                    <td style="padding: 16px 0; text-align: right;"><button class="btn btn-primary" onclick="openKYCModal('นฤมล ทองดี', '3-9876-54321-XX-X')">ตรวจสอบ</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- VIEW: FINANCE -->
+                <div id="view-finance" class="content-view">
+                    <div class="card mb-6">
+                        <div class="flex-between mb-4">
+                            <div class="text-lg" style="font-weight: 600;">Payout Management (GP 15%)</div>
+                            <button class="btn btn-primary" onclick="openModal('modal-payout')">ยืนยัน Batch Payout</button>
+                        </div>
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;">
+                            <div style="padding: 16px; background: var(--neutral-100); border-radius: 12px;">
+                                <div class="text-xs color-neutral-600">Gross Transaction</div>
+                                <div class="text-lg" style="font-weight: 700;">฿8,549,330</div>
+                            </div>
+                            <div style="padding: 16px; background: var(--primary-100); border-radius: 12px;">
+                                <div class="text-xs color-primary-600">Net Platform GP</div>
+                                <div class="text-lg" style="font-weight: 700; color: var(--primary-600);">฿1,282,400</div>
+                            </div>
+                            <div style="padding: 16px; background: #FDECEA; border-radius: 12px;">
+                                <div class="text-xs color-error">รายการรอโอน (Pending)</div>
+                                <div class="text-lg" style="font-weight: 700; color: var(--error);">฿425,500</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="text-md mb-4" style="font-weight: 600;">รายการรอโอนล่าสุด (Ready to Settle)</div>
+                        <div class="flex-between" style="padding: 12px 0; border-bottom: 1px solid var(--neutral-100);">
+                            <span>บริษัท แคร์ พลัส โอเปอเรเตอร์</span>
+                            <span style="font-weight: 600;">฿142,500</span>
+                        </div>
+                        <div class="flex-between" style="padding: 12px 0;">
+                            <span>สถานดูแลผู้สูงอายุ สิริแคร์</span>
+                            <span style="font-weight: 600;">฿98,400</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VIEW: REVIEWS -->
+                <div id="view-reviews" class="content-view">
+                    <div class="card">
+                        <div class="flex-between mb-4">
+                            <div class="text-lg" style="font-weight: 600;">Review Moderation & Appeals</div>
+                            <span class="badge badge-error">3 อุทธรณ์รอตัดสิน</span>
+                        </div>
+                        <div style="padding: 16px; border: 1px solid var(--neutral-100); border-radius: 12px; margin-bottom: 16px;">
+                            <div class="flex-between">
+                                <div class="text-sm"><b>คุณสมพร (ลูกค้า)</b> — รีวิวเมื่อ 12 พ.ค.</div>
+                                <span class="badge badge-warning">Auto-masked</span>
+                            </div>
+                            <p class="text-sm color-neutral-600" style="margin-top: 8px;">"ผู้ดูแลบริการดีมาก แต่แอป <span style="background: #FDECEA; color: var(--error); padding: 0 4px;">[หยาบคาย]</span> ใช้งานยากเหลือเกิน..."</p>
+                            <div style="margin-top: 12px; display: flex; gap: 8px;">
+                                <button class="btn btn-outline" style="font-size: 11px;" onclick="showToast('กู้คืนข้อความเรียบร้อย')">กู้คืนต้นฉบับ</button>
+                                <button class="btn btn-primary" style="font-size: 11px;" onclick="showToast('ยืนยันการเซนเซอร์ข้อความ')">ยืนยันเซนเซอร์</button>
+                            </div>
+                        </div>
+                        <div style="padding: 16px; border: 1px solid var(--neutral-100); border-radius: 12px;">
+                            <div class="flex-between">
+                                <div class="text-sm"><b>กัญญา ประยูรวงษ์ (ผู้ดูแล)</b> — ยื่นอุทธรณ์ 14 พ.ค.</div>
+                                <span class="badge badge-error">SLA: 24 ชม.</span>
+                            </div>
+                            <p class="text-sm color-neutral-600" style="margin-top: 8px;">อุทธรณ์รีวิว Case #R-8842: "ลูกค้าร้องเรียนเรื่องมาสาย แต่ติดอุบัติเหตุระหว่างทาง มีหลักฐานใบแจ้งความ"</p>
+                            <button class="btn btn-primary" style="font-size: 11px; margin-top: 12px;" onclick="alert('แสดงหลักฐานใบแจ้งความและภาพถ่ายอุบัติเหตุ...')">ตรวจสอบหลักฐานอุทธรณ์</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VIEW: REPORTS -->
+                <div id="view-reports" class="content-view">
+                    <div class="card">
+                        <div class="text-lg mb-6" style="font-weight: 600;">วิเคราะห์ข้อมูลเชิงกลยุทธ์ (Market Intelligence)</div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                            <div style="padding: 24px; background: var(--neutral-100); border-radius: 16px; text-align: center;">
+                                <div style="display: flex; justify-content: center; gap: 8px; align-items: baseline; height: 120px;">
+                                    <div style="width: 30px; height: 40%; background: var(--primary-600);"></div>
+                                    <div style="width: 30px; height: 60%; background: var(--primary-600);"></div>
+                                    <div style="width: 30px; height: 50%; background: var(--primary-600);"></div>
+                                    <div style="width: 30px; height: 90%; background: var(--secondary-500);"></div>
+                                </div>
+                                <div class="text-md" style="margin-top: 16px; font-weight: 700;">Demand Spike: +40%</div>
+                                <div class="text-xs color-neutral-600">เขตบึงกุ่ม และ ลาดกระบัง</div>
+                            </div>
+                            <div style="padding: 24px; background: var(--neutral-100); border-radius: 16px; text-align: center;">
+                                <div class="display-xs" style="color: var(--success); font-weight: 700;">+12.4%</div>
+                                <div class="text-md" style="margin-top: 8px; font-weight: 600;">Monthly Growth Rate</div>
+                                <p class="text-xs color-neutral-600" style="margin-top: 12px;">อัตราการเติบโตของผู้ใช้ใหม่<br>เปรียบเทียบ เมษายน vs พฤษภาคม 2569</p>
+                            </div>
+                        </div>
+                        <button class="btn btn-outline" style="width: 100%; margin-top: 24px;" onclick="showToast('กำลังเจนเนอเรตไฟล์ Strategic Report (PDF)...')">ส่งออกรายงานฉบับสมบูรณ์</button>
+                    </div>
+                </div>
+
+                <!-- VIEW: PDPA -->
+                <div id="view-pdpa" class="content-view">
+                    <div class="card">
+                        <div class="text-lg mb-4" style="font-weight: 600;">Privacy & Consent Dashboard (PDPA)</div>
+                        <div style="display: flex; flex-direction: column; gap: 16px;">
+                            <div class="flex-between text-sm">
+                                <span>Privacy Policy</span>
+                                <span class="badge badge-success">v3.2.1 (Active)</span>
+                            </div>
+                            <div class="flex-between text-sm">
+                                <span>Terms of Service</span>
+                                <span class="badge badge-success">v2.0.0 (Active)</span>
+                            </div>
+                            <hr style="border: 0; border-top: 1px solid var(--neutral-100);">
+                            <div class="flex-between text-sm">
+                                <span>Data Subject Request (DSR)</span>
+                                <span class="badge badge-error">2 รายการรอดำเนินการ</span>
+                            </div>
+                            <button class="btn btn-primary" style="width: 100%;" onclick="openModal('modal-pdpa')">จัดการคำร้องขอลบ/เข้าถึงข้อมูล</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VIEW: CLOUD -->
+                <div id="view-cloud" class="content-view">
+                    <div class="card">
+                        <div class="text-lg mb-6" style="font-weight: 600;">Cloud Infrastructure Monitoring</div>
+                        <div style="display: flex; flex-direction: column; gap: 20px;">
+                            <div>
+                                <div class="flex-between text-sm mb-2">
+                                    <span>Main API Cluster (Auto-scaling)</span>
+                                    <span style="color: var(--success); font-weight: 700;">Healthy</span>
+                                </div>
+                                <div style="height: 8px; background: var(--neutral-100); border-radius: 4px; overflow: hidden;">
+                                    <div style="width: 100%; height: 100%; background: var(--success);"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex-between text-sm mb-2">
+                                    <span>SMS Gateway Service</span>
+                                    <span style="color: var(--error); font-weight: 700;">Degraded (Latent)</span>
+                                </div>
+                                <div style="height: 8px; background: var(--neutral-100); border-radius: 4px; overflow: hidden;">
+                                    <div style="width: 61%; height: 100%; background: var(--error);"></div>
+                                </div>
+                            </div>
+                            <button class="btn btn-outline" style="width: 100%; margin-top: 8px;" onclick="openModal('modal-logs')">ตรวจสอบ Incident Logs รายวินาที</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- MODALS -->
+    <div class="modal-overlay" id="modal-kyc">
+        <div class="modal-container">
+            <div class="modal-header"><h3>ตรวจสอบ KYC</h3><span class="modal-close" onclick="closeModal('modal-kyc')">&times;</span></div>
+            <div class="modal-body">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                    <div><label class="modal-label">ชื่อ</label><div id="kyc-name" class="text-md" style="font-weight: 700;"></div></div>
+                    <div><label class="modal-label">เลขบัตรประชาชน</label><div id="kyc-id" class="text-md"></div></div>
+                </div>
+                <div class="badge badge-success" style="width: 100%; padding: 12px; margin-top: 16px; justify-content: center;">ยืนยันความถูกต้องผ่านกรมการปกครองแล้ว</div>
+            </div>
+            <div class="modal-footer"><button class="btn btn-outline" onclick="closeModal('modal-kyc')">ย้อนกลับ</button><button class="btn btn-primary" onclick="confirmKYC()">อนุมัติสิทธิ์เข้า Marketplace</button></div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modal-payout">
+        <div class="modal-container" style="max-width: 400px;">
+            <div class="modal-header"><h3>ยืนยันการโอนเงิน (Payout)</h3><span class="modal-close" onclick="closeModal('modal-payout')">&times;</span></div>
+            <div class="modal-body">
+                <p class="text-sm mb-4">ยอดรวม Batch นี้: <b>฿425,500</b></p>
+                <label class="modal-label">Admin PIN <span>*</span></label>
+                <input type="password" class="modal-input" placeholder="กรอกรหัส 6 หลัก" id="payout-pin" required>
+            </div>
+            <div class="modal-footer"><button class="btn btn-primary" style="width: 100%;" onclick="submitPayout()">ยืนยันและส่งคำสั่งธนาคาร</button></div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modal-pdpa">
+        <div class="modal-container">
+            <div class="modal-header"><h3>DSR Case #4521</h3><span class="modal-close" onclick="closeModal('modal-pdpa')">&times;</span></div>
+            <div class="modal-body">
+                <p class="text-sm mb-4">คำร้อง: "ต้องการลบข้อมูลทั้งหมดตามสิทธิ์ส่วนบุคคล"</p>
+                <label class="modal-label">ความเห็นแอดมิน <span>*</span></label>
+                <textarea class="modal-input" style="height: 100px;" id="pdpa-reason" placeholder="ระบุเหตุผลการตัดสินใจ..." required></textarea>
+            </div>
+            <div class="modal-footer"><button class="btn btn-outline" onclick="resolvePDPA('Reject')">ปฏิเสธ</button><button class="btn btn-primary" onclick="resolvePDPA('Approve')">อนุมัติคำร้อง</button></div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modal-logs">
+        <div class="modal-container" style="max-width: 700px;">
+            <div class="modal-header"><h3>Cloud Infrastructure Logs</h3><span class="modal-close" onclick="closeModal('modal-logs')">&times;</span></div>
+            <div class="modal-body">
+                <div style="background: #1e1e1e; color: #28C76F; padding: 16px; border-radius: 12px; font-family: monospace; font-size: 12px; height: 300px; overflow-y: auto;">
+                    [14:32:01] ERROR SMS_GW region:SG-1 timeout<br>
+                    [14:32:05] WARN Latency spikes detected on AWS-Direct-Connect<br>
+                    [14:35:00] INFO Auto-failover initiated to HK-Region<br>
+                    [14:35:10] SUCCESS Connection established. Traffic redirected.<br>
+                    [14:40:00] MONITOR Stable status achieved.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" style="display: none; position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: #1E1E1E; color: white; padding: 12px 24px; border-radius: 99px; font-size: 14px; z-index: 2000; box-shadow: 0 4px 12px rgba(0,0,0,0.3);"></div>
+
+    <script>
+        function switchView(viewId, element) {
+            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+            element.classList.add('active');
+            document.querySelectorAll('.content-view').forEach(view => view.classList.remove('active-view'));
+            document.getElementById('view-' + viewId).classList.add('active-view');
+            const titles = {'dashboard': 'ศูนย์ควบคุมการปฏิบัติงานส่วนกลาง', 'users': 'จัดการบัญชีและตรวจสอบตัวตน', 'finance': 'Payout Management', 'reviews': 'Review Moderation & Appeals', 'reports': 'วิเคราะห์ข้อมูลเชิงกลยุทธ์', 'pdpa': 'Privacy & Consent Dashboard', 'cloud': 'Infrastructure Monitoring'};
+            document.getElementById('page-title').innerText = titles[viewId] || 'ผู้ดูแลระบบ';
+        }
+        function openModal(id) { document.getElementById(id).classList.add('active'); }
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+        function showToast(msg) { const t = document.getElementById('toast'); t.innerText = msg; t.style.display = 'block'; setTimeout(() => { t.style.display = 'none'; }, 3000); }
+        function openKYCModal(name, id) { document.getElementById('kyc-name').innerText = name; document.getElementById('kyc-id').innerText = id; openModal('modal-kyc'); }
+        function confirmKYC() { closeModal('modal-kyc'); showToast("อนุมัติผู้ใช้เรียบร้อยแล้ว"); }
+        function submitPayout() { const pin = document.getElementById('payout-pin'); if(!pin.value) { pin.classList.add('input-error'); return; } closeModal('modal-payout'); showToast("Batch Payout ถูกส่งไปยังธนาคารเรียบร้อย"); pin.value = ''; pin.classList.remove('input-error'); }
+        function resolvePDPA(action) { const reason = document.getElementById('pdpa-reason'); if(!reason.value) { reason.classList.add('input-error'); return; } closeModal('modal-pdpa'); showToast(action === 'Approve' ? "อนุมัติคำร้อง PDPA" : "ปฏิเสธคำร้อง"); reason.value = ''; reason.classList.remove('input-error'); }
+    </script>
+</body>
+</html>

@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareDee Training Institute Portal - ระบบสถาบันฝึกอบรม</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+    <link rel="stylesheet" href="css/design.css">
+    <style>
+        .wizard-steps { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-8); }
+        .step { display: flex; flex-direction: column; align-items: center; gap: var(--space-2); flex: 1; position: relative; }
+        .step:not(:last-child)::after { content: ''; position: absolute; top: 16px; left: 50%; width: 100%; height: 2px; background-color: var(--neutral-300); z-index: 1; }
+        .step.done:not(:last-child)::after { background-color: var(--success); }
+        .step-circle { width: 32px; height: 32px; border-radius: 50%; background-color: var(--white); border: 2px solid var(--neutral-300); display: flex; align-items: center; justify-content: center; font-weight: 600; z-index: 2; color: var(--neutral-600); }
+        .step.active .step-circle { border-color: var(--primary-600); color: var(--primary-600); background-color: var(--primary-100); }
+        .step.done .step-circle { background-color: var(--success); border-color: var(--success); color: var(--white); }
+        .step-label { font-size: 12px; font-weight: 500; color: var(--neutral-600); text-align: center; }
+        .step.active .step-label { color: var(--primary-600); font-weight: 600; }
+        .heatmap { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-2); }
+        .heat-cell { padding: var(--space-3); border-radius: var(--radius-md); text-align: center; font-size: 12px; font-weight: 600; }
+        .import-mode-btn { padding: var(--space-2) var(--space-4); border-radius: var(--radius-md); border: 1px solid var(--neutral-300); background-color: var(--white); cursor: pointer; font-size: 13px; font-weight: 600; color: var(--neutral-600); }
+        .import-mode-btn.active { background-color: var(--primary-600); color: var(--white); border-color: var(--primary-600); }
+        .manual-form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--space-4); }
+        .input-field { display: flex; flex-direction: column; gap: 4px; }
+        .input-field label { font-size: 12px; font-weight: 600; color: var(--neutral-600); }
+        .input-field input, .input-field select { padding: var(--space-2); border: 1px solid var(--neutral-300); border-radius: var(--radius-sm); font-size: 13px; font-family: var(--font-thai); }
+        .input-error { border-color: var(--error) !important; background-color: #FDECEA; }
+    </style>
+</head>
+<body>
+    <div class="layout-wrapper">
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <div class="logo-icon">C</div>
+                <div class="logo-text">CareDee</div>
+            </div>
+            <nav>
+                <ul class="nav-menu">
+                    <li><a href="javascript:void(0)" class="nav-link active" onclick="switchView('dashboard', this)"><i class="ti ti-layout-dashboard"></i> แดชบอร์ด TI</a></li>
+                    <li><a href="javascript:void(0)" class="nav-link" onclick="switchView('import', this)"><i class="ti ti-file-import"></i> นำเข้าผู้ผ่านการอบรม</a></li>
+                    <li><a href="javascript:void(0)" class="nav-link" onclick="switchView('certs', this)"><i class="ti ti-certificate"></i> จัดการใบรับรอง</a></li>
+                    <li><a href="javascript:void(0)" class="nav-link" onclick="switchView('market', this)"><i class="ti ti-chart-dots"></i> สถิติตลาดแรงงาน</a></li>
+                    <li><a href="javascript:void(0)" class="nav-link" onclick="switchView('verify', this)"><i class="ti ti-checkbox"></i> การตรวจสอบ</a></li>
+                    <li><a href="javascript:void(0)" class="nav-link" onclick="switchView('profile', this)"><i class="ti ti-building"></i> ข้อมูลสถาบัน</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="top-nav">
+                <div class="text-lg" style="font-weight: 700;" id="page-title">ระบบสถาบันไทยแคร์ อินเตอร์เนชั่นแนล</div>
+                <div style="display: flex; align-items: center; gap: var(--space-4);">
+                    <div style="text-align: right;">
+                        <div class="text-sm" style="font-weight: 600;">ThaiCare Institute</div>
+                        <div class="text-xs color-neutral-600">รหัส TI-BNK-0042</div>
+                    </div>
+                    <div style="width: 36px; height: 36px; background-color: var(--primary-100); color: var(--primary-600); border-radius: var(--radius-full); display: flex; align-items: center; justify-content: center; font-weight: 600;">สท</div>
+                </div>
+            </header>
+
+            <div class="content-body">
+                
+                <!-- VIEW: DASHBOARD -->
+                <div id="view-dashboard" class="content-view active-view">
+                    <div class="stat-grid">
+                        <div class="stat-card">
+                            <div class="stat-label">ผู้อบรมสะสมทั้งหมด</div>
+                            <div class="stat-value" style="color: var(--primary-600);">1,284 คน</div>
+                            <div class="text-xs color-success">▲ 15% จากปีที่แล้ว</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">ใบรับรองที่ยังมีผล (Active)</div>
+                            <div class="stat-value" style="color: var(--success);">892 ใบ</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Connectivity Rate</div>
+                            <div class="stat-value">69.5%</div>
+                            <div class="text-xs color-neutral-600">เชื่อมต่อบัญชี CareDee</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">คิวตรวจสอบจาก Operator</div>
+                            <div class="stat-value" style="color: var(--error);">5 งาน</div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="text-lg mb-4" style="font-weight: 600;">หลักสูตรยอดนิยม (Course Popularity)</div>
+                        <div style="display: flex; flex-direction: column; gap: 12px;">
+                            <div class="text-sm">ผู้ดูแลผู้สูงอายุขั้นพื้นฐาน (800 คน)</div>
+                            <div style="height: 12px; background: var(--neutral-100); border-radius: 6px; overflow: hidden;"><div style="width: 80%; height: 100%; background: var(--primary-600);"></div></div>
+                            <div class="text-sm">การปฐมพยาบาลเบื้องต้น (420 คน)</div>
+                            <div style="height: 12px; background: var(--neutral-100); border-radius: 6px; overflow: hidden;"><div style="width: 42%; height: 100%; background: var(--primary-600);"></div></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VIEW: IMPORT -->
+                <div id="view-import" class="content-view">
+                    <div class="card">
+                        <div class="flex-between mb-6">
+                            <div class="text-lg" style="font-weight: 600;">ระบบนำเข้าข้อมูลอัจฉริยะ (Batch Import)</div>
+                            <div style="display: flex; gap: 8px;">
+                                <button class="import-mode-btn active" id="btn-mode-file" onclick="setImportMode('file')">อัปโหลดไฟล์</button>
+                                <button class="import-mode-btn" id="btn-mode-manual" onclick="setImportMode('manual')">กรอกรายบุคคล</button>
+                            </div>
+                        </div>
+
+                        <div id="import-file-section" style="padding: 60px; border: 2px dashed var(--neutral-300); border-radius: 16px; text-align: center; background: var(--neutral-100); margin-bottom: 24px;">
+                            <i class="ti ti-cloud-upload" style="font-size: 54px; color: var(--neutral-600);"></i>
+                            <h3 style="margin-top: 16px;">ลากไฟล์มาวางเพื่อนำเข้า</h3>
+                            <p class="text-sm color-neutral-600">รองรับไฟล์ Excel และ CSV (รูปแบบตามมาตรฐานสถาบัน)</p>
+                            <button class="btn btn-primary" style="margin-top: 24px;" onclick="openModal('modal-upload-success')">เลือกไฟล์จากคอมพิวเตอร์</button>
+                        </div>
+
+                        <div id="import-manual-section" style="display: none; padding: 24px; background: var(--neutral-100); border-radius: 16px; margin-bottom: 24px;">
+                            <div class="manual-form-grid">
+                                <div class="input-field"><label class="modal-label">ชื่อ-นามสกุล <span>*</span></label><input type="text" id="manual-name" placeholder="ระบุชื่อจริงภาษาไทย" required></div>
+                                <div class="input-field"><label class="modal-label">เลขบัตรประชาชน <span>*</span></label><input type="text" id="manual-id" maxlength="13" placeholder="เลข 13 หลัก" required></div>
+                                <div class="input-field">
+                                    <label class="modal-label">หลักสูตรที่อบรม <span>*</span></label>
+                                    <select id="manual-course" required>
+                                        <option value="">-- กรุณาเลือก --</option>
+                                        <option value="Advanced Caregiving">การดูแลผู้ป่วยระยะสุดท้าย</option>
+                                        <option value="Basic Life Support">การกู้ชีพเบื้องต้น</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary" style="margin-top: 20px;" onclick="addManualRow()">+ เพิ่มเข้าตารางตรวจสอบ</button>
+                        </div>
+
+                        <div class="card" style="border: 1px solid var(--neutral-100);">
+                            <table style="width: 100%; border-collapse: collapse; font-size: 14px;" id="import-table">
+                                <thead><tr style="text-align: left; border-bottom: 1px solid var(--neutral-300); color: var(--neutral-600);"><th style="padding: 12px;">ชื่อผู้ผ่านการอบรม</th><th style="padding: 12px;">เลขที่ใบประกาศ</th><th style="padding: 12px;">สถานะข้อมูล</th></tr></thead>
+                                <tbody><tr style="border-bottom: 1px solid var(--neutral-100);"><td style="padding: 12px;">สมชาย มั่นใจ</td><td style="padding: 12px;">CERT-2569-0012</td><td style="padding: 12px;"><span class="badge badge-success">Valid</span></td></tr></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VIEW: CERTS -->
+                <div id="view-certs" class="content-view">
+                    <div class="card">
+                        <div class="flex-between mb-6">
+                            <div class="text-lg" style="font-weight: 600;">ระบบจัดการใบรับรองดิจิทัล</div>
+                            <button class="btn btn-primary" onclick="openModal('modal-issue-cert')">ออกใบประกาศรายบุคคล</button>
+                        </div>
+                        <table style="width: 100%; font-size: 13px;">
+                            <thead><tr style="text-align: left; border-bottom: 1px solid var(--neutral-300);"><th style="padding: 8px;">เลขใบรับรอง</th><th style="padding: 8px;">ผู้ได้รับ</th><th style="padding: 8px;">วันหมดอายุ</th><th style="padding: 8px;">ดำเนินการ</th></tr></thead>
+                            <tbody><tr style="border-bottom: 1px solid var(--neutral-100);"><td style="padding: 12px;">CERT-2026-0012</td><td style="padding: 12px;">สมชาย มั่นใจ</td><td style="padding: 12px;">15/05/2571</td><td style="padding: 12px;"><button class="btn btn-outline" style="font-size: 11px;" onclick="showToast('กำลังเจนเนอเรต PDF...')">ดูวุฒิบัตร</button></td></tr></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- VIEW: MARKET -->
+                <div id="view-market" class="content-view">
+                    <div class="card">
+                        <div class="text-lg mb-6" style="font-weight: 600;">ข้อมูลสถิติความต้องการตลาดแรงงาน (Market Demand)</div>
+                        <div class="heatmap">
+                            <div class="heat-cell" style="background: #FDECEA; color: #7A1C1C;">บึงกุ่ม (High)</div>
+                            <div class="heat-cell" style="background: #FDECEA; color: #7A1C1C;">ลาดกระบัง (High)</div>
+                            <div class="heat-cell" style="background: var(--secondary-100); color: #B06B00;">บางแค (Med)</div>
+                            <div class="heat-cell" style="background: var(--primary-100); color: #007A8C;">ดินแดง (Low)</div>
+                        </div>
+                        <div style="margin-top: 24px; padding: 16px; background: var(--primary-100); border-radius: 12px;">
+                            <p class="text-sm color-primary-600" style="font-weight: 700;">บทวิเคราะห์เชิงลึก:</p>
+                            <p class="text-xs color-neutral-600" style="margin-top: 4px;">แนะนำให้สถาบันเปิดคอร์ส "ผู้ดูแลผู้สูงอายุระยะยาว" ในพื้นที่โซนกรุงเทพตะวันออก เนื่องจากมี Demand สูงแต่ Supply ต่ำกว่า 30%</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VIEW: VERIFY -->
+                <div id="view-verify" class="content-view">
+                    <div class="card">
+                        <div class="text-lg mb-6" style="font-weight: 600;">Verification Queue (จากสถานดูแล)</div>
+                        <div style="padding: 20px; border: 1px solid var(--neutral-100); border-radius: 16px; margin-bottom: 16px;">
+                            <div class="flex-between">
+                                <div class="text-md"><b>ตรวจสอบใบรับรอง: กัญญา ประยูรวงษ์</b></div>
+                                <span class="badge badge-error">Pending</span>
+                            </div>
+                            <div class="text-sm color-neutral-600" style="margin-top: 4px;">ผู้ร้องขอ: แคร์ พลัส โอเปอเรเตอร์ (CD-OPT-0012)</div>
+                            <div style="margin-top: 20px; display: flex; gap: 12px;">
+                                <button class="btn btn-primary" onclick="showToast('ยืนยันความถูกต้องสำเร็จ')">ยืนยันข้อมูล</button>
+                                <button class="btn btn-outline" onclick="openModal('modal-reject-verify')">ปฏิเสธ</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VIEW: PROFILE -->
+                <div id="view-profile" class="content-view">
+                    <div class="card">
+                        <div class="text-lg mb-6" style="font-weight: 600;">ข้อมูลโปรไฟล์และเอกสารทางกฎหมาย</div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                            <div style="padding: 16px; border: 1px solid var(--neutral-100); border-radius: 12px;">
+                                <div class="text-sm color-neutral-600 mb-2">สถานะสถาบัน</div>
+                                <span class="badge badge-success">Verified Institute</span>
+                            </div>
+                            <div style="padding: 16px; border: 1px solid var(--neutral-100); border-radius: 12px;">
+                                <div class="text-sm color-neutral-600 mb-2">จำนวนวิทยากร</div>
+                                <div class="text-md" style="font-weight: 700;">12 ท่าน (Certified)</div>
+                            </div>
+                        </div>
+                        <button class="btn btn-outline" style="width: 100%; margin-top: 20px;" onclick="showToast('อัปโหลดไฟล์ใบอนุญาตใหม่...')">อัปเดตเอกสารสถาบัน</button>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- MODALS -->
+    <div class="modal-overlay" id="modal-upload-success">
+        <div class="modal-container" style="max-width: 400px; text-align: center;">
+            <div class="modal-body">
+                <i class="ti ti-circle-check" style="font-size: 64px; color: var(--success);"></i>
+                <h3 style="margin-top: 16px;">นำเข้าข้อมูลสำเร็จ</h3>
+                <p class="text-sm color-neutral-600">ระบบอ่านไฟล์เสร็จสิ้น พบข้อมูลผู้ผ่านการอบรม 125 รายการ</p>
+                <button class="btn btn-primary" style="margin-top: 24px; width: 100%;" onclick="closeModal('modal-upload-success')">เข้าสู่ขั้นตอนตรวจสอบ</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modal-reject-verify">
+        <div class="modal-container">
+            <div class="modal-header"><h3>ระบุเหตุผลการปฏิเสธ</h3><span class="modal-close" onclick="closeModal('modal-reject-verify')">&times;</span></div>
+            <div class="modal-body">
+                <label class="modal-label">สาเหตุที่ไม่ยืนยันข้อมูล <span>*</span></label>
+                <textarea class="modal-input" style="height: 100px;" id="reject-reason" placeholder="เช่น ไม่พบเลขที่ใบประกาศนี้ในฐานข้อมูลสถาบัน..." required></textarea>
+            </div>
+            <div class="modal-footer"><button class="btn btn-outline" onclick="closeModal('modal-reject-verify')">ยกเลิก</button><button class="btn btn-primary" onclick="submitRejectVerify()">ยืนยันปฏิเสธ</button></div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modal-issue-cert">
+        <div class="modal-container">
+            <div class="modal-header"><h3>ออกใบรับรองดิจิทัลรายบุคคล</h3><span class="modal-close" onclick="closeModal('modal-issue-cert')">&times;</span></div>
+            <div class="modal-body">
+                <div class="input-field" style="margin-bottom: 16px;"><label class="modal-label">รายชื่อผู้อบรม <span>*</span></label><select id="issue-student" class="modal-input" required><option value="">-- ค้นหารายชื่อ --</option><option value="1">สมเกียรติ รักดี</option></select></div>
+                <div class="input-field"><label class="modal-label">หลักสูตร <span>*</span></label><select id="issue-course" class="modal-input" required><option value="">-- เลือกหลักสูตร --</option><option value="1">การดูแลผู้ป่วยติดเตียง (Advance)</option></select></div>
+            </div>
+            <div class="modal-footer"><button class="btn btn-outline" onclick="closeModal('modal-issue-cert')">ยกเลิก</button><button class="btn btn-primary" onclick="submitIssueCert()">สร้างและส่งใบรับรอง</button></div>
+        </div>
+    </div>
+
+    <div id="toast" style="display: none; position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: #1E1E1E; color: white; padding: 12px 24px; border-radius: 99px; font-size: 14px; z-index: 2000; box-shadow: 0 4px 12px rgba(0,0,0,0.3);"></div>
+
+    <script>
+        function switchView(viewId, element) {
+            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+            element.classList.add('active');
+            document.querySelectorAll('.content-view').forEach(view => view.classList.remove('active-view'));
+            document.getElementById('view-' + viewId).classList.add('active-view');
+            const titles = {'dashboard': 'ภาพรวมสถาบันการอบรม', 'import': 'ระบบนำเข้าข้อมูล', 'certs': 'จัดการใบรับรองดิจิทัล', 'market': 'วิเคราะห์สถิติตลาด', 'verify': 'คิวตรวจสอบมาตรฐาน', 'profile': 'ข้อมูลสถาบัน'};
+            document.getElementById('page-title').innerText = titles[viewId] || 'สถาบันฝึกอบรม';
+        }
+        function openModal(id) { document.getElementById(id).classList.add('active'); }
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+        function showToast(msg) { const t = document.getElementById('toast'); t.innerText = msg; t.style.display = 'block'; setTimeout(() => { t.style.display = 'none'; }, 3000); }
+        function setImportMode(mode) {
+            document.getElementById('btn-mode-file').classList.toggle('active', mode === 'file');
+            document.getElementById('btn-mode-manual').classList.toggle('active', mode === 'manual');
+            document.getElementById('import-file-section').style.display = mode === 'file' ? 'block' : 'none';
+            document.getElementById('import-manual-section').style.display = mode === 'manual' ? 'block' : 'none';
+        }
+        function addManualRow() {
+            const nameEl = document.getElementById('manual-name'), idEl = document.getElementById('manual-id'), courseEl = document.getElementById('manual-course');
+            [nameEl, idEl, courseEl].forEach(el => el.classList.remove('input-error'));
+            if(!nameEl.value || !idEl.value || !courseEl.value) {
+                if(!nameEl.value) nameEl.classList.add('input-error');
+                if(!idEl.value) idEl.classList.add('input-error');
+                if(!courseEl.value) courseEl.classList.add('input-error');
+                showToast("กรุณากรอกข้อมูลให้ครบถ้วน"); return;
+            }
+            const table = document.getElementById('import-table').getElementsByTagName('tbody')[0];
+            const newRow = table.insertRow();
+            newRow.innerHTML = `<td style="padding: 12px;">${nameEl.value}</td><td style="padding: 12px;">(Pending)</td><td style="padding: 12px;"><span class="badge badge-success">Correct</span></td>`;
+            nameEl.value = ''; idEl.value = ''; courseEl.value = '';
+            showToast("เพิ่มรายชื่อลงตารางตรวจสอบเรียบร้อย");
+        }
+        function submitRejectVerify() {
+            if(!document.getElementById('reject-reason').value) { alert("กรุณาระบุเหตุผลที่ปฏิเสธ"); return; }
+            closeModal('modal-reject-verify'); showToast("ส่งการปฏิเสธเรียบร้อยแล้ว");
+        }
+        function submitIssueCert() {
+            if(!document.getElementById('issue-student').value || !document.getElementById('issue-course').value) { alert("กรุณาเลือกข้อมูลให้ครบถ้วน"); return; }
+            closeModal('modal-issue-cert'); showToast("ออกใบรับรองดิจิทัลสำเร็จ!");
+        }
+    </script>
+</body>
+</html>
