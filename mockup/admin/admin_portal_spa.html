@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CareDee Admin SPA - Platform Control Center</title>
+    <title>ระบบจัดการผู้ดูแลระบบ CareDee - ศูนย์ควบคุมแพลตฟอร์ม</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -31,6 +31,7 @@
             /* Layout */
             --sidebar-bg: #004D58; 
             --sidebar-width: 260px;
+            --sidebar-collapsed-width: 80px;
             --font-main: 'IBM Plex Sans Thai', 'Inter', sans-serif;
         }
 
@@ -48,7 +49,7 @@
             min-height: 100vh;
         }
 
-        /* Global Maintenance Banner */
+        /* ปิดปรับปรุงระบบทั้งหมด Banner */
         .global-banner {
             position: fixed;
             top: 0;
@@ -63,6 +64,7 @@
             font-weight: 600;
             font-size: 14px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: left 0.3s ease;
         }
         .global-banner.urgent { background: var(--error); color: white; }
         .global-banner.normal { background: var(--secondary-500); color: white; }
@@ -77,12 +79,15 @@
             display: flex;
             flex-direction: column;
             z-index: 1000;
+            transition: width 0.3s ease;
+            overflow: hidden;
         }
 
         .sidebar-header {
             padding: 32px 20px;
             text-align: center;
             border-bottom: 1px solid rgba(255,255,255,0.1);
+            white-space: nowrap;
         }
 
         .logo-box {
@@ -97,6 +102,7 @@
             justify-content: center;
             font-weight: 700;
             font-size: 20px;
+            transition: margin 0.3s ease;
         }
 
         .sidebar-menu {
@@ -117,6 +123,7 @@
             background: none;
             width: 100%;
             text-align: left;
+            white-space: nowrap;
         }
 
         .menu-item:hover, .menu-item.active {
@@ -130,6 +137,26 @@
             width: 24px;
             text-align: center;
             font-style: normal;
+            flex-shrink: 0;
+        }
+
+        /* Collapsed Sidebar Logic */
+        body.sidebar-collapsed .sidebar {
+            width: var(--sidebar-collapsed-width);
+        }
+        body.sidebar-collapsed .sidebar-header h3,
+        body.sidebar-collapsed .sidebar-header p,
+        body.sidebar-collapsed .menu-item span {
+            display: none;
+        }
+        body.sidebar-collapsed .main-content {
+            margin-left: var(--sidebar-collapsed-width);
+        }
+        body.sidebar-collapsed .global-banner {
+            left: var(--sidebar-collapsed-width);
+        }
+        body.sidebar-collapsed .sidebar-header {
+            padding: 20px 0;
         }
 
         /* Main Content Styles */
@@ -138,7 +165,7 @@
             flex: 1;
             padding: 32px;
             padding-top: 60px; /* Space for banner */
-            transition: padding-top 0.3s;
+            transition: margin-left 0.3s ease, padding-top 0.3s;
         }
         body.has-banner .main-content { padding-top: 100px; }
 
@@ -202,9 +229,44 @@
         .masked-text { filter: blur(4px); cursor: pointer; transition: filter 0.2s; }
         .masked-text.revealed { filter: blur(0); }
         
-        /* Heatmap Pulse */
-        @keyframes pulse { 0% { transform: scale(0.95); opacity: 0.7; } 50% { transform: scale(1.1); opacity: 0.4; } 100% { transform: scale(0.95); opacity: 0.7; } }
-        .heatmap-dot { position: absolute; background: rgba(234, 84, 85, 0.4); width: 60px; height: 60px; border-radius: 50%; filter: blur(15px); animation: pulse 2s infinite; }
+        /* Heatmap Styles */
+        .heatmap-grid {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            grid-template-rows: repeat(5, 1fr);
+            gap: 4px;
+            height: 280px;
+            background: #f8fafc;
+            padding: 8px;
+            border-radius: 12px;
+        }
+        .heat-cell {
+            border-radius: 4px;
+            transition: transform 0.2s;
+            cursor: pointer;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .heat-cell:hover {
+            transform: scale(1.05);
+            z-index: 2;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .heat-cell.v-high { background: #EA5455; }
+        .heat-cell.high { background: #FF9F43; }
+        .heat-cell.med { background: #FFD56D; }
+        .heat-cell.low { background: #E0F2F4; }
+        .heat-label {
+            font-size: 9px;
+            font-weight: 700;
+            color: rgba(255,255,255,0.9);
+            text-align: center;
+            pointer-events: none;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+        .heat-label.dark { color: var(--neutral-600); text-shadow: none; }
 
         /* Uptime Chart */
         .uptime-chart { height: 60px; display: flex; align-items: flex-end; gap: 2px; }
@@ -220,24 +282,24 @@
     <nav class="sidebar">
         <div class="sidebar-header">
             <div class="logo-box">CD</div>
-            <h3 style="font-weight: 700; font-size: 20px;">CareDee Admin</h3>
-            <p style="font-size: 11px; color: rgba(255,255,255,0.5); text-transform: uppercase;">System Control Panel</p>
+            <h3 style="font-weight: 700; font-size: 20px;">ผู้ดูแลระบบ CareDee</h3>
+            <p style="font-size: 11px; color: rgba(255,255,255,0.5); text-transform: uppercase;">แผงควบคุมระบบ</p>
         </div>
         <div class="sidebar-menu">
-            <button onclick="switchView('view-dashboard')" class="menu-item active" id="btn-dashboard"><i>📊</i> Dashboard</button>
-            <button onclick="switchView('view-users')" class="menu-item" id="btn-users"><i>👤</i> ผู้ดูแล/ผู้ให้บริการ</button>
-            <button onclick="switchView('view-finance')" class="menu-item" id="btn-finance"><i>💰</i> จัดการการเงิน</button>
-            <button onclick="switchView('view-reviews')" class="menu-item" id="btn-reviews"><i>✨</i> คุณภาพรีวิว & อุทธรณ์</button>
-            <button onclick="switchView('view-reports')" class="menu-item" id="btn-reports"><i>📈</i> รายงานระบบ</button>
-            <button onclick="switchView('view-pdpa')" class="menu-item" id="btn-pdpa"><i>🛡️</i> นโยบาย & PDPA</button>
-            <button onclick="switchView('view-cloud')" class="menu-item" id="btn-cloud"><i>🖥️</i> เฝ้าระวังระบบคลาวด์</button>
+            <button onclick="switchView('view-dashboard')" class="menu-item active" id="btn-dashboard"><i>📊</i> <span>หน้าหลัก</span></button>
+            <button onclick="switchView('view-users')" class="menu-item" id="btn-users"><i>👤</i> <span>ผู้ดูแล/ผู้ให้บริการ</span></button>
+            <button onclick="switchView('view-finance')" class="menu-item" id="btn-finance"><i>💰</i> <span>จัดการการเงิน</span></button>
+            <button onclick="switchView('view-reviews')" class="menu-item" id="btn-reviews"><i>✨</i> <span>คุณภาพรีวิว & อุทธรณ์</span></button>
+            <button onclick="switchView('view-reports')" class="menu-item" id="btn-reports"><i>📈</i> <span>รายงานระบบ</span></button>
+            <button onclick="switchView('view-pdpa')" class="menu-item" id="btn-pdpa"><i>🛡️</i> <span>นโยบาย & PDPA</span></button>
+            <button onclick="switchView('view-cloud')" class="menu-item" id="btn-cloud"><i>🖥️</i> <span>เฝ้าระวังระบบคลาวด์</span></button>
         </div>
         <div class="sidebar-footer" style="padding: 24px; border-top: 1px solid rgba(255,255,255,0.1);">
-            <button class="menu-item" style="padding: 0;"><i>🚪</i> ออกจากระบบ</button>
+            <button class="menu-item" style="padding: 0;"><i>🚪</i> <span>ออกจากระบบ</span></button>
         </div>
     </nav>
 
-    <!-- Global Banner -->
+    <!-- ทั้งหมด Banner -->
     <div id="global-maintenance-banner" class="global-banner">
         <span id="banner-icon">📢</span>
         <span id="banner-text">ระบบจะปิดปรับปรุงเวลา 02:00 - 04:00 น.</span>
@@ -252,16 +314,16 @@
                 <div class="search-bar">
                     <input type="text" placeholder="ค้นหาข้อมูลในระบบ..." style="padding: 10px 20px; border-radius: 12px; border: 1px solid var(--neutral-300); width: 300px;">
                 </div>
-                <select id="operator-filter" class="btn-outline" style="padding: 8px 12px; border-radius: 8px;" onchange="applyGlobalFilter(this.value)">
-                    <option value="all">-- ทุกหน่วยงาน (Global View) --</option>
-                    <option value="en">บริษัท บริบาลไทย จำกัด</option>
-                    <option value="mk">ศูนย์ดูแลมีสุข</option>
+                <select id="operator-filter" class="btn-outline" style="padding: 8px 12px; border-radius: 8px;" onchange="applyทั้งหมดกรองข้อมูล(this.value)">
+                    <option value="all">-- ทุกหน่วยงาน (มุมมองรวม) --</option>
+                    <option value="en">บริษัท บริบาลไทย จำกัด (EN)</option>
+                    <option value="mk">ศูนย์ดูแลมีสุข (MS)</option>
                 </select>
             </div>
             <div class="user-info" style="display: flex; align-items: center; gap: 16px;">
                 <div style="text-align: right;">
                     <p style="font-weight: 700; font-size: 14px;">Michael Jackson</p>
-                    <p style="font-size: 12px; color: var(--neutral-600);">Platform Operator</p>
+                    <p style="font-size: 12px; color: var(--neutral-600);">ผู้ดูแลระบบ</p>
                 </div>
                 <div style="width: 44px; height: 44px; background: var(--primary-100); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: var(--primary-600); font-weight: 700;">MJ</div>
             </div>
@@ -277,11 +339,11 @@
                 </div>
                 <div class="metric-card" style="border-left-color: var(--info);">
                     <div class="metric-title">รายได้รวม (เดือนนี้)</div>
-                    <div class="metric-value">฿ 154,200</div>
+                    <div class="metric-value">฿ 1,240,500</div>
                     <p style="font-size: 12px; color: var(--neutral-600); margin-top: 8px;">อัปเดตล่าสุด: 2 นาทีที่แล้ว</p>
                 </div>
                 <div class="metric-card" style="border-left-color: var(--warning);">
-                    <div class="metric-title">รออนุมัติ (Pending)</div>
+                    <div class="metric-title">รออนุมัติ (รออนุมัติ)</div>
                     <div class="metric-value" id="dash-pending-count">12</div>
                     <p style="font-size: 12px; color: var(--error); margin-top: 8px;">ต้องการการตรวจสอบด่วน</p>
                 </div>
@@ -299,11 +361,11 @@
                         </thead>
                         <tbody>
                             <tr id="row-user-dash-1">
-                                <td>สมชาย ใจดี</td><td>Caregiver</td><td><span class="status-pill status-pending">รอตรวจ</span></td>
+                                <td>สมชาย ใจดี</td><td>ผู้ดูแล</td><td><span class="status-pill status-pending">รอตรวจ</span></td>
                                 <td><button class="btn btn-success" style="padding: 4px 12px;" onclick="approveUser('row-user-dash-1')">อนุมัติ</button></td>
                             </tr>
                             <tr id="row-user-dash-2">
-                                <td>บริบาลไทย จำกัด</td><td>Operator</td><td><span class="status-pill status-pending">รอเอกสาร</span></td>
+                                <td>บริษัท บริบาลไทย จำกัด</td><td>ผู้ให้บริการ</td><td><span class="status-pill status-pending">รอเอกสาร</span></td>
                                 <td><button class="btn btn-outline" style="padding: 4px 12px;" onclick="switchView('view-users')">ตรวจ</button></td>
                             </tr>
                         </tbody>
@@ -323,39 +385,125 @@
                     </div>
                 </div>
 
-                <!-- Bulk Actions (Gap 3) -->
+                <!-- การจัดการข้อมูลเป็นชุด (Gap 3) -->
                 <div id="bulk-users-bar" style="background: var(--primary-100); padding: 12px 20px; border-radius: 12px; margin-bottom: 16px; display: none; align-items: center; gap: 16px; border-left: 4px solid var(--primary-600);">
                     <span style="font-weight: 600; font-size: 14px;">เลือกแล้ว <span id="user-sel-count">0</span> รายการ:</span>
-                    <button class="btn btn-success" onclick="bulkApproveUsers()">✅ อนุมัติพร้อมกัน (Batch Approval)</button>
-                    <button class="btn btn-outline" style="background:white" onclick="alert('Batch suspended')">🚫 ระงับชั่วคราว</button>
+                    <button class="btn btn-success" onclick="bulkอนุมัติUsers()">✅ อนุมัติพร้อมกัน (อนุมัติเป็นชุด)</button>
+                    <button class="btn btn-outline" style="background:white" onclick="alert('ระงับการใช้งานเป็นชุด')">🚫 ระงับชั่วคราว</button>
                 </div>
 
                 <table>
                     <thead>
                         <tr>
                             <th style="width: 40px;"><input type="checkbox" onchange="toggleUsersAll(this)"></th>
-                            <th>ชื่อ-นามสกุล</th><th>ประเภท</th><th>สังกัด</th><th>ใบรับรอง</th><th>Consent Date</th><th>สถานะ</th><th>จัดการ</th></tr>
+                            <th>ชื่อ-นามสกุล</th><th>ประเภท</th><th>สังกัด</th><th>ใบรับรอง</th><th>วันที่ให้ความยินยอม</th><th>สถานะ</th><th>จัดการ</th></tr>
                     </thead>
                     <tbody id="user-table-body">
                         <tr id="user-row-1">
                             <td><input type="checkbox" class="user-check" onchange="updateUserBulk()"></td>
-                            <td>วิภาวดี รักดี</td><td>Caregiver</td><td>EN Enterprise</td><td><span style="color: var(--success);">✓ Verified</span></td>
+                            <td>น.ส. กัญญาวีร์ สีใส</td><td>ผู้ดูแล</td><td>en</td><td><span style="color: var(--success);">✓ ยืนยันแล้ว</span></td>
                             <td style="font-size: 11px; color: var(--neutral-600);">12/05/26 09:45</td>
-                            <td><span class="status-pill status-pending">รอดำเนินการ</span></td>
+                            <td><span class="status-pill status-success">ปกติ</span></td>
                             <td>
                                 <div style="display: flex; gap: 4px;">
-                                    <button class="btn btn-outline" style="padding: 4px 8px;" onclick="openEvidenceModal('วิภาวดี รักดี')">📄 ตรวจ</button>
-                                    <button class="btn btn-success" style="padding: 4px 8px;" onclick="approveUser('user-row-1')">อนุมัติ</button>
+                                    <button class="btn btn-outline" style="padding: 4px 8px;" onclick="openEvidenceModal('กัญญาวีร์ สีใส')">📄 ตรวจ</button>
                                 </div>
                             </td>
                         </tr>
                         <tr id="user-row-2">
                             <td><input type="checkbox" class="user-check" onchange="updateUserBulk()"></td>
-                            <td>มานะ อดทน</td><td>Caregiver</td><td>Independent</td><td>-</td>
+                            <td>นาย ธนพล รักงาน</td><td>ผู้ดูแล</td><td>อิสระ</td><td><span style="color: var(--warning);">⚠ รอตรวจสอบสถาบัน</span></td>
                             <td style="font-size: 11px; color: var(--neutral-600);">05/01/26 11:30</td>
-                            <td id="status-mana"><span class="status-pill status-success">ปกติ</span></td>
+                            <td id="status-mana"><span class="status-pill status-pending">รอดำเนินการ</span></td>
                             <td>
-                                <button class="btn btn-error" style="padding: 4px 12px;" onclick="openConfirmModal('ระงับสิทธิ์ มานะ อดทน', 'การระงับสิทธิ์จะทำให้ผู้ใช้เข้าสู่ระบบไม่ได้ทันที', () => suspendUser('status-mana'), true)">ระงับ</button>
+                                <div style="display: flex; gap: 4px;">
+                                    <button class="btn btn-outline" style="padding: 4px 8px;" onclick="openEvidenceModal('ธนพล รักงาน')">📄 ตรวจ</button>
+                                    <button class="btn btn-success" style="padding: 4px 8px;" onclick="approveUser('user-row-2')">อนุมัติ</button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="user-row-3">
+                            <td><input type="checkbox" class="user-check" onchange="updateUserBulk()"></td>
+                            <td>นาง วิไลลักษณ์ ผาสุก</td><td>ผู้ดูแล</td><td>en</td><td><span style="color: var(--success);">✓ ยืนยันแล้ว</span></td>
+                            <td style="font-size: 11px; color: var(--neutral-600);">10/04/26 14:20</td>
+                            <td><span class="status-pill status-success">ปกติ</span></td>
+                            <td>
+                                <button class="btn btn-error" style="padding: 4px 12px;" onclick="openConfirmModal('ระงับสิทธิ์ วิไลลักษณ์ ผาสุก', 'การระงับสิทธิ์จะทำให้ผู้ใช้เข้าสู่ระบบไม่ได้ทันที', () => suspendUser('status-mana'), true)">ระงับ</button>
+                            </td>
+                        </tr>
+                        <tr id="user-row-4">
+                            <td><input type="checkbox" class="user-check" onchange="updateUserBulk()"></td>
+                            <td>น.ส. รัตนาพร มั่นใจ</td><td>ผู้ดูแล</td><td>mk</td><td><span style="color: var(--success);">✓ ยืนยันแล้ว</span></td>
+                            <td style="font-size: 11px; color: var(--neutral-600);">15/05/26 08:30</td>
+                            <td><span class="status-pill status-success">ปกติ</span></td>
+                            <td>
+                                <button class="btn btn-error" style="padding: 4px 12px;" onclick="openConfirmModal('ระงับสิทธิ์', 'ยืนยัน', null, true)">ระงับ</button>
+                            </td>
+                        </tr>
+                        <tr id="user-row-5">
+                            <td><input type="checkbox" class="user-check" onchange="updateUserBulk()"></td>
+                            <td>น.ส. อรทัย ใจสะอาด</td><td>ผู้ดูแล</td><td>en</td><td><span style="color: var(--success);">✓ ยืนยันแล้ว</span></td>
+                            <td style="font-size: 11px; color: var(--neutral-600);">14/05/26 16:10</td>
+                            <td><span class="status-pill status-success">ปกติ</span></td>
+                            <td>
+                                <button class="btn btn-error" style="padding: 4px 12px;" onclick="openConfirmModal('ระงับสิทธิ์', 'ยืนยัน', null, true)">ระงับ</button>
+                            </td>
+                        </tr>
+                        <tr id="user-row-6">
+                            <td><input type="checkbox" class="user-check" onchange="updateUserBulk()"></td>
+                            <td>นาย สุรศักดิ์ กล้าหาญ</td><td>ผู้ดูแล</td><td>อิสระ</td><td><span style="color: var(--success);">✓ ยืนยันแล้ว</span></td>
+                            <td style="font-size: 11px; color: var(--neutral-600);">10/05/26 09:00</td>
+                            <td><span class="status-pill status-error">ถูกระงับ</span></td>
+                            <td>
+                                <button class="btn btn-success" style="padding: 4px 12px;" onclick="alert('ปลดระงับสำเร็จ')">ปลดระงับ</button>
+                            </td>
+                        </tr>
+                        <tr id="user-row-7">
+                            <td><input type="checkbox" class="user-check" onchange="updateUserBulk()"></td>
+                            <td>นาง สมศรี บุญรอด</td><td>ผู้ดูแล</td><td>homecare</td><td><span style="color: var(--success);">✓ ยืนยันแล้ว</span></td>
+                            <td style="font-size: 11px; color: var(--neutral-600);">01/05/26 10:00</td>
+                            <td><span class="status-pill status-success">ปกติ</span></td>
+                            <td>
+                                <button class="btn btn-error" style="padding: 4px 12px;" onclick="openConfirmModal('ระงับสิทธิ์', 'ยืนยัน', null, true)">ระงับ</button>
+                            </td>
+                        </tr>
+                        <tr id="user-row-8">
+                            <td><input type="checkbox" class="user-check" onchange="updateUserBulk()"></td>
+                            <td>น.ส. จุฑามาศ รักดี</td><td>ผู้ดูแล</td><td>mk</td><td><span style="color: var(--success);">✓ ยืนยันแล้ว</span></td>
+                            <td style="font-size: 11px; color: var(--neutral-600);">15/05/26 11:20</td>
+                            <td><span class="status-pill status-success">ปกติ</span></td>
+                            <td>
+                                <button class="btn btn-error" style="padding: 4px 12px;" onclick="openConfirmModal('ระงับสิทธิ์', 'ยืนยัน', null, true)">ระงับ</button>
+                            </td>
+                        </tr>
+                        <tr id="user-row-op-1">
+                            <td><input type="checkbox" class="user-check" onchange="updateUserBulk()"></td>
+                            <td>บริษัท บริบาลไทย จำกัด</td><td>ผู้ให้บริการ</td><td>-</td><td><span style="color: var(--success);">✓ ยืนยันแล้ว</span></td>
+                            <td style="font-size: 11px; color: var(--neutral-600);">15/01/26 10:15</td>
+                            <td><span class="status-pill status-success">ปกติ</span></td>
+                            <td>
+                                <button class="btn btn-error" style="padding: 4px 12px;" onclick="openConfirmModal('ระงับสิทธิ์', 'ยืนยัน', null, true)">ระงับ</button>
+                            </td>
+                        </tr>
+                        <tr id="user-row-op-2">
+                            <td><input type="checkbox" class="user-check" onchange="updateUserBulk()"></td>
+                            <td>ศูนย์ดูแลมีสุข</td><td>ผู้ให้บริการ</td><td>-</td><td><span style="color: var(--success);">✓ ยืนยันแล้ว</span></td>
+                            <td style="font-size: 11px; color: var(--neutral-600);">20/02/26 09:30</td>
+                            <td><span class="status-pill status-success">ปกติ</span></td>
+                            <td>
+                                <button class="btn btn-error" style="padding: 4px 12px;" onclick="openConfirmModal('ระงับสิทธิ์', 'ยืนยัน', null, true)">ระงับ</button>
+                            </td>
+                        </tr>
+                        <tr id="user-row-op-3">
+                            <td><input type="checkbox" class="user-check" onchange="updateUserBulk()"></td>
+                            <td>โฮมแคร์ พรีเมียม</td><td>ผู้ให้บริการ</td><td>-</td><td><span style="color: var(--warning);">⚠ รอเอกสาร</span></td>
+                            <td style="font-size: 11px; color: var(--neutral-600);">15/05/26 08:00</td>
+                            <td><span class="status-pill status-pending">รอตรวจสอบ</span></td>
+                            <td>
+                                <div style="display: flex; gap: 4px;">
+                                    <button class="btn btn-outline" style="padding: 4px 8px;" onclick="openEvidenceModal('โฮมแคร์ พรีเมียม')">📄 ตรวจ</button>
+                                    <button class="btn btn-success" style="padding: 4px 8px;" onclick="approveUser('user-row-op-3')">อนุมัติ</button>
+                                </div>
                             </td>
                         </tr>
                     </tbody>
@@ -371,11 +519,11 @@
                     <div class="metric-value">฿ 1.24M</div>
                 </div>
                 <div class="metric-card" style="border-left-color: var(--info);">
-                    <div class="metric-title">Commission (10%)</div>
+                    <div class="metric-title">ค่าคอมมิชชัน (10%)</div>
                     <div class="metric-value">฿ 124,050</div>
                 </div>
                 <div class="metric-card" style="border-left-color: var(--warning);">
-                    <div class="metric-title">ยอดรอโอน (Pending)</div>
+                    <div class="metric-title">ยอดรอโอน (รออนุมัติ)</div>
                     <div class="metric-value">฿ 45,200</div>
                 </div>
                 <div class="metric-card" style="border-left-color: var(--success);">
@@ -384,25 +532,163 @@
                 </div>
             </div>
             <div class="card">
-                <div class="card-header"><h2>รายการรอโอนเงิน (Payout Queue)</h2></div>
+                <div class="card-header"><h2>รายการรอโอนเงิน (คิวรอโอนเงิน)</h2></div>
                 <table>
                     <thead>
-                        <tr><th>ID จอง</th><th>ผู้รับเงิน</th><th>ยอดสุทธิ</th><th>สถานะ Gateway</th><th>จัดการ</th></tr>
+                        <tr><th>ID จอง</th><th>ผู้รับเงิน</th><th>ยอดสุทธิ</th><th>สถานะ เกตเวย์</th><th>จัดการ</th></tr>
                     </thead>
                     <tbody>
                         <tr>
                             <td>
                                 <div style="display: flex; flex-direction: column;">
                                     <span style="font-weight: 700; color: var(--primary-600);">#BK-9915</span>
-                                    <button class="btn btn-outline" style="font-size: 10px; padding: 2px 6px; margin-top: 4px;" onclick="openPayoutDetail('#BK-9915')">🔍 Breakdown (Gap 4)</button>
+                                    <button class="btn btn-outline" style="font-size: 10px; padding: 2px 6px; margin-top: 4px;" onclick="openPayoutDetail('#BK-9915')">🔍 ดูรายละเอียด (Gap 4)</button>
                                 </div>
                             </td>
                             <td>สมชาย บริบาล</td><td>฿ 1,620</td>
-                            <td><span class="status-pill status-success">Success</span></td>
+                            <td><span class="status-pill status-success">สำเร็จ</span></td>
                             <td><button class="btn btn-success" style="padding: 4px 12px;" onclick="openConfirmModal('ยืนยันการโอนเงิน', 'ระบบจะส่งคำสั่งโอนเงินไปยังธนาคารปลายทางทันที โดยระบุเหตุผลการอนุมัติใน Log', () => alert('โอนเงินสำเร็จ!'), true)">โอนเงิน</button></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div style="display: flex; flex-direction: column;">
+                                    <span style="font-weight: 700; color: var(--primary-600);">#BK-9916</span>
+                                    <button class="btn btn-outline" style="font-size: 10px; padding: 2px 6px; margin-top: 4px;" onclick="openPayoutDetail('#BK-9916')">🔍 ดูรายละเอียด</button>
+                                </div>
+                            </td>
+                            <td>นาง วิไลลักษณ์ ผาสุก</td><td>฿ 3,240</td>
+                            <td><span class="status-pill status-success">สำเร็จ</span></td>
+                            <td><button class="btn btn-success" style="padding: 4px 12px;" onclick="alert('โอนเงินสำเร็จ!')">โอนเงิน</button></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div style="display: flex; flex-direction: column;">
+                                    <span style="font-weight: 700; color: var(--primary-600);">#BK-9917</span>
+                                    <button class="btn btn-outline" style="font-size: 10px; padding: 2px 6px; margin-top: 4px;" onclick="openPayoutDetail('#BK-9917')">🔍 ดูรายละเอียด</button>
+                                </div>
+                            </td>
+                            <td>น.ส. กัญญาวีร์ สีใส</td><td>฿ 2,100</td>
+                            <td><span class="status-pill status-pending">กำลังดำเนินการ</span></td>
+                            <td><button class="btn btn-outline" style="padding: 4px 12px;">รอ เกตเวย์</button></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div style="display: flex; flex-direction: column;">
+                                    <span style="font-weight: 700; color: var(--primary-600);">#BK-9918</span>
+                                    <button class="btn btn-outline" style="font-size: 10px; padding: 2px 6px; margin-top: 4px;" onclick="openPayoutDetail('#BK-9918')">🔍 ดูรายละเอียด</button>
+                                </div>
+                            </td>
+                            <td>บริษัท บริบาลไทย จำกัด</td><td>฿ 15,400</td>
+                            <td><span class="status-pill status-success">สำเร็จ</span></td>
+                            <td><button class="btn btn-success" style="padding: 4px 12px;" onclick="alert('โอนเงินสำเร็จ!')">โอนเงิน</button></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div style="display: flex; flex-direction: column;">
+                                    <span style="font-weight: 700; color: var(--primary-600);">#BK-9919</span>
+                                    <button class="btn btn-outline" style="font-size: 10px; padding: 2px 6px; margin-top: 4px;" onclick="openPayoutDetail('#BK-9919')">🔍 ดูรายละเอียด</button>
+                                </div>
+                            </td>
+                            <td>นาย สุรศักดิ์ กล้าหาญ</td><td>฿ 1,500</td>
+                            <td><span class="status-pill status-error">ล้มเหลว</span></td>
+                            <td><button class="btn btn-error" style="padding: 4px 12px;">ตรวจสอบบัญชี</button></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div style="display: flex; flex-direction: column;">
+                                    <span style="font-weight: 700; color: var(--primary-600);">#BK-9920</span>
+                                    <button class="btn btn-outline" style="font-size: 10px; padding: 2px 6px; margin-top: 4px;" onclick="openPayoutDetail('#BK-9920')">🔍 ดูรายละเอียด</button>
+                                </div>
+                            </td>
+                            <td>นาง สมศรี บุญรอด</td><td>฿ 4,800</td>
+                            <td><span class="status-pill status-success">สำเร็จ</span></td>
+                            <td><button class="btn btn-success" style="padding: 4px 12px;" onclick="alert('โอนเงินสำเร็จ!')">โอนเงิน</button></td>
+                        </tr>
+                        <tr>
+                            <td><span style="font-weight: 700; color: var(--primary-600);">#BK-9921</span></td>
+                            <td>นาย ธนพล รักงาน</td><td>฿ 1,800</td>
+                            <td><span class="status-pill status-pending">รอดำเนินการ</span></td>
+                            <td><button class="btn btn-primary" style="padding: 4px 12px;">อนุมัติ</button></td>
+                        </tr>
+                        <tr>
+                            <td><span style="font-weight: 700; color: var(--primary-600);">#BK-9922</span></td>
+                            <td>ศูนย์ดูแลมีสุข</td><td>฿ 22,500</td>
+                            <td><span class="status-pill status-success">สำเร็จ</span></td>
+                            <td><button class="btn btn-outline" style="padding: 4px 12px;">รายละเอียด</button></td>
+                        </tr>
+                        <tr>
+                            <td><span style="font-weight: 700; color: var(--primary-600);">#BK-9923</span></td>
+                            <td>น.ส. รัตนาพร มั่นใจ</td><td>฿ 2,500</td>
+                            <td><span class="status-pill status-success">สำเร็จ</span></td>
+                            <td><button class="btn btn-outline" style="padding: 4px 12px;">รายละเอียด</button></td>
+                        </tr>
+                        <tr>
+                            <td><span style="font-weight: 700; color: var(--primary-600);">#BK-9924</span></td>
+                            <td>น.ส. อรทัย ใจสะอาด</td><td>฿ 1,200</td>
+                            <td><span class="status-pill status-success">สำเร็จ</span></td>
+                            <td><button class="btn btn-outline" style="padding: 4px 12px;">รายละเอียด</button></td>
+                        </tr>
+                        <tr>
+                            <td><span style="font-weight: 700; color: var(--primary-600);">#BK-9925</span></td>
+                            <td>นาย นิกร แสงทอง</td><td>฿ 3,500</td>
+                            <td><span class="status-pill status-pending">กำลังดำเนินการ</span></td>
+                            <td><button class="btn btn-outline" style="padding: 4px 12px;">รอ เกตเวย์</button></td>
+                        </tr>
+                        <tr>
+                            <td><span style="font-weight: 700; color: var(--primary-600);">#BK-9926</span></td>
+                            <td>น.ส. จุฑามาศ รักดี</td><td>฿ 2,800</td>
+                            <td><span class="status-pill status-success">สำเร็จ</span></td>
+                            <td><button class="btn btn-outline" style="padding: 4px 12px;">รายละเอียด</button></td>
+                        </tr>
+                        <tr>
+                            <td><span style="font-weight: 700; color: var(--primary-600);">#BK-9927</span></td>
+                            <td>น.ส. วนิดา นามวงศ์</td><td>฿ 1,600</td>
+                            <td><span class="status-pill status-pending">รอดำเนินการ</span></td>
+                            <td><button class="btn btn-primary" style="padding: 4px 12px;">อนุมัติ</button></td>
+                        </tr>
+                        <tr>
+                            <td><span style="font-weight: 700; color: var(--primary-600);">#BK-9928</span></td>
+                            <td>โฮมแคร์ พรีเมียม</td><td>฿ 12,000</td>
+                            <td><span class="status-pill status-pending">รอดำเนินการ</span></td>
+                            <td><button class="btn btn-primary" style="padding: 4px 12px;">อนุมัติ</button></td>
+                        </tr>
+                        <tr>
+                            <td><span style="font-weight: 700; color: var(--primary-600);">#BK-9929</span></td>
+                            <td>นาย สมเกียรติ พากเพียร</td><td>฿ 2,200</td>
+                            <td><span class="status-pill status-success">สำเร็จ</span></td>
+                            <td><button class="btn btn-outline" style="padding: 4px 12px;">รายละเอียด</button></td>
+                        </tr>
+                        <tr>
+                            <td><span style="font-weight: 700; color: var(--primary-600);">#BK-9930</span></td>
+                            <td>น.ส. กัญญาวีร์ สีใส</td><td>฿ 1,900</td>
+                            <td><span class="status-pill status-success">สำเร็จ</span></td>
+                            <td><button class="btn btn-outline" style="padding: 4px 12px;">รายละเอียด</button></td>
                         </tr>
                     </tbody>
                 </table>
+            </div>
+            <div class="card" style="border-top: 4px solid var(--info);">
+                <div class="card-header"><h2>💡 คำอธิบายสถานะและการจัดการเงิน (Status Glossary)</h2></div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px;">
+                    <div>
+                        <h3 style="font-size: 15px; margin-bottom: 12px; color: var(--primary-600);">ความหมายของสถานะ เกตเวย์</h3>
+                        <ul style="list-style: none; font-size: 14px; line-height: 2;">
+                            <li><span class="status-pill status-pending" style="display: inline-block; width: 80px; text-align: center;">รอดำเนินการ</span> <b>: รออนุมัติ</b> - รายการจองเสร็จสิ้นแล้ว รอ Admin ตรวจสอบและกด "อนุมัติ" เพื่อเริ่มกระบวนการโอนเงิน</li>
+                            <li><span class="status-pill status-pending" style="display: inline-block; width: 80px; text-align: center;">กำลังดำเนินการ</span> <b>: กำลังโอน</b> - ระบบส่งคำสั่งไปยังธนาคารแล้ว อยู่ระหว่างรอผลตอบรับ (ไม่สามารถยกเลิกได้ในขั้นตอนนี้)</li>
+                            <li><span class="status-pill status-success" style="display: inline-block; width: 80px; text-align: center;">สำเร็จ</span> <b>: โอนสำเร็จ</b> - เงินเข้าบัญชีผู้รับปลายทางเรียบร้อยแล้ว</li>
+                            <li><span class="status-pill status-error" style="display: inline-block; width: 80px; text-align: center;">ล้มเหลว</span> <b>: ล้มเหลว</b> - การโอนไม่สำเร็จ (เช่น เลขบัญชีผิด, ยอดเงินในระบบไม่พอ) ต้องตรวจสอบและแก้ไขข้อมูล</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 style="font-size: 15px; margin-bottom: 12px; color: var(--primary-600);">การดำเนินการ (ความหมายของการดำเนินการ)</h3>
+                        <ul style="list-style: none; font-size: 14px; line-height: 2;">
+                            <li><b>อนุมัติ (อนุมัติ):</b> ตรวจสอบยอดเงินและความถูกต้องเพื่อเปลี่ยนสถานะเป็นพร้อมโอน</li>
+                            <li><b>โอนเงิน (โอนเงิน):</b> ส่งคำสั่ง Batch Payout ไปยัง ระบบรับชำระเงิน ทันที</li>
+                            <li><b>ตรวจสอบบัญชี (ตรวจสอบบัญชี):</b> ตรวจสอบความถูกต้องของชื่อ-เลขบัญชีกับข้อมูลที่ลงทะเบียนไว้</li>
+                            <li><b>ดูรายละเอียด:</b> ดูรายละเอียดการหัก Commission, ภาษี ณ ที่จ่าย และยอดสุทธิที่โอนจริง</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -411,7 +697,7 @@
             <div class="card">
                 <div class="card-header">
                     <h2>คุณภาพรีวิวและรายการอุทธรณ์</h2>
-                    <span style="font-size: 13px; color: var(--neutral-600);">Auto-Moderation: ACTIVE</span>
+                    <span style="font-size: 13px; color: var(--neutral-600);">การกลั่นกรองอัตโนมัติ: ทำงานอยู่</span>
                 </div>
                 <table>
                     <thead>
@@ -421,13 +707,67 @@
                         <tr>
                             <td>
                                 <div class="masked-text" onclick="this.classList.toggle('revealed')">"บริการแย่มาก ทำงานไม่ [คำหยาบ] เลย..." (คลิกเพื่อดู)</div>
-                                <div style="font-size: 11px; color: var(--neutral-600); margin-top: 4px;">#BK-9801 | 12 พ.ค. 26</div>
+                                <div style="font-size: 11px; color: var(--neutral-600); margin-top: 4px;">#AP-990 | 15 พ.ค. 26 | เป้าหมาย: นาย สุรศักดิ์ กล้าหาญ</div>
                             </td>
                             <td><span style="color: var(--warning);">★☆☆☆☆</span></td>
                             <td>
-                                <button class="btn btn-outline" style="font-size: 11px; padding: 4px 8px;" onclick="openEvidenceModal('#BK-9801 Appeal')">👁️ View Evidence (Gap 1)</button>
+                                <button class="btn btn-outline" style="font-size: 11px; padding: 4px 8px;" onclick="openEvidenceModal('#AP-990 Appeal')">👁️ ดูหลักฐาน (Gap 1)</button>
                             </td>
-                            <td><span class="status-pill status-error">Flagged</span></td>
+                            <td><span class="status-pill status-error">ถูกรายงาน</span></td>
+                            <td style="display: flex; gap: 8px;">
+                                <button class="btn btn-success" title="กู้คืน">✓</button>
+                                <button class="btn btn-error" title="ลบ">🗑️</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="masked-text" onclick="this.classList.toggle('revealed')">"มาสายตลอด โทรไปก็ไม่รับสาย..." (คลิกเพื่อดู)</div>
+                                <div style="font-size: 11px; color: var(--neutral-600); margin-top: 4px;">#AP-991 | 14 พ.ค. 26 | เป้าหมาย: นาย ธนพล รักงาน</div>
+                            </td>
+                            <td><span style="color: var(--warning);">★★☆☆☆</span></td>
+                            <td>
+                                <button class="btn btn-outline" style="font-size: 11px; padding: 4px 8px;" onclick="openEvidenceModal('#AP-991 Appeal')">👁️ ดูหลักฐาน</button>
+                            </td>
+                            <td><span class="status-pill status-error">ถูกรายงาน</span></td>
+                            <td style="display: flex; gap: 8px;">
+                                <button class="btn btn-success" title="กู้คืน">✓</button>
+                                <button class="btn btn-error" title="ลบ">🗑️</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="masked-text revealed">"ดูแลคุณแม่ดีมากค่ะ ใส่ใจทุกรายละเอียด"</div>
+                                <div style="font-size: 11px; color: var(--neutral-600); margin-top: 4px;">#REV-1002 | 13 พ.ค. 26 | เป้าหมาย: น.ส. รัตนาพร มั่นใจ</div>
+                            </td>
+                            <td><span style="color: var(--success);">★★★★★</span></td>
+                            <td>-</td>
+                            <td><span class="status-pill status-success">อนุมัติแล้ว</span></td>
+                            <td style="display: flex; gap: 8px;">
+                                <button class="btn btn-outline" title="ดูรายละเอียด">🔍</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="masked-text revealed">"เจ้าหน้าที่พูดจาสุภาพ ให้คำแนะนำดีมาก"</div>
+                                <div style="font-size: 11px; color: var(--neutral-600); margin-top: 4px;">#REV-1005 | 12 พ.ค. 26 | เป้าหมาย: น.ส. จุฑามาศ รักดี</div>
+                            </td>
+                            <td><span style="color: var(--success);">★★★★★</span></td>
+                            <td>-</td>
+                            <td><span class="status-pill status-success">อนุมัติแล้ว</span></td>
+                            <td style="display: flex; gap: 8px;">
+                                <button class="btn btn-outline" title="ดูรายละเอียด">🔍</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="masked-text" onclick="this.classList.toggle('revealed')">"ส่งคนมาไม่ตรงปก บอกว่าพูดญี่ปุ่นได้แต่พูดไม่ได้..." (คลิกเพื่อดู)</div>
+                                <div style="font-size: 11px; color: var(--neutral-600); margin-top: 4px;">#AP-995 | 10 พ.ค. 26 | เป้าหมาย: ศูนย์ดูแลมีสุข</div>
+                            </td>
+                            <td><span style="color: var(--warning);">★☆☆☆☆</span></td>
+                            <td>
+                                <button class="btn btn-outline" style="font-size: 11px; padding: 4px 8px;" onclick="openEvidenceModal('#AP-995 Appeal')">👁️ ดูหลักฐาน</button>
+                            </td>
+                            <td><span class="status-pill status-pending">กำลังตรวจสอบ</span></td>
                             <td style="display: flex; gap: 8px;">
                                 <button class="btn btn-success" title="กู้คืน">✓</button>
                                 <button class="btn btn-error" title="ลบ">🗑️</button>
@@ -441,28 +781,76 @@
         <!-- VIEW: REPORTS -->
         <section id="view-reports" class="view-section">
             <div class="card">
-                <div class="card-header">
-                    <h2>Market Insights (Demand vs Supply)</h2>
-                    <div style="display: flex; gap: 12px; align-items: center;">
-                        <span style="font-size: 12px; font-weight: 600;">Custom Range (Gap 2):</span>
-                        <input type="date" class="btn-outline" style="padding: 4px 8px; border-radius: 6px;">
-                        <span>-</span>
-                        <input type="date" class="btn-outline" style="padding: 4px 8px; border-radius: 6px;">
-                        <button class="btn btn-primary btn-sm">Filter</button>
+                <div class="card-header" style="flex-wrap: wrap; gap: 16px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                        <h2>ข้อมูลเชิงลึกตลาด (แผนที่ความร้อน ความต้องการ vs ผู้ให้บริการ)</h2>
+                        <div style="display: flex; gap: 12px; align-items: center;">
+                            <span style="font-size: 12px; font-weight: 600;">กำหนดช่วงเวลา (Gap 2):</span>
+                            <input type="date" class="btn-outline" style="padding: 4px 8px; border-radius: 6px;">
+                            <span>-</span>
+                            <input type="date" class="btn-outline" style="padding: 4px 8px; border-radius: 6px;">
+                            <button class="btn btn-primary btn-sm">กรองข้อมูล</button>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 8px; font-size: 10px;">
+                        <span style="display: flex; align-items: center; gap: 4px;"><i style="width: 8px; height: 8px; background: #EA5455; border-radius: 2px; display: inline-block;"></i> สูง</span>
+                        <span style="display: flex; align-items: center; gap: 4px;"><i style="width: 8px; height: 8px; background: #FF9F43; border-radius: 2px; display: inline-block;"></i> ปานกลาง</span>
+                        <span style="display: flex; align-items: center; gap: 4px;"><i style="width: 8px; height: 8px; background: #E0F2F4; border-radius: 2px; display: inline-block;"></i> ต่ำ</span>
                     </div>
                 </div>
-                <div style="height: 300px; background: var(--neutral-100); border-radius: 12px; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center;">
-                    <p style="color: var(--neutral-600); z-index: 1;">[ Interactive Heatmap Visualization ]</p>
-                    <div class="heatmap-dot" style="top: 20%; left: 30%;"></div>
-                    <div class="heatmap-dot" style="top: 60%; left: 70%; background: var(--secondary-500);"></div>
+                <div class="heatmap-grid">
+                    <div class="heat-cell low"><span class="heat-label dark">นนทบุรี</span></div>
+                    <div class="heat-cell med"><span class="heat-label dark">ดอนเมือง</span></div>
+                    <div class="heat-cell v-high"><span class="heat-label">บางนา</span></div>
+                    <div class="heat-cell med"></div>
+                    <div class="heat-cell high"></div>
+                    <div class="heat-cell low"></div>
+                    <div class="heat-cell low"></div>
+                    <div class="heat-cell med"><span class="heat-label dark">สมุทรปราการ</span></div>
+                    
+                    <div class="heat-cell med"></div>
+                    <div class="heat-cell v-high"><span class="heat-label">พญาไท</span></div>
+                    <div class="heat-cell v-high"><span class="heat-label">สุขุมวิท</span></div>
+                    <div class="heat-cell v-high"></div>
+                    <div class="heat-cell high"></div>
+                    <div class="heat-cell med"></div>
+                    <div class="heat-cell low"></div>
+                    <div class="heat-cell low"></div>
+
+                    <div class="heat-cell low"></div>
+                    <div class="heat-cell high"><span class="heat-label">พระราม 2</span></div>
+                    <div class="heat-cell v-high"></div>
+                    <div class="heat-cell med"></div>
+                    <div class="heat-cell low"></div>
+                    <div class="heat-cell med"></div>
+                    <div class="heat-cell med"></div>
+                    <div class="heat-cell high"><span class="heat-label">ตลิ่งชัน</span></div>
+
+                    <div class="heat-cell low"></div>
+                    <div class="heat-cell med"></div>
+                    <div class="heat-cell high"></div>
+                    <div class="heat-cell med"></div>
+                    <div class="heat-cell low"></div>
+                    <div class="heat-cell v-high"><span class="heat-label">ลาดพร้าว</span></div>
+                    <div class="heat-cell high"></div>
+                    <div class="heat-cell med"></div>
+
+                    <div class="heat-cell low"></div>
+                    <div class="heat-cell low"></div>
+                    <div class="heat-cell med"></div>
+                    <div class="heat-cell high"><span class="heat-label">ราชพฤกษ์</span></div>
+                    <div class="heat-cell med"></div>
+                    <div class="heat-cell low"></div>
+                    <div class="heat-cell low"></div>
+                    <div class="heat-cell low"></div>
                 </div>
             </div>
             <div class="card">
                 <div class="card-header"><h2>ศูนย์ส่งออกรายงาน</h2></div>
                 <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px;">
-                    <button class="btn btn-outline" style="text-align: left; padding: 20px;">📄 รายงานสรุปรายได้ (Monthly)</button>
-                    <button class="btn btn-outline" style="text-align: left; padding: 20px;">🛡️ รายงาน PDPA Audit</button>
-                    <button class="btn btn-primary" style="text-align: center; padding: 20px;">🚀 สร้างรายงาน Custom</button>
+                    <button class="btn btn-outline" style="text-align: left; padding: 20px;" onclick="openRevenueReportModal()">📄 รายงานสรุปรายได้ (Monthly)</button>
+                    <button class="btn btn-outline" style="text-align: left; padding: 20px;" onclick="openPDPAReportModal()">🛡️ รายงาน PDPA Audit</button>
+                    <button class="btn btn-primary" style="text-align: center; padding: 20px;" onclick="openกำหนดเองReportModal()">🚀 สร้างรายงาน กำหนดเอง</button>
                 </div>
             </div>
         </section>
@@ -470,21 +858,21 @@
         <!-- VIEW: PDPA -->
         <section id="view-pdpa" class="view-section">
             <div class="card">
-                <div class="card-header"><h2>Privacy & Consent Control</h2></div>
+                <div class="card-header"><h2>การจัดการความเป็นส่วนตัวและคำยินยอม</h2></div>
                 <div style="background: var(--secondary-100); padding: 20px; border-radius: 12px; border: 1px dashed var(--secondary-500); margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center;">
                     <div>
-                        <p style="font-weight: 700;">Broadcast Policy Update (v2.4)</p>
+                        <p style="font-weight: 700;">ประกาศอัปเดตนโยบาย (v2.4)</p>
                         <p style="font-size: 13px; color: var(--neutral-600);">ส่งแจ้งเตือน Re-consent ให้ผู้ใช้ทุกคนในระบบ</p>
                     </div>
                     <div style="display: flex; gap: 8px;">
-                        <button class="btn btn-outline" onclick="openPolicyPreview('v2.4')">👁️ Policy Preview (Gap 5)</button>
+                        <button class="btn btn-outline" onclick="openPolicyPreview('v2.4')">👁️ ดูตัวอย่างนโยบาย (Gap 5)</button>
                         <button class="btn btn-warning" onclick="openConfirmModal('ส่งแจ้งเตือน Re-consent', 'ผู้ใช้ทุกคนจะต้องกดยอมรับนโยบายใหม่เมื่อเข้าสู่ระบบครั้งถัดไป', () => alert('ส่งแจ้งเตือนสำเร็จ!'), true)">ประกาศแจ้งเตือน</button>
                     </div>
                 </div>
-                <div class="card-header"><h2>Privacy Access Log</h2></div>
+                <div class="card-header"><h2>บันทึกการเข้าถึงข้อมูลส่วนบุคคล</h2></div>
                 <div style="background: var(--neutral-100); padding: 16px; border-radius: 12px; font-size: 13px;">
-                    <p style="margin-bottom: 8px;"><b>14:20</b> | <b>Admin Michael</b> เข้าถึงข้อมูลส่วนบุคคล #U-5501 (Reason: Support)</p>
-                    <p><b>11:45</b> | <b>System</b> ทำการลบข้อมูล (Auto-purge) ประวัติ 7 ปี</p>
+                    <p style="margin-bottom: 8px;"><b>14:20</b> | <b>แอดมิน Michael</b> เข้าถึงข้อมูลส่วนบุคคล #U-5501 (Reason: Support)</p>
+                    <p><b>11:45</b> | <b>ระบบ</b> ทำการลบข้อมูล (Auto-purge) ประวัติ 7 ปี</p>
                 </div>
             </div>
         </section>
@@ -493,43 +881,43 @@
         <section id="view-cloud" class="view-section">
             <div class="dashboard-grid">
                 <div class="metric-card">
-                    <div class="metric-title">Availability</div>
+                    <div class="metric-title">ความพร้อมใช้งานระบบ</div>
                     <div class="metric-value" style="color: var(--success);">99.98%</div>
                 </div>
                 <div class="metric-card" style="border-left-color: var(--info);">
-                    <div class="metric-title">Active Users</div>
+                    <div class="metric-title">ผู้ใช้งานปัจจุบัน</div>
                     <div class="metric-value">1,245</div>
                 </div>
                 <div class="metric-card" style="border-left-color: var(--error);">
-                    <div class="metric-title">Security Alerts</div>
+                    <div class="metric-title">เตือนความปลอดภัย</div>
                     <div class="metric-value">3</div>
                 </div>
                 <div class="metric-card" style="border-left-color: var(--secondary-500);">
-                    <div class="metric-title">Avg Response Time</div>
+                    <div class="metric-title">เวลาตอบสนองเฉลี่ย</div>
                     <div class="metric-value">124ms</div>
                 </div>
             </div>
             
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
                 <div class="card">
-                    <div class="card-header"><h2>Service Health</h2></div>
+                    <div class="card-header"><h2>สถานะระบบบริการ</h2></div>
                     <div id="service-health-list">
                         <!-- Simulated service items -->
                     </div>
                     <div style="margin-top: 20px;">
-                        <h3 style="font-size: 14px; margin-bottom: 12px;">Uptime History (24h)</h3>
+                        <h3 style="font-size: 14px; margin-bottom: 12px;">ประวัติการทำงาน (24 ชม.)</h3>
                         <div class="uptime-chart" id="uptime-chart-bars"></div>
                     </div>
                 </div>
                 <div class="card">
-                    <div class="card-header"><h2>Maintenance Broadcaster</h2></div>
+                    <div class="card-header"><h2>ระบบประกาศปิดปรับปรุง</h2></div>
                     <div style="display: flex; flex-direction: column; gap: 16px;">
                         <textarea id="broadcast-msg-input" placeholder="พิมพ์ข้อความแจ้งปิดปรับปรุงระบบ..." style="width: 100%; height: 100px; padding: 12px; border-radius: 12px; border: 1px solid var(--neutral-300); resize: none;"></textarea>
                         <div style="display: flex; align-items: center; gap: 8px;">
                             <input type="checkbox" id="urgent-check">
                             <label for="urgent-check" style="font-size: 14px; font-weight: 600;">ตั้งเป็นแถบสีแดง (Urgent)</label>
                         </div>
-                        <button class="btn btn-warning" style="width: 100%;" onclick="broadcastMaintenance()">🚀 ประกาศแจ้งเตือนทันที (Global)</button>
+                        <button class="btn btn-warning" style="width: 100%;" onclick="broadcastMaintenance()">🚀 ประกาศแจ้งเตือนทันที (ทั้งหมด)</button>
                     </div>
                 </div>
             </div>
@@ -551,50 +939,50 @@
                         <tbody>
                             <tr>
                                 <td><b>1. คุณภาพรีวิว & อุทธรณ์</b></td>
-                                <td><b>Evidence Viewer:</b> ส่วนแสดงหลักฐานประกอบการอุทธรณ์ (Appeal Logic)</td>
+                                <td><b>ดูหลักฐาน:</b> ส่วนแสดงหลักฐานประกอบการอุทธรณ์ (ตรรกะการอุทธรณ์)</td>
                                 <td><span class="status-pill status-success">Implemented</span></td>
                             </tr>
                             <tr>
                                 <td><b>2. รายงานระบบ</b></td>
-                                <td><b>Custom Date Range Picker:</b> รองรับการเลือกช่วงวันที่ได้ตามเงื่อนไขทางธุรกิจ</td>
+                                <td><b>ตัวเลือกช่วงวันที่แบบกำหนดเอง:</b> รองรับการเลือกช่วงวันที่ได้ตามเงื่อนไขทางธุรกิจ</td>
                                 <td><span class="status-pill status-success">Implemented</span></td>
                             </tr>
                             <tr>
                                 <td><b>3. การจัดการผู้ใช้</b></td>
-                                <td><b>Bulk Actions:</b> Batch Approval การจัดการข้อมูลจำนวนมาก (Efficiency at Scale)</td>
+                                <td><b>การจัดการข้อมูลเป็นชุด:</b> อนุมัติเป็นชุด การจัดการข้อมูลจำนวนมาก (ประสิทธิภาพสำหรับข้อมูลปริมาณมาก)</td>
                                 <td><span class="status-pill status-success">Implemented</span></td>
                             </tr>
                             <tr>
                                 <td><b>4. จัดการการเงิน</b></td>
-                                <td><b>Payout Verification Details:</b> Transaction Breakdown ความโปร่งใสของที่มาของยอดเงิน</td>
+                                <td><b>รายละเอียดการยืนยันการโอนเงิน:</b> ดูรายละเอียดธุรกรรม ความโปร่งใสของที่มาของยอดเงิน</td>
                                 <td><span class="status-pill status-success">Implemented</span></td>
                             </tr>
                             <tr>
                                 <td><b>5. นโยบาย & PDPA</b></td>
-                                <td><b>Policy Preview:</b> การตรวจสอบความถูกต้องของเนื้อหากฎหมายก่อนประกาศใช้ (Broadcast)</td>
+                                <td><b>ดูตัวอย่างนโยบาย:</b> การตรวจสอบความถูกต้องของเนื้อหากฎหมายก่อนประกาศใช้ (Broadcast)</td>
                                 <td><span class="status-pill status-success">Implemented</span></td>
                             </tr>
                             <tr>
                                 <td><b>6. เฝ้าระวังคลาวด์</b></td>
-                                <td><b>Incident Link:</b> รายละเอียดข้อผิดพลาดทางเทคนิค (Technical Alert Detail)</td>
+                                <td><b>ลิงก์รายงานปัญหา:</b> รายละเอียดข้อผิดพลาดทางเทคนิค (รายละเอียดการเตือนทางเทคนิค)</td>
                                 <td><span class="status-pill status-success">Implemented</span></td>
                             </tr>
                         </tbody>
                     </table>
 
                     <div style="margin-top: 32px; padding-top: 24px; border-top: 1px dashed var(--neutral-300);">
-                        <h3 style="font-size: 16px; margin-bottom: 16px; color: var(--primary-600);">💡 ข้อแนะนำเพิ่มเติมสำหรับ UI/UX (Strategic Suggestions)</h3>
+                        <h3 style="font-size: 16px; margin-bottom: 16px; color: var(--primary-600);">💡 ข้อแนะนำเพิ่มเติมสำหรับ UI/UX (ข้อเสนอแนะเชิงกลยุทธ์)</h3>
                         <ul style="list-style-type: none; padding-left: 0;">
                             <li style="margin-bottom: 12px; display: flex; gap: 12px;">
                                 <span style="font-size: 20px;">📏</span>
                                 <div>
-                                    <b>Condensed Design:</b> ปรับระยะห่าง (Padding) ให้กระชับขึ้นในหน้าที่มีตารางข้อมูลหนาแน่น (Data Density) เพื่อลดการ Scroll ตามหลักการ Admin Portal
+                                    <b>การออกแบบให้กระชับ:</b> ปรับระยะห่าง (Padding) ให้กระชับขึ้นในหน้าที่มีตารางข้อมูลหนาแน่น (ความหนาแน่นของข้อมูล) เพื่อลดการ Scroll ตามหลักการ Admin Portal
                                 </div>
                             </li>
                             <li style="margin-bottom: 12px; display: flex; gap: 12px;">
                                 <span style="font-size: 20px;">🛡️</span>
                                 <div>
-                                    <b>Security Context:</b> เพิ่มการระบุ <b>Reason Code (เหตุผล)</b> กำกับไว้ใน Audit Log สำหรับทุกการดำเนินการที่มีความเสี่ยงสูง (High Risk Actions) เช่น การลบข้อมูล หรือการโอนเงิน
+                                    <b>บริบทความปลอดภัย:</b> เพิ่มการระบุ <b>รหัสเหตุผล (เหตุผล)</b> กำกับไว้ใน Audit Log สำหรับทุกการดำเนินการที่มีความเสี่ยงสูง (การดำเนินการที่มีความเสี่ยงสูง) เช่น การลบข้อมูล หรือการโอนเงิน
                                 </div>
                             </li>
                         </ul>
@@ -614,7 +1002,7 @@
             
             <!-- Reason Field (Gap Analysis) -->
             <div id="reason-field" style="display: none; text-align: left; margin-top: 16px;">
-                <label for="action-reason" style="font-size: 13px; font-weight: 600; color: var(--neutral-600);">ระบุเหตุผล (Reason for Audit Log):</label>
+                <label for="action-reason" style="font-size: 13px; font-weight: 600; color: var(--neutral-600);">ระบุเหตุผล (เหตุผลสำหรับบันทึกตรวจสอบ):</label>
                 <textarea id="action-reason" placeholder="โปรดระบุเหตุผลในการดำเนินการ..." style="width: 100%; height: 80px; padding: 10px; border-radius: 8px; border: 1px solid var(--neutral-300); margin-top: 8px; font-size: 13px; resize: none;"></textarea>
             </div>
 
@@ -628,9 +1016,9 @@
     <!-- Evidence Modal (Gap 1) -->
     <div id="evidence-modal" class="modal-overlay">
         <div class="modal-content" style="max-width: 600px;">
-            <h2 id="ev-title">หลักฐานประกอบ (Evidence Viewer)</h2>
+            <h2 id="ev-title">หลักฐานประกอบ (ดูหลักฐาน)</h2>
             <div style="height: 300px; background: #eee; border-radius: 12px; margin: 20px 0; display: flex; align-items: center; justify-content: center; color: var(--neutral-600);">
-                [ MOCKUP IMAGE: CHAT LOG / RECEIPT / PHOTO ]
+                [ ภาพตัวอย่าง: ประวัติแชท / ใบเสร็จ / รูปภาพ ]
             </div>
             <p style="font-size: 13px; color: var(--neutral-600); margin-bottom: 24px;">รายละเอียด: ข้อมูลที่ระบบจัดเก็บเพื่อใช้ตัดสินใจอุทธรณ์</p>
             <button class="btn btn-outline" style="width: 100%;" onclick="document.getElementById('evidence-modal').style.display='none'">ปิด</button>
@@ -640,42 +1028,137 @@
     <!-- Payout Detail Modal (Gap 4) -->
     <div id="payout-modal" class="modal-overlay">
         <div class="modal-content" style="max-width: 600px; text-align: left;">
-            <h2>Transaction Breakdown (#BK-9915)</h2>
+            <h2>ดูรายละเอียดธุรกรรม (#BK-9915)</h2>
             <div style="background: var(--neutral-100); padding: 16px; border-radius: 12px; margin-top: 16px;">
                 <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                    <span>ยอดจอง (Gross Service Fee):</span>
+                    <span>ยอดจอง (ค่าบริการรวม):</span>
                     <b>฿ 1,800.00</b>
                 </div>
                 <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                    <span>Commission (10%):</span>
+                    <span>ค่าคอมมิชชัน (10%):</span>
                     <b style="color: var(--error);">- ฿ 180.00</b>
                 </div>
                 <div style="display: flex; justify-content: space-between; border-top: 1px solid var(--neutral-300); padding-top: 8px; font-weight: 700;">
-                    <span>ยอดสุทธิรอโอน (Net Payout):</span>
+                    <span>ยอดสุทธิรอโอน (ยอดเงินสุทธิที่รอโอน):</span>
                     <span style="color: var(--success);">฿ 1,620.00</span>
                 </div>
             </div>
             <div style="margin-top: 20px;">
-                <p style="font-size: 12px; color: var(--neutral-600);">* ภาษี ณ ที่จ่าย (WHT) จะถูกคำนวณและหักอัตโนมัติหากผู้ให้บริการเป็นนิติบุคคล</p>
+                <p style="font-size: 12px; color: var(--neutral-600);">* ภาษี ณ ที่จ่าย (หัก ณ ที่จ่าย) จะถูกคำนวณและหักอัตโนมัติหากผู้ให้บริการเป็นนิติบุคคล</p>
             </div>
             <button class="btn btn-outline" style="width: 100%; margin-top: 24px;" onclick="document.getElementById('payout-modal').style.display='none'">ปิด</button>
         </div>
     </div>
 
-    <!-- Policy Preview Modal (Gap 5) -->
+    <!-- ดูตัวอย่างนโยบาย Modal (Gap 5) -->
     <div id="policy-modal" class="modal-overlay">
         <div class="modal-content" style="max-width: 700px; text-align: left;">
-            <h2>Policy Content Preview</h2>
+            <h2>ตัวอย่างเนื้อหานโยบาย</h2>
             <div style="height: 350px; overflow-y: auto; background: var(--neutral-100); padding: 20px; border-radius: 12px; font-size: 13px; line-height: 1.6; margin-top: 16px; border: 1px solid var(--neutral-300);">
-                <h3>Privacy Policy Version 2.4</h3>
+                <h3>นโยบายความเป็นส่วนตัว เวอร์ชัน 2.4</h3>
                 <p>หมวดที่ 1: การเก็บรวบรวมข้อมูลส่วนบุคคล...</p>
                 <p>เรามีการจัดเก็บข้อมูลพิกัด GPS เพื่อความปลอดภัยของผู้รับบริการในขณะปฏิบัติหน้าที่...</p>
                 <p>หมวดที่ 2: วัตถุประสงค์ในการประมวลผลข้อมูล...</p>
-                <p>เพื่อใช้ในการยืนยันวุฒิการศึกษาผ่านสถาบันฝึกอบรม (Training Institute API)...</p>
+                <p>เพื่อใช้ในการยืนยันวุฒิการศึกษาผ่านสถาบันฝึกอบรม (API สถาบันฝึกอบรม)...</p>
             </div>
             <div style="display: flex; gap: 12px; margin-top: 24px;">
                 <button class="btn btn-outline" style="flex:1" onclick="document.getElementById('policy-modal').style.display='none'">ปิด</button>
-                <button class="btn btn-primary" style="flex:1">Export as PDF (Legal)</button>
+                <button class="btn btn-primary" style="flex:1">ส่งออกเป็น PDF (ฉบับกฎหมาย)</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Revenue Report Modal -->
+    <div id="revenue-report-modal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 800px; text-align: left;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2>รายงานสรุปรายได้ (สรุปรายได้รายเดือน)</h2>
+                <button class="btn btn-success" onclick="alert('กำลังส่งออกไปยัง Excel...')">📥 ส่งออก CSV/Excel</button>
+            </div>
+            <div style="max-height: 400px; overflow-y: auto;">
+                <table>
+                    <thead>
+                        <tr><th>เดือน/ปี</th><th>ยอด Gross รวม</th><th>ค่าคอมมิชชัน (10%)</th><th>ยอดรอโอนสุทธิ</th><th>สถานะ</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>พฤษภาคม 2026</td><td>฿ 450,000</td><td>฿ 45,000</td><td>฿ 405,000</td><td><span class="status-pill status-pending">กำลังดำเนินการ</span></td></tr>
+                        <tr><td>เมษายน 2026</td><td>฿ 1,240,500</td><td>฿ 124,050</td><td>฿ 1,116,450</td><td><span class="status-pill status-success">เสร็จสมบูรณ์</span></td></tr>
+                        <tr><td>มีนาคม 2026</td><td>฿ 980,000</td><td>฿ 98,000</td><td>฿ 882,000</td><td><span class="status-pill status-success">เสร็จสมบูรณ์</span></td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <button class="btn btn-outline" style="width: 100%; margin-top: 24px;" onclick="document.getElementById('revenue-report-modal').style.display='none'">ปิด</button>
+        </div>
+    </div>
+
+    <!-- PDPA Audit Report Modal -->
+    <div id="pdpa-report-modal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 900px; text-align: left;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2>บันทึกการตรวจสอบตาม PDPA</h2>
+                <button class="btn btn-outline" onclick="alert('กำลังดาวน์โหลดบันทึกทั้งหมด...')">📜 ดาวน์โหลดบันทึกทั้งหมด (PDF)</button>
+            </div>
+            <div style="max-height: 400px; overflow-y: auto;">
+                <table style="font-size: 13px;">
+                    <thead>
+                        <tr><th>วัน-เวลา</th><th>กิจกรรม</th><th>ผู้ดำเนินการ</th><th>เหตุผล/หมายเหตุ</th><th>เป้าหมาย (ID)</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>15/05/26 14:20</td><td>เข้าถึงข้อมูลส่วนบุคคล</td><td>แอดมิน Michael</td><td>ใบแจ้งปัญหา #TK-99</td><td>ผู้ใช้ #U-5501</td></tr>
+                        <tr><td>14/05/26 09:15</td><td>ส่งออกข้อมูลการเงิน</td><td>แอดมิน Sarah</td><td>ตรวจสอบรายเดือน</td><td>ตัวแทนการเงิน</td></tr>
+                        <tr><td>13/05/26 11:45</td><td>ลบข้อมูลอัตโนมัติ (หมดอายุ)</td><td>ระบบ</td><td>นโยบายการเก็บรักษาข้อมูล</td><td>ประวัติ > 7 ปี</td></tr>
+                        <tr><td>12/05/26 16:30</td><td>ประกาศนโยบาย v2.4</td><td>แอดมิน Michael</td><td>อัปเดตทางกฎหมาย</td><td>ผู้ใช้ทั้งหมด</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <button class="btn btn-outline" style="width: 100%; margin-top: 24px;" onclick="document.getElementById('pdpa-report-modal').style.display='none'">ปิด</button>
+        </div>
+    </div>
+
+    <!-- กำหนดเอง Report Modal -->
+    <div id="custom-report-modal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 600px; text-align: left;">
+            <h2>สร้างรายงาน กำหนดเอง (สร้างรายงาน)</h2>
+            <div style="display: flex; flex-direction: column; gap: 16px; margin-top: 20px;">
+                <div>
+                    <label style="font-size: 13px; font-weight: 600; color: var(--neutral-600);">แหล่งข้อมูล (แหล่งข้อมูล):</label>
+                    <select class="btn-outline" style="width: 100%; padding: 10px; margin-top: 4px; border-radius: 8px;">
+                        <option>ข้อมูลผู้ใช้ (วิเคราะห์ผู้ใช้)</option>
+                        <option>ธุรกรรมการเงิน (ธุรกรรมการเงิน)</option>
+                        <option>คุณภาพการบริการ (รีวิวบริการ)</option>
+                        <option>รายการจอง (ข้อมูลการจอง)</option>
+                    </select>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div>
+                        <label style="font-size: 13px; font-weight: 600; color: var(--neutral-600);">วันที่เริ่ม:</label>
+                        <input type="date" class="btn-outline" style="width: 100%; padding: 8px; margin-top: 4px; border-radius: 8px;">
+                    </div>
+                    <div>
+                        <label style="font-size: 13px; font-weight: 600; color: var(--neutral-600);">วันที่สิ้นสุด:</label>
+                        <input type="date" class="btn-outline" style="width: 100%; padding: 8px; margin-top: 4px; border-radius: 8px;">
+                    </div>
+                </div>
+                <div>
+                    <label style="font-size: 13px; font-weight: 600; color: var(--neutral-600);">ตัวกรองหน่วยงาน:</label>
+                    <select class="btn-outline" style="width: 100%; padding: 10px; margin-top: 4px; border-radius: 8px;">
+                        <option>-- ทั้งหมด --</option>
+                        <option>บริษัท บริบาลไทย จำกัด</option>
+                        <option>ศูนย์ดูแลมีสุข</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="font-size: 13px; font-weight: 600; color: var(--neutral-600);">รูปแบบไฟล์ (รูปแบบไฟล์):</label>
+                    <div style="display: flex; gap: 12px; margin-top: 8px;">
+                        <label><input type="radio" name="fmt" checked> CSV</label>
+                        <label><input type="radio" name="fmt"> Excel (.xlsx)</label>
+                        <label><input type="radio" name="fmt"> PDF</label>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 12px; margin-top: 12px;">
+                    <button class="btn btn-outline" style="flex:1" onclick="document.getElementById('custom-report-modal').style.display='none'">ยกเลิก</button>
+                    <button class="btn btn-primary" style="flex:1" onclick="alert('กำลังสร้างรายงาน... การดาวน์โหลดจะเริ่มในไม่ช้า')">🚀 สร้างและดาวน์โหลด</button>
+                </div>
             </div>
         </div>
     </div>
@@ -684,6 +1167,11 @@
         // --- State Management ---
         let currentView = 'view-dashboard';
         let pendingCount = 12;
+
+        // --- Sidebar Logic ---
+        function toggleSidebar() {
+            document.body.classList.toggle('sidebar-collapsed');
+        }
 
         // --- View Switching ---
         function switchView(viewId) {
@@ -699,15 +1187,15 @@
             currentView = viewId;
         }
 
-        // --- Global Actions ---
-        function applyGlobalFilter(operator) {
+        // --- ทั้งหมด Actions ---
+        function applyทั้งหมดกรองข้อมูล(operator) {
             const rows = document.querySelectorAll('tbody tr');
             rows.forEach(row => {
                 if (operator === 'all') {
                     row.style.display = '';
                     return;
                 }
-                const text = row.innerText.toLowerCase();
+                const text = row.innerText.toต่ำerCase();
                 const opMap = { 'en': 'en enterprise', 'mk': 'มีสุข' };
                 if (text.includes(opMap[operator])) {
                     row.style.display = '';
@@ -715,14 +1203,14 @@
                     row.style.display = 'none';
                 }
             });
-            console.log('Filtering by agency:', operator);
+            console.log('กรองข้อมูลing by agency:', operator);
         }
 
         function handleSearch(query) {
-            const q = query.toLowerCase();
+            const q = query.toต่ำerCase();
             const rows = document.querySelectorAll('.view-section.active tbody tr');
             rows.forEach(row => {
-                row.style.display = row.innerText.toLowerCase().includes(q) ? '' : 'none';
+                row.style.display = row.innerText.toต่ำerCase().includes(q) ? '' : 'none';
             });
         }
 
@@ -731,7 +1219,7 @@
                 document.body.innerHTML = `
                     <div style="height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--sidebar-bg); color: white;">
                         <div class="logo-box" style="width: 80px; height: 80px; font-size: 40px;">CD</div>
-                        <h1 style="margin-top: 20px;">CareDee Admin</h1>
+                        <h1 style="margin-top: 20px;">ผู้ดูแลระบบ CareDee</h1>
                         <p style="opacity: 0.7;">คุณได้ออกจากระบบเรียบร้อยแล้ว</p>
                         <button class="btn btn-primary" style="margin-top: 32px;" onclick="location.reload()">เข้าสู่ระบบอีกครั้ง</button>
                     </div>
@@ -749,7 +1237,7 @@
             }
 
             openConfirmModal(
-                'ยืนยันการประกาศ Global Maintenance?',
+                'ยืนยันการประกาศ ปิดปรับปรุงระบบทั้งหมด?',
                 'การกดประกาศนี้จะส่งผลกระทบต่อผู้ใช้ทุกคนในระบบทันที และจะแสดงแถบประกาศในทุกหน้าของ Admin Portal',
                 () => {
                     const banner = document.getElementById('global-maintenance-banner');
@@ -794,17 +1282,17 @@
             const row = btn.closest('tr');
             const pill = row.querySelector('.status-pill');
             pill.className = 'status-pill status-success';
-            pill.innerText = 'Restored';
+            pill.innerText = 'กู้คืนแล้ว';
             alert('กู้คืนรีวิวเรียบร้อย');
         }
 
         function suspendUser(statusId) {
             const status = document.getElementById(statusId);
-            status.innerHTML = '<span class="status-pill status-error">Suspended</span>';
+            status.innerHTML = '<span class="status-pill status-error">ถูกระงับ</span>';
             closeModal();
         }
 
-        // --- Bulk Actions Logic (Gap 3) ---
+        // --- การจัดการข้อมูลเป็นชุด Logic (Gap 3) ---
         function toggleUsersAll(master) {
             const checks = document.querySelectorAll('.user-check');
             checks.forEach(c => c.checked = master.checked);
@@ -823,9 +1311,9 @@
             }
         }
 
-        function bulkApproveUsers() {
+        function bulkอนุมัติUsers() {
             const count = document.querySelectorAll('.user-check:checked').length;
-            openConfirmModal('Batch Approval', `คุณกำลังจะอนุมัติผู้ใช้จำนวน ${count} รายการพร้อมกัน ยืนยันหรือไม่?`, () => {
+            openConfirmModal('อนุมัติเป็นชุด', `คุณกำลังจะอนุมัติผู้ใช้จำนวน ${count} รายการพร้อมกัน ยืนยันหรือไม่?`, () => {
                 alert(`อนุมัติ ${count} รายการสำเร็จ!`);
                 location.reload();
             }, true);
@@ -833,7 +1321,7 @@
 
         // --- Modals Logic (Gaps 1, 4, 5) ---
         function openEvidenceModal(title) {
-            document.getElementById('ev-title').innerText = 'Evidence Viewer: ' + title;
+            document.getElementById('ev-title').innerText = 'ดูหลักฐาน: ' + title;
             document.getElementById('evidence-modal').style.display = 'flex';
         }
 
@@ -843,6 +1331,18 @@
 
         function openPolicyPreview(ver) {
             document.getElementById('policy-modal').style.display = 'flex';
+        }
+
+        function openRevenueReportModal() {
+            document.getElementById('revenue-report-modal').style.display = 'flex';
+        }
+
+        function openPDPAReportModal() {
+            document.getElementById('pdpa-report-modal').style.display = 'flex';
+        }
+
+        function openกำหนดเองReportModal() {
+            document.getElementById('custom-report-modal').style.display = 'flex';
         }
 
         let onConfirmCallback = null;
@@ -882,9 +1382,9 @@
         }
 
         const services = [
-            { name: 'CareDee Main API', status: 'green', msg: 'Healthy' },
-            { name: 'Payment Gateway', status: 'yellow', msg: 'Latency High' },
-            { name: 'Notification Service', status: 'green', msg: 'Online' }
+            { name: 'API หลัก CareDee', status: 'green', msg: 'ปกติ' },
+            { name: 'ระบบรับชำระเงิน', status: 'yellow', msg: 'ความหน่วงสูง' },
+            { name: 'ระบบแจ้งเตือน', status: 'green', msg: 'ออนไลน์' }
         ];
 
         function initCloudStatus() {
@@ -906,7 +1406,7 @@
                         <span style="width: 10px; height: 10px; border-radius: 50%; background: var(--${s.status === 'green' ? 'success' : 'warning'});"></span>
                         <div style="display:flex; flex-direction:column;">
                             <span style="font-weight: 600;">${s.name}</span>
-                            <a href="#" style="font-size: 10px; color: var(--primary-600);" onclick="alert('Incident Log: Latency spiked to 2.5s at 10:15 AM')">View Technical Incident (Gap 6)</a>
+                            <a href="#" style="font-size: 10px; color: var(--primary-600);" onclick="alert('บันทึกปัญหา: ความหน่วงพุ่งสูงถึง 2.5 วินาที เวลา 10:15 น.')">ดูรายละเอียดปัญหาเทคนิค (Gap 6)</a>
                         </div>
                     </div>
                     <span style="font-size: 12px; font-weight: 700; color: var(--${s.status === 'green' ? 'success' : 'warning'});">${s.msg}</span>

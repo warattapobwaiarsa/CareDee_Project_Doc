@@ -4,281 +4,499 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>เข้าสู่ระบบ | CareDee</title>
+    
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
         :root {
-            /* Brand Colors */
-            --primary-600: #007A8C;
-            --primary-100: #E0F2F4;
-            --secondary-500: #FF9F43;
-            --secondary-100: #FFF3E6;
+            /* Core Brand */
+            --brand-primary: #007A8C;
+            --brand-primary-dark: #005A68;
+            --brand-primary-light: #E0F2F4;
+            --brand-secondary: #FF9F43;
             
-            /* Semantic Colors */
-            --success: #28C76F;
-            --warning: #FF9F43;
+            /* Neutrals */
+            --surface: #FFFFFF;
+            --background: #F4F7F8;
+            --text-heading: #1E1E1E;
+            --text-body: #4B4B4B;
+            --text-muted: #6E6B7B;
+            --border: #EBEBED;
+            
+            /* Functional */
             --error: #EA5455;
-            --info: #00CFE8;
+            --success: #28C76F;
             
-            /* Neutral Colors */
-            --white: #FFFFFF;
-            --neutral-100: #F8F8F8;
-            --neutral-300: #B9B9C3;
-            --neutral-600: #6E6B7B;
-            --neutral-900: #1E1E1E;
+            /* Shadows & Effects */
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.05);
+            --shadow-md: 0 10px 30px rgba(0,0,0,0.08);
+            --radius-lg: 24px;
+            --radius-md: 12px;
             
-            /* Interactive */
-            --pressed: #006675;
-            
-            /* Typography */
-            --font-main: 'IBM Plex Sans Thai', 'Inter', sans-serif;
+            --font-thai: 'IBM Plex Sans Thai', sans-serif;
+            --font-inter: 'Inter', sans-serif;
         }
 
         * {
-            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: var(--font-main);
+            box-sizing: border-box;
         }
 
         body {
-            background-color: var(--neutral-100);
-            color: var(--neutral-900);
-            min-height: 100vh;
+            font-family: var(--font-thai);
+            background-color: var(--background);
+            color: var(--text-body);
             display: flex;
             align-items: center;
             justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
         }
 
-        .login-wrapper {
+        /* Login Layout */
+        .login-card {
             display: flex;
             width: 100%;
-            max-width: 1000px;
-            height: 600px;
-            background: var(--white);
-            border-radius: 20px;
+            max-width: 1100px;
+            min-height: 700px;
+            background: var(--surface);
+            border-radius: var(--radius-lg);
             overflow: hidden;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            margin: 20px;
+            box-shadow: var(--shadow-md);
         }
 
-        /* Branding Side */
-        .branding-side {
-            flex: 1;
-            background: linear-gradient(135deg, var(--primary-600) 0%, #005A68 100%);
-            color: white;
-            padding: 48px;
+        /* Immersive Left Side */
+        .brand-section {
+            flex: 1.2;
+            background: linear-gradient(150deg, var(--brand-primary) 0%, var(--brand-primary-dark) 100%);
+            padding: 60px;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: space-between;
             position: relative;
+            color: white;
             overflow: hidden;
         }
 
-        .branding-side::before {
+        /* Abstract Decorative Elements */
+        .brand-section::before {
             content: '';
             position: absolute;
-            top: -100px;
-            right: -100px;
-            width: 300px;
-            height: 300px;
-            background: rgba(255, 255, 255, 0.05);
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+            top: -150px;
+            left: -150px;
             border-radius: 50%;
         }
 
-        .brand-logo {
-            width: 240px;
-            height: auto;
-            margin-bottom: 32px;
+        .brand-section::after {
+            content: '';
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: rgba(255,255,255,0.03);
+            bottom: 50px;
+            right: -50px;
+            border-radius: 40px;
+            transform: rotate(25deg);
         }
 
-        .branding-side h2 {
-            font-size: 32px;
+        .logo-badge {
+            display: inline-flex;
+            background: white;
+            padding: 16px 24px;
+            border-radius: var(--radius-md);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            z-index: 10;
+            width: fit-content;
+        }
+
+        .logo-badge img {
+            height: 50px;
+            width: auto;
+        }
+
+        .brand-content {
+            z-index: 10;
+        }
+
+        .brand-content h2 {
+            font-size: 38px;
             font-weight: 700;
-            margin-bottom: 16px;
             line-height: 1.3;
+            margin-bottom: 24px;
         }
 
-        .branding-side p {
+        .brand-content p {
             font-size: 18px;
+            font-weight: 300;
             opacity: 0.9;
             line-height: 1.6;
+            max-width: 420px;
         }
 
-        /* Form Side */
-        .form-side {
-            width: 450px;
-            padding: 48px;
+        .brand-footer {
+            z-index: 10;
+            font-size: 14px;
+            opacity: 0.7;
+        }
+
+        /* Form Right Side */
+        .form-section {
+            flex: 1;
+            padding: 60px;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            background: var(--white);
+            background: var(--surface);
         }
 
-        h1 {
-            font-size: 28px;
+        .form-header {
+            margin-bottom: 40px;
+        }
+
+        .form-header h1 {
+            font-size: 32px;
             font-weight: 700;
-            margin-bottom: 8px;
-            color: var(--neutral-900);
+            color: var(--text-heading);
+            margin-bottom: 12px;
         }
 
-        p.subtitle {
-            font-size: 14px;
-            color: var(--neutral-600);
-            margin-bottom: 32px;
+        .form-header p {
+            color: var(--text-muted);
+            font-size: 16px;
         }
 
+        /* Form Controls */
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
 
         .form-group label {
             display: block;
             font-size: 14px;
-            font-weight: 500;
-            margin-bottom: 8px;
-            color: var(--neutral-900);
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--text-heading);
+        }
+
+        .input-group {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-group i.icon-prefix {
+            position: absolute;
+            left: 16px;
+            color: var(--text-muted);
+            font-size: 18px;
+            transition: color 0.2s;
         }
 
         .form-control {
             width: 100%;
-            padding: 12px 16px;
+            padding: 14px 16px 14px 48px;
             font-size: 16px;
-            border: 1px solid var(--neutral-300);
-            border-radius: 8px;
-            transition: all 0.2s ease;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-md);
+            background-color: #FAFAFB;
+            transition: all 0.3s ease;
             outline: none;
-            color: var(--neutral-900);
+            color: var(--text-heading);
         }
 
         .form-control:focus {
-            border-color: var(--primary-600);
-            box-shadow: 0 0 0 3px var(--primary-100);
+            border-color: var(--brand-primary);
+            background-color: white;
+            box-shadow: 0 0 0 4px var(--brand-primary-light);
         }
 
-        .form-footer {
+        .form-control:focus + i.icon-prefix {
+            color: var(--brand-primary);
+        }
+
+        /* Password Visibility */
+        .toggle-btn {
+            position: absolute;
+            right: 16px;
+            cursor: pointer;
+            color: var(--text-muted);
+            padding: 8px;
+            border-radius: 50%;
+            transition: background 0.2s;
+        }
+
+        .toggle-btn:hover {
+            background: rgba(0,0,0,0.05);
+        }
+
+        /* Actions */
+        .form-actions {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 24px;
-            font-size: 14px;
+            margin-bottom: 32px;
         }
 
-        .checkbox-group {
+        .remember-me {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             cursor: pointer;
-            color: var(--neutral-600);
+            font-size: 14px;
+            user-select: none;
         }
 
-        .forgot-password {
-            color: var(--primary-600);
+        .remember-me input {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--brand-primary);
+            cursor: pointer;
+        }
+
+        .forgot-link {
+            font-size: 14px;
+            color: var(--brand-primary);
             text-decoration: none;
-            font-weight: 500;
+            font-weight: 600;
+            transition: opacity 0.2s;
         }
 
-        .forgot-password:hover {
+        .forgot-link:hover {
+            opacity: 0.8;
             text-decoration: underline;
         }
 
-        .btn-login {
+        /* Buttons */
+        .btn-primary {
             width: 100%;
-            padding: 14px;
-            background-color: var(--primary-600);
+            padding: 16px;
+            background-color: var(--brand-primary);
             color: white;
             border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
+            border-radius: var(--radius-md);
+            font-size: 18px;
+            font-weight: 700;
             cursor: pointer;
-            transition: background-color 0.2s ease;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 122, 140, 0.25);
         }
 
-        .btn-login:hover {
-            background-color: var(--pressed);
+        .btn-primary:hover {
+            background-color: var(--brand-primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 122, 140, 0.35);
         }
 
-        .register-link {
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary.loading {
+            pointer-events: none;
+            opacity: 0.8;
+        }
+
+        /* Extra Links */
+        .register-footer {
+            margin-top: auto;
             text-align: center;
-            margin-top: 24px;
-            font-size: 14px;
-            color: var(--neutral-600);
+            padding-top: 30px;
+            font-size: 15px;
+            border-top: 1px solid var(--border);
         }
 
-        .register-link a {
-            color: var(--secondary-500);
+        .register-footer a {
+            color: var(--brand-primary);
             text-decoration: none;
-            font-weight: 600;
+            font-weight: 700;
         }
 
-        .register-link a:hover {
-            text-decoration: underline;
+        /* Alerts */
+        .alert {
+            display: none;
+            padding: 14px 16px;
+            border-radius: var(--radius-md);
+            font-size: 14px;
+            margin-bottom: 24px;
+            align-items: center;
+            gap: 12px;
         }
 
-        /* Responsive Adjustments */
-        @media (max-width: 900px) {
-            .branding-side {
+        .alert-error {
+            background-color: #FFF5F5;
+            color: var(--error);
+            border: 1px solid #FFEBEB;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .brand-section {
                 display: none;
             }
-            .login-wrapper {
-                max-width: 450px;
-                height: auto;
-            }
-            .form-side {
-                width: 100%;
+            .login-card {
+                max-width: 500px;
             }
         }
 
-        @media (max-width: 480px) {
-            .form-side {
-                padding: 32px 24px;
+        @media (max-width: 576px) {
+            .form-section {
+                padding: 40px 24px;
             }
+            .form-header h1 {
+                font-size: 26px;
+            }
+        }
+
+        /* Animations */
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 0.8s linear infinite;
         }
     </style>
 </head>
 <body>
 
-    <div class="login-wrapper">
-        <div class="branding-side">
-            <img src="../../logo/caredee_v2.svg" alt="CareDee Logo" class="brand-logo" />
-            <h2>ดูแลคนที่คุณรัก <br>ด้วยมืออาชีพจาก CareDee</h2>
-            <p>แพลตฟอร์มที่รวมผู้ดูแลคุณภาพและสถาบันฝึกอบรมชั้นนำ เพื่อความอุ่นใจของทุกคนในครอบครัว</p>
-        </div>
-
-        <div class="form-side">
-            <div class="form-header">
-                <h1>เข้าสู่ระบบ</h1>
-                <p class="subtitle">กรุณากรอกข้อมูลเพื่อเข้าใช้งานระบบ</p>
+    <div class="login-card">
+        <!-- Branding Side -->
+        <div class="brand-section">
+            <div class="logo-badge">
+                <img src="../../logo/caredee_v2.png" alt="CareDee Logo">
+            </div>
+            
+            <div class="brand-content">
+                <h2>มอบการดูแลที่ดีที่สุด <br>ให้คนที่คุณรัก</h2>
+                <p>แพลตฟอร์มบริหารจัดการศูนย์ดูแลผู้สูงอายุ และการฝึกอบรมบุคลากรคุณภาพ เพื่อมาตรฐานความปลอดภัยและความอุ่นใจของครอบครัว</p>
             </div>
 
-            <form>
+            <div class="brand-footer">
+                &copy; 2024 CareDee Platform. All rights reserved.
+            </div>
+        </div>
+
+        <!-- Form Side -->
+        <div class="form-section">
+            <div class="form-header">
+                <h1>เข้าสู่ระบบ</h1>
+                <p>ยินดีต้อนรับกลับมา! กรุณาลงชื่อเข้าใช้งาน</p>
+            </div>
+
+            <div id="error-alert" class="alert alert-error">
+                <i class="fas fa-circle-exclamation"></i>
+                <span>อีเมลหรือรหัสผ่านไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง</span>
+            </div>
+
+            <form id="login-form">
                 <div class="form-group">
-                    <label for="email">อีเมล / ชื่อผู้ใช้งาน</label>
-                    <input type="text" id="email" class="form-control" placeholder="example@email.com" required>
+                    <label for="email">อีเมลหรือชื่อผู้ใช้</label>
+                    <div class="input-group">
+                        <i class="far fa-envelope icon-prefix"></i>
+                        <input type="text" id="email" class="form-control" placeholder="example@email.com" required autocomplete="username">
+                    </div>
                 </div>
 
                 <div class="form-group">
                     <label for="password">รหัสผ่าน</label>
-                    <input type="password" id="password" class="form-control" placeholder="••••••••" required>
+                    <div class="input-group">
+                        <i class="fas fa-shield-halved icon-prefix"></i>
+                        <input type="password" id="password" class="form-control" placeholder="••••••••" required autocomplete="current-password">
+                        <div class="toggle-btn" id="togglePassword">
+                            <i class="far fa-eye"></i>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="form-footer">
-                    <label class="checkbox-group">
-                        <input type="checkbox"> จดจำฉัน
+                <div class="form-actions">
+                    <label class="remember-me">
+                        <input type="checkbox" id="remember">
+                        จดจำฉัน
                     </label>
-                    <a href="#" class="forgot-password">ลืมรหัสผ่าน?</a>
+                    <a href="forgot_password_template.html" class="forgot-link">ลืมรหัสผ่าน?</a>
                 </div>
 
-                <button type="submit" class="btn-login">เข้าสู่ระบบ</button>
+                <button type="submit" class="btn-primary" id="btn-submit">
+                    <span id="btn-text">เข้าสู่ระบบ</span>
+                    <div class="spinner" id="btn-spinner"></div>
+                </button>
             </form>
 
-            <div class="register-link">
-                ยังไม่มีบัญชี? <a href="#">ลงทะเบียนใหม่</a>
+            <div class="register-footer">
+                ยังไม่มีบัญชีใช่ไหม? <a href="register_template.html">สร้างบัญชีใหม่ที่นี่</a>
             </div>
         </div>
     </div>
 
+    <script>
+        // Toggle Password Visibility
+        const toggleBtn = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('password');
+        
+        toggleBtn.addEventListener('click', () => {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            
+            const icon = toggleBtn.querySelector('i');
+            icon.classList.toggle('fa-eye');
+            icon.classList.toggle('fa-eye-slash');
+        });
+
+        // Handle Login Simulation
+        const loginForm = document.getElementById('login-form');
+        const btnSubmit = document.getElementById('btn-submit');
+        const btnText = document.getElementById('btn-text');
+        const btnSpinner = document.getElementById('btn-spinner');
+        const errorAlert = document.getElementById('error-alert');
+
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            // Reset UI state
+            errorAlert.style.display = 'none';
+            btnSubmit.classList.add('loading');
+            btnText.style.display = 'none';
+            btnSpinner.style.display = 'inline-block';
+
+            // Simulate Network Delay
+            setTimeout(() => {
+                // Mock verification (Matches previous version's logic)
+                if (email === 'admin' && password === '1234') {
+                    btnText.innerText = 'กำลังเข้าสู่ระบบ...';
+                    btnText.style.display = 'block';
+                    btnSpinner.style.display = 'none';
+                    
+                    setTimeout(() => {
+                        alert('เข้าสู่ระบบสำเร็จ! ยินดีต้อนรับสู่ CareDee');
+                        window.location.reload(); 
+                    }, 800);
+                } else {
+                    btnSubmit.classList.remove('loading');
+                    btnText.style.display = 'block';
+                    btnSpinner.style.display = 'none';
+                    errorAlert.style.display = 'flex';
+                }
+            }, 1800);
+        });
+    </script>
 </body>
 </html>
