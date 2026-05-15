@@ -1,0 +1,101 @@
+# รายละเอียดฟีเจอร์และฟังก์ชันการใช้งานของ CareDee Portals
+
+เอกสารฉบับนี้สรุปรายละเอียดการออกแบบและฟังก์ชันการใช้งานของระบบ CareDee ทั้ง 3 ส่วน (Admin, Operator, Training) ตามที่ปรากฏในไฟล์ Mockup SPA โดยแบ่งตามหน้าที่และการเข้าถึงข้อมูล
+
+---
+
+## 1. CareDee Admin Portal (Platform Control Center)
+**ไฟล์:** `mockup/admin/admin_portal_spa.html`  
+**กลุ่มเป้าหมาย:** ผู้ดูแลระบบระดับสูงสุด (Platform Admin)
+
+### รายละเอียดหน้าจอ (View Sections):
+1.  **หน้าหลัก (Dashboard):**
+    - **Metrics Cards:** แสดงจำนวนรายการจองวันนี้, รายได้รวมเดือนนี้ และจำนวนรายการรออนุมัติ (Pending) พร้อม Trend การเปลี่ยนแปลง
+    - **รายการรออนุมัติล่าสุด:** ตารางสรุปรายชื่อผู้สมัครใหม่ (Caregiver/Operator) ให้กดอนุมัติได้ทันที
+2.  **จัดการผู้ดูแล/ผู้ให้บริการ (Users):**
+    - ตารางรายชื่อที่แสดงสถานะการยืนยันใบรับรอง (Verified) และประวัติการยอมรับ PDPA (Consent Date)
+    - **Bulk Actions:** แถบจัดการข้อมูลจำนวนมาก (Batch Approval) เมื่อเลือกหลายรายการ
+    - **Evidence Modal:** ป๊อปอัพตรวจสอบเอกสารหลักฐานแบบละเอียด
+3.  **จัดการการเงิน (Finance):**
+    - สรุปยอด Gross, Commission (10%), ยอดรอโอน และยอดโอนสำเร็จ
+    - **Payout Queue:** รายการรอโอนเงินคืนให้ผู้ให้บริการพร้อมปุ่มดู **Breakdown** (แจกแจง Gross - Fee)
+4.  **คุณภาพรีวิว & อุทธรณ์ (Reviews):**
+    - **Auto-Moderation:** ระบบเบลอคำหยาบ (Masking) ในรีวิวอัตโนมัติ (คลิกเพื่อดูต้นฉบับ)
+    - **Evidence Viewer:** ดูหลักฐานประกอบการอุทธรณ์ เช่น แชท หรือรูปถ่าย เพื่อตัดสินเคส
+5.  **รายงานระบบ (Reports):**
+    - **Interactive Heatmap:** แสดงพื้นที่ที่มีความต้องการสูง (Demand vs Supply) แบบ Visual
+    - **Custom Range Filter:** เลือกช่วงวันที่เพื่อกรองข้อมูลรายงานและส่งออก (Monthly/Audit)
+6.  **นโยบาย & PDPA (Privacy & Consent):**
+    - **Policy Broadcast:** หน้าต่างจัดการการประกาศเปลี่ยนนโยบายและส่ง Re-consent ให้ผู้ใช้
+    - **Access Log:** บันทึกประวัติการเข้าถึงข้อมูลส่วนบุคคล (Audit Trail) ตามกฎหมาย
+7.  **เฝ้าระวังระบบคลาวด์ (Cloud Monitoring):**
+    - **Service Health:** ตรวจสอบสถานะ API, Payment Gateway และ Uptime History (24 ชม.)
+    - **Maintenance Broadcaster:** ส่งประกาศ Global Banner แจ้งปิดปรับปรุงระบบไปยังผู้ใช้ทุกคน
+
+---
+
+## 2. CareDee Operator Portal (Service Operator Portal)
+**ไฟล์:** `mockup/operator/operator_portal_spa.html`  
+**กลุ่มเป้าหมาย:** หัวหน้าศูนย์บริการ / เอเจนซี่ (Operator)
+
+### รายละเอียดหน้าจอ (Pages):
+1.  **หน้าหลัก (Dashboard):**
+    - **Team Summary:** สรุปงานในมือ, Utilization Rate และคะแนนรีวิวเฉลี่ยของทีม
+    - **System Sync:** ตัวบ่งชี้การเชื่อมต่อข้อมูลแบบ Real-time (Online/Offline Status)
+    - **Quick Actions:** รายการงานด่วน เช่น ตารางซ้อน หรือเคสอุทธรณ์ที่ใกล้หมดเวลา SLA
+2.  **จัดการทีมผู้ดูแล (Team Management):**
+    - **Matching Engine Config:** ปรับแต่งค่าน้ำหนักการจับคู่งาน (เช่น เน้นระยะทางใกล้เป็นหลัก)
+    - **Onboarding Tracker:** ติดตามขั้นตอนการรับคนใหม่เข้าสังกัด (Verified side-by-side กับ TI)
+3.  **ตารางงาน & การจอง (Schedule Control):**
+    - **Master Timeline:** กราฟแสดงคิวงานของผู้ดูแลทุกคนในศูนย์ (Timeline Grid)
+    - **Smart Re-assign:** ฟังก์ชันย้ายงานให้อัตโนมัติเมื่อเกิด Conflict หรือคนเดิมลาป่วย
+    - **Scheduling Audit Log:** บันทึกประวัติการแก้ไขตารางงาน
+4.  **ติดตามรายงานหน้างาน (Care Reports):**
+    - **Live Feed:** รายงานสุขภาพและกิจกรรมที่ผู้ดูแลบันทึกเข้ามา (Activity List)
+    - **Geofence Monitoring:** ตรวจสอบการเช็กอินนอกพิกัดสถานที่ทำงาน (Failure Alert)
+    - **AI Insights:** ระบบวิเคราะห์ความเสี่ยงด้านสุขภาพจากข้อมูลรายงาน
+5.  **ข้อร้องเรียน & อุทธรณ์ (Disputes & Resolution):**
+    - **SLA Countdown:** แถบแจ้งเตือนเวลาที่เหลือในการจัดการเคส (3 วัน)
+    - **Evidence Box:** แสดงข้อมูลแชทและพิกัด GPS เพื่อใช้ยื่นอุทธรณ์ต่อ Admin แพลตฟอร์ม
+6.  **รายงาน & รายได้ (Analytics):**
+    - **Settlement Logic:** ตารางสรุปยอดโอนคืน (Gross - 15% GP = Net)
+    - **Audit Log Viewer:** ดูประวัติการทำงานย้อนหลัง 3 ปี เพื่อการตรวจสอบภายใน
+
+---
+
+## 3. CareDee Training Portal (Academy Interface)
+**ไฟล์:** `mockup/training/training_portal_spa.html`  
+**กลุ่มเป้าหมาย:** เจ้าหน้าที่สถาบันฝึกอบรม (Training Institute)
+
+### รายละเอียดหน้าจอ (Pages):
+1.  **ภาพรวมสถาบัน (Dashboard):**
+    - **Connectivity Stats:** จำนวนผู้อบรมที่เชื่อมโยงบัญชีกับ CareDee แล้ว vs รอสมัคร
+    - **Course-Demand Fit:** กราฟวิเคราะห์ความต้องการตลาดเทียบกับหลักสูตรที่เปิดสอน
+    - **Institute Status:** แสดงสถานะการ Verified และ KYC ของสถาบัน
+2.  **นำเข้าข้อมูล (Import Wizard):**
+    - **Dual Input:** รองรับทั้งการอัปโหลดไฟล์ (CSV/XLSX) และการกรอกข้อมูลด้วยตนเอง (Manual Entry)
+    - **Conflict Resolution:** หน้าจอ Preview เพื่อแก้ไขข้อมูลที่ผิดพลาด (Inline Edit) ก่อนบันทึก
+    - **Bulk Invite:** ส่งคำเชิญสมัครสมาชิกให้ผู้ที่จบการศึกษาแต่ยังไม่มีบัญชี CareDee
+3.  **จัดการใบรับรอง (Certificate Management):**
+    - **Lifecycle Control:** ระบบต่ออายุ (Renew) และเพิกถอน (Revoke) ใบรับรองพร้อมบันทึกเหตุผล
+    - **Digital Printing:** ฟังก์ชันพิมพ์ใบรับรองดิจิทัลสำหรับผู้อบรม
+4.  **สถิติตลาดแรงงาน (Market Intelligence):**
+    - **Unmet Demand:** วิเคราะห์คำค้นหาของลูกค้าที่ไม่พบผู้ให้บริการ (Market Gap)
+    - **Heatmap:** แผนที่แสดงพื้นที่ขาดแคลนแรงงานตามประเภททักษะ
+5.  **การตรวจสอบ & เกณฑ์ (Verification):**
+    - **Verification Queue:** รับคำขอตรวจสอบวุฒิการศึกษาจากผู้สมัครอิสระ
+    - **Global Policy:** แสดงเกณฑ์มาตรฐานการพิจารณาเอกสารที่ Admin กำหนด (Read Only)
+    - **PDPA Audit Log:** บันทึกประวัติการตรวจสอบทุกรายการพร้อม IP และ Metadata
+6.  **โปรไฟล์สถาบัน & KYC:**
+    - จัดการข้อมูลติดต่อและอัปโหลดเอกสารนิติบุคคล/ใบอนุญาต เพื่อยืนยันตัวตนสถาบัน
+
+---
+
+## สรุปรายการ Gaps Analysis (สิ่งที่เติมเต็มจากเอกสาร SRS v1.2)
+ในการพัฒนา Mockup นี้ ได้มีการเติมฟีเจอร์ที่ขาดหายไปเพื่อให้ตรงตามข้อกำหนดทางธุรกิจ ดังนี้:
+1. **Gap 1 (Evidence Viewer):** ส่วนแสดงหลักฐานสำหรับตัดสินเคสอุทธรณ์
+2. **Gap 2 (Custom Date Range):** การเลือกช่วงวันที่ในหน้ารายงาน
+3. **Gap 3 (Bulk Actions):** การจัดการข้อมูลจำนวนมาก (Batch Approval)
+4. **Gap 4 (Payout Breakdown):** การแจงรายละเอียดเงินโอนเพื่อความโปร่งใส
+5. **Gap 5 (Policy Preview/Broadcast):** การควบคุมนโยบาย PDPA
+6. **Gap 6 (Technical Incident Link):** การเชื่อมโยงบันทึกข้อผิดพลาดทางเทคนิคในหน้า Cloud

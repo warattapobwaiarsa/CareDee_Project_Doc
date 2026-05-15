@@ -269,7 +269,7 @@
 
         <!-- VIEW: DASHBOARD -->
         <section id="view-dashboard" class="view-section active">
-            <div class="dashboard-grid">
+            <div class="dashboard-grid" style="grid-template-columns: repeat(3, 1fr);">
                 <div class="metric-card">
                     <div class="metric-title">รายการจองวันนี้</div>
                     <div class="metric-value">42 รายการ</div>
@@ -285,14 +285,9 @@
                     <div class="metric-value" id="dash-pending-count">12</div>
                     <p style="font-size: 12px; color: var(--error); margin-top: 8px;">ต้องการการตรวจสอบด่วน</p>
                 </div>
-                <div class="metric-card" style="border-left-color: var(--success);">
-                    <div class="metric-title">System Uptime</div>
-                    <div class="metric-value">99.98%</div>
-                    <p style="font-size: 12px; color: var(--success); margin-top: 8px;">สถานะปกติ</p>
-                </div>
             </div>
 
-            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px;">
+            <div style="display: grid; grid-template-columns: 1fr; gap: 24px;">
                 <div class="card">
                     <div class="card-header">
                         <h2>รายการรออนุมัติล่าสุด</h2>
@@ -313,13 +308,6 @@
                             </tr>
                         </tbody>
                     </table>
-                </div>
-                <div class="card">
-                    <div class="card-header"><h2>สถานะทรัพยากร</h2></div>
-                    <div style="text-align: center; padding: 20px;">
-                        <div style="width: 120px; height: 120px; border: 10px solid var(--neutral-100); border-top-color: var(--success); border-radius: 50%; margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 700;">45%</div>
-                        <p style="font-weight: 600;">CPU Load Normal</p>
-                    </div>
                 </div>
             </div>
         </section>
